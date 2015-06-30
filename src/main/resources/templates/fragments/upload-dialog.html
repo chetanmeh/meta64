@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="uploadDialog">
+		<div data-role="header">
+			<h2>Upload Attachment</h2>
+		</div>
+		<div role="main" class="ui-content">
+			<div id="uploadPathDisplay" class="path-display-in-editor"></div>
+
+			<div id="uploadFieldContainer">
+				<form id="uploadForm" method="POST" enctype="multipart/form-data">
+	    			<input type="file" name="file"/>
+	    			<input id="uploadFormNodeId" type="hidden" name="nodeId"/>
+	  			</form>
+			</div>
+			
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="uploadButton" onClick="attachment.uploadFileNow()" data-theme="b" data-role="button">Upload</a>
+				
+				<a id="deleteAttachmentButton" data-role="button">Delete</a>
+				
+				<!--  -->
+				<a href="#" id="cancelUploadButton" 
+					data-role="button" onClick="attachment.closeUploadDialog()">Close</a>
+			</div>
+			
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.meta64</groupId>
+	<artifactId>com.meta64.mobile</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Meta64 Mobile</name>
+	<description>meta64 - Social Engine for the Web</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.2.3.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<start-class>com.meta64.mobile.AppServer</start-class>
+		<java.version>1.7</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mobile</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		 <!-- The JCR API --> 
+    <dependency> 
+        <groupId>javax.jcr</groupId> 
+        <artifactId>jcr</artifactId> 
+        <version>2.0</version> 
+    </dependency> 
+
+    <dependency> 
+        <groupId>org.apache.jackrabbit</groupId> 
+        <artifactId>oak-core</artifactId> 
+        <version>1.4-SNAPSHOT</version> 
+    </dependency> 
+    
+     <dependency> 
+        <groupId>org.apache.jackrabbit</groupId> 
+        <artifactId>oak-jcr</artifactId> 
+        <version>1.4-SNAPSHOT</version> 
+    </dependency> 
+    
+     <dependency> 
+        <groupId>org.apache.jackrabbit</groupId> 
+        <artifactId>oak-commons</artifactId> 
+        <version>1.4-SNAPSHOT</version> 
+    </dependency> 
+    
+    <dependency>
+    	<groupId>com.h2database</groupId>
+    	<artifactId>h2-mvstore</artifactId>
+    	<version>1.4.185</version>
+	</dependency>
+    
+    <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongo-java-driver</artifactId>
+    </dependency>
+    
+    <dependency>
+  		<groupId>mysql</groupId>
+  		<artifactId>mysql-connector-java</artifactId>
+  </dependency>
+
+    <!-- Use Log4J for logging --> 
+    <dependency> 
+        <groupId>org.slf4j</groupId> 
+        <artifactId>slf4j-log4j12</artifactId> 
+    </dependency> 
+		
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

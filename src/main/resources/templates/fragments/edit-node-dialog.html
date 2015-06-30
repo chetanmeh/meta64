@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="editNodeDialog">
+		<div data-role="header">
+			<h2>Edit Node</h2>
+		</div>
+		<div role="main" class="ui-content">
+			<div id="editNodePathDisplay" class="path-display-in-editor"></div>
+
+			<div id="propertyEditFieldContainer">
+			</div>
+
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="saveNodeButton" data-theme="b" data-role="button">Save</a>
+				<a id="makeNodeReferencableButton" data-role="button">Make Referencable</a>
+				<!--  -->
+				<a id="addPropertyButton" data-role="button">Add Property</a>
+				<!--  -->
+				<a href="#" id="cancelEditButton" 
+					data-role="button">Close</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

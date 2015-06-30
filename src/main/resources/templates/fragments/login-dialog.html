@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="loginDialogId">
+		<div data-role="header">
+			<h2>Meta64 Login</h2>
+		</div>
+		<div role="main" class="ui-content">
+
+			<div class="ui-field-contain">
+				<label for="userName">User:</label>
+				<!--  -->
+				<input type="text" name="userName" id="userName" value="wclayf"/>
+			</div>
+			<div class="ui-field-contain">
+				<label for="password">Password:</label>
+				<!--  -->
+				<input type="password" name="password" id="password" value="wclayf"/>
+			</div>
+
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="loginButton" data-theme="b" data-role="button">Login</a>
+				<a href="#signupDialog" data-rel="dialog" data-role="button" data-transition="pop">Signup</a>
+				<a href="#" id="cancelLoginActionButton" data-rel="back"
+					data-theme="a" data-role="button">Cancel</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

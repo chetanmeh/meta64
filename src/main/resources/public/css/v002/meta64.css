@@ -1,0 +1,77 @@
+
+.captcha {
+	margin-top: 20px;
+	border: 1px solid black;
+}
+
+.privilege-list {
+}
+
+.binary-link {
+	
+}
+
+.privilege-entry {
+	margin-left: 1em;
+	background: lightGray;
+	border-bottom: 1px solid #d6d6d6;
+}
+
+.jcr-content {
+	margin-left: 1em;
+}
+
+.property-text {
+	margin-left: 1em; 
+}
+
+.prop-table-row {
+	border-bottom: 1px solid #d6d6d6;
+	width: 100%;
+}
+
+.prop-table-name-col {
+	border-right: 1px solid gray;
+	width: 25%;
+}
+
+.prop-table {
+	//border: 1px solid gray;
+	width: 100%;
+}
+
+.path-display-in-editor {
+	background: lightGray;
+	padding: 10px;
+}
+
+.main-node-content {
+	background: lightGray;
+	padding: 10px;
+}
+
+.page-node-header {
+	border-left: 10px solid transparent;
+}
+
+.node-table-row {
+	border-bottom: 6px solid #d6d6d6;
+	padding-left: 5px;
+}
+
+.active-row {
+	border-left: 10px solid red;	
+}
+
+.inactive-row {
+	/* transparent doesnt seem to work */
+	border-left: 10px solid transparent;
+}
+
+.property-column {
+	width: 20%;
+}
+
+.value-column {
+	width: 80%;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="accountPreferencesDialog">
+		<div data-role="header">
+			<h2>Meta64 - Account Preferences</h2>
+		</div>
+		<div role="main" class="ui-content">
+
+			<div class="ui-field-contain">
+				<fieldset data-role="controlgroup" data-type="horizontal">
+					<legend>Edit Mode:</legend>
+					<input type="radio" name="editModeRadioGroup" id="editModeSimple"
+						value="on" checked="checked" />
+					<!--  -->
+					<label for="editModeSimple">Simple</label>
+					<!--  -->
+					<input type="radio" name="editModeRadioGroup" id="editModeAdvanced"
+						value="off" />
+					<!--  -->
+					<label for="editModeAdvanced">Advanced</label>
+				</fieldset>
+			</div>
+
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="savePreferencesButton" data-theme="b"
+					data-role="button">Save</a> <a href="#"
+					id="cancelPreferencesDialogButton" data-rel="back" data-theme="a"
+					data-role="button">Cancel</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

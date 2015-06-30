@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="shareNodeDialog">
+		<div data-role="header">
+			<h2>Share Node</h2>
+		</div>
+		<div role="main" class="ui-content">
+			<div id="shareNodeNameDisplay"></div>
+
+			<div id="sharingListFieldContainer"></div>
+
+			<div data-type="horizontal" data-role="controlgroup">
+
+				<!--  -->
+				<a id="shareNodeToPersonButton" data-role="button">Share with
+					Person</a>
+				<!--  -->
+				<a id="shareNodeToGroupButton" data-role="button">Share with
+					Group</a>
+				<!--  -->
+				<a id="shareNodeToPublicButton" data-theme="b" data-role="button">Make
+					Public</a>
+				<!--  -->
+				<a href="#" id="closeShareNodeDialogButton" data-rel="back" data-role="button">Close</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

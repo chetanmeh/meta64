@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<title>meta64</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="../css/v002/meta64.css" />
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var postTargetUrl = /*[[${@constantsProvider.getRestUrl()}]]*/"";
+	//console.log("REST HOST: " + postTargetUrl);
+	/*]]>*/
+</script>
+
+<script type="text/javascript" th:src="@{/jquery/jquery-2.1.3.js}"></script>
+
+<script>
+	// WARNING: do not move. Must be after jquery.js but before jquery.mobile.js
+	$(document).on("mobileinit", function() {
+
+		// We want popups to cover the page behind them with a dark background
+		$.mobile.popup.prototype.options.overlayTheme = "b";
+	});
+</script>
+
+<script type="text/javascript"
+	th:src="@{/jquery/jquery.mobile-1.4.5.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/Markdown.Converter.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/Markdown.Sanitizer.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/util.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/render.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/nav.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/view.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/share.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/user.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/prefs.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/props.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/edit.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/attachment.js}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{/js/v009/meta64.js}"></script>
+
+</head>
+
+<body>
+	<div id="mainPage" data-role="page">
+		<div id="mainPageHeader" data-role="header" data-position="fixed"
+			data-tap-toggle="false">
+			<h1 id="headerUserName">Meta64 - User: anonymous</h1>
+			<a href="#popupMenu" data-rel="popup" data-icon="bars">Menu</a>
+			<div data-role="navbar">
+				<ul>
+					<li><a id="navHomeButton" data-icon="home">Home</a></li>
+					<li><a id="navUpLevelButton" data-icon="arrow-u-l">Up
+							Level</a></li>
+					<!--  
+					<li><a id="navScrollTopButton" data-icon="arrow-u">Top</a></li>
+					-->
+					<li><a id="propsToggleButton" data-icon="forbidden">Props</a></li>
+					<li><a id="editModeButton" data-icon="forbidden">Edit</a></li>
+					<li><a href="#loginDialogId" data-rel="dialog"
+						data-transition="pop" data-icon="user">Login</a></li>
+				</ul>
+			</div>
+			<div class="page-node-header">
+				<div id="mainNodeStatusBar"></div>
+			</div>
+		</div>
+
+		<div data-role="content">
+			<div id="mainNodeContent" class="main-node-content"></div>
+			<div id="listView"></div>
+			<div th:replace="fragments/popup-menu">...</div>
+		</div>
+		<!-- /content -->
+
+	</div>
+	<!-- /page -->
+
+	<div data-role="dialog" id="sure" data-title="Are you sure?">
+		<div data-role="content">
+			<h3 class="sure-1"></h3>
+			<p class="sure-2"></p>
+			<a href="#" class="sure-do" data-role="button" data-theme="b"
+				data-rel="back">Yes</a>
+			<!--  -->
+			<a href="#" data-role="button" data-theme="c" data-rel="back">No</a>
+		</div>
+	</div>
+
+	<div th:replace="fragments/login-dialog">...</div>
+	<div th:replace="fragments/signup-dialog">...</div>
+	<div th:replace="fragments/edit-node-dialog">...</div>
+	<div th:replace="fragments/share-node-dialog">...</div>
+	<div th:replace="fragments/edit-property-dialog">...</div>
+	<div th:replace="fragments/change-password-dialog">...</div>
+	<div th:replace="fragments/account-preferences-dialog">...</div>
+	<div th:replace="fragments/upload-dialog">...</div>
+	
+	<script>
+		//meta64.initApp();
+		meta64.hookInitFunction();
+	</script>
+</body>
+</html>
