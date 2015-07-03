@@ -1,4 +1,4 @@
-# Meta64 Mobile: A "Mobile first" JCR Browser
+# Meta64: A "Mobile first" JCR Browser
 (JCR=Java Content Repository)
 Document Date: 6/28/2015
 
