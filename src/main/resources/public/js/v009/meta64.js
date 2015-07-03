@@ -270,8 +270,12 @@ var meta64 = function() {
 				"name" : "makeNodeReferencable",
 				"enable" : true,
 				"function" : edit.makeNodeReferencable
+			}, {
+				"name" : "insertBookWarAndPeace",
+				"enable" : true,
+				"function" : edit.insertBookWarAndPeace
 			});
-
+			
 			// hookSliderChanges("editMode");
 		},
 
@@ -292,6 +296,7 @@ var meta64 = function() {
 			util.setEnablementByName("changePasswordDialog", true);
 			util.setEnablementByName("editMode", _.js.currentNode);
 			util.setEnablementByName("signup", true);
+			util.setEnablementByName("insertBookWarAndPeace", _.js.isAdminUser, _.js.isAdminUser);
 		},
 
 		/*

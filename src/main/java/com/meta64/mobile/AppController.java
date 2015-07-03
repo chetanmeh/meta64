@@ -42,6 +42,7 @@ import com.meta64.mobile.request.DeleteAttachmentRequest;
 import com.meta64.mobile.request.DeleteNodeRequest;
 import com.meta64.mobile.request.DeletePropertyRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
+import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.MakeNodeReferencableRequest;
@@ -59,6 +60,7 @@ import com.meta64.mobile.response.DeleteAttachmentResponse;
 import com.meta64.mobile.response.DeleteNodeResponse;
 import com.meta64.mobile.response.DeletePropertyResponse;
 import com.meta64.mobile.response.GetNodePrivilegesResponse;
+import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.MakeNodeReferencableResponse;
@@ -351,6 +353,33 @@ public class AppController {
 		newNode.setProperty("jcr:content", "");
 		session.save();
 		// res.setNewChildNodeId(newNode.getIdentifier());
+
+		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
+		res.setSuccess(true);
+
+		return res;
+	}
+	
+	@RequestMapping(value = REST_PATH + "/insertBook", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
+		logRequest("insertBook", req);
+
+		InsertBookResponse res = new InsertBookResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+
+		String nodeId = req.getNodeId();
+		Node node = JcrUtil.findNode(session, nodeId); 
+
+		String name = req.getBookName();
+
+		//TODO: Use ImportWarAndPeace.java to insert the actual book content, next.
+		
+		/* NT_UNSTRUCTURED IS ORDERABLE */
+		Node newNode = node.addNode(NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
+		newNode.setProperty("jcr:content", "");
+		session.save();
 
 		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
 		res.setSuccess(true);

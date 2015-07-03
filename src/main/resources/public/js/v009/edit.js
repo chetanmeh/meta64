@@ -21,6 +21,17 @@ var edit = function() {
 		view.scrollToSelectedNode();
 	}
 
+	var _insertBookResponse = function(res) {
+		console.log("insertBookResponse running.");
+
+		if (!res.success) {
+			alert("Insert book failed: " + res.message);
+		}
+		view.refreshTree();
+		$.mobile.changePage("#mainPage");
+		view.scrollToSelectedNode();
+	}
+
 	var _deleteNodeResponse = function(res) {
 		if (!res.success) {
 			alert("Delete node failed: " + res.message);
@@ -482,7 +493,7 @@ var edit = function() {
 					return;
 				}
 			}
-			
+
 			/*
 			 * this indicates we are NOT inserting inline. An inline insert
 			 * would always have a target.
@@ -500,6 +511,24 @@ var edit = function() {
 					util.json("deleteNode", {
 						"nodeId" : node.id,
 					}, _deleteNodeResponse);
+				}
+			});
+		},
+
+		insertBookWarAndPeace : function() {
+						
+			util.areYouSure("Confirm", "Insert book War and Peace?", "Yes, insert book.", function() {
+				
+				/* inserting under whatever node user has focused */
+				var node = nav.getFocusedNode();
+				
+				if (!node) {
+					alert("No node is selected.");
+				} else {
+					util.json("insertBook", {
+						"nodeId" : node.id,
+						"bookName" : "War and Peace"
+					}, _insertBookResponse);
 				}
 			});
 		}

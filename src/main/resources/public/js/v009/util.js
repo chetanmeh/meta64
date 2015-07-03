@@ -69,7 +69,8 @@ var util = function() {
 					}
 				},
 				error : function(xhr, status, error) {
-					alert("Server request failed."); //xhr.responseText); //JSON.parse(xhr.responseText));
+					alert("Server request failed."); // xhr.responseText);
+														// //JSON.parse(xhr.responseText));
 				}
 			});
 		},
@@ -140,7 +141,7 @@ var util = function() {
 			return action["enable"];
 		},
 
-		setEnablementByName : function(actionName, enablement) {
+		setEnablementByName : function(actionName, enablement, visibility) {
 			/* first find action object, and update enablement */
 			var action = meta64.js.actionNameToObjMap[actionName];
 			if (!action) {
@@ -156,6 +157,17 @@ var util = function() {
 				// console.log("setting enablement of " + id + " to " +
 				// enablement);
 				_.setEnablement(elm, enablement);
+				
+				/*
+				 * optional parameter, undefined means it wasn't passed which
+				 * means 'true' in this case
+				 */
+				if (typeof (visibility) === 'undefined' || visibility) {
+					_.setVisibility(elm, true)
+				}
+				else {
+					_.setVisibility(elm, false);
+				}
 			}
 		},
 
