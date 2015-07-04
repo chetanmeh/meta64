@@ -75,6 +75,22 @@ var util = function() {
 			});
 		},
 
+		/*
+		 * We have to be able to map any identifier to a uid, that will be
+		 * repeatable, so we have to use a local 'hashset-type' implementation
+		 */
+		getUidForId : function(map, id) {
+			/* look for uid in map */
+			var uid = map[id];
+
+			/* if not found, get next number, and add to map */
+			if (!uid) {
+				uid = meta64.nextUid++;
+				map[id] = uid;
+			}
+			return uid;
+		},
+		
 		getPreviousPage : function() {
 			// get the ID of the previous page
 			var prevPage = '#' + $.mobile.activePage.prev('div[data-role="page"]')[0].id;

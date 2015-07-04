@@ -5,21 +5,6 @@ console.log("running module: meta64.js");
  * be removed and replaced with "_."
  */
 var meta64 = function() {
-	/*
-	 * We have to be able to map any identifier to a uid, that will be
-	 * repeatable, so we have to use a local 'hashset-type' implementation
-	 */
-	var _getUidForId = function(ident) {
-		/* look for uid in map */
-		var uid = _.identToUidMap[ident];
-
-		/* if not found, get next number, and add to map */
-		if (!uid) {
-			uid = _.nextUid++;
-			_.identToUidMap[ident] = uid;
-		}
-		return uid;
-	}
 
 	/*
 	 * ================= PUBLIC =================
@@ -413,7 +398,7 @@ var meta64 = function() {
 		 * that this node is 'recognized' by client side code
 		 */
 		initNode : function(node) {
-			node.uid = _getUidForId(node.id);
+			node.uid = util.getUidForId(_.identToUidMap, node.id);
 			node.properties = props.setPreferredPropertyOrder(node.properties);
 
 			// console.log("******* initNode uid=" + node.uid);

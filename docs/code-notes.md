@@ -6,9 +6,7 @@ The app is a SPA and the main loading page is 'index.html', which is technically
 
 ## Underscore (_)
 
-A underscore variable in the JS should generally be interpreted at "this". In other words an underscore (_) at the front of a varible or as a scoping variable, means that the variable is referencing the current JS file that it's in. The convention would mean that for example, in a class named 'util.js' if you see something like "_.myVar or _.myFunction" those will be the same as "util.myVar or util.myFunction". So the underscore itself is the scoping variable that is the near equivalent of 'this' in Java or C++. Since JS is a functional language more than an OOP one, we use this name convention. I think this is a common convention used by JS developers also, to have underscore mean something similar to 'this'. Also in each module there is a variable named js, which holds all the public variables for that module all on a single scope. 
-
-To have private variables in a given module, simply put them outside the 'js' scope, and then they will not be visible to any other modules (i.e. JS files) other than the module they are in. In retrospect this 'js' sub-scope was unnessary and I have plans to remove it. Module scope is sufficient.
+A underscore variable in the JS should generally be interpreted at "this". In other words an underscore (_) at the front of a varible or as a scoping variable, means that the variable is referencing the current JS file that it's in. The convention would mean that for example, in a class named 'util.js' if you see something like "_.myVar or _.myFunction" those will be the same as "util.myVar or util.myFunction". So the underscore itself is the scoping variable that is the near equivalent of 'this' in Java or C++. Since JS is a functional language more than an OOP one, we use this name convention. I think this is a common convention used by JS developers also, to have underscore mean something similar to 'this'.
 
 ## RESTfulness
 

@@ -3,24 +3,9 @@ console.log("running module: search.js");
 var search = function() {
 
 	/*
-	 * We have to be able to map any identifier to a uid, that will be
-	 * repeatable, so we have to use a local 'hashset-type' implementation
-	 */
-	var _getUidForId = function(ident) {
-		/* look for uid in map */
-		var uid = _.identToUidMap[ident];
-
-		/* if not found, get next number, and add to map */
-		if (!uid) {
-			uid = meta64.nextUid++;
-			_.identToUidMap[ident] = uid;
-		}
-		return uid;
-	}
-
-	/*
 	 * ================= PRIVATE =================
 	 */
+
 	var _searchNodesResponse = function(res) {
 		_.renderSearchResultsFromData(res);
 	}
@@ -71,11 +56,10 @@ var search = function() {
 		},
 
 		initSearchNode : function(node) {
-			node.uid = _getUidForId(node.id);
+			node.uid = util.getUidForId(_.identToUidMap, node.id);
 			// node.properties =
 			// props.setPreferredPropertyOrder(node.properties);
 
-			// console.log("******* initNode uid=" + node.uid);
 			_.uidToNodeMap[node.uid] = node;
 		},
 
