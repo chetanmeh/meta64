@@ -6,12 +6,15 @@ import java.io.InputStreamReader;
 
 import javax.jcr.Node;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.AppController;
+import com.meta64.mobile.JcrUtil;
 import com.meta64.mobile.SpringContextUtil;
 
 @Component
@@ -19,8 +22,8 @@ import com.meta64.mobile.SpringContextUtil;
 public class ImportWarAndPeace {
 	private static final Logger log = LoggerFactory.getLogger(ImportWarAndPeace.class);
 
-	private String resourceName;
-	private boolean debug = true;
+	private int maxLines = Integer.MAX_VALUE;
+	private boolean debug = false;
 	private Node root;
 	private Node curBook;
 	private Node curChapter;
@@ -32,22 +35,15 @@ public class ImportWarAndPeace {
 	private int globalVerse = 0;
 	private boolean halt;
 
-	public void run() throws Exception {
-		internalRun();
-	}
-
-	private void internalRun() throws Exception {
-
-		Resource resource = SpringContextUtil.getApplicationContext().getResource(resourceName); 
-		
-//		Resource resource = 
-//		          appContext.getResource("url:http://www.yourdomain.com/testing.txt");
-		
+	public void importBook(String resourceName, Node root) throws Exception {
+		this.root = root;
+		Resource resource = SpringContextUtil.getApplicationContext().getResource(resourceName);
 		InputStream is = resource.getInputStream();
 		BufferedReader in = new BufferedReader(new InputStreamReader(is));
 
 		try {
 			String line;
+			int lineCount = 0;
 
 			while (!halt && (line = in.readLine()) != null) {
 				line = line.trim();
@@ -87,6 +83,8 @@ public class ImportWarAndPeace {
 					paragraph.append(" ");
 				}
 				paragraph.append(line);
+
+				if (++lineCount > maxLines) break;
 			}
 		}
 		finally {
@@ -106,15 +104,8 @@ public class ImportWarAndPeace {
 
 			addParagraph();
 
-			// InsertResultInfo info = Factory.createNodeService().attachNode(0, "C" +
-			// String.valueOf(globalChapter) + ". " + line,
-			// curBook.getRecordId(), AllTypes.TYPE_BOOK_CHAPTER, false, InsertType.ATTACH_BOTTOM,
-			// true, null, null, null, null, null,
-			// false, null, null, null, true, false, true, false);
-
-			// curChapter = info.getModel();
-			// itemInserted(info);
-
+			curChapter = curBook.addNode(AppController.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
+			curChapter.setProperty("jcr:content", "C" + String.valueOf(globalChapter) + ". " + line);
 			return true;
 		}
 
@@ -137,13 +128,9 @@ public class ImportWarAndPeace {
 		globalVerse++;
 
 		// line = XString.injectForQuotations(line);
-		// InsertResultInfo info = Factory.createNodeService().attachNode(0, "VS" + globalVerse +
-		// ". " + line, curChapter.getRecordId(),
-		// AllTypes.TYPE_BOOK_CHAPTER_VERSE, false, InsertType.ATTACH_BOTTOM, true, null, null,
-		// null, null, null, false, null, null,
-		// null, true, false, true, false);
 
-		// itemInserted(info);
+		Node paraNode = curChapter.addNode(AppController.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
+		paraNode.setProperty("jcr:content", "VS" + globalVerse + ". " + line);
 
 		paragraph.setLength(0);
 		return true;
@@ -160,24 +147,11 @@ public class ImportWarAndPeace {
 		if (line.startsWith("BOOK ") || anyEpilogue(line)) {
 			globalBook++;
 			addParagraph();
-			// InsertResultInfo info = Factory.createNodeService().attachNode(0, "B" +
-			// String.valueOf(globalBook) + ". " + line,
-			// root.getRecordId(), AllTypes.TYPE_BOOK, false, InsertType.ATTACH_BOTTOM, true, null,
-			// null, null, null, null, false,
-			// null, null, null, true, false, true, false);
-			// curBook = info.getModel();
 
-			// itemInserted(info);
-
+			curBook = root.addNode(AppController.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
+			curBook.setProperty("jcr:content", "B" + String.valueOf(globalBook) + ". " + line);
 			return true;
 		}
 		return false;
 	}
-
-	// private void itemInserted(InsertResultInfo info) throws Exception {
-	// int id = info.getModel().getRecordId();
-	// if (idList != null) {
-	// idList.add(id);
-	// }
-	// }
 }

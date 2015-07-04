@@ -70,6 +70,7 @@ import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.util.ImportWarAndPeace;
 
 /**
  * Primary Spring MVC controller, that returns the main page, process REST calls from the client
@@ -372,16 +373,13 @@ public class AppController {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId); 
 
-		String name = req.getBookName();
+		/* for now we don't check book name. Only one book exists: War and Peace */
+		//String name = req.getBookName();
 
-		//TODO: Use ImportWarAndPeace.java to insert the actual book content, next.
+		ImportWarAndPeace iwap = SpringContextUtil.getApplicationContext().getBean(ImportWarAndPeace.class);
+		iwap.importBook("classpath:/com/meta64/mobile/util/war-and-peace.txt", node);
 		
-		/* NT_UNSTRUCTURED IS ORDERABLE */
-		Node newNode = node.addNode(NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
-		newNode.setProperty("jcr:content", "");
 		session.save();
-
-		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
 		res.setSuccess(true);
 
 		return res;
