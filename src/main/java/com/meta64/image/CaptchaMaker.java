@@ -19,7 +19,7 @@ public class CaptchaMaker {
 
 	/* returns a random string of at least 5 numeric characters */
 	public static String createCaptchaString() {
-		StringBuilder captcha = new StringBuilder(); 
+		StringBuilder captcha = new StringBuilder();
 		while (captcha.length() < CAPTCHA_NUM_CHARS) {
 			/* add random character between 0 and 9 */
 			captcha.append(String.valueOf(rand.nextInt(10)));
@@ -120,10 +120,17 @@ public class CaptchaMaker {
 			}
 		}
 
-		BufferedImage scaledImage = ImageUtil.scaleImage(outBufferedImage, imgWidth);
-		ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-		ImageIO.write(scaledImage, "png", tmp);
-		tmp.close();
+		ByteArrayOutputStream tmp = null;
+		try {
+			BufferedImage scaledImage = ImageUtil.scaleImage(outBufferedImage, imgWidth);
+			tmp = new ByteArrayOutputStream();
+			ImageIO.write(scaledImage, "png", tmp);
+		}
+		finally {
+			if (tmp != null) {
+				tmp.close();
+			}
+		}
 		return tmp.toByteArray();
 	}
 }

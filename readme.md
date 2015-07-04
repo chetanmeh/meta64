@@ -5,7 +5,7 @@ Document Date: 6/28/2015
 ## Key Technologies
 
 * Client: JavaScript, JQuery Mobile, HTML+CSS, RESTful JSON-based Ajax
-* Server: Java, Spring Boot + Spring Framework, Apache Oak JCR, MongoDb and/or MySQL, Tomcat Embedded 
+* Server: Java, Spring Boot + Spring Framework, Thymeleaf, Apache Oak JCR, MongoDb and/or MySQL, Tomcat Embedded 
 
 ## Meta64 Overview
 

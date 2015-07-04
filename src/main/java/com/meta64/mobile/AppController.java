@@ -70,6 +70,7 @@ import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.service.NodeRenderService;
 import com.meta64.mobile.util.ImportWarAndPeace;
 
 /**
@@ -550,40 +551,11 @@ public class AppController {
 
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-
-		// int countBeforeAdd = JcrUtil.getPropertyCount(node);
-		// System.out.println("countBefore: " + countBeforeAdd);
-
-		// if (info.getProperties() != null && info.getProperties().size() > 0) {
-		// for (PropertyInfo property : info.getProperties()) {
-		// System.out.println("NODE[" + item.getPath() + "]Property to save: "
-		// + info.getPropertyName() + "=" + info.getPropertyValue());
 		node.setProperty(req.getPropertyName(), req.getPropertyValue());
-		// node.
-		// }
-
 		session.save();
 
 		PropertyInfo propertySaved = new PropertyInfo(-1, req.getPropertyName(), req.getPropertyValue(), null);
 		res.setPropertySaved(propertySaved);
-
-		// ////////////////
-		// {
-		// item = session.getItem(nodeId);
-		//
-		// // &&& oops need an "Add Property" on the gui side before I can do this, and
-		// // also
-		// // "deleteProperty", each property just
-		// // needs to have a delete button on it.
-		//
-		// if (item.isNode()) {
-		// Node node2 = (Node) item;
-		// int countAfterAdd = JcrUtil.getPropertyCount(node2);
-		// System.out.println("countAfter: " + countAfterAdd);
-		// }
-		// }
-		// ////////////////
-		// }
 
 		res.setSuccess(true);
 		return res;
@@ -726,4 +698,7 @@ public class AppController {
 		res.setSuccess(true);
 		return res;
 	}
+	
+	//see DescendantSearchTest
+	
 }

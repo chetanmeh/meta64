@@ -28,7 +28,7 @@ public class UserManagerService {
 
 	/* returns true if successful */
 	public boolean signup(final String userName, final String password, String email, String captcha) throws Exception {
-		log.debug("Signup: userName=" + userName + " password=" + password + " email=" + email + " captcha=" + captcha);
+		log.debug("Signup: userName=" + userName + " email=" + email + " captcha=" + captcha);
 
 		/* throw exceptions of the username or password are not valid */
 		XString.checkUserName(userName);

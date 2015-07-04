@@ -1,10 +1,8 @@
 package com.meta64.mobile;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
@@ -14,18 +12,20 @@ import javax.jcr.Session;
  * Assorted general utility functions related to JCR nodes.
  */
 public class JcrUtil {
-	public static boolean nodeHasChildren(Node node) throws RepositoryException {
-		NodeIterator nodeIter = node.getNodes();
-		try {
-			/* if nextNode throws exception there are no children */
-			nodeIter.nextNode();
-			return true;
-		}
-		catch (NoSuchElementException ex) {
-			// not an error. Iterator end condition, out of children.
-			return false;
-		}
-	}
+	
+	//trying out node.hasNodes()!
+//	public static boolean nodeHasChildren(Node node) throws RepositoryException {
+//		NodeIterator nodeIter = node.getNodes();
+//		try {
+//			/* if nextNode throws exception there are no children */
+//			nodeIter.nextNode();
+//			return true;
+//		}
+//		catch (NoSuchElementException ex) {
+//			// not an error. Iterator end condition, out of children.
+//			return false;
+//		}
+//	}
 
 	public static Node findNode(Session session, String id) throws Exception {
 		return id.startsWith("/") ? session.getNode(id) : session.getNodeByIdentifier(id);

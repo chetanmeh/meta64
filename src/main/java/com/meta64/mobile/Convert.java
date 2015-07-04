@@ -86,8 +86,8 @@ public class Convert {
 		catch (Exception e) {
 			// not an error. means node has no binary subnode.
 		}
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), JcrUtil.nodeHasChildren(node), false,
-				hasBinary, binaryIsImage, binVer);
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), node.hasNodes(), false, hasBinary,
+				binaryIsImage, binVer);
 		return nodeInfo;
 	}
 
