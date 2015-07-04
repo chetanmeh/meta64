@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="searchNodesDialog">
+		<div data-role="header">
+			<h2>Search</h2>
+		</div>
+		<div role="main" class="ui-content">
+
+			<div class="ui-field-contain">
+				<label for="searchText">Search:</label>
+				<!--  -->
+				<input type="text" name="searchText" id="searchText" value=""/>
+			</div>
+			
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="searchNodesButton" data-theme="b" data-role="button">Search</a>
+				<a href="#" id="cancelSearchButton" data-rel="back"
+					data-theme="a" data-role="button">Close</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

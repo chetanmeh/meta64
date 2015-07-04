@@ -274,6 +274,14 @@ var meta64 = function() {
 				"name" : "insertBookWarAndPeace",
 				"enable" : true,
 				"function" : edit.insertBookWarAndPeace
+			}, {
+				"name" : "searchNodes",
+				"enable" : true,
+				"function" : search.searchNodes 
+			}, {
+				"name" : "searchNodesDialog",
+				"enable" : true,
+				"function" : search.searchNodesDialog
 			});
 			
 			// hookSliderChanges("editMode");
