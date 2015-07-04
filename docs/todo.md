@@ -4,7 +4,7 @@
 
 * need to remove the JS scope from each module. That is not needed. Should be easy search and replace of '.js.' to '.' mostly.
 
-* having the 'v010' folder with js files in it is not good for source control, because that approach was designed for renaming the folder which breaks source control continuity
+* review TODOs in code.
 
 # New Capabilities
 
