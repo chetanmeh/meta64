@@ -16,6 +16,12 @@ var search = function() {
 	var _ = {
 
 		/*
+		 * Will be the last row clicked on (NodeInfo.java object) and having the
+		 * red highlight bar
+		 */
+		highlightRowNode : null,
+
+		/*
 		 * maps node 'identifier' (assigned at server) to uid value which is a
 		 * value based off local sequence, and uses nextUid as the counter.
 		 */
@@ -116,18 +122,53 @@ var search = function() {
 			// selected = true;
 			// }
 
-			var cssId = uid + "_srow";
+			var cssId = uid + "_srch_row";
 			// console.log("Rendering Node Row[" + index + "] with id: " +cssId)
 			return render.makeTag("div", //
 			{
 				"class" : "node-table-row inactive-row",
-				// "onClick" : "nav.clickOnNodeRow(this, '" + uid + "');", //
+				"onClick" : "search.clickOnSearchResultRow(this, '" + uid + "');", //
 				"id" : cssId
 			},// 
 			/* _.makeButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed) + */render.makeTag("div", //
 			{
-				"id" : uid + "_scontent"
+				"id" : uid + "_srch_content"
 			}, render.renderNodeContent(node, true, true, true, true)));
+		},
+
+		clickOnSearchResultRow : function(rowElm, uid) {
+
+			_.unhighlightRow();
+
+			// var node = _.uidToNodeMap[uid];
+			// if (!node) {
+			// console.log("clickOnNodeRow recieved uid that doesn't map to any
+			// node. uid=" + uid);
+			// return;
+			// }
+
+			_.highlightRowNode = _.uidToNodeMap[uid];
+
+			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
+		},
+
+		/*
+		 * turn of row selection styling of whatever row is currently selected
+		 */
+		unhighlightRow : function() {
+
+			if (!_.highlightRowNode) {
+				return;
+			}
+
+			/* now make CSS id from node */
+			var nodeId = _.highlightRowNode.uid + "_srch_row";
+
+			var elm = util.domElm(nodeId);
+			if (elm) {
+				/* change class on element */
+				util.changeOrAddClass(elm, "active-row", "inactive-row");
+			}
 		}
 	}
 

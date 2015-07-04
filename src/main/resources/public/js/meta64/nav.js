@@ -82,14 +82,12 @@ var nav = function() {
 		 */
 		unhighlightRow : function() {
 
-			console.log("unhighlight row");
 			var currentUid = meta64.currentNodeUid;
-			console.log("  currentParentUid=" + currentUid);
 
 			/* check if we have an existing highlighted row to unhighlight */
 			var currentSelNode = meta64.parentUidToFocusNodeMap[currentUid];
 			if (!currentSelNode.uid) {
-				alert("oops, unhighlight says current node has null uid");
+				console.log("unhighlight says current node has null uid");
 			}
 			
 			if (currentSelNode) {
@@ -111,13 +109,10 @@ var nav = function() {
 						/* change class on element */
 						util.changeOrAddClass(elm, "active-row", "inactive-row");
 					} else {
-						alert('oops.');
 						console.log("ERR: unable to find row element with id: " + nodeId);
-						console.trace();
 					}
 				} else {
 					console.log("ERR: failed to find uidToNodeMap item for uid:" + currentSelNode.uid);
-					console.trace();
 				}
 			} else {
 				console.log("  no parent node found for: currentUid=" + currentUid);
