@@ -8,12 +8,12 @@ var search = function() {
 	 */
 	var _getUidForId = function(ident) {
 		/* look for uid in map */
-		var uid = _.js.identToUidMap[ident];
+		var uid = _.identToUidMap[ident];
 
 		/* if not found, get next number, and add to map */
 		if (!uid) {
-			uid = meta64.js.nextUid++;
-			_.js.identToUidMap[ident] = uid;
+			uid = meta64.nextUid++;
+			_.identToUidMap[ident] = uid;
 		}
 		return uid;
 	}
@@ -29,25 +29,23 @@ var search = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		js : {
-			/*
-			 * maps node 'identifier' (assigned at server) to uid value which is
-			 * a value based off local sequence, and uses nextUid as the
-			 * counter.
-			 */
-			identToUidMap : {},
-			
-			/*
-			 * maps node.uid values to the NodeInfo.java objects
-			 * 
-			 * The only contract about uid values is that they are unique
-			 * insofar as any one of them always maps to the same node. Limited
-			 * lifetime however. The server is simply numbering nodes
-			 * sequentially. Actually represents the 'instance' of a model
-			 * object. Very similar to a 'hashCode' on Java objects.
-			 */
-			uidToNodeMap : {}
-		},
+
+		/*
+		 * maps node 'identifier' (assigned at server) to uid value which is a
+		 * value based off local sequence, and uses nextUid as the counter.
+		 */
+		identToUidMap : {},
+
+		/*
+		 * maps node.uid values to the NodeInfo.java objects
+		 * 
+		 * The only contract about uid values is that they are unique insofar as
+		 * any one of them always maps to the same node. Limited lifetime
+		 * however. The server is simply numbering nodes sequentially. Actually
+		 * represents the 'instance' of a model object. Very similar to a
+		 * 'hashCode' on Java objects.
+		 */
+		uidToNodeMap : {},
 
 		searchNodes : function() {
 			var node = nav.getFocusedNode();
@@ -78,7 +76,7 @@ var search = function() {
 			// props.setPreferredPropertyOrder(node.properties);
 
 			// console.log("******* initNode uid=" + node.uid);
-			_.js.uidToNodeMap[node.uid] = node;
+			_.uidToNodeMap[node.uid] = node;
 		},
 
 		renderSearchResultsFromData : function(data) {
@@ -118,7 +116,7 @@ var search = function() {
 			 * deleting things I won't want to allow to delete, but I will
 			 * design this better later.
 			 */
-			var isRep = node.name.startsWith("rep:") || meta64.js.currentNodeData.node.path.contains("/rep:");
+			var isRep = node.name.startsWith("rep:") || meta64.currentNodeData.node.path.contains("/rep:");
 			var editingAllowed = meta64.isAdminUser || !isRep;
 
 			// /*
@@ -129,7 +127,7 @@ var search = function() {
 			// // console.log("test: [" + parentIdToFocusIdMap[currentNodeId]
 			// // +"]==["+ node.id + "]")
 			// var focusNode =
-			// meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid];
+			// meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
 			// if (!selected && focusNode && focusNode.uid === uid) {
 			// selected = true;
 			// }

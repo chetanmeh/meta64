@@ -11,11 +11,11 @@ var user = function() {
 		if (res.success) {
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 			
-			meta64.js.homeNodeId = res.rootNode.id;
-			meta64.js.homeNodePath = res.rootNode.path;
+			meta64.homeNodeId = res.rootNode.id;
+			meta64.homeNodePath = res.rootNode.path;
 			
-			meta64.js.isAdminUser = res.userName === "admin";
-			view.refreshTree(meta64.js.homeNodeId);
+			meta64.isAdminUser = res.userName === "admin";
+			view.refreshTree(meta64.homeNodeId);
 			$("#headerUserName").html("Meta64 - User: " + res.userName);
 		} else {
 			alert(res.message);

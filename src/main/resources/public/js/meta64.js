@@ -1,8 +1,8 @@
 console.log("running module: meta64.js");
 
 /*
- * TODO: I noticed some meta64.js.whatever scoping in this class, which needs to be removed
- * and replaced with "_."
+ * TODO: I noticed some meta64.whatever scoping in this class, which needs to
+ * be removed and replaced with "_."
  */
 var meta64 = function() {
 	/*
@@ -11,12 +11,12 @@ var meta64 = function() {
 	 */
 	var _getUidForId = function(ident) {
 		/* look for uid in map */
-		var uid = _.js.identToUidMap[ident];
+		var uid = _.identToUidMap[ident];
 
 		/* if not found, get next number, and add to map */
 		if (!uid) {
-			uid = _.js.nextUid++;
-			_.js.identToUidMap[ident] = uid;
+			uid = _.nextUid++;
+			_.identToUidMap[ident] = uid;
 		}
 		return uid;
 	}
@@ -25,138 +25,133 @@ var meta64 = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		js : {
-			/*
-			 * User's root node. Top level of what logged in user is allowed to
-			 * see.
-			 */
-			homeNodeId : "",
-			homeNodePath : "",
 
-			/*
-			 * specifies if this is admin user. Server side still protects
-			 * itself from all access, even if this variable is hacked by
-			 * attackers.
-			 */
-			isAdminUser : false,
+		/*
+		 * User's root node. Top level of what logged in user is allowed to see.
+		 */
+		homeNodeId : "",
+		homeNodePath : "",
 
-			/*
-			 * signals that data has changed and the next time we go to the main
-			 * tree view window we need to refresh data from the server
-			 */
-			treeDirty : false,
+		/*
+		 * specifies if this is admin user. Server side still protects itself
+		 * from all access, even if this variable is hacked by attackers.
+		 */
+		isAdminUser : false,
 
-			/*
-			 * maps node.uid values to the NodeInfo.java objects
-			 * 
-			 * The only contract about uid values is that they are unique
-			 * insofar as any one of them always maps to the same node. Limited
-			 * lifetime however. The server is simply numbering nodes
-			 * sequentially. Actually represents the 'instance' of a model
-			 * object. Very similar to a 'hashCode' on Java objects.
-			 */
-			uidToNodeMap : {},
+		/*
+		 * signals that data has changed and the next time we go to the main
+		 * tree view window we need to refresh data from the server
+		 */
+		treeDirty : false,
 
-			/* counter for local uids */
-			nextUid : 0,
+		/*
+		 * maps node.uid values to the NodeInfo.java objects
+		 * 
+		 * The only contract about uid values is that they are unique insofar as
+		 * any one of them always maps to the same node. Limited lifetime
+		 * however. The server is simply numbering nodes sequentially. Actually
+		 * represents the 'instance' of a model object. Very similar to a
+		 * 'hashCode' on Java objects.
+		 */
+		uidToNodeMap : {},
 
-			/*
-			 * maps node 'identifier' (assigned at server) to uid value which is
-			 * a value based off local sequence, and uses nextUid as the
-			 * counter.
-			 */
-			identToUidMap : {},
+		/* counter for local uids */
+		nextUid : 0,
 
-			/*
-			 * maps action name values to the action objects. Action objects
-			 * have properties: "name", "enable", etc...
-			 */
-			actionNameToObjMap : {},
+		/*
+		 * maps node 'identifier' (assigned at server) to uid value which is a
+		 * value based off local sequence, and uses nextUid as the counter.
+		 */
+		identToUidMap : {},
 
-			/*
-			 * Under any given node, there can be one active 'selected' node
-			 * that has the highlighting, and will be scrolled to whenever the
-			 * page with that child is visited, and this object holds the map of
-			 * parent uid to selected node (NodeInfo object), where the key is
-			 * the parent node uid, and the value is the currently selected node
-			 * within that parent. Note this 'selection state' is only
-			 * significant on the client, and only for being able to scroll to
-			 * the node during navigating around on the tree.
-			 */
-			parentUidToFocusNodeMap : {},
+		/*
+		 * maps action name values to the action objects. Action objects have
+		 * properties: "name", "enable", etc...
+		 */
+		actionNameToObjMap : {},
 
-			/*
-			 * determines if we should render all the editing buttons on each
-			 * row
-			 * 
-			 * warning, doesn't currently support defaulting to true right here.
-			 */
-			editMode : false,
+		/*
+		 * Under any given node, there can be one active 'selected' node that
+		 * has the highlighting, and will be scrolled to whenever the page with
+		 * that child is visited, and this object holds the map of parent uid to
+		 * selected node (NodeInfo object), where the key is the parent node
+		 * uid, and the value is the currently selected node within that parent.
+		 * Note this 'selection state' is only significant on the client, and
+		 * only for being able to scroll to the node during navigating around on
+		 * the tree.
+		 */
+		parentUidToFocusNodeMap : {},
 
-			MODE_ADVANCED : "advanced",
-			MODE_SIMPLE : "simple",
+		/*
+		 * determines if we should render all the editing buttons on each row
+		 * 
+		 * warning, doesn't currently support defaulting to true right here.
+		 */
+		editMode : false,
 
-			/* can be 'simple' or 'advanced' */
-			editModeOption : "simple",
+		MODE_ADVANCED : "advanced",
+		MODE_SIMPLE : "simple",
 
-			/*
-			 * toggled by button, and holds if we are going to show properties
-			 * or not on each node in the main view
-			 */
-			showProperties : false,
+		/* can be 'simple' or 'advanced' */
+		editModeOption : "simple",
 
-			/*
-			 * List of node prefixes to flag nodes to not allow to be shown in
-			 * the page in simple mode
-			 */
-			simpleModeNodePrefixBlackList : {
-				"rep:" : true
-			},
+		/*
+		 * toggled by button, and holds if we are going to show properties or
+		 * not on each node in the main view
+		 */
+		showProperties : false,
 
-			simpleModePropertyBlackList : {
-				"jcr:primaryType" : true,
-				"rep:policy" : true
-			},
-
-			readOnlyPropertyList : {
-				"jcr:uuid" : true,
-				"jcr:mixinTypes" : true
-			},
-
-			binaryPropertyList : {
-				"jcr:data" : true
-			},
-
-			/*
-			 * Property fields are generated dynamically and this maps the DOM
-			 * IDs of each field to the property object it edits.
-			 */
-			fieldIdToPropMap : {},
-
-			/*
-			 * maps all node uids to true if selected, otherwise the property
-			 * should be deleted (not existing)
-			 */
-			selectedNodes : {},
-
-			/* identifier of newly created node */
-			newChildNodeId : "",
-
-			/* RenderNodeResponse.java object */
-			currentNodeData : null,
-
-			/*
-			 * all variables derivable from currentNodeData, but stored directly
-			 * for simpler code/access
-			 */
-			currentNode : null,
-			currentNodeUid : null,
-			currentNodeId : null,
-			currentNodePath : null
+		/*
+		 * List of node prefixes to flag nodes to not allow to be shown in the
+		 * page in simple mode
+		 */
+		simpleModeNodePrefixBlackList : {
+			"rep:" : true
 		},
 
+		simpleModePropertyBlackList : {
+			"jcr:primaryType" : true,
+			"rep:policy" : true
+		},
+
+		readOnlyPropertyList : {
+			"jcr:uuid" : true,
+			"jcr:mixinTypes" : true
+		},
+
+		binaryPropertyList : {
+			"jcr:data" : true
+		},
+
+		/*
+		 * Property fields are generated dynamically and this maps the DOM IDs
+		 * of each field to the property object it edits.
+		 */
+		fieldIdToPropMap : {},
+
+		/*
+		 * maps all node uids to true if selected, otherwise the property should
+		 * be deleted (not existing)
+		 */
+		selectedNodes : {},
+
+		/* identifier of newly created node */
+		newChildNodeId : "",
+
+		/* RenderNodeResponse.java object */
+		currentNodeData : null,
+
+		/*
+		 * all variables derivable from currentNodeData, but stored directly for
+		 * simpler code/access
+		 */
+		currentNode : null,
+		currentNodeUid : null,
+		currentNodeId : null,
+		currentNodePath : null,
+
 		inSimpleMode : function() {
-			return _.js.editModeOption === _.js.MODE_SIMPLE;
+			return _.editModeOption === _.MODE_SIMPLE;
 		},
 
 		isNodeBlackListed : function(node) {
@@ -164,8 +159,8 @@ var meta64 = function() {
 				return false;
 
 			var prop;
-			for (prop in _.js.simpleModeNodePrefixBlackList) {
-				if (_.js.simpleModeNodePrefixBlackList.hasOwnProperty(prop) && node.name.startsWith(prop)) {
+			for (prop in _.simpleModeNodePrefixBlackList) {
+				if (_.simpleModeNodePrefixBlackList.hasOwnProperty(prop) && node.name.startsWith(prop)) {
 					return true;
 				}
 			}
@@ -174,7 +169,7 @@ var meta64 = function() {
 		},
 
 		getPathOfUid : function(uid) {
-			var node = _.js.uidToNodeMap[uid];
+			var node = _.uidToNodeMap[uid];
 			if (!node) {
 				return "[path error. invalid uid: " + uid + "]";
 			} else {
@@ -187,7 +182,7 @@ var meta64 = function() {
 		 * the action name.
 		 */
 		defineAllActions : function() {
-			var displayingNode = !util.emptyString(_.js.currentNode);
+			var displayingNode = !util.emptyString(_.currentNode);
 
 			/*
 			 * Define all actions and enablement for them.
@@ -279,24 +274,24 @@ var meta64 = function() {
 			}, {
 				"name" : "searchNodes",
 				"enable" : true,
-				"function" : search.searchNodes 
+				"function" : search.searchNodes
 			}, {
 				"name" : "searchNodesDialog",
 				"enable" : true,
 				"function" : search.searchNodesDialog
 			});
-			
+
 			// hookSliderChanges("editMode");
 		},
 
 		refreshAllGuiEnablement : function() {
 			/* multiple select nodes */
-			var selNodeCount = util.getPropertyCount(_.js.selectedNodes);
+			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 
 			util.setEnablementByName("login", true);
-			util.setEnablementByName("navHome", _.js.currentNode && !nav.displayingRoot());
-			util.setEnablementByName("navUpLevel", _.js.currentNode && !nav.displayingRoot());
-			util.setEnablementByName("propsToggle", _.js.currentNode);
+			util.setEnablementByName("navHome", _.currentNode && !nav.displayingRoot());
+			util.setEnablementByName("navUpLevel", _.currentNode && !nav.displayingRoot());
+			util.setEnablementByName("propsToggle", _.currentNode);
 			util.setEnablementByName("saveNode", true);
 			util.setEnablementByName("cancelEdit", true);
 			util.setEnablementByName("addProperty", true);
@@ -304,9 +299,9 @@ var meta64 = function() {
 			util.setEnablementByName("saveProperty", true);
 			util.setEnablementByName("changePassword", true);
 			util.setEnablementByName("changePasswordDialog", true);
-			util.setEnablementByName("editMode", _.js.currentNode);
+			util.setEnablementByName("editMode", _.currentNode);
 			util.setEnablementByName("signup", true);
-			util.setEnablementByName("insertBookWarAndPeace", _.js.isAdminUser, _.js.isAdminUser);
+			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
 		},
 
 		/*
@@ -323,7 +318,7 @@ var meta64 = function() {
 				var actionName = action["name"];
 				var func = action["function"];
 
-				_.js.actionNameToObjMap[actionName] = action;
+				_.actionNameToObjMap[actionName] = action;
 
 				if (typeof func !== "function") {
 					console.log("Function not found for action " + actionName);
@@ -347,10 +342,10 @@ var meta64 = function() {
 
 		getSingleSelectedNode : function() {
 			var uid;
-			for (uid in _.js.selectedNodes) {
-				if (_.js.selectedNodes.hasOwnProperty(uid)) {
+			for (uid in _.selectedNodes) {
+				if (_.selectedNodes.hasOwnProperty(uid)) {
 					// console.log("found a single Sel NodeID: " + nodeId);
-					var singleSelNode = _.js.uidToNodeMap[uid];
+					var singleSelNode = _.uidToNodeMap[uid];
 					// if (singleSelNode == null) {
 					// console.log("id doesn't map to a node.");
 					// } else {
@@ -365,11 +360,11 @@ var meta64 = function() {
 
 		/* node = NodeInfo.java object */
 		getOrdinalOfNode : function(node) {
-			if (!_.js.currentNodeData || !_.js.currentNodeData.children)
+			if (!_.currentNodeData || !_.currentNodeData.children)
 				return -1;
 
-			for (var i = 0; i < _.js.currentNodeData.children.length; i++) {
-				if (node.id === _.js.currentNodeData.children[i].id) {
+			for (var i = 0; i < _.currentNodeData.children.length; i++) {
+				if (node.id === _.currentNodeData.children[i].id) {
 					return i;
 				}
 			}
@@ -377,11 +372,11 @@ var meta64 = function() {
 		},
 
 		setCurrentNodeData : function(data) {
-			_.js.currentNodeData = data;
-			_.js.currentNode = data.node;
-			_.js.currentNodeUid = data.node.uid;
-			_.js.currentNodeId = data.node.id;
-			_.js.currentNodePath = data.node.path;
+			_.currentNodeData = data;
+			_.currentNode = data.node;
+			_.currentNodeUid = data.node.uid;
+			_.currentNodeId = data.node.id;
+			_.currentNodePath = data.node.path;
 		},
 
 		hookInitFunction : function() {
@@ -422,7 +417,7 @@ var meta64 = function() {
 			node.properties = props.setPreferredPropertyOrder(node.properties);
 
 			// console.log("******* initNode uid=" + node.uid);
-			meta64.js.uidToNodeMap[node.uid] = node;
+			meta64.uidToNodeMap[node.uid] = node;
 		},
 
 		initApp : function() {

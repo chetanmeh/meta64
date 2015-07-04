@@ -10,7 +10,7 @@ var props = function() {
 			alert("Property save failed: " + res.message);
 		}
 
-		edit.js.editNode.properties.push(res.propertySaved)
+		edit.editNode.properties.push(res.propertySaved)
 
 		edit.populateEditNodeDialog();
 		$.mobile.changePage("#editNodeDialog");
@@ -18,7 +18,7 @@ var props = function() {
 		// $("#editPropertyDialogCloseButton").trigger('click');
 		// $.mobile.changePage(getPreviousPage()); //"#editNodeDialog");
 
-		meta64.js.treeDirty = true;
+		meta64.treeDirty = true;
 	}
 
 	var _deletePropertyResponse = function(res, info) {
@@ -34,7 +34,7 @@ var props = function() {
 			/* now just re-render screen from local variables */
 			edit.populateEditNodeDialog();
 			$.mobile.changePage("#editNodeDialog");
-			meta64.js.treeDirty = true;
+			meta64.treeDirty = true;
 		}
 	}
 
@@ -46,12 +46,12 @@ var props = function() {
 		 * Toggles display of properties in the gui.
 		 */
 		propsToggle : function() {
-			meta64.js.showProperties = meta64.js.showProperties ? false : true;
+			meta64.showProperties = meta64.showProperties ? false : true;
 			// setDataIconUsingId("#editModeButton", editMode ? "edit" :
 			// "forbidden");
 			var elm = $("#propsToggleButton");
-			elm.toggleClass("ui-icon-grid", meta64.js.showProperties);
-			elm.toggleClass("ui-icon-forbidden", !meta64.js.showProperties);
+			elm.toggleClass("ui-icon-grid", meta64.showProperties);
+			elm.toggleClass("ui-icon-forbidden", !meta64.showProperties);
 			render.renderPageFromData();
 		},
 
@@ -69,7 +69,7 @@ var props = function() {
 		deletePropertyImmediate : function(propName) {
 
 			util.json("deleteProperty", {
-				"nodeId" : edit.js.editNode.id,
+				"nodeId" : edit.editNode.id,
 				"propName" : propName
 			}, _deletePropertyResponse, {
 				"propertyToDelete" : propName
@@ -121,7 +121,7 @@ var props = function() {
 			var propertyValueData = $("#addPropertyValueTextContent").val();
 
 			var postData = {
-				nodeId : edit.js.editNode.id,
+				nodeId : edit.editNode.id,
 				propertyName : propertyNameData,
 				propertyValue : propertyValueData
 			};
@@ -130,7 +130,7 @@ var props = function() {
 		},
 
 		addSubProperty : function(fieldId) {
-			var prop = meta64.js.fieldIdToPropMap[fieldId];
+			var prop = meta64.fieldIdToPropMap[fieldId];
 
 			var isMulti = util.isObject(prop.values);
 
@@ -173,11 +173,11 @@ var props = function() {
 		},
 
 		deletePropertyFromLocalData : function(propertyName) {
-			for (var i = 0; i < edit.js.editNode.properties.length; i++) {
-				if (propertyName === edit.js.editNode.properties[i].name) {
+			for (var i = 0; i < edit.editNode.properties.length; i++) {
+				if (propertyName === edit.editNode.properties[i].name) {
 					// console.log("Delete id at index: " + i);
 					// splice is how you delete array elements in js.
-					edit.js.editNode.properties.splice(i, 1);
+					edit.editNode.properties.splice(i, 1);
 					break;
 				}
 			}

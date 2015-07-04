@@ -34,7 +34,7 @@ var share = function() {
 		if (html === "") {
 			html = "Node is not shared with anyone.";
 		}
-		
+
 		util.setHtmlEnhanced($("#sharingListFieldContainer"), html);
 	}
 
@@ -64,7 +64,7 @@ var share = function() {
 
 	var _removePrivilegeResponse = function(res) {
 		util.json("getNodePrivileges", {
-			"nodeId" : _.js.sharingNode.path
+			"nodeId" : _.sharingNode.path
 		}, _getNodePrivilegesResponse);
 	}
 
@@ -80,13 +80,12 @@ var share = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		js : {
-			sharingNode : null
-		},
+
+		sharingNode : null,
 
 		removePrivilege : function(principal, privilege) {
 			util.json("removePrivilege", {
-				"nodeId" : _.js.sharingNode.id,
+				"nodeId" : _.sharingNode.id,
 				"principal" : principal,
 				"privilege" : privilege
 			}, _removePrivilegeResponse);
@@ -102,7 +101,7 @@ var share = function() {
 			 * day
 			 */
 			util.json("addPrivilege", {
-				"nodeId" : _.js.sharingNode.id,
+				"nodeId" : _.sharingNode.id,
 				"principal" : "everyone",
 				"privilege" : "read"
 			}, _.reload);
@@ -113,8 +112,8 @@ var share = function() {
 		 * node display in edit mode
 		 */
 		editNodeSharing : function(uid) {
-			_.js.sharingNode = meta64.js.uidToNodeMap[uid];
-			if (_.js.sharingNode == null) {
+			_.sharingNode = meta64.uidToNodeMap[uid];
+			if (_.sharingNode == null) {
 				alert("Unable to edit node: uid=" + uid);
 			}
 
@@ -123,7 +122,7 @@ var share = function() {
 
 		reload : function() {
 			util.json("getNodePrivileges", {
-				"nodeId" : _.js.sharingNode.id
+				"nodeId" : _.sharingNode.id
 			}, _getNodePrivilegesResponse);
 		}
 	};

@@ -11,7 +11,7 @@ var nav = function() {
 		},
 
 		displayingRoot : function() {
-			return meta64.js.currentNodeId === meta64.js.homeNodeId;
+			return meta64.currentNodeId === meta64.homeNodeId;
 		},
 
 		navUpLevel : function() {
@@ -22,7 +22,7 @@ var nav = function() {
 			}
 
 			util.json("renderNode", {
-				"nodeId" : meta64.js.currentNodeId,
+				"nodeId" : meta64.currentNodeId,
 				"upLevel" : 1
 			}, view.renderNodeResponse);
 		},
@@ -37,11 +37,11 @@ var nav = function() {
 			 * check if we have an existing highlighted row to unhighlight, and
 			 * is done by looking up current parent node for the page
 			 */
-			var currentSelNode = meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid];
+			var currentSelNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
 
 			if (currentSelNode) {
 				/* get node by node identifier */
-				var node = meta64.js.uidToNodeMap[currentSelNode.uid];
+				var node = meta64.uidToNodeMap[currentSelNode.uid];
 				return node;
 			}
 			return null;
@@ -57,12 +57,12 @@ var nav = function() {
 			 * check if we have an existing highlighted row to unhighlight, and
 			 * is done by looking up current parent node for the page
 			 */
-			var currentSelNode = meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid];
+			var currentSelNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
 			if (currentSelNode) {
-				console.log("Unhighlighting previous row: currentNodeId=" + meta64.js.currentNodeUid);
+				console.log("Unhighlighting previous row: currentNodeId=" + meta64.currentNodeUid);
 
 				/* get node by node identifier */
-				var node = meta64.js.uidToNodeMap[currentSelNode.uid];
+				var node = meta64.uidToNodeMap[currentSelNode.uid];
 
 				if (node) {
 					// console.log("found highlighted node.id=" + node.id);
@@ -83,11 +83,11 @@ var nav = function() {
 		unhighlightRow : function() {
 
 			console.log("unhighlight row");
-			var currentUid = meta64.js.currentNodeUid;
+			var currentUid = meta64.currentNodeUid;
 			console.log("  currentParentUid=" + currentUid);
 
 			/* check if we have an existing highlighted row to unhighlight */
-			var currentSelNode = meta64.js.parentUidToFocusNodeMap[currentUid];
+			var currentSelNode = meta64.parentUidToFocusNodeMap[currentUid];
 			if (!currentSelNode.uid) {
 				alert("oops, unhighlight says current node has null uid");
 			}
@@ -97,7 +97,7 @@ var nav = function() {
 						+ meta64.getPathOfUid(currentSelNode.uid));
 
 				/* get node by node identifier */
-				var node = meta64.js.uidToNodeMap[currentSelNode.uid];
+				var node = meta64.uidToNodeMap[currentSelNode.uid];
 
 				if (node) {
 					console.log("    found highlighted node.uid=" + node.uid);
@@ -128,7 +128,7 @@ var nav = function() {
 
 			_.unhighlightRow();
 
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
 				console.log("clickOnNodeRow recieved uid that doesn't map to any node. uid=" + uid);
 			}
@@ -137,7 +137,7 @@ var nav = function() {
 			 * sets which node is selected on this page (i.e. parent node of
 			 * this page being the 'key')
 			 */
-			meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid] = node;
+			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
 			if (!node.uid) {
 				alert("oops, node.uid is null");
 			}
@@ -146,7 +146,7 @@ var nav = function() {
 		},
 
 		openNode : function(uid) {
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
 				alert("Unknown nodeId in openNode: " + uid);
 			} else {
@@ -157,9 +157,9 @@ var nav = function() {
 		toggleNodeSel : function(uid) {
 			var checked = util.getRequiredElement('#' + uid + "_sel").is(":checked");
 			if (checked) {
-				meta64.js.selectedNodes[uid] = true;
+				meta64.selectedNodes[uid] = true;
 			} else {
-				delete meta64.js.selectedNodes[uid];
+				delete meta64.selectedNodes[uid];
 			}
 			view.updateStatusBar();
 			meta64.refreshAllGuiEnablement();
@@ -168,7 +168,7 @@ var nav = function() {
 
 		navHome : function() {
 			util.json("renderNode", {
-				"nodeId" : meta64.js.homeNodeId
+				"nodeId" : meta64.homeNodeId
 			}, view.renderNodeResponse);
 		}
 	};

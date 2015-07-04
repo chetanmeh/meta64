@@ -59,7 +59,7 @@ var render = function() {
 			var ret = '';
 
 			if (showPath) {
-				var path = meta64.js.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
+				var path = meta64.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
 				ret += "Path: " + _.formatPath(path) + "<br>";
@@ -97,9 +97,9 @@ var render = function() {
 				ret += "Name: " + node.name + " [uid=" + node.uid + "]";
 			}
 
-			if (meta64.js.showProperties) {
+			if (meta64.showProperties) {
 				// console.log("showProperties = " +
-				// meta64.js.showProperties);
+				// meta64.showProperties);
 				var properties = props.renderProperties(node.properties);
 				if (properties) {
 					ret += /* "<br>" + */properties;
@@ -126,7 +126,7 @@ var render = function() {
 		renderNodeAsListItem : function(node, index, count, rowCount) {
 
 			var uid = node.uid;
-			var selected = (node.id === meta64.js.newChildNodeId);
+			var selected = (node.id === meta64.newChildNodeId);
 			var canMoveUp = index > 0 && rowCount > 1;
 			var canMoveDown = index < count - 1;
 
@@ -135,7 +135,7 @@ var render = function() {
 			 * deleting things I won't want to allow to delete, but I will
 			 * design this better later.
 			 */
-			var isRep = node.name.startsWith("rep:") || meta64.js.currentNodeData.node.path.contains("/rep:");
+			var isRep = node.name.startsWith("rep:") || meta64.currentNodeData.node.path.contains("/rep:");
 			var editingAllowed = meta64.isAdminUser || !isRep;
 
 			/*
@@ -144,7 +144,7 @@ var render = function() {
 			 */
 			// console.log("test: [" + parentIdToFocusIdMap[currentNodeId]
 			// +"]==["+ node.id + "]")
-			var focusNode = meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid];
+			var focusNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
 			if (!selected && focusNode && focusNode.uid === uid) {
 				selected = true;
 			}
@@ -197,7 +197,7 @@ var render = function() {
 			 * the server side security will let them know. In the future we can
 			 * add more intelligence to when to show these buttons or not.
 			 */
-			if (meta64.js.editMode) {
+			if (meta64.editMode) {
 				// console.log("Editing allowed: " + nodeId);
 
 				/* Construct Create Subnode Button */
@@ -217,7 +217,7 @@ var render = function() {
 				}, "Ins");
 			}
 
-			if (meta64.js.editMode && editingAllowed) {
+			if (meta64.editMode && editingAllowed) {
 				/* Construct Create Subnode Button */
 				deleteNodeButton = _.makeTag("a", //
 				{
@@ -242,7 +242,7 @@ var render = function() {
 					"data-icon" : "action"
 				}, "Upload");
 
-				if (meta64.js.currentNode.childrenOrdered) {
+				if (meta64.currentNode.childrenOrdered) {
 
 					if (canMoveUp) {
 						/* Construct Create Subnode Button */
@@ -296,7 +296,7 @@ var render = function() {
 		 * 'hasChildren' true
 		 */
 		nodeHasChildren : function(uid) {
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
 				console.log("Unknown nodeId in nodeHasChildren: " + uid);
 				return false;
@@ -306,7 +306,7 @@ var render = function() {
 		},
 
 		formatPath : function(path) {
-			return meta64.js.isAdminUser ? path : path.replaceAll("/jcr:root", "");
+			return meta64.isAdminUser ? path : path.replaceAll("/jcr:root", "");
 		},
 
 		markdown : function(text) {
@@ -325,21 +325,21 @@ var render = function() {
 		renderPageFromData : function(data) {
 			var newData = false;
 			if (!data) {
-				data = meta64.js.currentNodeData;
+				data = meta64.currentNodeData;
 			} else {
 				newData = true;
 			}
 
-			meta64.js.treeDirty = false;
+			meta64.treeDirty = false;
 
 			// console.log("renderPageFromData.");
 			if (newData) {
-				meta64.js.uidToNodeMap = {};
+				meta64.uidToNodeMap = {};
 				meta64.initNode(data.node);
 				meta64.setCurrentNodeData(data);
 			}
 
-			var propCount = meta64.js.currentNode.properties ? meta64.js.currentNode.properties.length : 0;
+			var propCount = meta64.currentNode.properties ? meta64.currentNode.properties.length : 0;
 			// console.log("RENDER NODE: " + data.node.id + propertyCount=" +
 			// propCount);
 			var output = '';
@@ -370,8 +370,8 @@ var render = function() {
 					 * if no row is selected for this parent, select the first
 					 * row
 					 */
-					if (!meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid]) {
-						meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid] = node;
+					if (!meta64.parentUidToFocusNodeMap[meta64.currentNodeUid]) {
+						meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
 
 						if (!node.uid) {
 							alert("oops, node.uid is null");
@@ -446,19 +446,19 @@ var render = function() {
 		},
 
 		allowPropertyToDisplay : function(propName) {
-			return meta64.js.simpleModePropertyBlackList[propName] == null;
+			return meta64.simpleModePropertyBlackList[propName] == null;
 		},
 
 		isReadOnlyProperty : function(propName) {
-			return meta64.js.readOnlyPropertyList[propName];
+			return meta64.readOnlyPropertyList[propName];
 		},
 
 		isBinaryProperty : function(propName) {
-			return meta64.js.binaryPropertyList[propName];
+			return meta64.binaryPropertyList[propName];
 		},
 
 		sanitizePropertyName : function(propName) {
-			if (meta64.js.editModeOption === "simple") {
+			if (meta64.editModeOption === "simple") {
 				return propName === "jcr:content" ? "Content" : propName;
 			} else {
 				return propName;

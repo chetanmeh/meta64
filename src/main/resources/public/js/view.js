@@ -6,16 +6,16 @@ var view = function() {
 	 */
 	var _ = {
 		updateStatusBar : function() {
-			if (!meta64.js.currentNodeData)
+			if (!meta64.currentNodeData)
 				return;
 			var statusLine = "";
 
-			if (meta64.js.editModeOption === meta64.js.MODE_ADVANCED) {
-				statusLine += "count: " + meta64.js.currentNodeData.children.length;
+			if (meta64.editModeOption === meta64.MODE_ADVANCED) {
+				statusLine += "count: " + meta64.currentNodeData.children.length;
 			}
 
-			if (meta64.js.editMode) {
-				statusLine += " Selections: " + util.getPropertyCount(meta64.js.selectedNodes);
+			if (meta64.editMode) {
+				statusLine += " Selections: " + util.getPropertyCount(meta64.selectedNodes);
 			}
 
 			var visible = statusLine.length > 0;
@@ -28,7 +28,7 @@ var view = function() {
 
 		refreshTree : function(nodeId) {
 			if (!nodeId) {
-				nodeId = meta64.js.currentNodeId;
+				nodeId = meta64.currentNodeId;
 			}
 
 			util.json("renderNode", {
@@ -67,9 +67,9 @@ var view = function() {
 		},
 
 		initEditPathDisplayById : function(domId) {
-			var node = edit.js.editNode;
+			var node = edit.editNode;
 			var e = $(domId);
-			if (edit.js.editingUnsavedNode) {
+			if (edit.editingUnsavedNode) {
 				e.hide();
 			} else {
 				e.html("Path: " + render.formatPath(node.path))

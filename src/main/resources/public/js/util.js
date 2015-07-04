@@ -133,7 +133,7 @@ var util = function() {
 		},
 
 		isActionEnabled : function(actionName) {
-			var action = meta64.js.actionNameToObjMap[actionName];
+			var action = meta64.actionNameToObjMap[actionName];
 			if (!action) {
 				alert("Unrecognized actionName: " + actionName);
 				return;
@@ -143,7 +143,7 @@ var util = function() {
 
 		setEnablementByName : function(actionName, enablement, visibility) {
 			/* first find action object, and update enablement */
-			var action = meta64.js.actionNameToObjMap[actionName];
+			var action = meta64.actionNameToObjMap[actionName];
 			if (!action) {
 				alert("Unrecognized actionName: " + actionName);
 				return;

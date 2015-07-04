@@ -12,7 +12,7 @@ var attachment = function() {
 			 * All that's needed to update client is to set the binary flag on
 			 * the node to false, and re-render
 			 */
-			_.js.uploadNode.hasBinary = false;
+			_.uploadNode.hasBinary = false;
 			render.renderPageFromData();
 			_.closeUploadDialog();
 		} else {
@@ -24,15 +24,14 @@ var attachment = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		js : {
-			/* Node being uploaded to */
-			uploadNode : null
-		},
+
+		/* Node being uploaded to */
+		uploadNode : null,
 
 		deleteAttachment : function() {
 			util.areYouSure("Confirm Delete Attachment", "Delete the Attachment on the Node?", "Yes, delete.", function() {
 				util.json("deleteAttachment", {
-					"nodeId" : _.js.uploadNode.id,
+					"nodeId" : _.uploadNode.id,
 				}, _deleteAttachmentResponse);
 			});
 		},
@@ -40,7 +39,7 @@ var attachment = function() {
 		uploadFileNow : function() {
 
 			/* Upload form has hidden input element for nodeId parameter */
-			$("#uploadFormNodeId").attr("value", _.js.uploadNode.id);
+			$("#uploadFormNodeId").attr("value", _.uploadNode.id);
 
 			/*
 			 * This is the only place we do something differently from the
@@ -57,7 +56,7 @@ var attachment = function() {
 				contentType : false,
 				cache : false,
 				success : function() {
-					view.refreshTree(); 
+					view.refreshTree();
 					_.closeUploadDialog();
 				},
 				error : function() {
@@ -69,18 +68,18 @@ var attachment = function() {
 		populateUploadDialog : function() {
 
 			/* display the node path at the top of the edit page */
-			$("#uploadPathDisplay").html("Path: " + render.formatPath(_.js.uploadNode.path));
+			$("#uploadPathDisplay").html("Path: " + render.formatPath(_.uploadNode.path));
 		},
 
 		openUploadDialog : function(uid) {
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
-				_.js.uploadNode = null;
+				_.uploadNode = null;
 				alert("Unknown nodeId in upload: " + uid);
 				return;
 			}
 
-			_.js.uploadNode = node;
+			_.uploadNode = node;
 			_.populateUploadDialog();
 			$.mobile.changePage("#uploadDialog");
 		},

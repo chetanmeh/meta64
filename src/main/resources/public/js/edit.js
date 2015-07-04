@@ -62,13 +62,13 @@ var edit = function() {
 		 * TODO: verify this value gets used now that we aren't going
 		 * IMMEDIATELY to the treeview after creates
 		 */
-		meta64.js.newChildNodeId = res.newNode.id;
-		console.log("new child identifier: " + meta64.js.newChildNodeId);
+		meta64.newChildNodeId = res.newNode.id;
+		console.log("new child identifier: " + meta64.newChildNodeId);
 
 		/*
 		 * todo: initNode needed here ?
 		 */
-		meta64.js.parentUidToFocusNodeMap[meta64.js.currentNodeUid] = res.newNode;
+		meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = res.newNode;
 
 		meta64.initNode(res.newNode);
 		edit.editNode(res.newNode.uid);
@@ -89,8 +89,8 @@ var edit = function() {
 		 * TODO: verify this value gets used now that we aren't going
 		 * IMMEDIATELY to the treeview after creates
 		 */
-		meta64.js.newChildNodeId = res.newNode.id;
-		console.log("new child identifier: " + meta64.js.newChildNodeId);
+		meta64.newChildNodeId = res.newNode.id;
+		console.log("new child identifier: " + meta64.newChildNodeId);
 
 		meta64.initNode(res.newNode);
 		edit.editNode(res.newNode.uid);
@@ -100,28 +100,26 @@ var edit = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		js : {
-			/*
-			 * indicates editor is displaying a node that is not yet saved on
-			 * the server
-			 */
-			editingUnsavedNode : false,
+		/*
+		 * indicates editor is displaying a node that is not yet saved on the
+		 * server
+		 */
+		editingUnsavedNode : false,
 
-			/* Node being edited */
-			editNode : null,
+		/* Node being edited */
+		editNode : null,
 
-			/*
-			 * type=NodeInfo.java
-			 * 
-			 * When inserting a new node, this holds the node that was clicked
-			 * on at the time the insert was requested, and is sent to server
-			 * for ordinal position assignment of new node. Also if this var is
-			 * null, it indicates we are creating in a 'create under parent'
-			 * mode, versus non-null meaning 'insert inline' type of insert.
-			 * 
-			 */
-			nodeInsertTarget : null
-		},
+		/*
+		 * type=NodeInfo.java
+		 * 
+		 * When inserting a new node, this holds the node that was clicked on at
+		 * the time the insert was requested, and is sent to server for ordinal
+		 * position assignment of new node. Also if this var is null, it
+		 * indicates we are creating in a 'create under parent' mode, versus
+		 * non-null meaning 'insert inline' type of insert.
+		 * 
+		 */
+		nodeInsertTarget : null,
 
 		/*
 		 * called to display editor that will come up BEFORE any node is saved
@@ -129,32 +127,32 @@ var edit = function() {
 		 * have the correct node name, at least.
 		 */
 		startEditingNewNode : function() {
-			_.js.editingUnsavedNode = true;
-			_.js.editNode = null;
+			_.editingUnsavedNode = true;
+			_.editNode = null;
 
 			_.populateEditNodeDialog();
 			$.mobile.changePage("#editNodeDialog");
 		},
 
 		editMode : function() {
-			meta64.js.editMode = meta64.js.editMode ? false : true;
+			meta64.editMode = meta64.editMode ? false : true;
 			// setDataIconUsingId("#editModeButton", editMode ? "edit" :
 			// "forbidden");
 			var elm = $("#editModeButton");
-			elm.toggleClass("ui-icon-edit", meta64.js.editMode);
-			elm.toggleClass("ui-icon-forbidden", !meta64.js.editMode);
-			render.renderPageFromData(); 
+			elm.toggleClass("ui-icon-edit", meta64.editMode);
+			elm.toggleClass("ui-icon-forbidden", !meta64.editMode);
+			render.renderPageFromData();
 		},
 
 		makeNodeReferencable : function() {
 			util.json("makeNodeReferencable", {
-				"nodeId" : _.js.editNode.id,
+				"nodeId" : _.editNode.id,
 			}, _makeNodeReferencableResponse);
 		},
 
 		cancelEdit : function() {
 
-			if (meta64.js.treeDirty) {
+			if (meta64.treeDirty) {
 				/*
 				 * TODO: this results in a call to the server to refresh page
 				 * which CAN be avoided if I write smarter client-side code, but
@@ -188,7 +186,7 @@ var edit = function() {
 			 * createSubNode, which actually saves onto the server, and will
 			 * initiate further editing like for properties, etc.
 			 */
-			if (_.js.editingUnsavedNode) {
+			if (_.editingUnsavedNode) {
 				_.saveNewNode();
 			}
 			/*
@@ -205,11 +203,11 @@ var edit = function() {
 
 			console.log("Sending up first node name: " + newNodeName);
 
-			meta64.js.treeDirty = true;
-			if (_.js.nodeInsertTarget) {
+			meta64.treeDirty = true;
+			if (_.nodeInsertTarget) {
 				util.json("insertNode", {
 					"parentId" : _parentOfNewNode.id,
-					"targetName" : _.js.nodeInsertTarget.name,
+					"targetName" : _.nodeInsertTarget.name,
 					"newNodeName" : newNodeName
 				}, _insertNodeResponse);
 			} else {
@@ -230,8 +228,8 @@ var edit = function() {
 				var fieldId = "editNodeTextContent" + counter;
 
 				/* is this an existing gui edit field */
-				if (meta64.js.fieldIdToPropMap.hasOwnProperty(fieldId)) {
-					var prop = meta64.js.fieldIdToPropMap[fieldId];
+				if (meta64.fieldIdToPropMap.hasOwnProperty(fieldId)) {
+					var prop = meta64.fieldIdToPropMap[fieldId];
 
 					// alert('prop found: ' + prop.name);
 					var propVal = $("#" + fieldId).val();
@@ -254,7 +252,7 @@ var edit = function() {
 
 			if (changeCount > 0) {
 				var postData = {
-					nodeId : _.js.editNode.id,
+					nodeId : _.editNode.id,
 					properties : propertiesList
 				};
 				// alert(JSON.stringify(postData));
@@ -265,16 +263,16 @@ var edit = function() {
 		},
 
 		moveNodeUp : function(uid) {
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (node) {
 				var ordinal = meta64.getOrdinalOfNode(node);
 				console.log("ordinal=" + ordinal);
 				if (ordinal == -1 && ordinal <= 0)
 					return;
-				var nodeAbove = meta64.js.currentNodeData.children[ordinal - 1];
+				var nodeAbove = meta64.currentNodeData.children[ordinal - 1];
 
 				util.json("setNodePosition", {
-					"parentNodeId" : meta64.js.currentNodeId,
+					"parentNodeId" : meta64.currentNodeId,
 					"nodeId" : node.name,
 					"siblingId" : nodeAbove.name
 				}, _setNodePositionResponse);
@@ -284,16 +282,16 @@ var edit = function() {
 		},
 
 		moveNodeDown : function(uid) {
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (node) {
 				var ordinal = meta64.getOrdinalOfNode(node);
 				console.log("ordinal=" + ordinal);
-				if (ordinal == -1 && ordinal >= meta64.js.currentNodeData.children.length - 1)
+				if (ordinal == -1 && ordinal >= meta64.currentNodeData.children.length - 1)
 					return;
-				var nodeBelow = meta64.js.currentNodeData.children[ordinal + 1];
+				var nodeBelow = meta64.currentNodeData.children[ordinal + 1];
 
 				util.json("setNodePosition", {
-					"parentNodeId" : meta64.js.currentNodeData.node.id,
+					"parentNodeId" : meta64.currentNodeData.node.id,
 					"nodeId" : nodeBelow.name,
 					"siblingId" : node.name
 				}, _setNodePositionResponse);
@@ -303,14 +301,14 @@ var edit = function() {
 		},
 
 		editNode : function(uid) {
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
-				_.js.editNode = null;
+				_.editNode = null;
 				alert("Unknown nodeId in editNodeClick: " + uid);
 				return;
 			}
-			_.js.editingUnsavedNode = false;
-			_.js.editNode = node;
+			_.editingUnsavedNode = false;
+			_.editNode = node;
 			_.populateEditNodeDialog();
 			$.mobile.changePage("#editNodeDialog");
 		},
@@ -330,18 +328,18 @@ var edit = function() {
 			var counter = 0;
 
 			/* clear this map to get rid of old properties */
-			meta64.js.fieldIdToPropMap = {};
+			meta64.fieldIdToPropMap = {};
 
 			/* TODO: this block of code nests to deep. clean this up! */
-			if (_.js.editNode) {
+			if (_.editNode) {
 				// Iterate PropertyInfo.java objects
-				$.each(_.js.editNode.properties, function(index, prop) {
+				$.each(_.editNode.properties, function(index, prop) {
 					if (!render.allowPropertyToDisplay(prop.name))
 						return;
 
 					var fieldId = "editNodeTextContent" + counter;
 
-					meta64.js.fieldIdToPropMap[fieldId] = prop;
+					meta64.fieldIdToPropMap[fieldId] = prop;
 					var isMulti = prop.values && prop.values.length > 0;
 
 					var isReadOnlyProp = render.isReadOnlyProperty(prop.name);
@@ -462,19 +460,19 @@ var edit = function() {
 			 * saved on the server before we allow any property editing to
 			 * happen.
 			 */
-			util.setVisibility("#addPropertyButton", !_.js.editingUnsavedNode);
+			util.setVisibility("#addPropertyButton", !_.editingUnsavedNode);
 		},
 
 		insertNode : function(uid) {
-			_parentOfNewNode = meta64.js.currentNode;
+			_parentOfNewNode = meta64.currentNode;
 			if (!_parentOfNewNode) {
 				console.log("Unknown nodeId in insertNodeClick: " + uid);
 				return;
 			}
 
-			var node = meta64.js.uidToNodeMap[uid];
+			var node = meta64.uidToNodeMap[uid];
 			if (node) {
-				_.js.nodeInsertTarget = node;
+				_.nodeInsertTarget = node;
 				_.startEditingNewNode();
 			}
 		},
@@ -485,9 +483,9 @@ var edit = function() {
 			 * currently viewed node (parent of current page)
 			 */
 			if (!uid) {
-				_parentOfNewNode = meta64.js.currentNode;
+				_parentOfNewNode = meta64.currentNode;
 			} else {
-				_parentOfNewNode = meta64.js.uidToNodeMap[uid];
+				_parentOfNewNode = meta64.uidToNodeMap[uid];
 				if (!_parentOfNewNode) {
 					console.log("Unknown nodeId in createSubNode: " + uid);
 					return;
@@ -498,13 +496,13 @@ var edit = function() {
 			 * this indicates we are NOT inserting inline. An inline insert
 			 * would always have a target.
 			 */
-			_.js.nodeInsertTarget = null;
+			_.nodeInsertTarget = null;
 			_.startEditingNewNode();
 		},
 
 		deleteNode : function(uid) {
 			util.areYouSure("Confirm Delete", "Delete the node?", "Yes, delete.", function() {
-				var node = meta64.js.uidToNodeMap[uid];
+				var node = meta64.uidToNodeMap[uid];
 				if (!node) {
 					alert("Unknown nodeId in deleteNodeClick: " + uid);
 				} else {
@@ -516,12 +514,12 @@ var edit = function() {
 		},
 
 		insertBookWarAndPeace : function() {
-						
+
 			util.areYouSure("Confirm", "Insert book War and Peace?", "Yes, insert book.", function() {
-				
+
 				/* inserting under whatever node user has focused */
 				var node = nav.getFocusedNode();
-				
+
 				if (!node) {
 					alert("No node is selected.");
 				} else {
