@@ -44,6 +44,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Node editing (plain text/markdown)
 * Orderable child nodes ("move up" and "move down" supported)
 * Creating Subnodes or Inline nodes
+* Full text search
 * Deleting Nodes
 * Sharing a node as Public, and removing shares
 * Short URL GUID for any node, so it can be referenced by URL
@@ -63,7 +64,6 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 ### Next Features to be Developed
 Listed here in the order they will likely be developed...
 
-* Full text search
 * More JUnit unit tests.
 * Cut, Copy, Paste (move nodes to new location on tree)
 * Ability to share node with specific user.
