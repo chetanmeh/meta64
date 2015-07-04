@@ -365,7 +365,10 @@ public class AppController {
 	@OakSession
 	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
 		logRequest("insertBook", req);
-
+		if (sessionContext.isAdmin()) {
+			throw new Exception("insertBook is an admin-only feature.");
+		}
+		
 		InsertBookResponse res = new InsertBookResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();

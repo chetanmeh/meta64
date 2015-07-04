@@ -30,6 +30,10 @@ public class SessionContext {
 		// not used currently
 	}
 
+	public boolean isAdmin() {
+		return "admin".equalsIgnoreCase(userName);
+	}
+
 	public String getUserName() {
 		return userName;
 	}

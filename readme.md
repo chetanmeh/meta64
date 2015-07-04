@@ -57,6 +57,8 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Change password feature.
 * Multiple nodes selectable
 * Mobile ready (this is a "mobile first" app)
+* Admin feature to insert entire book "War and Peace", for quickly
+  creating test data for exploring all the features.
 
 ### Next Features to be Developed
 Listed here in the order they will likely be developed...
