@@ -143,7 +143,7 @@ var edit = function() {
 			var elm = $("#editModeButton");
 			elm.toggleClass("ui-icon-edit", meta64.js.editMode);
 			elm.toggleClass("ui-icon-forbidden", !meta64.js.editMode);
-			render.renderPageFromData(); // new. meta64.js.currentNodeData);
+			render.renderPageFromData(); 
 		},
 
 		makeNodeReferencable : function() {

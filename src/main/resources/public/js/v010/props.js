@@ -52,7 +52,7 @@ var props = function() {
 			var elm = $("#propsToggleButton");
 			elm.toggleClass("ui-icon-grid", meta64.js.showProperties);
 			elm.toggleClass("ui-icon-forbidden", !meta64.js.showProperties);
-			render.renderPageFromData(); // new. meta64.js.currentNodeData);
+			render.renderPageFromData();
 		},
 
 		/*

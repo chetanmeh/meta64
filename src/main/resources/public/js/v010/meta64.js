@@ -1,20 +1,22 @@
 console.log("running module: meta64.js");
 
+/*
+ * TODO: I noticed some meta64.js.whatever scoping in this class, which needs to be removed
+ * and replaced with "_."
+ */
 var meta64 = function() {
 	/*
-	 * TODO: move to meta64 file.
-	 * 
 	 * We have to be able to map any identifier to a uid, that will be
 	 * repeatable, so we have to use a local 'hashset-type' implementation
 	 */
 	var _getUidForId = function(ident) {
 		/* look for uid in map */
-		var uid = meta64.js.identToUidMap[ident];
+		var uid = _.js.identToUidMap[ident];
 
 		/* if not found, get next number, and add to map */
 		if (!uid) {
-			uid = meta64.js.nextUid++;
-			meta64.js.identToUidMap[ident] = uid;
+			uid = _.js.nextUid++;
+			_.js.identToUidMap[ident] = uid;
 		}
 		return uid;
 	}

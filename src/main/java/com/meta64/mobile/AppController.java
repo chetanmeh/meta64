@@ -46,6 +46,7 @@ import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.MakeNodeReferencableRequest;
+import com.meta64.mobile.request.NodeSearchRequest;
 import com.meta64.mobile.request.RemovePrivilegeRequest;
 import com.meta64.mobile.request.RenderNodeRequest;
 import com.meta64.mobile.request.SaveNodeRequest;
@@ -64,6 +65,7 @@ import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.MakeNodeReferencableResponse;
+import com.meta64.mobile.response.NodeSearchResponse;
 import com.meta64.mobile.response.RemovePrivilegeResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
 import com.meta64.mobile.response.SaveNodeResponse;
@@ -71,6 +73,7 @@ import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
 import com.meta64.mobile.service.NodeRenderService;
+import com.meta64.mobile.service.NodeSearchService;
 import com.meta64.mobile.util.ImportWarAndPeace;
 
 /**
@@ -101,6 +104,9 @@ public class AppController {
 
 	@Autowired
 	private NodeRenderService nodeRenderService;
+	
+	@Autowired
+	private NodeSearchService nodeSearchService;
 
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
@@ -699,6 +705,16 @@ public class AppController {
 		return res;
 	}
 	
-	//see DescendantSearchTest
-	
+	@RequestMapping(value = REST_PATH + "/nodeSearch", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody NodeSearchResponse nodeSearch(@RequestBody NodeSearchRequest req) throws Exception {
+		logRequest("nodeSearch", req);
+
+		NodeSearchResponse res = new NodeSearchResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+
+		nodeSearchService.search(session, req, res);
+		return res;
+	}
 }

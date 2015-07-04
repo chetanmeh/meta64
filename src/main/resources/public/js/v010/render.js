@@ -7,71 +7,6 @@ var render = function() {
 	/*
 	 * ================= PRIVATE =================
 	 */
-	/*
-	 * node: JSON of NodeInfo.java
-	 */
-	function _renderNodeContent(node, showIdentifier, showPath, showName, renderBinary) {
-		var ret = '';
-
-		if (showPath) {
-			var path = meta64.js.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
-			/* tail end of path is the name, so we can strip that off */
-			// path = path.replace(node.name, "");
-			ret += "Path: " + _.formatPath(path) + "<br>";
-		}
-
-		if (showIdentifier) {
-			if (node.id === node.path && showPath) {
-				// ret += "ID: *<br>";
-			} else {
-				/*
-				 * if ID contains a slash then it's more path than ID, so I won't show it as an ID. This is kind of 
-				 * confusing how JCR will put in the ID as a path component, which is valid but then again it's not
-				 * an ID either.
-				 */
-				//if (!node.id.contains("/")) {
-					ret += "ID: " + node.id + "<br>";
-				//}
-			}
-		}
-
-		/*
-		 * on root node name will be empty string so don't show that
-		 * 
-		 * commenting: I decided users will understand the path as a single long
-		 * entity with less confusion than breaking out the name for them. They
-		 * already unserstand internet URLs. This is the same concept. No need
-		 * to baby them.
-		 * 
-		 * The !showPath condition here is because if we are showing the path
-		 * then the end of that is always the name, so we don't need to show the
-		 * path AND the name. One is a substring of the other.
-		 */
-		if (showName && !showPath && node.name) {
-			ret += "Name: " + node.name + " [uid=" + node.uid + "]";
-		}
-
-		if (meta64.js.showProperties) {
-			// console.log("showProperties = " + meta64.js.showProperties);
-			var properties = props.renderProperties(node.properties);
-			if (properties) {
-				ret += /* "<br>" + */properties;
-			}
-		} else {
-			var contentProp = props.getNodeProperty("jcr:content", node);
-			if (contentProp) {
-				var jcrContent = props.renderProperty(contentProp);
-
-				ret += _.makeTag("div", {
-					"class" : "jcr-content"
-				}, _.markdown(jcrContent));
-			}
-		}
-		if (renderBinary && node.hasBinary) {
-			ret += _renderBinary(node);
-		}
-		return ret;
-	}
 
 	/*
 	 * This is the content displayed when the user signs in, and we see that
@@ -118,6 +53,74 @@ var render = function() {
 	 */
 	var _ = {
 		/*
+		 * node: JSON of NodeInfo.java
+		 */
+		renderNodeContent : function(node, showIdentifier, showPath, showName, renderBinary) {
+			var ret = '';
+
+			if (showPath) {
+				var path = meta64.js.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
+				/* tail end of path is the name, so we can strip that off */
+				// path = path.replace(node.name, "");
+				ret += "Path: " + _.formatPath(path) + "<br>";
+			}
+
+			if (showIdentifier) {
+				if (node.id === node.path && showPath) {
+					// ret += "ID: *<br>";
+				} else {
+					/*
+					 * if ID contains a slash then it's more path than ID, so I
+					 * won't show it as an ID. This is kind of confusing how JCR
+					 * will put in the ID as a path component, which is valid
+					 * but then again it's not an ID either.
+					 */
+					// if (!node.id.contains("/")) {
+					ret += "ID: " + node.id + "<br>";
+					// }
+				}
+			}
+
+			/*
+			 * on root node name will be empty string so don't show that
+			 * 
+			 * commenting: I decided users will understand the path as a single
+			 * long entity with less confusion than breaking out the name for
+			 * them. They already unserstand internet URLs. This is the same
+			 * concept. No need to baby them.
+			 * 
+			 * The !showPath condition here is because if we are showing the
+			 * path then the end of that is always the name, so we don't need to
+			 * show the path AND the name. One is a substring of the other.
+			 */
+			if (showName && !showPath && node.name) {
+				ret += "Name: " + node.name + " [uid=" + node.uid + "]";
+			}
+
+			if (meta64.js.showProperties) {
+				// console.log("showProperties = " +
+				// meta64.js.showProperties);
+				var properties = props.renderProperties(node.properties);
+				if (properties) {
+					ret += /* "<br>" + */properties;
+				}
+			} else {
+				var contentProp = props.getNodeProperty("jcr:content", node);
+				if (contentProp) {
+					var jcrContent = props.renderProperty(contentProp);
+
+					ret += _.makeTag("div", {
+						"class" : "jcr-content"
+					}, _.markdown(jcrContent));
+				}
+			}
+			if (renderBinary && node.hasBinary) {
+				ret += _renderBinary(node);
+			}
+			return ret;
+		},
+
+		/*
 		 * node is a NodeInfo.java JSON
 		 */
 		renderNodeAsListItem : function(node, index, count, rowCount) {
@@ -157,7 +160,7 @@ var render = function() {
 			_.makeButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed) + _.makeTag("div", //
 			{
 				"id" : uid + "_content"
-			}, _renderNodeContent(node, true, true, true, true)));
+			}, _.renderNodeContent(node, true, true, true, true)));
 		},
 
 		makeButtonBarHtml : function(uid, canMoveUp, canMoveDown, editingAllowed) {
@@ -341,19 +344,22 @@ var render = function() {
 			// propCount);
 			var output = '';
 
-			$("#mainNodeContent").html(_renderNodeContent(data.node, true, true, false, false));
+			$("#mainNodeContent").html(_.renderNodeContent(data.node, true, true, false, false));
 			view.updateStatusBar();
 
 			var childCount = data.children.length;
-			
-			/* Number of rows that have actually made it onto the page to far. Note: some nodes get filtered 
-			 * out on the client side for various reasons.
+
+			/*
+			 * Number of rows that have actually made it onto the page to far.
+			 * Note: some nodes get filtered out on the client side for various
+			 * reasons.
 			 */
 			var rowCount = 0;
 
 			$.each(data.children, function(i, node) {
-				if (meta64.isNodeBlackListed(node)) return;
-				
+				if (meta64.isNodeBlackListed(node))
+					return;
+
 				if (newData) {
 					meta64.initNode(node);
 
