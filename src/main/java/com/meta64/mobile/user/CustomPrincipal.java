@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.user;
 
 import java.security.Principal;
 

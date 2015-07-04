@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.repo;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -6,6 +6,8 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.meta64.mobile.user.UserManagerUtil;
 
 /**
  * Instance of a Repository

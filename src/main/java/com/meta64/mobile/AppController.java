@@ -30,8 +30,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.meta64.image.CaptchaMaker;
 import com.meta64.mobile.annotate.OakSession;
+import com.meta64.mobile.config.AppConstant;
+import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.config.SpringContextUtil;
+import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.model.PropertyInfo;
 import com.meta64.mobile.request.AddPrivilegeRequest;
@@ -74,20 +77,29 @@ import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
 import com.meta64.mobile.service.NodeRenderService;
 import com.meta64.mobile.service.NodeSearchService;
+import com.meta64.mobile.user.AccessControlUtil;
+import com.meta64.mobile.user.UserManagerService;
+import com.meta64.mobile.user.UserManagerUtil;
+import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.ImportWarAndPeace;
+import com.meta64.mobile.util.JcrUtil;
+import com.meta64.mobile.util.ThreadLocals;
+import com.meta64.mobile.util.XString;
 
 /**
  * Primary Spring MVC controller, that returns the main page, process REST calls from the client
  * javascript, and also performs the uploading/download, and serving of images. These major areas
  * probably will eventually be broken out onto separate controllers, and much of the business rules
  * in here will be moved out into service or utility classes
+ * 
+ * Note, it's critical to understand the OakSession AOP code or else this class will be confusing 
+ * regarding how the OAK transations are managed and how logging in is done.
  */
 @Controller
 @Scope("session")
 public class AppController {
 	private static final Logger log = LoggerFactory.getLogger(AppController.class);
-
-	public static String NAMESPACE = "nt";
+	
 	private static final String REST_PATH = "/mobile/rest";
 
 	/*
@@ -210,41 +222,6 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 
 		nodeRenderService.renderNode(session, req, res);
-
-		//
-		// List<NodeInfo> children = new LinkedList<NodeInfo>();
-		// res.setChildren(children);
-		//
-		// Node node = JcrUtil.findNode(session, req.getNodeId());
-		//
-		// int levelsUpRemaining = req.getUpLevel();
-		// while (node != null && levelsUpRemaining > 0) {
-		// node = node.getParent();
-		// if (Log.renderNodeRequest) {
-		// // System.out.println("   upLevel to nodeid: "+item.getPath());
-		// }
-		// levelsUpRemaining--;
-		// }
-		//
-		// NodeInfo nodeInfo = Convert.convertToNodeInfo(session, node);
-		// NodeType type = node.getPrimaryNodeType();
-		// boolean ordered = type.hasOrderableChildNodes();
-		// nodeInfo.setChildrenOrdered(ordered);
-		// // System.out.println("Primary type: " + type.getName() + " childrenOrdered=" +
-		// // ordered);
-		// res.setNode(nodeInfo);
-		//
-		// NodeIterator nodeIter = node.getNodes();
-		// try {
-		// while (true) {
-		// Node n = nodeIter.nextNode();
-		// children.add(Convert.convertToNodeInfo(session, n));
-		// }
-		// }
-		// catch (NoSuchElementException ex) {
-		// // not an error. Normal iterator end condition.
-		// }
-
 		return res;
 	}
 
@@ -357,7 +334,7 @@ public class AppController {
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
 		/* NT_UNSTRUCTURED IS ORDERABLE */
-		Node newNode = node.addNode(NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
+		Node newNode = node.addNode(AppConstant.NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty("jcr:content", "");
 		session.save();
 		// res.setNewChildNodeId(newNode.getIdentifier());
@@ -412,7 +389,7 @@ public class AppController {
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
 		/* NT_UNSTRUCTURED IS ORDERABLE */
-		Node newNode = parentNode.addNode(NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
+		Node newNode = parentNode.addNode(AppConstant.NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty("jcr:content", "");
 		session.save();
 
@@ -454,7 +431,7 @@ public class AppController {
 
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-		Node nodeToRemove = session.getNode(node.getPath() + "/" + NAMESPACE + ":bin");
+		Node nodeToRemove = session.getNode(node.getPath() + "/" + AppConstant.NAMESPACE + ":bin");
 		nodeToRemove.remove();
 		session.save();
 		res.setSuccess(true);
@@ -628,7 +605,7 @@ public class AppController {
 			Node node = JcrUtil.findNode(session, nodeId);
 			String mimeType = URLConnection.guessContentTypeFromName(fileName);
 
-			String name = NAMESPACE + ":bin";
+			String name = AppConstant.NAMESPACE + ":bin";
 
 			Node binaryNode = null;
 			long version = 0;
@@ -639,7 +616,7 @@ public class AppController {
 				 * Based on my reading of the JCR docs, I don't need to remove old properties,
 				 * because new property will overwrite. TODO: testing pending
 				 */
-				Property versionProperty = binaryNode.getProperty(NAMESPACE + ":ver");
+				Property versionProperty = binaryNode.getProperty(AppConstant.NAMESPACE + ":ver");
 				if (versionProperty != null) {
 					version = versionProperty.getValue().getLong();
 				}
@@ -656,7 +633,7 @@ public class AppController {
 			Binary binary = session.getValueFactory().createBinary(uploadfile.getInputStream());
 			binaryNode.setProperty("jcr:data", binary);
 			binaryNode.setProperty("jcr:mimeType", mimeType);
-			binaryNode.setProperty(NAMESPACE + ":ver", ++version);
+			binaryNode.setProperty(AppConstant.NAMESPACE + ":ver", ++version);
 
 			/*
 			 * DO NOT DELETE (this code can be used to test uploading) String directory =

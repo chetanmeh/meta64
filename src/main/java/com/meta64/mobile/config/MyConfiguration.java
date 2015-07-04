@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.config;
 
 /**
  * Keeping this for future reference.

@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.user;
 
 import javax.jcr.Session;
 
@@ -7,6 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.util.JcrRunnable;
+import com.meta64.mobile.util.ValContainer;
+import com.meta64.mobile.util.XString;
 
 /**
  * Service methods for processing user management functions. Login, logout, etc.

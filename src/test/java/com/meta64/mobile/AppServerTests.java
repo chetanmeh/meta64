@@ -14,6 +14,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.request.AddPrivilegeRequest;
 import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
@@ -26,6 +27,11 @@ import com.meta64.mobile.response.GetNodePrivilegesResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.RemovePrivilegeResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.user.RunAsJcrAdmin;
+import com.meta64.mobile.user.UserManagerService;
+import com.meta64.mobile.util.Convert;
+import com.meta64.mobile.util.JcrRunnable;
+import com.meta64.mobile.util.ThreadLocals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServer.class)

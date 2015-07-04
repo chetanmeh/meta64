@@ -1,4 +1,4 @@
-package com.meta64.image;
+package com.meta64.mobile.image;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;

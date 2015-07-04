@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.util;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.model.NodeInfo;
 import com.meta64.mobile.model.PrivilegeInfo;
@@ -92,7 +93,7 @@ public class Convert {
 	}
 
 	public static long getBinaryVersion(Node node) throws Exception {
-		Property versionProperty = node.getProperty(AppController.NAMESPACE + ":ver");
+		Property versionProperty = node.getProperty(AppConstant.NAMESPACE + ":ver");
 		if (versionProperty != null) {
 			return versionProperty.getValue().getLong();
 		}

@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.Convert;
-import com.meta64.mobile.JcrUtil;
-import com.meta64.mobile.OakRepositoryBean;
-import com.meta64.mobile.RunAsJcrAdmin;
-import com.meta64.mobile.SessionContext;
+import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
+import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.NodeSearchRequest;
 import com.meta64.mobile.response.NodeSearchResponse;
+import com.meta64.mobile.user.RunAsJcrAdmin;
+import com.meta64.mobile.util.Convert;
+import com.meta64.mobile.util.JcrUtil;
 
 /**
  * Service for searching the repository

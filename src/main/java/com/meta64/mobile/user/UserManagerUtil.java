@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.user;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.meta64.mobile.model.RefInfo;
+import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.util.JcrUtil;
 
 /**
  * Utilities related to user management.

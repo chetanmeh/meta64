@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.OakRepositoryBean;
-import com.meta64.mobile.SessionContext;
-import com.meta64.mobile.SpringContextUtil;
-import com.meta64.mobile.ThreadLocals;
+import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.config.SpringContextUtil;
+import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.SignupRequest;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.base.OakResponseBase;
+import com.meta64.mobile.util.ThreadLocals;
 
 /**
  * This is the core (and maybe only) chunk of AOP that we use in this app, that wraps the processing

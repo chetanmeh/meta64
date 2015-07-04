@@ -1,10 +1,12 @@
-package com.meta64.mobile;
+package com.meta64.mobile.config;
 
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.meta64.mobile.repo.OakRepositoryBean;
 
 /**
  * Wrapper for holding variables that we do need to maintain server state of for a specific session.

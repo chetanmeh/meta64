@@ -1,4 +1,4 @@
-package com.meta64.mobile;
+package com.meta64.mobile.util;
 
 /**
  * Allows passing an object as a parameter to a method and then getting data back out of that
