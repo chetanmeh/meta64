@@ -8,6 +8,8 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.jackrabbit.JcrConstants;
+
 /**
  * Assorted general utility functions related to JCR nodes.
  */
@@ -17,6 +19,21 @@ public class JcrUtil {
 		return id.startsWith("/") ? session.getNode(id) : session.getNodeByIdentifier(id);
 	}
 
+	public static void timestampNewNode(Session session, Node node) throws Exception {
+		//newNode.setProperty("jcr:content", "");
+		//newNode.setProperty("jcr:content", "");
+		
+		//mix:created -> jcr:created + jcr:createdBy
+		if (!node.hasProperty("jcr:created")) {
+			node.addMixin("mix:created");
+		}
+		
+		//mix:lastModified -> jcr:lastModified + jcr:lastModifiedBy
+		if (!node.hasProperty("jcr:lastModified")) {
+			node.addMixin("mix:lastModified");
+		}
+	}
+	
 	public static Node getNodeByPath(Session session, String path) {
 		try {
 			return session.getNode("/jcr:root");

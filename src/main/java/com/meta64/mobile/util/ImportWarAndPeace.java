@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
@@ -33,9 +34,11 @@ public class ImportWarAndPeace {
 	private int globalChapter = 0;
 	private int globalVerse = 0;
 	private boolean halt;
+	private Session session;
 
-	public void importBook(String resourceName, Node root) throws Exception {
+	public void importBook(Session session, String resourceName, Node root) throws Exception {
 		this.root = root;
+		this.session = session;
 		Resource resource = SpringContextUtil.getApplicationContext().getResource(resourceName);
 		InputStream is = resource.getInputStream();
 		BufferedReader in = new BufferedReader(new InputStreamReader(is));
@@ -105,6 +108,7 @@ public class ImportWarAndPeace {
 
 			curChapter = curBook.addNode(AppConstant.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
 			curChapter.setProperty("jcr:content", "C" + String.valueOf(globalChapter) + ". " + line);
+			JcrUtil.timestampNewNode(session, curChapter);
 			return true;
 		}
 
@@ -130,7 +134,7 @@ public class ImportWarAndPeace {
 
 		Node paraNode = curChapter.addNode(AppConstant.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
 		paraNode.setProperty("jcr:content", "VS" + globalVerse + ". " + line);
-
+		JcrUtil.timestampNewNode(session, paraNode);
 		paragraph.setLength(0);
 		return true;
 	}
@@ -149,6 +153,7 @@ public class ImportWarAndPeace {
 
 			curBook = root.addNode(AppConstant.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
 			curBook.setProperty("jcr:content", "B" + String.valueOf(globalBook) + ". " + line);
+			JcrUtil.timestampNewNode(session, curBook);
 			return true;
 		}
 		return false;

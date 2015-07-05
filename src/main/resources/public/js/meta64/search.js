@@ -1,6 +1,7 @@
 console.log("running module: search.js");
 
-/* WARNING
+/*
+ * WARNING
  * 
  * Due to something apparently in the global namespace, if I try to use 'search'
  * as the variable name here instead of 'srch' the onClick handler of JQuery
@@ -25,15 +26,6 @@ var srch = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		clickSearchNode : function(uid) {
-			/*
-			 * update highlight node to point to the node clicked on, just to
-			 * persist it for later
-			 */
-			srch.highlightRowNode = srch.uidToNodeMap[uid];
-			view.refreshTree(srch.highlightRowNode.id);
-			$.mobile.changePage("#");
-		},
 
 		/*
 		 * Will be the last row clicked on (NodeInfo.java object) and having the
@@ -178,6 +170,16 @@ var srch = function() {
 			_.highlightRowNode = _.uidToNodeMap[uid];
 
 			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
+		},
+
+		clickSearchNode : function(uid) {
+			/*
+			 * update highlight node to point to the node clicked on, just to
+			 * persist it for later
+			 */
+			srch.highlightRowNode = srch.uidToNodeMap[uid];
+			view.refreshTree(srch.highlightRowNode.id);
+			$.mobile.changePage("#");
 		},
 
 		/*

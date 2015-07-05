@@ -71,7 +71,7 @@ var edit = function() {
 		meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = res.newNode;
 
 		meta64.initNode(res.newNode);
-		edit.editNode(res.newNode.uid);
+		edit.runEditNode(res.newNode.uid);
 	}
 
 	var _makeNodeReferencableResponse = function(res) {
@@ -93,7 +93,7 @@ var edit = function() {
 		console.log("new child identifier: " + meta64.newChildNodeId);
 
 		meta64.initNode(res.newNode);
-		edit.editNode(res.newNode.uid);
+		edit.runEditNode(res.newNode.uid);
 	}
 
 	/*
@@ -300,7 +300,7 @@ var edit = function() {
 			}
 		},
 
-		editNode : function(uid) {
+		runEditNode : function(uid) {
 			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
 				_.editNode = null;

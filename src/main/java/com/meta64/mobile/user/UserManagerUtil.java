@@ -74,6 +74,7 @@ public class UserManagerUtil {
 		log.debug("Creating jcr:root node, which didn't exist.");
 
 		Node newNode = allUsersRoot.addNode("jcr:" + userName, JcrConstants.NT_UNSTRUCTURED);
+		JcrUtil.timestampNewNode(session, newNode);
 		if (newNode == null) {
 			throw new Exception("unable to create jcr:root");
 		}

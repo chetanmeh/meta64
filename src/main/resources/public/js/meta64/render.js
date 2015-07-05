@@ -229,7 +229,7 @@ var render = function() {
 				/* Construct Create Subnode Button */
 				editNodeButton = _.makeTag("a", //
 				{
-					"onClick" : "edit.editNode('" + uid + "');",
+					"onClick" : "edit.runEditNode('" + uid + "');",
 					"data-role" : "button",
 					"data-icon" : "edit"
 				}, "Edit");
@@ -323,19 +323,20 @@ var render = function() {
 		},
 
 		renderPageFromData : function(data) {
-			if (!data.node) {
-				util.setVisibility("#listView", false);
-				$("#mainNodeContent").html("No default content is available.");
-				return;
-			} else {
-				util.setVisibility("#listView", true);
-			}
 
 			var newData = false;
 			if (!data) {
 				data = meta64.currentNodeData;
 			} else {
 				newData = true;
+			}
+			
+			if (!data || !data.node) {
+				util.setVisibility("#listView", false);
+				$("#mainNodeContent").html("No default content is available.");
+				return;
+			} else {
+				util.setVisibility("#listView", true);
 			}
 
 			meta64.treeDirty = false;

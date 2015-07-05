@@ -1,6 +1,6 @@
 # Meta64: A "Mobile first" JCR Browser
-(JCR=Java Content Repository)
-Document Date: 6/28/2015
+# *(JCR=Java Content Repository)*
+Document Date: 07/05/2015
 
 ## Key Technologies
 
@@ -64,6 +64,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 ### Next Features to be Developed
 Listed here in the order they will likely be developed...
 
+* Ensure updateDate and createDate exists on all nodes
 * More JUnit unit tests.
 * Cut, Copy, Paste (move nodes to new location on tree)
 * Ability to share node with specific user.

@@ -336,37 +336,11 @@ public class AppController {
 		/* NT_UNSTRUCTURED IS ORDERABLE */
 		Node newNode = node.addNode(AppConstant.NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty("jcr:content", "");
+		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
 		// res.setNewChildNodeId(newNode.getIdentifier());
 
 		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
-		res.setSuccess(true);
-
-		return res;
-	}
-	
-	@RequestMapping(value = REST_PATH + "/insertBook", method = RequestMethod.POST)
-	@OakSession
-	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
-		logRequest("insertBook", req);
-		if (sessionContext.isAdmin()) {
-			throw new Exception("insertBook is an admin-only feature.");
-		}
-		
-		InsertBookResponse res = new InsertBookResponse();
-		ThreadLocals.setResponse(res);
-		Session session = ThreadLocals.getJcrSession();
-
-		String nodeId = req.getNodeId();
-		Node node = JcrUtil.findNode(session, nodeId); 
-
-		/* for now we don't check book name. Only one book exists: War and Peace */
-		//String name = req.getBookName();
-
-		ImportWarAndPeace iwap = SpringContextUtil.getApplicationContext().getBean(ImportWarAndPeace.class);
-		iwap.importBook("classpath:/com/meta64/mobile/util/war-and-peace.txt", node);
-		
-		session.save();
 		res.setSuccess(true);
 
 		return res;
@@ -391,6 +365,7 @@ public class AppController {
 		/* NT_UNSTRUCTURED IS ORDERABLE */
 		Node newNode = parentNode.addNode(AppConstant.NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty("jcr:content", "");
+		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
 
 		if (!XString.isEmpty(req.getTargetName())) {
@@ -400,6 +375,33 @@ public class AppController {
 		session.save();
 		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
 		res.setSuccess(true);
+		return res;
+	}
+	
+	@RequestMapping(value = REST_PATH + "/insertBook", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
+		logRequest("insertBook", req);
+		if (sessionContext.isAdmin()) {
+			throw new Exception("insertBook is an admin-only feature.");
+		}
+		
+		InsertBookResponse res = new InsertBookResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+
+		String nodeId = req.getNodeId();
+		Node node = JcrUtil.findNode(session, nodeId); 
+
+		/* for now we don't check book name. Only one book exists: War and Peace */
+		//String name = req.getBookName();
+
+		ImportWarAndPeace iwap = SpringContextUtil.getApplicationContext().getBean(ImportWarAndPeace.class);
+		iwap.importBook(session, "classpath:/com/meta64/mobile/util/war-and-peace.txt", node);
+		
+		session.save();
+		res.setSuccess(true);
+
 		return res;
 	}
 
@@ -628,6 +630,7 @@ public class AppController {
 			/* if no existing node existed we need to create */
 			if (binaryNode == null) {
 				binaryNode = node.addNode(name, JcrConstants.NT_UNSTRUCTURED);
+				JcrUtil.timestampNewNode(session, binaryNode);
 			}
 
 			Binary binary = session.getValueFactory().createBinary(uploadfile.getInputStream());
