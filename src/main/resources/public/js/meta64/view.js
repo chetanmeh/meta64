@@ -40,7 +40,7 @@ var view = function() {
 		 * data is instanceof RenderNodeResponse.java
 		 */
 		renderNodeResponse : function(data) {
-			//console.log("renderNode: " + JSON.stringify(data));
+			console.log("renderNode: " + JSON.stringify(data));
 			render.renderPageFromData(data);
 			meta64.refreshAllGuiEnablement();
 		},

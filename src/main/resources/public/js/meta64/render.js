@@ -323,6 +323,14 @@ var render = function() {
 		},
 
 		renderPageFromData : function(data) {
+			if (!data.node) {
+				util.setVisibility("#listView", false);
+				$("#mainNodeContent").html("No default content is available.");
+				return;
+			} else {
+				util.setVisibility("#listView", true);
+			}
+
 			var newData = false;
 			if (!data) {
 				data = meta64.currentNodeData;
@@ -332,7 +340,6 @@ var render = function() {
 
 			meta64.treeDirty = false;
 
-			// console.log("renderPageFromData.");
 			if (newData) {
 				meta64.uidToNodeMap = {};
 				meta64.initNode(data.node);
@@ -347,47 +354,50 @@ var render = function() {
 			$("#mainNodeContent").html(_.renderNodeContent(data.node, true, true, false, false));
 			view.updateStatusBar();
 
-			var childCount = data.children.length;
+			if (data.children) {
+				var childCount = data.children.length;
+				console.log("childCount: " + childCount);
+				/*
+				 * Number of rows that have actually made it onto the page to
+				 * far. Note: some nodes get filtered out on the client side for
+				 * various reasons.
+				 */
+				var rowCount = 0;
 
-			/*
-			 * Number of rows that have actually made it onto the page to far.
-			 * Note: some nodes get filtered out on the client side for various
-			 * reasons.
-			 */
-			var rowCount = 0;
+				$.each(data.children, function(i, node) {
+					if (meta64.isNodeBlackListed(node))
+						return;
 
-			$.each(data.children, function(i, node) {
-				if (meta64.isNodeBlackListed(node))
-					return;
+					if (newData) {
+						meta64.initNode(node);
 
-				if (newData) {
-					meta64.initNode(node);
+						// console.log(" RENDER ROW[" + i + "]: node.id=" +
+						// node.id);
 
-					// console.log(" RENDER ROW[" + i + "]: node.id=" +
-					// node.id);
+						/*
+						 * if no row is selected for this parent, select the
+						 * first row
+						 */
+						if (!meta64.parentUidToFocusNodeMap[meta64.currentNodeUid]) {
+							meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
 
-					/*
-					 * if no row is selected for this parent, select the first
-					 * row
-					 */
-					if (!meta64.parentUidToFocusNodeMap[meta64.currentNodeUid]) {
-						meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-
-						if (!node.uid) {
-							alert("oops, node.uid is null");
+							if (!node.uid) {
+								alert("oops, node.uid is null");
+							}
+							// console.log("Setting default row selection to
+							// this
+							// top
+							// row");
+						} else {
+							// console.log(" SEL ROW
+							// KNOWN:"+parentIdToFocusIdMap[meta64.currentNodeData.node.id]);
 						}
-						// console.log("Setting default row selection to this
-						// top
-						// row");
-					} else {
-						// console.log(" SEL ROW
-						// KNOWN:"+parentIdToFocusIdMap[meta64.currentNodeData.node.id]);
 					}
-				}
 
-				rowCount++;
-				output += _.renderNodeAsListItem(node, i, childCount, rowCount);
-			});
+					rowCount++;
+					output += _.renderNodeAsListItem(node, i, childCount, rowCount);
+				});
+			}
 
 			if (output.length == 0) {
 				output = _getEmptyPagePrompt();

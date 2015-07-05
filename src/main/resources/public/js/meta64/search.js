@@ -1,16 +1,15 @@
 console.log("running module: search.js");
 
-function clickSearchNode(uid) {
-	/*
-	 * update highlight node to point to the node clicked on, just to persist it
-	 * for later
-	 */
-	search.highlightRowNode = search.uidToNodeMap[uid];
-	view.refreshTree(search.highlightRowNode.id);
-	$.mobile.changePage("#");
-};
+/* WARNING
+ * 
+ * Due to something apparently in the global namespace, if I try to use 'search'
+ * as the variable name here instead of 'srch' the onClick handler of JQuery
+ * Mobile-decorated anchor tags gives an error saying the function is not found.
+ * So either Chrome or JQuery is somehow not compatible with a global variable
+ * named 'search'.
+ */
 
-var search = function() {
+var srch = function() {
 
 	var _UID_ROWID_SUFFIX = "_srch_row";
 
@@ -26,13 +25,13 @@ var search = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		clickSearchNode2 : function(uid) {
+		clickSearchNode : function(uid) {
 			/*
 			 * update highlight node to point to the node clicked on, just to
 			 * persist it for later
 			 */
-			search.highlightRowNode = search.uidToNodeMap[uid];
-			view.refreshTree(search.highlightRowNode.id);
+			srch.highlightRowNode = srch.uidToNodeMap[uid];
+			view.refreshTree(srch.highlightRowNode.id);
 			$.mobile.changePage("#");
 		},
 
@@ -148,7 +147,7 @@ var search = function() {
 			return render.makeTag("div", //
 			{
 				"class" : "node-table-row inactive-row",
-				"onClick" : "search.clickOnSearchResultRow(this, '" + uid + "');", //
+				"onClick" : "srch.clickOnSearchResultRow(this, '" + uid + "');", //
 				"id" : cssId
 			},// 
 			_.makeButtonBarHtml(uid) + render.makeTag("div", //
@@ -161,19 +160,8 @@ var search = function() {
 
 			var openButton = render.makeTag("a", //
 			{
-				/* For some VERY strange reason this call doesn't work. Says the function is not existing. WRONG Chrome.
-				 * This is either an exceedly strange browser bug or the scope named 'search' is overriding this only 
-				 * in the anchor tag. If I use the exact same 'search.clickSearchNode2' in the onClick of a DIV tag
-				 * it works perfectly well so the functio DOES exist and DOES have the correct name here. I spent 
-				 * SEVERAL HOURS trying to figure out what is choking the onclick method here, with no progress, other 
-				 * than to discover a globally scoped function WILL work.
-				 */
-				//"onClick" : "search.clickSearchNode2('" + uid + "');", //
-				
-				//This version works, oddly only because of global scope. VERY strange. I want to use
-				//search scope but that fails. See note above.
-				"onClick" : "clickSearchNode('" + uid + "');", //
-				
+				"onClick" : "srch.clickSearchNode('" + uid + "');", //
+
 				"data-role" : "button",
 				"data-icon" : "plus",
 				"data-theme" : "b"
@@ -215,13 +203,3 @@ var search = function() {
 	console.log("Module ready: search.js");
 	return _;
 }();
-
-function verifyFunction() {
-	if (typeof clickSearchNode != 'function') {
-		console.log("************************************ Failed creating clickSearchNode function");
-	} else {
-		console.log("************************************ clickSearchNode is STILL a function.");
-	}
-}
-
-verifyFunction();

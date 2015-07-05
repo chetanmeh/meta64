@@ -259,11 +259,11 @@ var meta64 = function() {
 			}, {
 				"name" : "searchNodes",
 				"enable" : true,
-				"function" : search.searchNodes
+				"function" : srch.searchNodes
 			}, {
 				"name" : "searchNodesDialog",
 				"enable" : true,
-				"function" : search.searchNodesDialog
+				"function" : srch.searchNodesDialog
 			});
 
 			// hookSliderChanges("editMode");
@@ -376,12 +376,14 @@ var meta64 = function() {
 			 */
 			// $(document).ready(function() {
 			$(document).on("pagecreate", "#mainPage", function(event) {
-				_.initApp();
+				//_.initApp();
 			});
 		},
 
 		anonPageLoadResponse : function(res) {
 			if (res.renderNodeResponse) {
+				console.log("res.renderNodeResponse exists.");
+				
 				util.setVisibility("#mainNodeContent", true);
 				util.setVisibility("#mainNodeStatusBar", true);
 				view.renderNodeResponse(res.renderNodeResponse);
@@ -398,6 +400,10 @@ var meta64 = function() {
 		 * that this node is 'recognized' by client side code
 		 */
 		initNode : function(node) {
+			if (!node) {
+				console.log("initNode has null node");
+				return;
+			}
 			node.uid = util.getUidForId(_.identToUidMap, node.id);
 			node.properties = props.setPreferredPropertyOrder(node.properties);
 

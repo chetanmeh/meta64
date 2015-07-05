@@ -120,7 +120,7 @@ var edit = function() {
 		 * 
 		 */
 		nodeInsertTarget : null,
-
+		
 		/*
 		 * called to display editor that will come up BEFORE any node is saved
 		 * onto the server, so that the first time any save is performed we will
