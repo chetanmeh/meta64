@@ -104,6 +104,7 @@ var srch = function() {
 			});
 
 			util.setHtmlEnhanced($("#searchResultsView"), output);
+			$.mobile.changePage("#searchResultsDialog");
 		},
 
 		/*
