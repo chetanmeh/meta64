@@ -47,7 +47,15 @@ public class NodeRenderService {
 		List<NodeInfo> children = new LinkedList<NodeInfo>();
 		res.setChildren(children);
 
-		Node node = JcrUtil.findNode(session, req.getNodeId());
+		Node node;
+		try {
+			node = JcrUtil.findNode(session, req.getNodeId());
+		}
+		catch (Exception e) {
+			res.setMessage("Node not found.");
+			res.setSuccess(false);
+			return;
+		}
 
 		int levelsUpRemaining = req.getUpLevel();
 		while (node != null && levelsUpRemaining > 0) {

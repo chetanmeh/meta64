@@ -1,6 +1,18 @@
 console.log("running module: search.js");
 
+function clickSearchNode(uid) {
+	/*
+	 * update highlight node to point to the node clicked on, just to persist it
+	 * for later
+	 */
+	search.highlightRowNode = search.uidToNodeMap[uid];
+	view.refreshTree(search.highlightRowNode.id);
+	$.mobile.changePage("#");
+};
+
 var search = function() {
+
+	var _UID_ROWID_SUFFIX = "_srch_row";
 
 	/*
 	 * ================= PRIVATE =================
@@ -8,12 +20,21 @@ var search = function() {
 
 	var _searchNodesResponse = function(res) {
 		_.renderSearchResultsFromData(res);
-	}
+	};
 
 	/*
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
+		clickSearchNode2 : function(uid) {
+			/*
+			 * update highlight node to point to the node clicked on, just to
+			 * persist it for later
+			 */
+			search.highlightRowNode = search.uidToNodeMap[uid];
+			view.refreshTree(search.highlightRowNode.id);
+			$.mobile.changePage("#");
+		},
 
 		/*
 		 * Will be the last row clicked on (NodeInfo.java object) and having the
@@ -122,7 +143,7 @@ var search = function() {
 			// selected = true;
 			// }
 
-			var cssId = uid + "_srch_row";
+			var cssId = uid + _UID_ROWID_SUFFIX;
 			// console.log("Rendering Node Row[" + index + "] with id: " +cssId)
 			return render.makeTag("div", //
 			{
@@ -130,23 +151,42 @@ var search = function() {
 				"onClick" : "search.clickOnSearchResultRow(this, '" + uid + "');", //
 				"id" : cssId
 			},// 
-			/* _.makeButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed) + */render.makeTag("div", //
+			_.makeButtonBarHtml(uid) + render.makeTag("div", //
 			{
 				"id" : uid + "_srch_content"
 			}, render.renderNodeContent(node, true, true, true, true)));
 		},
 
+		makeButtonBarHtml : function(uid) {
+
+			var openButton = render.makeTag("a", //
+			{
+				/* For some VERY strange reason this call doesn't work. Says the function is not existing. WRONG Chrome.
+				 * This is either an exceedly strange browser bug or the scope named 'search' is overriding this only 
+				 * in the anchor tag. If I use the exact same 'search.clickSearchNode2' in the onClick of a DIV tag
+				 * it works perfectly well so the functio DOES exist and DOES have the correct name here. I spent 
+				 * SEVERAL HOURS trying to figure out what is choking the onclick method here, with no progress, other 
+				 * than to discover a globally scoped function WILL work.
+				 */
+				//"onClick" : "search.clickSearchNode2('" + uid + "');", //
+				
+				//This version works, oddly only because of global scope. VERY strange. I want to use
+				//search scope but that fails. See note above.
+				"onClick" : "clickSearchNode('" + uid + "');", //
+				
+				"data-role" : "button",
+				"data-icon" : "plus",
+				"data-theme" : "b"
+			}, //
+			"Open");
+
+			return render.makeHorizontalFieldSet(openButton);
+		},
+
 		clickOnSearchResultRow : function(rowElm, uid) {
+			verifyFunction();
 
 			_.unhighlightRow();
-
-			// var node = _.uidToNodeMap[uid];
-			// if (!node) {
-			// console.log("clickOnNodeRow recieved uid that doesn't map to any
-			// node. uid=" + uid);
-			// return;
-			// }
-
 			_.highlightRowNode = _.uidToNodeMap[uid];
 
 			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
@@ -162,7 +202,7 @@ var search = function() {
 			}
 
 			/* now make CSS id from node */
-			var nodeId = _.highlightRowNode.uid + "_srch_row";
+			var nodeId = _.highlightRowNode.uid + _UID_ROWID_SUFFIX;
 
 			var elm = util.domElm(nodeId);
 			if (elm) {
@@ -170,8 +210,18 @@ var search = function() {
 				util.changeOrAddClass(elm, "active-row", "inactive-row");
 			}
 		}
-	}
+	};
 
 	console.log("Module ready: search.js");
 	return _;
 }();
+
+function verifyFunction() {
+	if (typeof clickSearchNode != 'function') {
+		console.log("************************************ Failed creating clickSearchNode function");
+	} else {
+		console.log("************************************ clickSearchNode is STILL a function.");
+	}
+}
+
+verifyFunction();
