@@ -495,14 +495,22 @@ public class AppController {
 
 		Session session = ThreadLocals.getJcrSession();
 		String nodeId = req.getNodeId();
-		// System.out.println("saveNode. nodeId=" + nodeId);
+		log.debug("saveNode. nodeId=" + nodeId);
 		Node node = JcrUtil.findNode(session, nodeId);
 
 		if (req.getProperties() != null && req.getProperties().size() > 0) {
 			for (PropertyInfo property : req.getProperties()) {
-				// System.out.println("Property to save: " + property.getName() + "="
-				// + property.getValue());
-				node.setProperty(property.getName(), property.getValue());
+				
+				/* save only if server determines the property is savable. Just protection. Client shouldn't be trying to save stuff
+				 * that is illegal to save, but we have to assume the worst behaviour from client code, for security and robustness.
+				 */
+				if (JcrUtil.isSavableProperty(property.getName())) {
+					log.debug("Property to save: " + property.getName() + "=" + property.getValue());
+					node.setProperty(property.getName(), property.getValue());
+				}
+				else {
+					log.debug("Ignoring rogue save attempt on prop: "+property.getName());
+				}
 			}
 
 			session.save();

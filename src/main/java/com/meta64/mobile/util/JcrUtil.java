@@ -1,5 +1,6 @@
 package com.meta64.mobile.util;
 
+import java.util.HashSet;
 import java.util.UUID;
 
 import javax.jcr.Node;
@@ -8,30 +9,47 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.jackrabbit.JcrConstants;
-
 /**
  * Assorted general utility functions related to JCR nodes.
  */
 public class JcrUtil {
 
+	/*
+	 * These are properties we should never allow the client to send back as part of a save
+	 * operation.
+	 */
+	private static HashSet<String> nonSavableProperties = new HashSet<String>();
+	static {
+		nonSavableProperties.add("jcr:mixinTypes");
+		nonSavableProperties.add("jcr:uuid");
+	}
+
 	public static Node findNode(Session session, String id) throws Exception {
 		return id.startsWith("/") ? session.getNode(id) : session.getNodeByIdentifier(id);
 	}
 
+	/*
+	 * Currently there's a bug in the client code where it sends nulls for some nonsavable types, so
+	 * before even fixing the client I decided to just make the server side block those. This is
+	 * more secure to always have the server allow misbehaving javascript for security reasons.
+	 */
+	public static boolean isSavableProperty(String propertyName) {
+		return !nonSavableProperties.contains(propertyName);
+	}
+
 	public static void timestampNewNode(Session session, Node node) throws Exception {
-		
-		//mix:created -> jcr:created + jcr:createdBy
+
+		// mix:created -> jcr:created + jcr:createdBy
 		if (!node.hasProperty("jcr:created")) {
 			node.addMixin("mix:created");
 		}
-		
-		//mix:lastModified -> jcr:lastModified + jcr:lastModifiedBy
+
+		// mix:lastModified -> jcr:lastModified + jcr:lastModifiedBy
 		if (!node.hasProperty("jcr:lastModified")) {
 			node.addMixin("mix:lastModified");
 		}
 	}
-	
+
 	public static Node getNodeByPath(Session session, String path) {
 		try {
 			return session.getNode("/jcr:root");

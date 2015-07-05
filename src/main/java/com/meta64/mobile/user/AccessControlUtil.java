@@ -50,7 +50,7 @@ public class AccessControlUtil {
 			return true;
 		}
 		else {
-			//acMgr.
+					
 		}
 
 		return false;
@@ -88,20 +88,9 @@ public class AccessControlUtil {
 				}
 			}
 		}
-		
-		list = acMgr.getEffectivePolicies(path);
-		if (list != null) {
-			for (AccessControlPolicy policy : list) {
-				// log.debug("policy: " + policy.getClass().getName());
-
-				if (policy instanceof AccessControlList) {
-					return (AccessControlList) policy;
-				}
-			}
-		}
 
 		/* No access control list found */
-		log.debug("No ACL found on node.");
+		log.debug("No modifyable ACL found on node.");
 		return null;
 	}
 

@@ -51,7 +51,7 @@ var util = function() {
 				console.log("callback not valid function for postName " + postName);
 			}
 
-			//console.log("JSON-POST: " + JSON.stringify(postData));
+			console.log("JSON-POST: " + JSON.stringify(postData));
 			$.ajax({
 				url : postTargetUrl + postName,
 				contentType : "application/json",
@@ -60,8 +60,8 @@ var util = function() {
 				cache : false,
 				data : JSON.stringify(postData),
 				success : function(jqXHR, textStatus) {
-					//console.log("JSON-RESULT: " + postName + " -> " + textStatus);
-					//console.log("JSON-RESULT-DATA: " + JSON.stringify(jqXHR));
+					console.log("JSON-RESULT: " + postName + " -> " + textStatus);
+					console.log("JSON-RESULT-DATA: " + JSON.stringify(jqXHR));
 					if (textStatus === "success") {
 						callback(jqXHR, info);
 					} else {
