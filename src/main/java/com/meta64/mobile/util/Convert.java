@@ -50,20 +50,22 @@ public class Convert {
 	public static List<AccessControlEntryInfo> convertToAclListInfo(AccessControlEntry[] aclEntries) {
 		List<AccessControlEntryInfo> aclEntriesInfo = new LinkedList<AccessControlEntryInfo>();
 
-		for (AccessControlEntry ace : aclEntries) {
-			AccessControlEntryInfo aceInfo = new AccessControlEntryInfo();
-			aceInfo.setPrincipalName(ace.getPrincipal().getName());
+		if (aclEntries != null) {
+			for (AccessControlEntry ace : aclEntries) {
+				AccessControlEntryInfo aceInfo = new AccessControlEntryInfo();
+				aceInfo.setPrincipalName(ace.getPrincipal().getName());
 
-			List<PrivilegeInfo> privInfoList = new LinkedList<PrivilegeInfo>();
-			for (Privilege privilege : ace.getPrivileges()) {
+				List<PrivilegeInfo> privInfoList = new LinkedList<PrivilegeInfo>();
+				for (Privilege privilege : ace.getPrivileges()) {
 
-				PrivilegeInfo privInfo = new PrivilegeInfo();
-				privInfo.setPrivilegeName(privilege.getName());
-				privInfoList.add(privInfo);
+					PrivilegeInfo privInfo = new PrivilegeInfo();
+					privInfo.setPrivilegeName(privilege.getName());
+					privInfoList.add(privInfo);
+				}
+
+				aceInfo.setPrivileges(privInfoList);
+				aclEntriesInfo.add(aceInfo);
 			}
-
-			aceInfo.setPrivileges(privInfoList);
-			aclEntriesInfo.add(aceInfo);
 		}
 
 		return aclEntriesInfo;

@@ -20,8 +20,6 @@ public class JcrUtil {
 	}
 
 	public static void timestampNewNode(Session session, Node node) throws Exception {
-		//newNode.setProperty("jcr:content", "");
-		//newNode.setProperty("jcr:content", "");
 		
 		//mix:created -> jcr:created + jcr:createdBy
 		if (!node.hasProperty("jcr:created")) {

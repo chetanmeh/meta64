@@ -120,7 +120,7 @@ var edit = function() {
 		 * 
 		 */
 		nodeInsertTarget : null,
-		
+
 		/*
 		 * called to display editor that will come up BEFORE any node is saved
 		 * onto the server, so that the first time any save is performed we will
@@ -334,8 +334,10 @@ var edit = function() {
 			if (_.editNode) {
 				// Iterate PropertyInfo.java objects
 				$.each(_.editNode.properties, function(index, prop) {
-					if (!render.allowPropertyToDisplay(prop.name))
+					if (!render.allowPropertyToDisplay(prop.name)) {
+						console.log("Hiding property: " + prop.name);
 						return;
+					}
 
 					var fieldId = "editNodeTextContent" + counter;
 
@@ -389,7 +391,7 @@ var edit = function() {
 							"Add Multi");
 						}
 
-						buttonBar = render.makeHorizontalFieldSet(selButton + addMultiButton + clearButton + deleteButton);
+						buttonBar = render.makeHorizontalFieldSet(/*selButton + */ addMultiButton + clearButton + deleteButton);
 					}
 
 					var field = buttonBar;

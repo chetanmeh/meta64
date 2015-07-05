@@ -92,14 +92,14 @@ import com.meta64.mobile.util.XString;
  * probably will eventually be broken out onto separate controllers, and much of the business rules
  * in here will be moved out into service or utility classes
  * 
- * Note, it's critical to understand the OakSession AOP code or else this class will be confusing 
+ * Note, it's critical to understand the OakSession AOP code or else this class will be confusing
  * regarding how the OAK transations are managed and how logging in is done.
  */
 @Controller
 @Scope("session")
 public class AppController {
 	private static final Logger log = LoggerFactory.getLogger(AppController.class);
-	
+
 	private static final String REST_PATH = "/mobile/rest";
 
 	/*
@@ -116,7 +116,7 @@ public class AppController {
 
 	@Autowired
 	private NodeRenderService nodeRenderService;
-	
+
 	@Autowired
 	private NodeSearchService nodeSearchService;
 
@@ -267,11 +267,21 @@ public class AppController {
 			throw new Exception("Code not yet able to handle non-everyone principle privilege adds.");
 		}
 
-		if (AccessControlUtil.grantPrivileges(session, node, principalObj, privilege)) {
-			session.save();
+		boolean success = false;
+		try {
+			success = AccessControlUtil.grantPrivileges(session, node, principalObj, privilege);
+		}
+		catch (Exception e) {
+			// leave success==false and continue.
 		}
 
-		res.setSuccess(true);
+		if (success) {
+			session.save();
+		}
+		else {
+			res.setMessage("Unable to alter privileges on node.");
+		}
+		res.setSuccess(success);
 		return res;
 	}
 
@@ -377,7 +387,7 @@ public class AppController {
 		res.setSuccess(true);
 		return res;
 	}
-	
+
 	@RequestMapping(value = REST_PATH + "/insertBook", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
@@ -385,20 +395,20 @@ public class AppController {
 		if (sessionContext.isAdmin()) {
 			throw new Exception("insertBook is an admin-only feature.");
 		}
-		
+
 		InsertBookResponse res = new InsertBookResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 
 		String nodeId = req.getNodeId();
-		Node node = JcrUtil.findNode(session, nodeId); 
+		Node node = JcrUtil.findNode(session, nodeId);
 
 		/* for now we don't check book name. Only one book exists: War and Peace */
-		//String name = req.getBookName();
+		// String name = req.getBookName();
 
 		ImportWarAndPeace iwap = SpringContextUtil.getApplicationContext().getBean(ImportWarAndPeace.class);
 		iwap.importBook(session, "classpath:/com/meta64/mobile/util/war-and-peace.txt", node);
-		
+
 		session.save();
 		res.setSuccess(true);
 
@@ -485,7 +495,7 @@ public class AppController {
 
 		Session session = ThreadLocals.getJcrSession();
 		String nodeId = req.getNodeId();
-		//System.out.println("saveNode. nodeId=" + nodeId);
+		// System.out.println("saveNode. nodeId=" + nodeId);
 		Node node = JcrUtil.findNode(session, nodeId);
 
 		if (req.getProperties() != null && req.getProperties().size() > 0) {
@@ -567,7 +577,7 @@ public class AppController {
 		logRequest("bin", null);
 		try {
 			Session session = ThreadLocals.getJcrSession();
-			//System.out.println("Retrieving binary nodeId: " + nodeId);
+			// System.out.println("Retrieving binary nodeId: " + nodeId);
 			Node node = JcrUtil.findNode(session, nodeId);
 
 			Property mimeTypeProp = node.getProperty("jcr:mimeType");
@@ -684,7 +694,7 @@ public class AppController {
 		res.setSuccess(true);
 		return res;
 	}
-	
+
 	@RequestMapping(value = REST_PATH + "/nodeSearch", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody NodeSearchResponse nodeSearch(@RequestBody NodeSearchRequest req) throws Exception {

@@ -279,6 +279,9 @@ var props = function() {
 						}
 						ret += "</tr>";
 					}
+					else {
+						console.log("Hiding property: "+property.name);
+					}
 				});
 
 				if (propCount == 0) {

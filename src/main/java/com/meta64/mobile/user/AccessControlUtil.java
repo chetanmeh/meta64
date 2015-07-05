@@ -49,6 +49,9 @@ public class AccessControlUtil {
 			acMgr.setPolicy(node.getPath(), (AccessControlPolicy) acl);
 			return true;
 		}
+		else {
+			//acMgr.
+		}
 
 		return false;
 	}
@@ -64,25 +67,41 @@ public class AccessControlUtil {
 		AccessControlManager acMgr = session.getAccessControlManager();
 
 		AccessControlPolicyIterator iter = acMgr.getApplicablePolicies(path);
-		while (iter.hasNext()) {
-			AccessControlPolicy policy = iter.nextAccessControlPolicy();
-			// log.debug("policy: " + policy.getClass().getName());
+		if (iter != null) {
+			while (iter.hasNext()) {
+				AccessControlPolicy policy = iter.nextAccessControlPolicy();
+				// log.debug("policy: " + policy.getClass().getName());
 
-			if (policy instanceof AccessControlList) {
-				return (AccessControlList) policy;
+				if (policy instanceof AccessControlList) {
+					return (AccessControlList) policy;
+				}
 			}
 		}
 
 		AccessControlPolicy[] list = acMgr.getPolicies(path);
-		for (AccessControlPolicy policy : list) {
-			// log.debug("policy: " + policy.getClass().getName());
+		if (list != null) {
+			for (AccessControlPolicy policy : list) {
+				// log.debug("policy: " + policy.getClass().getName());
 
-			if (policy instanceof AccessControlList) {
-				return (AccessControlList) policy;
+				if (policy instanceof AccessControlList) {
+					return (AccessControlList) policy;
+				}
+			}
+		}
+		
+		list = acMgr.getEffectivePolicies(path);
+		if (list != null) {
+			for (AccessControlPolicy policy : list) {
+				// log.debug("policy: " + policy.getClass().getName());
+
+				if (policy instanceof AccessControlList) {
+					return (AccessControlList) policy;
+				}
 			}
 		}
 
 		/* No access control list found */
+		log.debug("No ACL found on node.");
 		return null;
 	}
 

@@ -109,7 +109,9 @@ Listed here in the order they will likely be developed...
      http://localhost:8083/mobile
 * Remove anonUserLandingPageNode from application.properties, or set it properly. Sorry no docs exist yet on what that is, other than to say that landing page is the uuid of the page we will show all anonymous users or users before they log in.     
 
-
+# Known Bugs
+* Found 7/5/2015 :  Saving a node destroys referencability and ability do sharing. Fails to set privileges with this error:
+  "Colliding policy child without node being access controllable"
 
 
 
