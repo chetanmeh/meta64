@@ -153,6 +153,31 @@ var meta64 = function() {
 			return false;
 		},
 
+		getSelectedNodeUidsArray : function() {
+			var selArray = [];
+			var idx=0;
+			var uid;
+			for (uid in _.selectedNodes) {
+				if (_.selectedNodes.hasOwnProperty(uid)) {
+					selArray[idx++] = uid;
+				}
+			}
+			return selArray;
+		},
+		
+		getSelectedNodeIdsArray : function() {
+			var selArray = [];
+			var idx=0;
+			var uid;
+			for (uid in _.selectedNodes) {
+				if (_.selectedNodes.hasOwnProperty(uid)) {
+					var node = meta64.uidToNodeMap[uid];
+					selArray[idx++] = node.id;
+				}
+			}
+			return selArray;
+		},
+		
 		getPathOfUid : function(uid) {
 			var node = _.uidToNodeMap[uid];
 			if (!node) {
@@ -264,6 +289,10 @@ var meta64 = function() {
 				"name" : "searchNodesDialog",
 				"enable" : true,
 				"function" : srch.searchNodesDialog
+			},{
+				"name" : "deleteSelNodes",
+				"enable" : true,
+				"function" : edit.deleteSelNodes
 			});
 
 			// hookSliderChanges("editMode");

@@ -1,13 +1,15 @@
 package com.meta64.mobile.request;
 
-public class DeleteNodeRequest {
-	private String nodeId;
+import java.util.List;
 
-	public String getNodeId() {
-		return nodeId;
+public class DeleteNodeRequest {
+	private List<String> nodeIds;
+
+	public List<String> getNodeIds() {
+		return nodeIds;
 	}
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
+	public void setNodeIds(List<String> nodeIds) {
+		this.nodeIds = nodeIds;
 	}
 }

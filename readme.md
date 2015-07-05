@@ -64,14 +64,12 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 ### Next Features to be Developed
 Listed here in the order they will likely be developed...
 
-* Ensure updateDate and createDate exists on all nodes
 * More JUnit unit tests.
 * Cut, Copy, Paste (move nodes to new location on tree)
 * Ability to share node with specific user.
 * Ability to Export to XML, and Import from XML.
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
-* Create importer for book "War and Peace", to demo full-text searching capability - as was done in original meta64.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
 * Display images at smaller sizes, with click to enlarge capability. Currently all images are displayed at their actual size.
 * Email notification engine to support collaboration

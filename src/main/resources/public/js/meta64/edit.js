@@ -391,7 +391,7 @@ var edit = function() {
 							"Add Multi");
 						}
 
-						buttonBar = render.makeHorizontalFieldSet(/*selButton + */ addMultiButton + clearButton + deleteButton);
+						buttonBar = render.makeHorizontalFieldSet(/* selButton + */addMultiButton + clearButton + deleteButton);
 					}
 
 					var field = buttonBar;
@@ -502,16 +502,43 @@ var edit = function() {
 			_.startEditingNewNode();
 		},
 
+		/*
+		 * Delete the single node identified by 'uid' parameter if uid parameter
+		 * is passed, and if uid parameter is not passed then use the node
+		 * selections for multiple selections on the page.
+		 */
 		deleteNode : function(uid) {
-			util.areYouSure("Confirm Delete", "Delete the node?", "Yes, delete.", function() {
-				var node = meta64.uidToNodeMap[uid];
-				if (!node) {
-					alert("Unknown nodeId in deleteNodeClick: " + uid);
-				} else {
-					util.json("deleteNode", {
-						"nodeId" : node.id,
-					}, _deleteNodeResponse);
-				}
+
+			var node = meta64.uidToNodeMap[uid];
+			var selNodesArray = [];
+			selNodesArray[0] = node.id;
+
+			util.areYouSure("Confirm Delete", "Delete node ?", "Yes, delete.", function() {
+
+				util.json("deleteNodes", {
+					"nodeIds" : selNodesArray
+				}, _deleteNodeResponse);
+			});
+		},
+
+		/*
+		 * Delete the single node identified by 'uid' parameter if uid parameter
+		 * is passed, and if uid parameter is not passed then use the node
+		 * selections for multiple selections on the page.
+		 */
+		deleteSelNodes : function() {
+
+			var selNodesArray = meta64.getSelectedNodeIdsArray();
+			if (!selNodesArray || selNodesArray.length == 0) {
+				alert('You have not selected any nodes. Select nodes to delete first.');
+				return;
+			}
+
+			util.areYouSure("Confirm Delete", "Delete " + selNodesArray.length + " node(s) ?", "Yes, delete.", function() {
+
+				util.json("deleteNodes", {
+					"nodeIds" : selNodesArray
+				}, _deleteNodeResponse);
 			});
 		},
 

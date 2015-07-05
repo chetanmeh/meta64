@@ -415,18 +415,25 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/deleteNode", method = RequestMethod.POST)
+	@RequestMapping(value = REST_PATH + "/deleteNodes", method = RequestMethod.POST)
 	@OakSession
-	public @ResponseBody DeleteNodeResponse deleteNode(@RequestBody DeleteNodeRequest req) throws Exception {
+	public @ResponseBody DeleteNodeResponse deleteNodes(@RequestBody DeleteNodeRequest req) throws Exception {
 		logRequest("deleteNode", req);
 
 		DeleteNodeResponse res = new DeleteNodeResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 
-		String nodeId = req.getNodeId();
-		Node node = JcrUtil.findNode(session, nodeId);
-		node.remove();
+		for (String nodeId : req.getNodeIds()) {
+			log.debug("Deleting ID: " + nodeId);
+			try {
+				Node node = JcrUtil.findNode(session, nodeId);
+				node.remove();
+			}
+			catch (Exception e) {
+				//silently ignore if node cannot be found.
+			}
+		}
 		session.save();
 		res.setSuccess(true);
 		return res;
@@ -500,16 +507,18 @@ public class AppController {
 
 		if (req.getProperties() != null && req.getProperties().size() > 0) {
 			for (PropertyInfo property : req.getProperties()) {
-				
-				/* save only if server determines the property is savable. Just protection. Client shouldn't be trying to save stuff
-				 * that is illegal to save, but we have to assume the worst behaviour from client code, for security and robustness.
+
+				/*
+				 * save only if server determines the property is savable. Just protection. Client
+				 * shouldn't be trying to save stuff that is illegal to save, but we have to assume
+				 * the worst behaviour from client code, for security and robustness.
 				 */
 				if (JcrUtil.isSavableProperty(property.getName())) {
 					log.debug("Property to save: " + property.getName() + "=" + property.getValue());
 					node.setProperty(property.getName(), property.getValue());
 				}
 				else {
-					log.debug("Ignoring rogue save attempt on prop: "+property.getName());
+					log.debug("Ignoring rogue save attempt on prop: " + property.getName());
 				}
 			}
 
