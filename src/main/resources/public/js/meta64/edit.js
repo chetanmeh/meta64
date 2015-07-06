@@ -32,9 +32,16 @@ var edit = function() {
 		view.scrollToSelectedNode();
 	}
 
-	var _deleteNodeResponse = function(res) {
+	var _deleteNodesResponse = function(res) {
 		if (!res.success) {
 			alert("Delete node failed: " + res.message);
+		}
+		view.refreshTree();
+	}
+
+	var _moveNodesResponse = function(res) {
+		if (!res.success) {
+			alert("Move nodes failed: " + res.message);
 		}
 		view.refreshTree();
 	}
@@ -100,6 +107,9 @@ var edit = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
+		/* Node ID array of nodes that are ready to be moved when user clicks 'Finish Moving' */
+		nodesToMove : null,
+
 		/*
 		 * indicates editor is displaying a node that is not yet saved on the
 		 * server
@@ -517,7 +527,7 @@ var edit = function() {
 
 				util.json("deleteNodes", {
 					"nodeIds" : selNodesArray
-				}, _deleteNodeResponse);
+				}, _deleteNodesResponse);
 			});
 		},
 
@@ -538,7 +548,35 @@ var edit = function() {
 
 				util.json("deleteNodes", {
 					"nodeIds" : selNodesArray
-				}, _deleteNodeResponse);
+				}, _deleteNodesResponse);
+			});
+		},
+
+		moveSelNodes : function() {
+
+			var selNodesArray = meta64.getSelectedNodeIdsArray();
+			if (!selNodesArray || selNodesArray.length == 0) {
+				alert('You have not selected any nodes. Select nodes to delete first.');
+				return;
+			}
+
+			util.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to a new location ?", "Yes, move.", function() {
+				_.nodesToMove = selNodesArray;
+				alert("Ok, ready to move nodes. To finish moving, go select the target location, then click 'Finish Moving'");
+				meta64.refreshAllGuiEnablement();
+			});
+		},
+
+		finishMovingSelNodes : function() {
+			util.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to selected location ?", "Yes, move.", function() {
+				
+				/* For now, we will just cram the nodes onto the end of the children of the currently selected page. Later on we 
+				 * can get more specific about allowing precise destination location for moved nodes.
+				 */
+				util.json("moveNodes", {
+					"targetNodeId" : meta64.currentNodeId,
+					"nodeIds" : _.nodesToMove
+				}, _moveNodesResponse);
 			});
 		},
 

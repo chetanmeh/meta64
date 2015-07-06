@@ -70,9 +70,13 @@ var util = function() {
 				},
 				error : function(xhr, status, error) {
 					alert("Server request failed."); // xhr.responseText);
-														// //JSON.parse(xhr.responseText));
+					// //JSON.parse(xhr.responseText));
 				}
 			});
+		},
+
+		nullOrUndef : function(obj) {
+			return obj === null || obj === undefined;
 		},
 
 		/*
@@ -90,7 +94,7 @@ var util = function() {
 			}
 			return uid;
 		},
-		
+
 		getPreviousPage : function() {
 			// get the ID of the previous page
 			var prevPage = '#' + $.mobile.activePage.prev('div[data-role="page"]')[0].id;
@@ -173,15 +177,14 @@ var util = function() {
 				// console.log("setting enablement of " + id + " to " +
 				// enablement);
 				_.setEnablement(elm, enablement);
-				
+
 				/*
 				 * optional parameter, undefined means it wasn't passed which
 				 * means 'true' in this case
 				 */
 				if (typeof (visibility) === 'undefined' || visibility) {
 					_.setVisibility(elm, true)
-				}
-				else {
+				} else {
 					_.setVisibility(elm, false);
 				}
 			}

@@ -42,13 +42,14 @@ import com.meta64.mobile.request.AnonPageLoadRequest;
 import com.meta64.mobile.request.ChangePasswordRequest;
 import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.DeleteAttachmentRequest;
-import com.meta64.mobile.request.DeleteNodeRequest;
+import com.meta64.mobile.request.DeleteNodesRequest;
 import com.meta64.mobile.request.DeletePropertyRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
 import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.MakeNodeReferencableRequest;
+import com.meta64.mobile.request.MoveNodesRequest;
 import com.meta64.mobile.request.NodeSearchRequest;
 import com.meta64.mobile.request.RemovePrivilegeRequest;
 import com.meta64.mobile.request.RenderNodeRequest;
@@ -61,13 +62,14 @@ import com.meta64.mobile.response.AnonPageLoadResponse;
 import com.meta64.mobile.response.ChangePasswordResponse;
 import com.meta64.mobile.response.CreateSubNodeResponse;
 import com.meta64.mobile.response.DeleteAttachmentResponse;
-import com.meta64.mobile.response.DeleteNodeResponse;
+import com.meta64.mobile.response.DeleteNodesResponse;
 import com.meta64.mobile.response.DeletePropertyResponse;
 import com.meta64.mobile.response.GetNodePrivilegesResponse;
 import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.MakeNodeReferencableResponse;
+import com.meta64.mobile.response.MoveNodesResponse;
 import com.meta64.mobile.response.NodeSearchResponse;
 import com.meta64.mobile.response.RemovePrivilegeResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
@@ -417,10 +419,10 @@ public class AppController {
 
 	@RequestMapping(value = REST_PATH + "/deleteNodes", method = RequestMethod.POST)
 	@OakSession
-	public @ResponseBody DeleteNodeResponse deleteNodes(@RequestBody DeleteNodeRequest req) throws Exception {
-		logRequest("deleteNode", req);
+	public @ResponseBody DeleteNodesResponse deleteNodes(@RequestBody DeleteNodesRequest req) throws Exception {
+		logRequest("deleteNodes", req);
 
-		DeleteNodeResponse res = new DeleteNodeResponse();
+		DeleteNodesResponse res = new DeleteNodesResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 
@@ -429,6 +431,37 @@ public class AppController {
 			try {
 				Node node = JcrUtil.findNode(session, nodeId);
 				node.remove();
+			}
+			catch (Exception e) {
+				//silently ignore if node cannot be found.
+			}
+		}
+		session.save();
+		res.setSuccess(true);
+		return res;
+	}
+	
+	/*
+	 * IMPLEMENTATION IN PROGRESS!!!!
+	 * 
+	 * THIS METHOD NOT YET COMPLETE
+	 */
+	@RequestMapping(value = REST_PATH + "/moveNodes", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody MoveNodesResponse moveNodes(@RequestBody MoveNodesRequest req) throws Exception {
+		logRequest("moveNodes", req);
+
+		MoveNodesResponse res = new MoveNodesResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+
+		String targetId = req.getTargetNodeId();
+		
+		for (String nodeId : req.getNodeIds()) {
+			log.debug("Moving ID: " + nodeId);
+			try {
+				//Node node = JcrUtil.findNode(session, nodeId);
+				
 			}
 			catch (Exception e) {
 				//silently ignore if node cannot be found.

@@ -1,8 +1,8 @@
 console.log("running module: meta64.js");
 
 /*
- * TODO: I noticed some meta64.whatever scoping in this class, which needs to
- * be removed and replaced with "_."
+ * TODO: I noticed some meta64.whatever scoping in this class, which needs to be
+ * removed and replaced with "_."
  */
 var meta64 = function() {
 
@@ -155,7 +155,7 @@ var meta64 = function() {
 
 		getSelectedNodeUidsArray : function() {
 			var selArray = [];
-			var idx=0;
+			var idx = 0;
 			var uid;
 			for (uid in _.selectedNodes) {
 				if (_.selectedNodes.hasOwnProperty(uid)) {
@@ -164,10 +164,10 @@ var meta64 = function() {
 			}
 			return selArray;
 		},
-		
+
 		getSelectedNodeIdsArray : function() {
 			var selArray = [];
-			var idx=0;
+			var idx = 0;
 			var uid;
 			for (uid in _.selectedNodes) {
 				if (_.selectedNodes.hasOwnProperty(uid)) {
@@ -177,7 +177,20 @@ var meta64 = function() {
 			}
 			return selArray;
 		},
-		
+
+		/* Gets selected nodes as NodeInfo.java objects array */
+		getSelectedNodesArray : function() {
+			var selArray = [];
+			var idx = 0;
+			var uid;
+			for (uid in _.selectedNodes) {
+				if (_.selectedNodes.hasOwnProperty(uid)) {
+					selArray[idx++] = meta64.uidToNodeMap[uid];
+				}
+			}
+			return selArray;
+		},
+
 		getPathOfUid : function(uid) {
 			var node = _.uidToNodeMap[uid];
 			if (!node) {
@@ -289,10 +302,18 @@ var meta64 = function() {
 				"name" : "searchNodesDialog",
 				"enable" : true,
 				"function" : srch.searchNodesDialog
-			},{
+			}, {
 				"name" : "deleteSelNodes",
 				"enable" : true,
 				"function" : edit.deleteSelNodes
+			}, {
+				"name" : "moveSelNodes",
+				"enable" : true,
+				"function" : edit.moveSelNodes
+			}, {
+				"name" : "finishMovingSelNodes",
+				"enable" : true,
+				"function" : edit.finishMovingSelNodes
 			});
 
 			// hookSliderChanges("editMode");
@@ -316,6 +337,9 @@ var meta64 = function() {
 			util.setEnablementByName("editMode", _.currentNode);
 			util.setEnablementByName("signup", true);
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
+
+			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove);
+			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 		},
 
 		/*
@@ -405,14 +429,14 @@ var meta64 = function() {
 			 */
 			// $(document).ready(function() {
 			$(document).on("pagecreate", "#mainPage", function(event) {
-				//_.initApp();
+				// _.initApp();
 			});
 		},
 
 		anonPageLoadResponse : function(res) {
 			if (res.renderNodeResponse) {
 				console.log("res.renderNodeResponse exists.");
-				
+
 				util.setVisibility("#mainNodeContent", true);
 				util.setVisibility("#mainNodeStatusBar", true);
 				view.renderNodeResponse(res.renderNodeResponse);

@@ -2,7 +2,7 @@ package com.meta64.mobile.request;
 
 import java.util.List;
 
-public class DeleteNodeRequest {
+public class DeleteNodesRequest {
 	private List<String> nodeIds;
 
 	public List<String> getNodeIds() {
