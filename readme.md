@@ -58,7 +58,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Can switch between simple or advanced mode editing
 * Change password feature.
 * Multiple nodes selectable
-* Mobile ready (this is a "mobile first" app)
+* Export to XML
 * Admin feature to insert entire book "War and Peace", for quickly
   creating test data for exploring all the features.
 
@@ -67,7 +67,7 @@ Listed here in the order they will likely be developed...
 
 * More JUnit unit tests.
 * Ability to share node with specific user.
-* Ability to Export to XML, and Import from XML.
+* Import from XMLl
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.

@@ -350,8 +350,11 @@ var meta64 = function() {
 			util.setEnablementByName("changePasswordDialog", true);
 			util.setEnablementByName("editMode", _.currentNode);
 			util.setEnablementByName("signup", true);
+			
+			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
-
+			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
+			
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove);
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 		},

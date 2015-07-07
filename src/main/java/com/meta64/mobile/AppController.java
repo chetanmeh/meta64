@@ -322,6 +322,10 @@ public class AppController {
 		ExportResponse res = new ExportResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
+		
+		if (sessionContext.isAdmin()) {
+			throw new Exception("export is an admin-only feature.");
+		}
 
 		importExportService.export(session, req, res);
 		return res;
