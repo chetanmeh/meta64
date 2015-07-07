@@ -2,6 +2,7 @@ console.log("running module: render.js");
 
 var render = function() {
 
+	/* Holds the function that performs markdown conversion, and is set lazily */
 	var _markdown;
 
 	/*
@@ -114,6 +115,10 @@ var render = function() {
 		},
 
 		/*
+		 * This is the primary method for rendering each node (like a row) on
+		 * the main HTML page that displays node content. This generates the
+		 * HTML for a single row/node.
+		 * 
 		 * node is a NodeInfo.java JSON
 		 */
 		renderNodeAsListItem : function(node, index, count, rowCount) {
@@ -315,6 +320,34 @@ var render = function() {
 			return _markdown(text);
 		},
 
+		/*
+		 * Each page can show buttons at the top of it (not main header buttons
+		 * but additional buttons just for that page only, and this genates that
+		 * content for that entire control bar.
+		 */
+		renderMainPageControls : function() {
+			var html = '';
+
+			if (srch.numSearchResults() > 0) {
+
+				html += render.makeTag("a", //
+				{
+					"onClick" : "nav.showSearchPage();", //
+					"data-role" : "button",
+					"data-icon" : "search"
+				}, //
+				"Back to Search Results");
+			}
+
+			var hasContent = html.length > 0;
+			if (hasContent) {
+				//$("#mainPageControls").html(html);
+				util.setHtmlEnhanced($("#mainPageControls"), html);
+			}
+
+			util.setVisibility("#mainPageControls", hasContent)
+		},
+
 		renderPageFromData : function(data) {
 
 			var newData = false;
@@ -323,7 +356,7 @@ var render = function() {
 			} else {
 				newData = true;
 			}
-			
+
 			if (!data || !data.node) {
 				util.setVisibility("#listView", false);
 				$("#mainNodeContent").html("No default content is available.");
@@ -331,6 +364,8 @@ var render = function() {
 			} else {
 				util.setVisibility("#listView", true);
 			}
+
+			_.renderMainPageControls();
 
 			meta64.treeDirty = false;
 
@@ -345,8 +380,13 @@ var render = function() {
 			// propCount);
 			var output = '';
 
-			$("#mainNodeContent").html(_.renderNodeContent(data.node, true, true, false, false));
+			$("#mainNodeContent").html(_.renderNodeContent(data.node, true, false /*
+																					 * show
+																					 * path
+																					 */, false, false));
 			view.updateStatusBar();
+
+			_.renderMainPageControls();
 
 			if (data.children) {
 				var childCount = data.children.length;

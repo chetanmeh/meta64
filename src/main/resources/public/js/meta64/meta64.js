@@ -452,6 +452,7 @@ var meta64 = function() {
 
 				util.setHtmlEnhanced($("#listView"), res.content);
 			}
+			render.renderMainPageControls();
 		},
 
 		/*

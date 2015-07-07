@@ -13,6 +13,10 @@ var nav = function() {
 			return meta64.currentNodeId === meta64.homeNodeId;
 		},
 
+		showSearchPage : function() {
+			$.mobile.changePage("#searchResultsDialog");
+		},
+		
 		navUpLevel : function() {
 
 			if (_.displayingRoot()) {

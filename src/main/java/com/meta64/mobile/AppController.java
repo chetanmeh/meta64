@@ -92,7 +92,7 @@ import com.meta64.mobile.util.XString;
  * Primary Spring MVC controller, that returns the main page, process REST calls from the client
  * javascript, and also performs the uploading/download, and serving of images. These major areas
  * probably will eventually be broken out onto separate controllers, and much of the business rules
- * in here will be moved out into service or utility classes
+ * in here will be moved out into service or utility classes.
  * 
  * Note, it's critical to understand the OakSession AOP code or else this class will be confusing
  * regarding how the OAK transations are managed and how logging in is done.
@@ -469,6 +469,7 @@ public class AppController {
 				String dstPath = targetPath + "/" + node.getName();
 				// log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
 				session.move(srcPath, dstPath);
+			
 				//session.save();
 				
 				/* This code did not work as expected (or at all). This is supposed to move the new nodes into the proper

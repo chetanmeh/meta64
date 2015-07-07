@@ -46,6 +46,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Creating Subnodes or Inline nodes
 * Full text search
 * Deleting Nodes
+* Moving nodes to new locations
 * Sharing a node as Public, and removing shares
 * Short URL GUID for any node, so it can be referenced by URL
 * Uploading attachments (attached files) onto a node
@@ -65,13 +66,13 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 Listed here in the order they will likely be developed...
 
 * More JUnit unit tests.
-* Cut, Copy, Paste (move nodes to new location on tree)
 * Ability to share node with specific user.
 * Ability to Export to XML, and Import from XML.
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
 * Display images at smaller sizes, with click to enlarge capability. Currently all images are displayed at their actual size.
+* Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read.
 * Email notification engine to support collaboration
 * RSS Feeds for node changes
 
@@ -94,7 +95,7 @@ Listed here in the order they will likely be developed...
 ### Next Actions on the Agenda
 * Will create a screencast showing a 5 minute demo, on youtube.
 * Put an instance online at meta64.com, and bring down legacy site at that URL.
-* Will be seeking crowdsource funding (maybe)
+* Will be seeking crowdsource funding
 * Hoping to get publicized at first in the JCR developer community.
 
 # Technical Notes
@@ -106,10 +107,12 @@ Listed here in the order they will likely be developed...
 * Once app is up and running go here: 
      http://localhost:8083/mobile
 * Remove anonUserLandingPageNode from application.properties, or set it properly. Sorry no docs exist yet on what that is, other than to say that landing page is the uuid of the page we will show all anonymous users or users before they log in.     
+* Look in the 'docs' folder of the project for more documentation in addition to this readme.
 
 # Known Bugs
 
  [only minor bugs known at this time]
+
 
 
 

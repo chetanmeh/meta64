@@ -15,10 +15,18 @@ var srch = function() {
 	var _UID_ROWID_SUFFIX = "_srch_row";
 
 	var _searchNodesResponse = function(res) {
+		_.searchResults = res;
+
 		_.renderSearchResultsFromData(res);
 	};
 
 	var _ = {
+
+		/*
+		 * Holds the NodeSearchResponse.java JSON, or null if no search has been
+		 * done.
+		 */
+		searchResults : null,
 
 		/*
 		 * Will be the last row clicked on (NodeInfo.java object) and having the
@@ -42,6 +50,13 @@ var srch = function() {
 		 * 'hashCode' on Java objects.
 		 */
 		uidToNodeMap : {},
+
+		numSearchResults : function() {
+			return srch.searchResults != null && //
+			srch.searchResults.searchResults != null && //
+			srch.searchResults.searchResults.length != null ? //
+			srch.searchResults.searchResults.length : 0;
+		},
 
 		searchNodes : function() {
 			var node = nav.getFocusedNode();
@@ -101,6 +116,8 @@ var srch = function() {
 		},
 
 		/*
+		 * Renders a single line of search results on the search results page.
+		 * 
 		 * node is a NodeInfo.java JSON
 		 */
 		renderSearchResultAsListItem : function(node, index, count, rowCount) {
