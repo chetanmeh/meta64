@@ -2,10 +2,6 @@ console.log("running module: attachment.js");
 
 var attachment = function() {
 
-	/*
-	 * ================= PRIVATE =================
-	 */
-
 	function _deleteAttachmentResponse(res) {
 		if (util.checkSuccess("Delete attachment", res)) {
 			/*
@@ -18,9 +14,6 @@ var attachment = function() {
 		}
 	}
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 
 		/* Node being uploaded to */

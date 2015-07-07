@@ -14,17 +14,10 @@ var srch = function() {
 
 	var _UID_ROWID_SUFFIX = "_srch_row";
 
-	/*
-	 * ================= PRIVATE =================
-	 */
-
 	var _searchNodesResponse = function(res) {
 		_.renderSearchResultsFromData(res);
 	};
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 
 		/*

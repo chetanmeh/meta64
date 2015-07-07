@@ -6,9 +6,6 @@ console.log("running module: meta64.js");
  */
 var meta64 = function() {
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 
 		/*

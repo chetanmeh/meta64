@@ -1,9 +1,7 @@
 console.log("running module: view.js");
 
 var view = function() {
-	/*
-	 * ================= PUBLIC =================
-	 */
+	
 	var _ = {
 		updateStatusBar : function() {
 			if (!meta64.currentNodeData)

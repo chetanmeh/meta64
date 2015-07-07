@@ -3,9 +3,6 @@ console.log("running module: nav.js");
 var nav = function() {
 	var _UID_ROWID_SUFFIX = "_row";
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 
 		navScrollTop : function() {

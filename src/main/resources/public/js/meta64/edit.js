@@ -3,9 +3,6 @@ console.log("running module: edit.js");
 var edit = function() {
 
 	/*
-	 * ================= PRIVATE =================
-	 */
-	/*
 	 * node (NodeInfo.java) that is being created under when new node is created
 	 */
 	var _parentOfNewNode;
@@ -90,9 +87,6 @@ var edit = function() {
 		edit.runEditNode(res.newNode.uid);
 	}
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 		/*
 		 * Node ID array of nodes that are ready to be moved when user clicks

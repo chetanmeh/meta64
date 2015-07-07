@@ -1,9 +1,7 @@
 console.log("running module: prefs.js");
 
 var prefs = function() {
-	/*
-	 * ================= PUBLIC =================
-	 */
+	
 	var _ = {
 		savePreferences : function() {
 			meta64.editModeOption = $("#editModeSimple").is(":checked") ? meta64.MODE_SIMPLE : meta64.MODE_ADVANCED;

@@ -3,10 +3,6 @@ console.log("running module: user.js");
 var share = function() {
 
 	/*
-	 * ================= PRIVATE =================
-	 */
-
-	/*
 	 * Handles getNodePrivileges respons.
 	 * 
 	 * res=json of GetNodePrivilegesResponse.java
@@ -76,9 +72,6 @@ var share = function() {
 	// }
 	// }
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 
 		sharingNode : null,

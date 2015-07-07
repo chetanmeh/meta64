@@ -1,10 +1,7 @@
 console.log("running module: props.js");
 
 var props = function() {
-	/*
-	 * ================= PRIVATE =================
-	 */
-
+	
 	var _savePropertyResponse = function(res) {
 		util.checkSuccess("Save properties", res);
 
@@ -36,9 +33,6 @@ var props = function() {
 		}
 	}
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 		/*
 		 * Toggles display of properties in the gui.

@@ -5,10 +5,6 @@ var render = function() {
 	var _markdown;
 
 	/*
-	 * ================= PRIVATE =================
-	 */
-
-	/*
 	 * This is the content displayed when the user signs in, and we see that
 	 * they have no content being displayed. We want to give them some
 	 * insructions and the ability to add content.
@@ -48,9 +44,6 @@ var render = function() {
 		}
 	}
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 		/*
 		 * node: JSON of NodeInfo.java

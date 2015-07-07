@@ -2,9 +2,6 @@ console.log("running module: user.js");
 
 var user = function() {
 
-	/*
-	 * ================= PRIVATE =================
-	 */
 	/* ret is LoginResponse.java */
 	var _loginResponse = function(res) {
 		//console.log("Login.success=" + JSON.stringify(res));
@@ -33,9 +30,6 @@ var user = function() {
 		}
 	}
 
-	/*
-	 * ================= PUBLIC =================
-	 */
 	var _ = {
 		signup : function() {
 			var userName = util.getRequiredElement("#signupUserName").val();

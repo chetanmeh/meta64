@@ -2,13 +2,6 @@ console.log("running module: util.js");
 
 var util = function() {
 
-	/*
-	 * ================= PRIVATE =================
-	 */
-
-	/*
-	 * ================= PUBLIC =================
-	 */
 	if (typeof String.prototype.startsWith != 'function') {
 		// see below for better implementation!
 		String.prototype.startsWith = function(str) {
