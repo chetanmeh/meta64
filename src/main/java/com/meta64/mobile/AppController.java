@@ -441,11 +441,6 @@ public class AppController {
 		return res;
 	}
 	
-	/*
-	 * IMPLEMENTATION IN PROGRESS!!!!
-	 * 
-	 * THIS METHOD NOT YET COMPLETE
-	 */
 	@RequestMapping(value = REST_PATH + "/moveNodes", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody MoveNodesResponse moveNodes(@RequestBody MoveNodesRequest req) throws Exception {
@@ -456,15 +451,24 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 
 		String targetId = req.getTargetNodeId();
-		
+		Node targetNode = JcrUtil.findNode(session, targetId);
+		String targetPath = targetNode.getPath();
+
 		for (String nodeId : req.getNodeIds()) {
 			log.debug("Moving ID: " + nodeId);
 			try {
-				//Node node = JcrUtil.findNode(session, nodeId);
+				Node node = JcrUtil.findNode(session, nodeId);
 				
+				/* This code moves the copied nodes to the bottom of child list underneath the target node (i.e. targetNode being the parent)
+				 * for the new node locations.
+				 */
+				String srcPath = node.getPath();
+				String dstPath = targetPath + "/" + node.getName();
+				//log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
+				session.move(srcPath, dstPath);
 			}
 			catch (Exception e) {
-				//silently ignore if node cannot be found.
+				// silently ignore if node cannot be found.
 			}
 		}
 		session.save();
