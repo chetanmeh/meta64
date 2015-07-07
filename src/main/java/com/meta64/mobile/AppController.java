@@ -469,10 +469,14 @@ public class AppController {
 				String dstPath = targetPath + "/" + node.getName();
 				// log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
 				session.move(srcPath, dstPath);
-
-				/* not yet tested */
+				//session.save();
+				
+				/* This code did not work as expected (or at all). This is supposed to move the new nodes into the proper
+				 * ordinal position, and doesn't work. Since this is lower priority, i'm not even going to try to figure this 
+				 * out for now, and will just leave it as technical debt, TODO */
 //				if (targetChildId != null) {
 //					targetNode.orderBefore(dstPath, targetChildId);
+//					//session.save();
 //				}
 			}
 			catch (Exception e) {

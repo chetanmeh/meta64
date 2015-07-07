@@ -44,6 +44,7 @@ var edit = function() {
 			alert("Move nodes failed: " + res.message);
 		}
 		
+		_.nodesToMove = null; //reset
 		view.refreshTree();
 	}
 
