@@ -43,6 +43,7 @@ var edit = function() {
 		if (!res.success) {
 			alert("Move nodes failed: " + res.message);
 		}
+		
 		view.refreshTree();
 	}
 
@@ -107,7 +108,10 @@ var edit = function() {
 	 * ================= PUBLIC =================
 	 */
 	var _ = {
-		/* Node ID array of nodes that are ready to be moved when user clicks 'Finish Moving' */
+		/*
+		 * Node ID array of nodes that are ready to be moved when user clicks
+		 * 'Finish Moving'
+		 */
 		nodesToMove : null,
 
 		/*
@@ -562,19 +566,26 @@ var edit = function() {
 
 			util.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to a new location ?", "Yes, move.", function() {
 				_.nodesToMove = selNodesArray;
+				meta64.selectedNodes = {}; //clear selections. No longer need or want any selections.
 				alert("Ok, ready to move nodes. To finish moving, go select the target location, then click 'Finish Moving'");
 				meta64.refreshAllGuiEnablement();
 			});
 		},
 
 		finishMovingSelNodes : function() {
-			util.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to selected location ?", "Yes, move.", function() {
-				
-				/* For now, we will just cram the nodes onto the end of the children of the currently selected page. Later on we 
-				 * can get more specific about allowing precise destination location for moved nodes.
+			util.areYouSure("Confirm Move", "Move " + _.nodesToMove.length + " node(s) to selected location ?", "Yes, move.", function() {
+
+				var highlightNode = nav.getHighlightedNode();
+
+				/*
+				 * For now, we will just cram the nodes onto the end of the
+				 * children of the currently selected page. Later on we can get
+				 * more specific about allowing precise destination location for
+				 * moved nodes.
 				 */
 				util.json("moveNodes", {
 					"targetNodeId" : meta64.currentNodeId,
+					"targetChildId" : highlightNode != null ? highlightNode.id : null,
 					"nodeIds" : _.nodesToMove
 				}, _moveNodesResponse);
 			});

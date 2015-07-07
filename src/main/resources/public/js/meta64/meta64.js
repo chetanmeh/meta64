@@ -169,10 +169,19 @@ var meta64 = function() {
 			var selArray = [];
 			var idx = 0;
 			var uid;
+			if (!_.selectedNodes) {
+				console.log("no selected nodes.");
+			} else {
+				console.log("selectedNode count: " + _.selectedNodes.length);
+			}
 			for (uid in _.selectedNodes) {
 				if (_.selectedNodes.hasOwnProperty(uid)) {
 					var node = meta64.uidToNodeMap[uid];
-					selArray[idx++] = node.id;
+					if (!node) {
+						console.log("unable to find uidToNodeMap for uid=" + uid);
+					} else {
+						selArray[idx++] = node.id;
+					}
 				}
 			}
 			return selArray;

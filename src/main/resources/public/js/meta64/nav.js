@@ -79,6 +79,13 @@ var nav = function() {
 			return null;
 		},
 
+		/* Returns the node the user has "highlighted" (last clicked on), or null if none is highlighted */
+		getHighlightedNode : function() {
+
+			/* check if we have an existing highlighted row to unhighlight */
+			return meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
+		},
+		
 		/*
 		 * turn of row selection styling of whatever row is currently selected
 		 */

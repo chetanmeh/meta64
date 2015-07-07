@@ -433,14 +433,14 @@ public class AppController {
 				node.remove();
 			}
 			catch (Exception e) {
-				//silently ignore if node cannot be found.
+				// silently ignore if node cannot be found.
 			}
 		}
 		session.save();
 		res.setSuccess(true);
 		return res;
 	}
-	
+
 	@RequestMapping(value = REST_PATH + "/moveNodes", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody MoveNodesResponse moveNodes(@RequestBody MoveNodesRequest req) throws Exception {
@@ -453,19 +453,27 @@ public class AppController {
 		String targetId = req.getTargetNodeId();
 		Node targetNode = JcrUtil.findNode(session, targetId);
 		String targetPath = targetNode.getPath();
+		String targetChildId = req.getTargetChildId();
 
 		for (String nodeId : req.getNodeIds()) {
 			log.debug("Moving ID: " + nodeId);
 			try {
 				Node node = JcrUtil.findNode(session, nodeId);
-				
-				/* This code moves the copied nodes to the bottom of child list underneath the target node (i.e. targetNode being the parent)
-				 * for the new node locations.
+
+				/*
+				 * This code moves the copied nodes to the bottom of child list underneath the
+				 * target node (i.e. targetNode being the parent) for the new node locations.
 				 */
+
 				String srcPath = node.getPath();
 				String dstPath = targetPath + "/" + node.getName();
-				//log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
+				// log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
 				session.move(srcPath, dstPath);
+
+				/* not yet tested */
+//				if (targetChildId != null) {
+//					targetNode.orderBefore(dstPath, targetChildId);
+//				}
 			}
 			catch (Exception e) {
 				// silently ignore if node cannot be found.
