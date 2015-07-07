@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="exportDialog">
+		<div data-role="header">
+			<h2>Meta64 - Export to XML</h2>
+		</div>
+		<div role="main" class="ui-content">
+
+			<div class="ui-field-contain">
+				<label for="exportTargetNodeName">Export Target Node Name:</label>
+				<!--  -->
+				<input type="text" name="exportTargetNodeName" id="exportTargetNodeName" value="" />
+			</div>
+
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="exportNodesButton" data-theme="b" data-role="button">Export</a>
+				<a href="#" id="cancelExportButton" data-rel="back"
+					data-theme="a" data-role="button">Cancel</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

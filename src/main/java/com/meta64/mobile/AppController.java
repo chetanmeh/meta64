@@ -44,6 +44,7 @@ import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.DeleteAttachmentRequest;
 import com.meta64.mobile.request.DeleteNodesRequest;
 import com.meta64.mobile.request.DeletePropertyRequest;
+import com.meta64.mobile.request.ExportRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
 import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
@@ -64,6 +65,7 @@ import com.meta64.mobile.response.CreateSubNodeResponse;
 import com.meta64.mobile.response.DeleteAttachmentResponse;
 import com.meta64.mobile.response.DeleteNodesResponse;
 import com.meta64.mobile.response.DeletePropertyResponse;
+import com.meta64.mobile.response.ExportResponse;
 import com.meta64.mobile.response.GetNodePrivilegesResponse;
 import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
@@ -77,6 +79,7 @@ import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.service.ImportExportService;
 import com.meta64.mobile.service.NodeRenderService;
 import com.meta64.mobile.service.NodeSearchService;
 import com.meta64.mobile.user.AccessControlUtil;
@@ -121,6 +124,9 @@ public class AppController {
 
 	@Autowired
 	private NodeSearchService nodeSearchService;
+	
+	@Autowired
+	private ImportExportService importExportService;
 
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
@@ -305,6 +311,19 @@ public class AppController {
 		boolean success = AccessControlUtil.removeAclEntry(session, node, principal, privilege);
 		session.save();
 		res.setSuccess(success);
+		return res;
+	}
+	
+	@RequestMapping(value = REST_PATH + "/export", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody ExportResponse export(@RequestBody ExportRequest req) throws Exception {
+		logRequest("export", req);
+
+		ExportResponse res = new ExportResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+
+		importExportService.export(session, req, res);
 		return res;
 	}
 

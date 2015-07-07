@@ -320,6 +320,14 @@ var meta64 = function() {
 				"name" : "finishMovingSelNodes",
 				"enable" : true,
 				"function" : edit.finishMovingSelNodes
+			}, {
+				"name" : "openExportDialog",
+				"enable" : true,
+				"function" : edit.openExportDialog
+			}, {
+				"name" : "exportNodes",
+				"enable" : true,
+				"function" : edit.exportNodes
 			});
 
 			// hookSliderChanges("editMode");

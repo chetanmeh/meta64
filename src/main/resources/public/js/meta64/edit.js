@@ -14,6 +14,14 @@ var edit = function() {
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
+	
+	var _exportResponse = function(res) {
+		if (util.checkSuccess("Export", res)) {
+			alert("Export Successful.");
+			$.mobile.changePage("#mainPage");
+			view.scrollToSelectedNode();
+		}
+	}
 
 	var _insertBookResponse = function(res) {
 		console.log("insertBookResponse running.");
@@ -294,6 +302,27 @@ var edit = function() {
 			}
 		},
 
+		openExportDialog : function() {
+			$.mobile.changePage("#exportDialog");
+		},
+		
+		exportNodes : function() {
+			var highlightNode = nav.getHighlightedNode();
+			var targetFileName = util.getRequiredElement("#exportTargetNodeName").val();
+			
+			if (util.emptyString(targetFileName)) {
+				alert("Please enter a name for the export file.");
+				return;
+			}
+			
+			if (highlightNode) {
+				util.json("export", {
+					"nodeId" : highlightNode.id,
+					"targetFileName" : targetFileName
+				}, _exportResponse);
+			}
+		},
+		
 		runEditNode : function(uid) {
 			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
