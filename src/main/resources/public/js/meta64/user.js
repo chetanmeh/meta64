@@ -8,7 +8,7 @@ var user = function() {
 	/* ret is LoginResponse.java */
 	var _loginResponse = function(res) {
 		//console.log("Login.success=" + JSON.stringify(res));
-		if (res.success) {
+		if (util.checkSuccess("Login", res)) {
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 			
 			meta64.homeNodeId = res.rootNode.id;
@@ -17,23 +17,17 @@ var user = function() {
 			meta64.isAdminUser = res.userName === "admin";
 			view.refreshTree(meta64.homeNodeId);
 			$("#headerUserName").html("Meta64 - User: " + res.userName);
-		} else {
-			alert(res.message);
-		}
+		} 
 	}
 
 	var _changePasswordResponse = function(res) {
-		if (!res.success) {
-			alert("Change password failed: " + res.message);
-		} else {
+		if (util.checkSuccess("Change password", res)) {
 			alert("Password changed successfully.");
 		}
 	}
 
 	var _signupResponse = function(res) {
-		if (!res.success) {
-			alert("Signup failed: " + res.message);
-		} else {
+		if (util.checkSuccess("Signup new user", res)) {
 			$.mobile.changePage("#loginDialogId");
 			alert("Signup successful.");
 		}

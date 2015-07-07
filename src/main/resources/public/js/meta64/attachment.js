@@ -7,7 +7,7 @@ var attachment = function() {
 	 */
 
 	function _deleteAttachmentResponse(res) {
-		if (res.success) {
+		if (util.checkSuccess("Delete attachment", res)) {
 			/*
 			 * All that's needed to update client is to set the binary flag on
 			 * the node to false, and re-render
@@ -15,8 +15,6 @@ var attachment = function() {
 			_.uploadNode.hasBinary = false;
 			render.renderPageFromData();
 			_.closeUploadDialog();
-		} else {
-			alert("Unable to delete attachment.");
 		}
 	}
 

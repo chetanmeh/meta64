@@ -11,11 +11,8 @@ var edit = function() {
 	var _parentOfNewNode;
 
 	var _saveNodeResponse = function(res) {
-		console.log("saveNode_response running.");
-
-		if (!res.success) {
-			alert("Save node failed: " + res.message);
-		}
+		util.checkSuccess("Save node", res);
+		
 		view.refreshTree();
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
@@ -24,34 +21,26 @@ var edit = function() {
 	var _insertBookResponse = function(res) {
 		console.log("insertBookResponse running.");
 
-		if (!res.success) {
-			alert("Insert book failed: " + res.message);
-		}
+		util.checkSuccess("Insert Book", res);
 		view.refreshTree();
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
 	var _deleteNodesResponse = function(res) {
-		if (!res.success) {
-			alert("Delete node failed: " + res.message);
-		}
+		util.checkSuccess("Delete node", res);
 		view.refreshTree();
 	}
 
 	var _moveNodesResponse = function(res) {
-		if (!res.success) {
-			alert("Move nodes failed: " + res.message);
-		}
+		util.checkSuccess("Move nodes", res);
 		
 		_.nodesToMove = null; //reset
 		view.refreshTree();
 	}
 
 	var _setNodePositionResponse = function(res) {
-		if (!res.success) {
-			alert("Set node position failed: " + res.message);
-		}
+		util.checkSuccess("Change node position", res);
 
 		view.refreshTree();
 		$.mobile.changePage("#mainPage");
@@ -59,9 +48,7 @@ var edit = function() {
 	}
 
 	var _insertNodeResponse = function(res) {
-		if (!res.success) {
-			alert("Insert node failed: " + res.message);
-		}
+		util.checkSuccess("Insert node", res);
 
 		/*
 		 * set newChildNodeId and also map it to the currently selected node
@@ -84,15 +71,13 @@ var edit = function() {
 	}
 
 	var _makeNodeReferencableResponse = function(res) {
-		if (!res.success) {
-			alert("Failed to make node referencable: " + res.message);
-		}
+		util.checkSuccess("Make node referencable", res);
+		
+		//todo: oops need to refresh gui here to reflect change!
 	}
 
 	var _createSubNodeResponse = function(res) {
-		if (!res.success) {
-			alert("Create Subnode failed: " + res.message);
-		}
+		util.checkSuccess("Create subnode", res);
 
 		/*
 		 * TODO: verify this value gets used now that we aren't going

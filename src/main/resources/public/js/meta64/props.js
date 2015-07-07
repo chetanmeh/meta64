@@ -6,9 +6,7 @@ var props = function() {
 	 */
 
 	var _savePropertyResponse = function(res) {
-		if (!res.success) {
-			alert("Property save failed: " + res.message);
-		}
+		util.checkSuccess("Save properties", res);
 
 		edit.editNode.properties.push(res.propertySaved)
 
@@ -23,7 +21,7 @@ var props = function() {
 
 	var _deletePropertyResponse = function(res, info) {
 		// alert("info: "+JSON.stringify(info));
-		if (res.success) {
+		if (util.checkSuccess("Delete property", res)) {
 
 			/*
 			 * remove deleted property from client side storage, so we can

@@ -43,8 +43,7 @@ var util = function() {
 
 		/*
 		 * We use the convention that all calls to server are POSTs with a
-		 * 'postName' (like an RPC method name), and the target url is formatted
-		 * as [postName]Request
+		 * 'postName' (like an RPC method name)
 		 */
 		json : function(postName, postData, callback, info) {
 			if (typeof callback !== "function") {
@@ -73,6 +72,20 @@ var util = function() {
 					// //JSON.parse(xhr.responseText));
 				}
 			});
+		},
+
+		/*
+		 * We could have put this logic inside the json method itself, but I can
+		 * forsee cases where we don't want a message to appear when the json
+		 * response returns success==false, so we will have to call checkSuccess
+		 * inside every response method instead, if we want that response to
+		 * print a message to the user when fail happens.
+		 */
+		checkSuccess : function(opFriendlyName, res) {
+			if (!res.success) {
+				alert(opFriendlyName + " failed: " + res.message);
+			}
+			return res.success;
 		},
 
 		nullOrUndef : function(obj) {
