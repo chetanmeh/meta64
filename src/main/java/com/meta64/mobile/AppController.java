@@ -46,6 +46,7 @@ import com.meta64.mobile.request.DeleteNodesRequest;
 import com.meta64.mobile.request.DeletePropertyRequest;
 import com.meta64.mobile.request.ExportRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
+import com.meta64.mobile.request.ImportRequest;
 import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.LoginRequest;
@@ -67,6 +68,7 @@ import com.meta64.mobile.response.DeleteNodesResponse;
 import com.meta64.mobile.response.DeletePropertyResponse;
 import com.meta64.mobile.response.ExportResponse;
 import com.meta64.mobile.response.GetNodePrivilegesResponse;
+import com.meta64.mobile.response.ImportResponse;
 import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.LoginResponse;
@@ -314,20 +316,37 @@ public class AppController {
 		return res;
 	}
 	
-	@RequestMapping(value = REST_PATH + "/export", method = RequestMethod.POST)
+	@RequestMapping(value = REST_PATH + "/exportToXml", method = RequestMethod.POST)
 	@OakSession
-	public @ResponseBody ExportResponse export(@RequestBody ExportRequest req) throws Exception {
-		logRequest("export", req);
+	public @ResponseBody ExportResponse exportToXml(@RequestBody ExportRequest req) throws Exception {
+		logRequest("exportToXml", req);
 
 		ExportResponse res = new ExportResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 		
-		if (sessionContext.isAdmin()) {
+		if (!sessionContext.isAdmin()) {
 			throw new Exception("export is an admin-only feature.");
 		}
 
-		importExportService.export(session, req, res);
+		importExportService.exportToXml(session, req, res);
+		return res;
+	}
+	
+	@RequestMapping(value = REST_PATH + "/importFromXml", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody ImportResponse importFromXml(@RequestBody ImportRequest req) throws Exception {
+		logRequest("importFromXml", req);
+
+		ImportResponse res = new ImportResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+		
+		if (!sessionContext.isAdmin()) {
+			throw new Exception("export is an admin-only feature.");
+		}
+
+		importExportService.importFromXml(session, req, res);
 		return res;
 	}
 

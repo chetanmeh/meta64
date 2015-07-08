@@ -22,6 +22,15 @@ var edit = function() {
 			view.scrollToSelectedNode();
 		}
 	}
+	
+	var _importResponse = function(res) {
+		if (util.checkSuccess("Import", res)) {
+			alert("Import Successful.");
+			view.refreshTree();
+			$.mobile.changePage("#mainPage");
+			view.scrollToSelectedNode();
+		}
+	}
 
 	var _insertBookResponse = function(res) {
 		console.log("insertBookResponse running.");
@@ -316,10 +325,31 @@ var edit = function() {
 			}
 			
 			if (highlightNode) {
-				util.json("export", {
+				util.json("exportToXml", {
 					"nodeId" : highlightNode.id,
 					"targetFileName" : targetFileName
 				}, _exportResponse);
+			}
+		},
+		
+		openImportDialog : function() {
+			$.mobile.changePage("#importDialog");
+		},
+		
+		importNodes : function() {
+			var highlightNode = nav.getHighlightedNode();
+			var sourceFileName = util.getRequiredElement("#importTargetNodeName").val();
+			
+			if (util.emptyString(sourceFileName)) {
+				alert("Please enter a name for the import file.");
+				return;
+			}
+			
+			if (highlightNode) {
+				util.json("importFromXml", {
+					"nodeId" : highlightNode.id,
+					"sourceFileName" : sourceFileName
+				}, _importResponse);
 			}
 		},
 		

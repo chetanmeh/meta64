@@ -328,6 +328,14 @@ var meta64 = function() {
 				"name" : "exportNodes",
 				"enable" : true,
 				"function" : edit.exportNodes
+			}, {
+				"name" : "openImportDialog",
+				"enable" : true,
+				"function" : edit.openImportDialog
+			}, {
+				"name" : "importNodes",
+				"enable" : true,
+				"function" : edit.importNodes
 			});
 
 			// hookSliderChanges("editMode");
@@ -354,6 +362,7 @@ var meta64 = function() {
 			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
 			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
+			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser);
 			
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove);
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
