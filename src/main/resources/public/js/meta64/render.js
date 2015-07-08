@@ -28,7 +28,7 @@ var render = function() {
 		 * visible image
 		 */
 		if (node.binaryIsImage) {
-			return _.makeImageTagForNode(node);
+			return _.makeImageTag(node);
 		}
 		/*
 		 * If not an image we render a link to the attachment, so that it can be
@@ -341,7 +341,7 @@ var render = function() {
 
 			var hasContent = html.length > 0;
 			if (hasContent) {
-				//$("#mainPageControls").html(html);
+				// $("#mainPageControls").html(html);
 				util.setHtmlEnhanced($("#mainPageControls"), html);
 			}
 
@@ -446,10 +446,18 @@ var render = function() {
 			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path + "/nt:bin") + "&ver=" + node.binVer;
 		},
 
-		makeImageTagForNode : function(node) {
-			return _.makeTag("img", {
-				"src" : _.getUrlForNodeAttachment(node)
-			}, null, false);
+		makeImageTag : function(node) {
+			if (node.width && node.height) {
+				return _.makeTag("img", {
+					"src" : _.getUrlForNodeAttachment(node),
+					"width" : node.width+"px",
+					"height" : node.height+"px"
+				}, null, false);
+			} else {
+				return _.makeTag("img", {
+					"src" : _.getUrlForNodeAttachment(node)
+				}, null, false);
+			}
 		},
 
 		/*

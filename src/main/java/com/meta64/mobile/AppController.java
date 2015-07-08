@@ -1,9 +1,12 @@
 package com.meta64.mobile;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.net.URLConnection;
 import java.security.Principal;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -35,6 +38,7 @@ import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.image.CaptchaMaker;
+import com.meta64.mobile.image.ImageUtil;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.model.PropertyInfo;
 import com.meta64.mobile.request.AddPrivilegeRequest;
@@ -126,7 +130,7 @@ public class AppController {
 
 	@Autowired
 	private NodeSearchService nodeSearchService;
-	
+
 	@Autowired
 	private ImportExportService importExportService;
 
@@ -315,7 +319,7 @@ public class AppController {
 		res.setSuccess(success);
 		return res;
 	}
-	
+
 	@RequestMapping(value = REST_PATH + "/exportToXml", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody ExportResponse exportToXml(@RequestBody ExportRequest req) throws Exception {
@@ -324,7 +328,7 @@ public class AppController {
 		ExportResponse res = new ExportResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
-		
+
 		if (!sessionContext.isAdmin()) {
 			throw new Exception("export is an admin-only feature.");
 		}
@@ -332,7 +336,7 @@ public class AppController {
 		importExportService.exportToXml(session, req, res);
 		return res;
 	}
-	
+
 	@RequestMapping(value = REST_PATH + "/importFromXml", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody ImportResponse importFromXml(@RequestBody ImportRequest req) throws Exception {
@@ -341,7 +345,7 @@ public class AppController {
 		ImportResponse res = new ImportResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
-		
+
 		if (!sessionContext.isAdmin()) {
 			throw new Exception("export is an admin-only feature.");
 		}
@@ -511,16 +515,19 @@ public class AppController {
 				String dstPath = targetPath + "/" + node.getName();
 				// log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
 				session.move(srcPath, dstPath);
-			
-				//session.save();
-				
-				/* This code did not work as expected (or at all). This is supposed to move the new nodes into the proper
-				 * ordinal position, and doesn't work. Since this is lower priority, i'm not even going to try to figure this 
-				 * out for now, and will just leave it as technical debt, TODO */
-//				if (targetChildId != null) {
-//					targetNode.orderBefore(dstPath, targetChildId);
-//					//session.save();
-//				}
+
+				// session.save();
+
+				/*
+				 * This code did not work as expected (or at all). This is supposed to move the new
+				 * nodes into the proper ordinal position, and doesn't work. Since this is lower
+				 * priority, i'm not even going to try to figure this out for now, and will just
+				 * leave it as technical debt, TODO
+				 */
+				// if (targetChildId != null) {
+				// targetNode.orderBefore(dstPath, targetChildId);
+				// //session.save();
+				// }
 			}
 			catch (Exception e) {
 				// silently ignore if node cannot be found.
@@ -542,7 +549,7 @@ public class AppController {
 
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-		Node nodeToRemove = session.getNode(node.getPath() + "/" + AppConstant.NAMESPACE + ":bin");
+		Node nodeToRemove = session.getNode(node.getPath() + "/" + AppConstant.JCR_PROP_BIN);
 		nodeToRemove.remove();
 		session.save();
 		res.setSuccess(true);
@@ -689,13 +696,13 @@ public class AppController {
 			// System.out.println("Retrieving binary nodeId: " + nodeId);
 			Node node = JcrUtil.findNode(session, nodeId);
 
-			Property mimeTypeProp = node.getProperty("jcr:mimeType");
+			Property mimeTypeProp = node.getProperty(AppConstant.JCR_PROP_BIN_MIME);
 			if (mimeTypeProp == null) {
 				throw new Exception("unable to find mimeType property");
 			}
 			// log.debug("Retrieving mime: " + mimeTypeProp.getValue().getString());
 
-			Property dataProp = node.getProperty("jcr:data");
+			Property dataProp = node.getProperty(AppConstant.JCR_PROP_BIN_DATA);
 			if (dataProp == null) {
 				throw new Exception("unable to find data property");
 			}
@@ -726,7 +733,7 @@ public class AppController {
 			Node node = JcrUtil.findNode(session, nodeId);
 			String mimeType = URLConnection.guessContentTypeFromName(fileName);
 
-			String name = AppConstant.NAMESPACE + ":bin";
+			String name = AppConstant.JCR_PROP_BIN;
 
 			Node binaryNode = null;
 			long version = 0;
@@ -737,7 +744,7 @@ public class AppController {
 				 * Based on my reading of the JCR docs, I don't need to remove old properties,
 				 * because new property will overwrite. TODO: testing pending
 				 */
-				Property versionProperty = binaryNode.getProperty(AppConstant.NAMESPACE + ":ver");
+				Property versionProperty = binaryNode.getProperty(AppConstant.JCR_PROP_BIN_VER);
 				if (versionProperty != null) {
 					version = versionProperty.getValue().getLong();
 				}
@@ -753,9 +760,22 @@ public class AppController {
 			}
 
 			Binary binary = session.getValueFactory().createBinary(uploadfile.getInputStream());
-			binaryNode.setProperty("jcr:data", binary);
-			binaryNode.setProperty("jcr:mimeType", mimeType);
-			binaryNode.setProperty(AppConstant.NAMESPACE + ":ver", ++version);
+
+			/*
+			 * The above 'createBinary' call will have already read the entire stream so we can now
+			 * assume all data is present and width/height of image will ba available.
+			 */
+			if (ImageUtil.isImageMime(mimeType)) {
+				BufferedImage image = ImageIO.read(binary.getStream());
+				int width = image.getWidth();
+				int height = image.getHeight();
+				binaryNode.setProperty(AppConstant.JCR_PROP_IMG_WIDTH, String.valueOf(width));
+				binaryNode.setProperty(AppConstant.JCR_PROP_IMG_HEIGHT, String.valueOf(height));
+			}
+
+			binaryNode.setProperty(AppConstant.JCR_PROP_BIN_DATA, binary);
+			binaryNode.setProperty(AppConstant.JCR_PROP_BIN_MIME, mimeType);
+			binaryNode.setProperty(AppConstant.JCR_PROP_BIN_VER, ++version);
 
 			/*
 			 * DO NOT DELETE (this code can be used to test uploading) String directory =

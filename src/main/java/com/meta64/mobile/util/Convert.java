@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.meta64.mobile.config.AppConstant;
+import com.meta64.mobile.image.ImageSize;
+import com.meta64.mobile.image.ImageUtil;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.model.NodeInfo;
 import com.meta64.mobile.model.PrivilegeInfo;
@@ -76,38 +78,60 @@ public class Convert {
 		boolean hasBinary = false;
 		boolean binaryIsImage = false;
 		long binVer = 0;
+		ImageSize imageSize = null;
 		try {
 			// TODO: is there some better performing way of checking for the existence of a node ?
-			Node binNode = session.getNode(node.getPath() + "/nt:bin");
+			Node binNode = session.getNode(node.getPath() + "/" + AppConstant.JCR_PROP_BIN);
 
 			/* if we didn't get an exception, we know we have a binary */
 			hasBinary = true;
 
 			binaryIsImage = isImageAttached(binNode);
+
+			if (binaryIsImage) {
+				imageSize = getImageSize(binNode);
+			}
 			binVer = getBinaryVersion(binNode);
 		}
 		catch (Exception e) {
 			// not an error. means node has no binary subnode.
 		}
+
 		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), node.hasNodes(), false, hasBinary,
-				binaryIsImage, binVer);
+				binaryIsImage, binVer, //
+				imageSize != null ? imageSize.getWidth() : 0, //
+				imageSize != null ? imageSize.getHeight() : 0);
 		return nodeInfo;
 	}
 
 	public static long getBinaryVersion(Node node) throws Exception {
-		Property versionProperty = node.getProperty(AppConstant.NAMESPACE + ":ver");
+		Property versionProperty = node.getProperty(AppConstant.JCR_PROP_BIN_VER);
 		if (versionProperty != null) {
 			return versionProperty.getValue().getLong();
 		}
 		return -1;
 	}
 
+	public static ImageSize getImageSize(Node node) throws Exception {
+		ImageSize imageSize = new ImageSize();
+
+		Property widthProperty = node.getProperty(AppConstant.JCR_PROP_IMG_WIDTH);
+		if (widthProperty != null) {
+			imageSize.setWidth((int) widthProperty.getValue().getLong());
+		}
+
+		Property heightProperty = node.getProperty(AppConstant.JCR_PROP_IMG_HEIGHT);
+		if (heightProperty != null) {
+			imageSize.setHeight((int) heightProperty.getValue().getLong());
+		}
+		return imageSize;
+	}
+
 	public static boolean isImageAttached(Node node) throws Exception {
-		Property mimeTypeProp = node.getProperty("jcr:mimeType");
+		Property mimeTypeProp = node.getProperty(AppConstant.JCR_PROP_BIN_MIME);
 		return (mimeTypeProp != null && //
 				mimeTypeProp.getValue() != null && //
-				mimeTypeProp.getValue().getString() != null && //
-		mimeTypeProp.getValue().getString().toLowerCase().startsWith("image/"));
+		ImageUtil.isImageMime(mimeTypeProp.getValue().getString()));
 	}
 
 	public static List<PropertyInfo> convertToPropertyInfoList(Node node) throws RepositoryException {

@@ -16,6 +16,8 @@ public class NodeInfo {
 	private boolean hasBinary;
 	private boolean binaryIsImage;
 	private long binVer;
+	private int width;
+	private int height;
 
 	/* true if parent is "orderable" node */
 	private boolean childrenOrdered;
@@ -24,7 +26,7 @@ public class NodeInfo {
 	}
 
 	public NodeInfo(String id, String path, String name, List<PropertyInfo> properties, boolean hasChildren, boolean childrenOrdered, boolean hasBinary,
-			boolean binaryIsImage, long binVer) {
+			boolean binaryIsImage, long binVer, int width, int height) {
 		this.id = id;
 		this.path = path;
 		this.name = name;
@@ -34,6 +36,8 @@ public class NodeInfo {
 		this.hasBinary = hasBinary;
 		this.binaryIsImage = binaryIsImage;
 		this.binVer = binVer;
+		this.width = width;
+		this.height = height;
 	}
 
 	public boolean isChildrenOrdered() {
@@ -106,5 +110,21 @@ public class NodeInfo {
 
 	public void setBinVer(long binVer) {
 		this.binVer = binVer;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }
