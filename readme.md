@@ -1,6 +1,6 @@
 # Meta64: A "Mobile first" JCR Browser
-# *(JCR=Java Content Repository)*
-Document Date: 07/05/2015
+*(JCR=Java Content Repository)*
+Document Date: 07/09/2015
 
 ## Key Technologies
 
@@ -46,7 +46,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Creating Subnodes or Inline nodes
 * Full text search
 * Deleting Nodes
-* Moving nodes to new locations
+* Moving nodes to new locations (supports multi-select)
 * Sharing a node as Public, and removing shares
 * Short URL GUID for any node, so it can be referenced by URL
 * Uploading attachments (attached files) onto a node
@@ -58,16 +58,15 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Can switch between simple or advanced mode editing
 * Change password feature.
 * Multiple nodes selectable
-* Export to XML
+* Import/Export to XML
 * Admin feature to insert entire book "War and Peace", for quickly
-  creating test data for exploring all the features.
+  creating test data for exploring all the features, and especially 'search'.
 
 ### Next Features to be Developed
 Listed here in the order they will likely be developed...
 
 * More JUnit unit tests.
 * Ability to share node with specific user.
-* Import from XMLl
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
