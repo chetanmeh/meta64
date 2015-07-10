@@ -12,6 +12,8 @@ var user = function() {
 			meta64.homeNodePath = res.rootNode.path;
 			
 			meta64.isAdminUser = res.userName === "admin";
+			meta64.isAnonUser = res.userName === "anonymous";
+			
 			view.refreshTree(meta64.homeNodeId);
 			$("#headerUserName").html("Meta64 - User: " + res.userName);
 		} 

@@ -19,6 +19,9 @@ var meta64 = function() {
 		 * from all access, even if this variable is hacked by attackers.
 		 */
 		isAdminUser : false,
+		
+		/* always start out as anon user until login */
+		isAnonUser : true,
 
 		/*
 		 * signals that data has changed and the next time we go to the main
@@ -358,6 +361,9 @@ var meta64 = function() {
 			util.setEnablementByName("changePasswordDialog", true);
 			util.setEnablementByName("editMode", _.currentNode);
 			util.setEnablementByName("signup", true);
+			
+			util.setVisibility("#popupMenu", !_.isAnonUser);
+			util.setVisibility("#menuButton", !_.isAnonUser);
 			
 			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);

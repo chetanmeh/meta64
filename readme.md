@@ -1,6 +1,7 @@
-# Meta64: A "Mobile first" JCR Browser
-*(JCR=Java Content Repository)*
-Document Date: 07/09/2015
+# Meta64: A new kind of Wiki.
+An Open Source "Mobile first" Wiki-type content repository built on Apache Oak JCR and MongoDb
+
+On GitHub.com -> https://github.com/Clay-Ferguson/meta64
 
 ## Key Technologies
 
@@ -9,15 +10,15 @@ Document Date: 07/09/2015
 
 ## Meta64 Overview
 
-Meta64 is a **JCR Repository Browser**, which is an app for interacting with hierarchical data. It's also much more than a JCR Browser, because it's able to present a GUI front end appropriate to non-technical users, as well as the more technical users of back-end content repositories. The theory here is that "everything is content" and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well, which is one of the goals of meta64.
+Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you are on meta64.com) is actually running this app, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that "everything is content" and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
 
-(Point of clarification: Currently the meta64.com website is hosting the legacy version of meta64, which is an older technology stack built on GWT+JPA+MySql, and has been abandoned and replaced by the mobile version built on JCR+JQuery+MongoDb. However the news engine, email daemon, and other major non-storage components will be taken directly from the old codebase, and not rewritten.)
+The meta64 website and content on it is now geared towards the developer and is online as a demonstration of the technology stack, but the ultimate goal is to provide capabilities very similar to Facebook, Reddit, and Wikipedia, etc. if you could imagine them all rolled into one system. With the power of Lucene and MongoDB on the backend, plus the fully standards-based open stack, this only 4-month old codebase is already able to provide incredible power only found in other systems like Wikipedia and Google, or the other large-scale content repositories that are proprietary/commercial products, and built on much older technology stacks.
 
-Now back to the new development, meta64 mobile: For a social media user, meta64 can function as a blogging platform, file-sharing platform, social commenting platform, wiki system, personal website host, etc., while simultaneously functioning as a full-blown back-end JCR repository used by technical users like software developers, data architects, DB admins, etc. The way this is accomplished is by having a simplified set of features (i.e. rendering of the GUI) presented to non-technical users, while having the full featured JCR browser capabilities available at the flip of a switch, using a single button click. There is a 'simple' mode and 'advanced' mode, that does this.
+For a social media user, meta64 can function as a blogging platform, file-sharing platform, social commenting platform, wiki system, personal website host, etc., while simultaneously functioning as a full-blown back-end JCR repository used by technical users like software developers, data architects, DB admins, etc. The way this is accomplished is by having a simplified set of features (i.e. rendering of the GUI) presented to non-technical users, while having the full featured JCR browser capabilities available at the flip of a switch, using a single button click. There is a 'simple' mode and 'advanced' mode, that does this.
 
-There are just a few key concepts to know for a basic understanding of what JCR is all about, if you aren't familiar with it:
+There are just a few key concepts to know for a basic understanding of what JCR is all about, if you aren't familiar with the term:
 
-* Everything is content, and a JCR is a Content Repository (database) written in Java.
+* Everything is content, and a JCR is a Content Repository (database) standard for Java.
 * Data exists as a tree structure consisting of editable nodes.
 * Each user owns a part of the tree and subnodes under that make up their "account root".
 * Node text and attachments can be edited (like on a Wiki)
@@ -28,7 +29,7 @@ There are just a few key concepts to know for a basic understanding of what JCR 
 * Each node can be referenced by direct-linking to it on the URL, so users can publish their own pages with specific urls.
 * Essentially meta64 itself is a kind of tree-structured wiki, or just a tree of editable, sharable content, just like you see on social media, but completely general purpose.
 
-## Source Code Status (as of date at top)
+## Source Code Status
 Code is "open sourced" (and on GitHub) but pre-alpha prototype currently, meaning it's not considered production ready, but does follow architectural best practices. The code is not perfectly 'clean' or perfectly organized at this time, but neither is it sloppy or low quality. It is what you would expect from a rapidly evolving prototype. Correct frameworks and architectures are in place, but some minor refactoring changes need to be done, as is true in any proof-of-concept.
 
 ## Code Ownership

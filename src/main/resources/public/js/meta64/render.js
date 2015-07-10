@@ -11,15 +11,17 @@ var render = function() {
 	 * insructions and the ability to add content.
 	 */
 	function _getEmptyPagePrompt() {
-		/* Construct Create Subnode Button */
-		var createSubNodeButton = _.makeTag("a", //
-		{
-			"onClick" : "edit.createSubNode();",
-			"data-role" : "button",
-			"data-icon" : "star"
-		}, "Create Content");
-
-		return createSubNodeButton;
+		//TODO: oops, anonymous users had access to this button. LOL.
+		return "";
+//		/* Construct Create Subnode Button */
+//		var createSubNodeButton = _.makeTag("a", //
+//		{
+//			"onClick" : "edit.createSubNode();",
+//			"data-role" : "button",
+//			"data-icon" : "star"
+//		}, "Create Content");
+//
+//		return createSubNodeButton;
 	}
 
 	function _renderBinary(node) {

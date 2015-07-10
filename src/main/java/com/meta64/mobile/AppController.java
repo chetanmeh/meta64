@@ -144,7 +144,8 @@ public class AppController {
 	 * ID is optional url parameter that user can specify to access a specific node in the
 	 * repository by uuid.
 	 */
-	@RequestMapping("/mobile")
+	//@RequestMapping("/mobile")
+	@RequestMapping("/")
 	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
 		logRequest("mobile", null);
 

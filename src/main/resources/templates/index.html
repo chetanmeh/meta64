@@ -11,8 +11,9 @@
 
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	var postTargetUrl = /*[[${@constantsProvider.getRestUrl()}]]*/"";
-	//console.log("REST HOST: " + postTargetUrl);
+	//var postTargetUrl = /*[[${@constantsProvider.getRestUrl()}]]*/"";
+	var postTargetUrl = window.location.origin + "/mobile/rest/";
+	console.log("REST HOST: " + postTargetUrl);
 	/*]]>*/
 </script>
 
@@ -77,7 +78,7 @@
 		<div id="mainPageHeader" data-role="header" data-position="fixed"
 			data-tap-toggle="false">
 			<h1 id="headerUserName">Meta64 - User: anonymous</h1>
-			<a href="#popupMenu" data-rel="popup" data-icon="bars">Menu</a>
+			<a href="#popupMenu" data-rel="popup" data-icon="bars" id="menuButton">Menu</a>
 			<div data-role="navbar">
 				<ul>
 					<li><a id="navHomeButton" data-icon="home">Home</a></li>
@@ -131,7 +132,7 @@
 	<div th:replace="fragments/search-results-dialog">...</div>
 	<div th:replace="fragments/export-dialog">...</div>
 	<div th:replace="fragments/import-dialog">...</div>
-	
+
 	<script>
 		meta64.initApp();
 		meta64.hookInitFunction();

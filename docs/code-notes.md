@@ -1,4 +1,23 @@
-#JavaScript + Client-side Conventions
+## Starting MongoDB
+
+Tip on how to start MongoDb
+
+	 Windows: 
+	 mongod --dbpath c:\mongodb-data\db --port 27017
+	 
+    Linux:
+    mongod --dbpath /usr/local/mongodb-data --port 27017
+    
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+
+## Running the Meta64 Server
+
+* Note that the spring.config.location argument (as in the command below) you are required to include the main application.properties file as well as one of the profile ones (ending in -test, -dev, or -production)
+
+    Example Windows BAT file to run Server:
+    set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_55
+    set PATH=%JAVA_HOME\bin%;%PATH%
+    java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
 
 ## Single Page Application (SPA)
 
