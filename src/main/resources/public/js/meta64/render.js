@@ -100,6 +100,7 @@ var render = function() {
 				}
 			} else {
 				var contentProp = props.getNodeProperty("jcr:content", node);
+				console.log("contentProp: "+contentProp);
 				if (contentProp) {
 					var jcrContent = props.renderProperty(contentProp);
 
@@ -436,7 +437,8 @@ var render = function() {
 			if (output.length == 0 && !meta64.isAnonUser) {
 				output = _getEmptyPagePrompt();
 			}
-
+			console.log("output listView: "+output);
+			
 			util.setHtmlEnhanced($("#listView"), output);
 
 			view.scrollToSelectedNode();

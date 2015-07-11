@@ -396,10 +396,10 @@ var util = function() {
 		setVisibility : function(elmId, vis) {
 
 			if (vis) {
-				console.log("Showing element: " + elmId);
+				//console.log("Showing element: " + elmId);
 				$(elmId).show();
 			} else {
-				console.log("hiding element: " + elmId);
+				//console.log("hiding element: " + elmId);
 				$(elmId).hide();
 			}
 		}

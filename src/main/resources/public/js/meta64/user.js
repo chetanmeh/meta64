@@ -15,7 +15,12 @@ var user = function() {
 			meta64.isAnonUser = res.userName === "anonymous";
 			
 			view.refreshTree(meta64.homeNodeId);
-			$("#headerUserName").html("Meta64 - User: " + res.userName);
+			
+			var title = "Meta64";
+			if (!meta64.isAnonUser) {
+				title += " - "+res.userName;
+			}
+			$("#headerUserName").html(title);
 		} 
 	}
 

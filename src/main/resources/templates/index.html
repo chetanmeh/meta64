@@ -31,45 +31,47 @@
 <script type="text/javascript"
 	th:src="@{/jquery/jquery.mobile-1.4.5.js}"></script>
 
-<script type="text/javascript" th:src="@{/js/md/Markdown.Converter.js}"></script>
+<script type="text/javascript"
+	th:src="@{/js/md/Markdown.Converter.js?ver.md=1}"></script>
 
-<script type="text/javascript" th:src="@{/js/md/Markdown.Sanitizer.js}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/util.js}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/render.js}"></script>
+<script type="text/javascript"
+	th:src="@{/js/md/Markdown.Sanitizer.js?ver.md=1}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/nav.js}"></script>
+	th:src="@{${utilJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/view.js}"></script>
+	th:src="@{${renderJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/share.js}"></script>
+	th:src="@{${navJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/user.js}"></script>
+	th:src="@{${viewJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/prefs.js}"></script>
+	th:src="@{${shareJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/props.js}"></script>
+	th:src="@{${userJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/edit.js}"></script>
+	th:src="@{${prefsJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/attachment.js}"></script>
+	th:src="@{${propsJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/meta64.js}"></script>
+	th:src="@{${editJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{/js/meta64/search.js}"></script>
+	th:src="@{${attachmentJs}}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{${meta64Js}}"></script>
+
+<script type="text/javascript" th:inline="javascript"
+	th:src="@{${searchJs}}"></script>
 
 </head>
 
@@ -77,8 +79,9 @@
 	<div id="mainPage" data-role="page">
 		<div id="mainPageHeader" data-role="header" data-position="fixed"
 			data-tap-toggle="false">
-			<h1 id="headerUserName">Meta64 - User: anonymous</h1>
-			<a href="#popupMenu" data-rel="popup" data-icon="bars" id="menuButton">Menu</a>
+			<h1 id="headerUserName">Meta64</h1>
+			<a href="#popupMenu" data-rel="popup" data-icon="bars"
+				id="menuButton">Menu</a>
 			<div data-role="navbar">
 				<ul>
 					<li><a id="navHomeButton" data-icon="home">Home</a></li>
@@ -99,6 +102,7 @@
 		</div>
 
 		<div data-role="content">
+			<div th:text="${jsVer}"></div>
 			<div id="mainNodeContent" class="main-node-content"></div>
 			<div id="mainPageControls"></div>
 			<div id="listView"></div>

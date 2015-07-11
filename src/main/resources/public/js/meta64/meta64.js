@@ -351,15 +351,22 @@ var meta64 = function() {
 			util.setEnablementByName("login", true);
 			util.setEnablementByName("navHome", _.currentNode && !nav.displayingRoot());
 			util.setEnablementByName("navUpLevel", _.currentNode && !nav.displayingRoot());
-			util.setEnablementByName("propsToggle", _.currentNode);
-			util.setEnablementByName("saveNode", true);
+			
+			var propsToggle =  _.currentNode && !_.isAnonUser;
+			/* this leaves a hole in the toolbar if you hide it. Need to change that */
+			util.setEnablementByName("propsToggle", propsToggle);
+			
+			util.setEnablementByName("saveNode", !_.isAnonUser);
 			util.setEnablementByName("cancelEdit", true);
-			util.setEnablementByName("addProperty", true);
-			util.setEnablementByName("deleteProperty", true);
-			util.setEnablementByName("saveProperty", true);
-			util.setEnablementByName("changePassword", true);
-			util.setEnablementByName("changePasswordDialog", true);
-			util.setEnablementByName("editMode", _.currentNode);
+			util.setEnablementByName("addProperty", !_.isAnonUser);
+			util.setEnablementByName("deleteProperty", !_.isAnonUser);
+			util.setEnablementByName("saveProperty", !_.isAnonUser);
+			util.setEnablementByName("changePassword", !_.isAnonUser);
+			util.setEnablementByName("changePasswordDialog", !_.isAnonUser);
+			
+			var editMode = _.currentNode && !_.isAnonUser;
+			/* this leaves a hole in the toolbar if you hide it. Need to change that */
+			util.setEnablementByName("editMode", editMode);
 			util.setEnablementByName("signup", true);
 
 			util.setVisibility("#popupMenu", !_.isAnonUser);
@@ -370,7 +377,7 @@ var meta64 = function() {
 			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
 			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser);
 
-			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove);
+			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 		},
 
@@ -459,7 +466,10 @@ var meta64 = function() {
 			 * which is a major malfunction, so I target the specific page
 			 * "#mainPage" so that it can only call this ONE time.
 			 */
-			// $(document).ready(function() {
+			//$(document).ready(function() {
+				//_.loadAnonPageHome(false);
+			//};
+			
 			$(document).on("pagecreate", "#mainPage", function(event) {
 				_.initApp();
 			});

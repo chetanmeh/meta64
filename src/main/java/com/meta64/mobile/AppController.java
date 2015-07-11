@@ -1,7 +1,6 @@
 package com.meta64.mobile;
 
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.net.URLConnection;
 import java.security.Principal;
 import java.util.List;
@@ -94,6 +93,7 @@ import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.ImportWarAndPeace;
 import com.meta64.mobile.util.JcrUtil;
+import com.meta64.mobile.util.SpringMvcUtil;
 import com.meta64.mobile.util.ThreadLocals;
 import com.meta64.mobile.util.XString;
 
@@ -134,6 +134,17 @@ public class AppController {
 	@Autowired
 	private ImportExportService importExportService;
 
+	/*
+	 * Each time the server restarts we have a new version number here and will cause clients to
+	 * download new version of JS files into their local browser cache. For now the assumption is
+	 * that this is better then having to remember to update version numbers to invalidate client
+	 * caches, but in production systems we may not want to push new JS just because of a server
+	 * restart so this will change in the future. That is the 'currentTimeMillis' part will change
+	 * to some kind of an actual version number or something, that will be parts of managed
+	 * releases.
+	 */
+	public static final long jsVersion = System.currentTimeMillis();
+
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
 	}
@@ -144,13 +155,15 @@ public class AppController {
 	 * ID is optional url parameter that user can specify to access a specific node in the
 	 * repository by uuid.
 	 */
-	//@RequestMapping("/mobile")
+	// @RequestMapping("/mobile")
 	@RequestMapping("/")
 	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
 		logRequest("mobile", null);
 
+		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
+				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", "share", "user", "util", "view");
+
 		sessionContext.setUrlId(id);
-		// model.addAttribute("id", name);
 		return "index";
 	}
 
