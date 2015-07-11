@@ -16,7 +16,7 @@ var nav = function() {
 		showSearchPage : function() {
 			$.mobile.changePage("#searchResultsDialog");
 		},
-		
+
 		navUpLevel : function() {
 
 			if (_.displayingRoot()) {
@@ -80,13 +80,16 @@ var nav = function() {
 			return null;
 		},
 
-		/* Returns the node the user has "highlighted" (last clicked on), or null if none is highlighted */
+		/*
+		 * Returns the node the user has "highlighted" (last clicked on), or
+		 * null if none is highlighted
+		 */
 		getHighlightedNode : function() {
 
 			/* check if we have an existing highlighted row to unhighlight */
 			return meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
 		},
-		
+
 		/*
 		 * turn of row selection styling of whatever row is currently selected
 		 */
@@ -151,11 +154,12 @@ var nav = function() {
 		},
 
 		openNode : function(uid) {
-			
+
 			var node = meta64.uidToNodeMap[uid];
-			
-			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node; //new 7/4/2015
-			
+
+			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node; // new
+			// 7/4/2015
+
 			if (!node) {
 				alert("Unknown nodeId in openNode: " + uid);
 			} else {
@@ -176,9 +180,14 @@ var nav = function() {
 		},
 
 		navHome : function() {
-			util.json("renderNode", {
-				"nodeId" : meta64.homeNodeId
-			}, view.renderNodeResponse);
+			if (meta64.isAnonUser) {
+				meta64.loadAnonPageHome(true);
+				//window.location.href = window.location.origin;
+			} else {
+				util.json("renderNode", {
+					"nodeId" : meta64.homeNodeId
+				}, view.renderNodeResponse);
+			}
 		}
 	};
 

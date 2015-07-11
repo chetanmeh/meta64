@@ -19,7 +19,7 @@ var meta64 = function() {
 		 * from all access, even if this variable is hacked by attackers.
 		 */
 		isAdminUser : false,
-		
+
 		/* always start out as anon user until login */
 		isAnonUser : true,
 
@@ -361,15 +361,15 @@ var meta64 = function() {
 			util.setEnablementByName("changePasswordDialog", true);
 			util.setEnablementByName("editMode", _.currentNode);
 			util.setEnablementByName("signup", true);
-			
+
 			util.setVisibility("#popupMenu", !_.isAnonUser);
 			util.setVisibility("#menuButton", !_.isAnonUser);
-			
+
 			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
 			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
 			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser);
-			
+
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove);
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 		},
@@ -461,7 +461,7 @@ var meta64 = function() {
 			 */
 			// $(document).ready(function() {
 			$(document).on("pagecreate", "#mainPage", function(event) {
-				// _.initApp();
+				_.initApp();
 			});
 		},
 
@@ -501,8 +501,13 @@ var meta64 = function() {
 			console.log("initApp running.");
 
 			_.defineAllActions();
+			_.loadAnonPageHome(false);
+		},
 
-			util.json("anonPageLoad", {}, _.anonPageLoadResponse);
+		loadAnonPageHome : function(ignoreUrl) {
+			util.json("anonPageLoad", {
+				"ignoreUrl" : ignoreUrl
+			}, _.anonPageLoadResponse);
 		}
 	};
 

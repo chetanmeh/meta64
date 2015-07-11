@@ -178,17 +178,6 @@ var render = function() {
 				"Open");
 			}
 
-			/* Construct SelectButton */
-			var checkboxHtml = _.makeTag("input", //
-			{
-				"type" : "checkbox", //
-				"id" : uid + "_sel",//
-				"name" : uid + "_check", //
-				"onClick" : "nav.toggleNodeSel('" + uid + "')",
-				"data-icon" : "bullets"
-			}, "", false);
-			selButton = _.makeTag("label", null, checkboxHtml + "Sel");
-
 			/*
 			 * If in edit mode we always at least create the potential (buttons)
 			 * for a user to insert content, and if they don't have privileges
@@ -198,6 +187,17 @@ var render = function() {
 			if (meta64.editMode) {
 				// console.log("Editing allowed: " + nodeId);
 
+				/* Construct SelectButton */
+				var checkboxHtml = _.makeTag("input", //
+				{
+					"type" : "checkbox", //
+					"id" : uid + "_sel",//
+					"name" : uid + "_check", //
+					"onClick" : "nav.toggleNodeSel('" + uid + "')",
+					"data-icon" : "bullets"
+				}, "", false);
+				selButton = _.makeTag("label", null, checkboxHtml + "Sel");
+				
 				/* Construct Create Subnode Button */
 				createSubNodeButton = _.makeTag("a", //
 				{

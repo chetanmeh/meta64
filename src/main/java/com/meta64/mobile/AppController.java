@@ -441,7 +441,7 @@ public class AppController {
 	@OakSession
 	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
 		logRequest("insertBook", req);
-		if (sessionContext.isAdmin()) {
+		if (!sessionContext.isAdmin()) {
 			throw new Exception("insertBook is an admin-only feature.");
 		}
 
@@ -456,7 +456,7 @@ public class AppController {
 		// String name = req.getBookName();
 
 		ImportWarAndPeace iwap = SpringContextUtil.getApplicationContext().getBean(ImportWarAndPeace.class);
-		iwap.importBook(session, "classpath:/com/meta64/mobile/util/war-and-peace.txt", node);
+		iwap.importBook(session, "classpath:war-and-peace.txt", node);
 
 		session.save();
 		res.setSuccess(true);
@@ -802,7 +802,7 @@ public class AppController {
 		AnonPageLoadResponse res = new AnonPageLoadResponse();
 		Session session = ThreadLocals.getJcrSession();
 
-		String id = sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
+		String id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
 
 		if (!XString.isEmpty(id)) {
 			RenderNodeResponse renderNodeRes = new RenderNodeResponse();

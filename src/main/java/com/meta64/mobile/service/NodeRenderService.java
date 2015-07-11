@@ -12,6 +12,7 @@ import javax.jcr.nodetype.NodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -41,15 +42,17 @@ public class NodeRenderService {
 
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
-
+	
 	public void renderNode(Session session, RenderNodeRequest req, RenderNodeResponse res) throws Exception {
 
 		List<NodeInfo> children = new LinkedList<NodeInfo>();
 		res.setChildren(children);
 
-		Node node;
+		String targetId = req.getNodeId();
+		
+		Node node; 
 		try {
-			node = JcrUtil.findNode(session, req.getNodeId());
+			node = JcrUtil.findNode(session, targetId);
 		}
 		catch (Exception e) {
 			res.setMessage("Node not found.");

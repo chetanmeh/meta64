@@ -1,6 +1,6 @@
 ## Starting MongoDB
 
-Tip on how to start MongoDb
+Commands to run MongoDb
 
 	 Windows: 
 	 mongod --dbpath c:\mongodb-data\db --port 27017
@@ -10,7 +10,7 @@ Tip on how to start MongoDb
     
 http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
-## Running the Meta64 Server
+## Running the Meta64 Server (on Windows)
 
 * Note that the spring.config.location argument (as in the command below) you are required to include the main application.properties file as well as one of the profile ones (ending in -test, -dev, or -production)
 
@@ -18,6 +18,8 @@ http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
     set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_55
     set PATH=%JAVA_HOME\bin%;%PATH%
     java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
+    
+* Note, the above is not the "best" way to start an app on linux, but is the simplest.
 
 ## Single Page Application (SPA)
 
