@@ -99,7 +99,6 @@ Listed here in the order they will likely be developed...
 
 ## Next Actions on the Agenda
 * Will create a screencast showing a 5 minute demo, on youtube.
-* Put an instance online at meta64.com, and bring down legacy site at that URL.
 * Will be seeking crowdsource funding
 * Hoping to get publicized at first in the JCR developer community.
 
