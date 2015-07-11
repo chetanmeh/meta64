@@ -11,17 +11,15 @@ var render = function() {
 	 * insructions and the ability to add content.
 	 */
 	function _getEmptyPagePrompt() {
-		//TODO: oops, anonymous users had access to this button. LOL.
-		return "";
-//		/* Construct Create Subnode Button */
-//		var createSubNodeButton = _.makeTag("a", //
-//		{
-//			"onClick" : "edit.createSubNode();",
-//			"data-role" : "button",
-//			"data-icon" : "star"
-//		}, "Create Content");
-//
-//		return createSubNodeButton;
+		/* Construct Create Subnode Button */
+		var createSubNodeButton = _.makeTag("a", //
+		{
+			"onClick" : "edit.createSubNode();",
+			"data-role" : "button",
+			"data-icon" : "star"
+		}, "Create Content");
+
+		return createSubNodeButton;
 	}
 
 	function _renderBinary(node) {
@@ -61,7 +59,7 @@ var render = function() {
 				ret += "Path: " + _.formatPath(path) + "<br>";
 			}
 
-			if (showIdentifier) {
+			if (showIdentifier && meta64.editMode) {
 				if (node.id === node.path && showPath) {
 					// ret += "ID: *<br>";
 				} else {
@@ -435,7 +433,7 @@ var render = function() {
 				});
 			}
 
-			if (output.length == 0) {
+			if (output.length == 0 && !meta64.isAnonUser) {
 				output = _getEmptyPagePrompt();
 			}
 

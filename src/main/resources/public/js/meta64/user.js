@@ -36,7 +36,7 @@ var user = function() {
 		signup : function() {
 			var userName = util.getRequiredElement("#signupUserName").val();
 			var password = util.getRequiredElement("#signupPassword").val();
-			var email = util.getRequiredElement("#signupEmail").val();
+			var email = "noemail@nothing.com"; // util.getRequiredElement("#signupEmail").val();
 			var captcha = util.getRequiredElement("#signupCaptcha").val();
 
 			/* no real validation yet, other than non-empty */

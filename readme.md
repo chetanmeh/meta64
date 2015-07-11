@@ -102,8 +102,7 @@ Listed here in the order they will likely be developed...
 * See application.properties for configurations.
 * Pre-requisites: Java VM installed on machine, and MongoDB server up and running.
 * Currently uses default storage location for MongoDb (Windows -> c:\data\db)
-* Once app is up and running go here: 
-     http://localhost:8083/mobile
+* Once app is up and running go here: http://localhost:8083 (8083 port is currently the DEV profile port)
 * Remove anonUserLandingPageNode from application.properties, or set it properly. Sorry no docs exist yet on what that is, other than to say that landing page is the uuid of the page we will show all anonymous users or users before they log in.     
 * Look in the 'docs' folder of the project for more documentation in addition to this readme.
 
