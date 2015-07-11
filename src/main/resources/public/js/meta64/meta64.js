@@ -2,6 +2,9 @@ console.log("running module: meta64.js");
 
 var meta64 = function() {
 
+	var appInitialized = false;
+	var curUrlPath = window.location.pathname + window.location.search;
+
 	var _ = {
 
 		/*
@@ -97,7 +100,11 @@ var meta64 = function() {
 
 		readOnlyPropertyList : {
 			"jcr:uuid" : true,
-			"jcr:mixinTypes" : true
+			"jcr:mixinTypes" : true,
+			"jcr:created" : true,
+			"jcr:createdBy" : true,
+			"jcr:lastModified" : true,
+			"jcr:lastModifiedBy" : true
 		},
 
 		binaryPropertyList : {
@@ -347,11 +354,14 @@ var meta64 = function() {
 			util.setEnablementByName("login", true);
 			util.setEnablementByName("navHome", _.currentNode && !nav.displayingRoot());
 			util.setEnablementByName("navUpLevel", _.currentNode && !nav.displayingRoot());
-			
-			var propsToggle =  _.currentNode && !_.isAnonUser;
-			/* this leaves a hole in the toolbar if you hide it. Need to change that */
+
+			var propsToggle = _.currentNode && !_.isAnonUser;
+			/*
+			 * this leaves a hole in the toolbar if you hide it. Need to change
+			 * that
+			 */
 			util.setEnablementByName("propsToggle", propsToggle);
-			
+
 			util.setEnablementByName("saveNode", !_.isAnonUser);
 			util.setEnablementByName("cancelEdit", true);
 			util.setEnablementByName("addProperty", !_.isAnonUser);
@@ -359,13 +369,15 @@ var meta64 = function() {
 			util.setEnablementByName("saveProperty", !_.isAnonUser);
 			util.setEnablementByName("changePassword", !_.isAnonUser);
 			util.setEnablementByName("changePasswordDialog", !_.isAnonUser);
-			
+
 			var editMode = _.currentNode && !_.isAnonUser;
-			/* this leaves a hole in the toolbar if you hide it. Need to change that */
+			/*
+			 * this leaves a hole in the toolbar if you hide it. Need to change
+			 * that
+			 */
 			util.setEnablementByName("editMode", editMode);
 			util.setEnablementByName("signup", true);
 
-			util.setVisibility("#popupMenu", !_.isAnonUser);
 			util.setVisibility("#menuButton", !_.isAnonUser);
 
 			/* Disable and hide things only available to admin users */
@@ -462,12 +474,11 @@ var meta64 = function() {
 			 * which is a major malfunction, so I target the specific page
 			 * "#mainPage" so that it can only call this ONE time.
 			 */
-			//$(document).ready(function() {
-				//_.loadAnonPageHome(false);
-			//};
-			
+			// $(document).ready(function() {
+			// _.loadAnonPageHome(false);
+			// };
 			$(document).on("pagecreate", "#mainPage", function(event) {
-				_.initApp();
+				// _.initApp();
 			});
 		},
 
@@ -477,11 +488,14 @@ var meta64 = function() {
 
 				util.setVisibility("#mainNodeContent", true);
 				util.setVisibility("#mainNodeStatusBar", true);
+
+				console.log("rendering anon page response.");
 				view.renderNodeResponse(res.renderNodeResponse);
 			} else {
 				util.setVisibility("#mainNodeContent", false);
 				util.setVisibility("#mainNodeStatusBar", false);
 
+				console.log("setting listview to: " + res.content);
 				util.setHtmlEnhanced($("#listView"), res.content);
 			}
 			render.renderMainPageControls();
@@ -504,15 +518,34 @@ var meta64 = function() {
 		},
 
 		initApp : function() {
+			if (appInitialized)
+				return;
+			appInitialized = true;
+			//alert('app initializing');
+			
 			console.log("initApp running.");
 
 			_.defineAllActions();
-			_.loadAnonPageHome(false);
+			_.loadAnonPageHome(false, "");
+
+			/*
+			 * This was part of an experiment related to figuring out how JQuery alters anchor tags and 
+			 * basically breaks all external anchor tags, and I was using this to determine certain aspects
+			 * of how JQM pageloading works.
+			 */
+//			setInterval(function() {
+//				if (curUrlPath != window.location.pathname + window.location.search) {
+//					curUrlPath = window.location.pathname + window.location.search;
+//					alert('location changed!');
+//					_.loadAnonPageHome(false, window.location.search);
+//				}
+//			}, 1000);
 		},
 
-		loadAnonPageHome : function(ignoreUrl) {
+		loadAnonPageHome : function(ignoreUrl, urlQuery) {
 			util.json("anonPageLoad", {
-				"ignoreUrl" : ignoreUrl
+				"ignoreUrl" : ignoreUrl,
+				"urlQuery" : urlQuery
 			}, _.anonPageLoadResponse);
 		}
 	};

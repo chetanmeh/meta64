@@ -52,7 +52,7 @@ var render = function() {
 		renderNodeContent : function(node, showIdentifier, showPath, showName, renderBinary) {
 			var ret = '';
 
-			if (showPath) {
+			if (showPath && meta64.editMode) {
 				var path = meta64.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
@@ -100,7 +100,7 @@ var render = function() {
 				}
 			} else {
 				var contentProp = props.getNodeProperty("jcr:content", node);
-				console.log("contentProp: "+contentProp);
+				console.log("contentProp: " + contentProp);
 				if (contentProp) {
 					var jcrContent = props.renderProperty(contentProp);
 
@@ -198,7 +198,7 @@ var render = function() {
 					"data-icon" : "bullets"
 				}, "", false);
 				selButton = _.makeTag("label", null, checkboxHtml + "Sel");
-				
+
 				/* Construct Create Subnode Button */
 				createSubNodeButton = _.makeTag("a", //
 				{
@@ -318,7 +318,14 @@ var render = function() {
 				_markdown = new Markdown.getSanitizingConverter().makeHtml;
 			}
 
-			return _markdown(text);
+			/*
+			 * Note that $.mobile.ignoreContentEnabled = true; is required for this to work.
+			 * 
+			 * This is an interesting piece of code here. What this does it make sure that anchor tags <a> that
+			 * are in our user-edited content don't get processed by JQuery an 'enhanced' in a way that actuall
+			 * breaks the functionality of external links.
+			 */
+			return "<div data-ajax='false'>" + _markdown(text) + "</div>";
 		},
 
 		/*
@@ -377,21 +384,25 @@ var render = function() {
 			}
 
 			var propCount = meta64.currentNode.properties ? meta64.currentNode.properties.length : 0;
-			// console.log("RENDER NODE: " + data.node.id + propertyCount=" +
-			// propCount);
+			//console.log("RENDER NODE: " + data.node.id + " propCount=" + propCount);
 			var output = '';
 
-			$("#mainNodeContent").html(_.renderNodeContent(data.node, true, false /*
-																					 * show
-																					 * path
-																					 */, false, false));
+			var mainNodeContent = _.renderNodeContent(data.node, true, false /*
+																				 * show
+																				 * path
+																				 */, false, false);
+
+			$("#mainNodeContent").html(mainNodeContent);
+
+			//console.log("update status bar.");
 			view.updateStatusBar();
 
+			//console.log("rendering page controls.");
 			_.renderMainPageControls();
 
 			if (data.children) {
 				var childCount = data.children.length;
-				console.log("childCount: " + childCount);
+				//console.log("childCount: " + childCount);
 				/*
 				 * Number of rows that have actually made it onto the page to
 				 * far. Note: some nodes get filtered out on the client side for
@@ -430,18 +441,18 @@ var render = function() {
 					}
 
 					rowCount++;
-					output += _.renderNodeAsListItem(node, i, childCount, rowCount);
+					var row = _.renderNodeAsListItem(node, i, childCount, rowCount);
+					//console.log("row[" + rowCount + "]=" + row);
+					output += row;
 				});
 			}
 
-			if (output.length == 0 && !meta64.isAnonUser) {
+			if (output && output.length == 0 && !meta64.isAnonUser) {
 				output = _getEmptyPagePrompt();
 			}
-			console.log("output listView: "+output);
-			
-			util.setHtmlEnhanced($("#listView"), output);
+			//console.log("**************************** output listView: " + output);
 
-			view.scrollToSelectedNode();
+			util.setHtmlEnhancedById("#listView", output);
 		},
 
 		getUrlForNodeAttachment : function(node) {
@@ -452,8 +463,8 @@ var render = function() {
 			if (node.width && node.height) {
 				return _.makeTag("img", {
 					"src" : _.getUrlForNodeAttachment(node),
-					"width" : node.width+"px",
-					"height" : node.height+"px"
+					"width" : node.width + "px",
+					"height" : node.height + "px"
 				}, null, false);
 			} else {
 				return _.makeTag("img", {

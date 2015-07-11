@@ -25,6 +25,7 @@
 
 		// We want popups to cover the page behind them with a dark background
 		$.mobile.popup.prototype.options.overlayTheme = "b";
+		$.mobile.ignoreContentEnabled = true;
 	});
 </script>
 
@@ -102,7 +103,6 @@
 		</div>
 
 		<div data-role="content">
-			<div th:text="${jsVer}"></div>
 			<div id="mainNodeContent" class="main-node-content"></div>
 			<div id="mainPageControls"></div>
 			<div id="listView"></div>
@@ -138,8 +138,9 @@
 	<div th:replace="fragments/import-dialog">...</div>
 
 	<script>
-		//meta64.initApp();
+		meta64.initApp();
 		meta64.hookInitFunction();
 	</script>
+
 </body>
 </html>

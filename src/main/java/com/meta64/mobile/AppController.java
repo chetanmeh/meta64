@@ -815,7 +815,23 @@ public class AppController {
 		AnonPageLoadResponse res = new AnonPageLoadResponse();
 		Session session = ThreadLocals.getJcrSession();
 
-		String id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
+		String id = null;
+		
+		/*
+		 * This was part of a hack I did for troubleshooting a problem, and the it can go away eventually
+		 * and also the urlQuery attribute can be deleted...soon.
+		 */
+//		if (!XString.isEmpty(req.getUrlQuery())) {
+//			String query = req.getUrlQuery();
+//			int idx = query.indexOf("id=");
+//			if (idx != -1) {
+//				id = query.substring(idx + 3);
+//			}
+//		}
+
+		if (id == null) {
+			id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
+		}
 
 		if (!XString.isEmpty(id)) {
 			RenderNodeResponse renderNodeRes = new RenderNodeResponse();

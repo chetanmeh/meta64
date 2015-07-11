@@ -1,5 +1,5 @@
 # Meta64: A new kind of Wiki.
-An Open Source "Mobile first" Wiki-type content repository built on Apache Oak JCR and MongoDb
+An Open Source "Mobile first" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards a web developer audience, but the technology itself will eventually be a front-end for all web users.
 
 On GitHub.com -> https://github.com/Clay-Ferguson/meta64
 
@@ -10,7 +10,9 @@ On GitHub.com -> https://github.com/Clay-Ferguson/meta64
 
 ## Technology Demo (War and Peace)
 The book "War and Peace" is stored in the repository for browsing:
+
 http://www.meta64.com/?id=/nt:war-and-peace
+
 Logged in users can use the Full Text Search feature, on the menu at the upper left, that appears when you log in.
 
 ## Meta64 Overview

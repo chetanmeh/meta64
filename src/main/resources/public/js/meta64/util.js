@@ -43,7 +43,7 @@ var util = function() {
 				console.log("callback not valid function for postName " + postName);
 			}
 
-			console.log("JSON-POST: " + JSON.stringify(postData));
+			//console.log("JSON-POST: " + JSON.stringify(postData));
 			$.ajax({
 				url : postTargetUrl + postName,
 				contentType : "application/json",
@@ -52,8 +52,8 @@ var util = function() {
 				cache : false,
 				data : JSON.stringify(postData),
 				success : function(jqXHR, textStatus) {
-					console.log("JSON-RESULT: " + postName + " -> " + textStatus);
-					console.log("JSON-RESULT-DATA: " + JSON.stringify(jqXHR));
+					//console.log("JSON-RESULT: " + postName + " -> " + textStatus);
+					//console.log("JSON-RESULT-DATA: " + JSON.stringify(jqXHR));
 					if (textStatus === "success") {
 						callback(jqXHR, info);
 					} else {
@@ -128,7 +128,7 @@ var util = function() {
 				return null;
 			}
 			var e = document.getElementById(id);
-			if (e.length == 0) {
+			if (!e || e.length == 0) {
 				console.log("domElm Error. Required element id not found: " + id);
 			}
 			return e;
@@ -139,7 +139,7 @@ var util = function() {
 		 */
 		getRequiredElement : function(id) {
 			// var e = document.getElementById(id);
-			e = $(id);
+			var e = $(id);
 			if (e == null) {
 				console.log("getRequiredElement. Required element id not found: " + id);
 			}
@@ -341,6 +341,35 @@ var util = function() {
 		// elm.ehanceWithin();
 		// }
 
+		//part of some troubleshooting i'll eventually delete.
+//		setHtmlEnhancedById2 : function(elmId, content) {
+//			console.log("setting content: "+content+" on id "+elmId);
+//			//var elm = _.getRequiredElement(elmId);
+//			var elm = document.getElementById(elmId);
+//			if (elm) {
+//				console.log("setting innerHTML is successful");
+//				elm.innerHtml = content;
+//				//elm.html(content);
+//				//elm.enhanceWithin();
+//			}
+//			else {
+//				console.log("setting failed.");
+//			}
+//		},
+		
+		setHtmlEnhancedById : function(elmId, content) {
+			//console.log("setting content: "+content+" on id "+elmId);
+			var elm = _.getRequiredElement(elmId);
+			if (elm) {
+				$(elm).html(content);
+				$(elm).enhanceWithin();
+				//console.log("setting is successful");
+			}
+			else {
+				console.log("setting failed.");
+			}
+		},
+
 		setHtmlEnhanced : function(elm, content) {
 			elm.html(content);
 			elm.enhanceWithin();
@@ -396,10 +425,10 @@ var util = function() {
 		setVisibility : function(elmId, vis) {
 
 			if (vis) {
-				//console.log("Showing element: " + elmId);
+				// console.log("Showing element: " + elmId);
 				$(elmId).show();
 			} else {
-				//console.log("hiding element: " + elmId);
+				// console.log("hiding element: " + elmId);
 				$(elmId).hide();
 			}
 		}

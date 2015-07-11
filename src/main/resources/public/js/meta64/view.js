@@ -38,8 +38,9 @@ var view = function() {
 		 * data is instanceof RenderNodeResponse.java
 		 */
 		renderNodeResponse : function(data) {
-			console.log("renderNode: " + JSON.stringify(data));
+			//console.log("renderNode: " + JSON.stringify(data));
 			render.renderPageFromData(data);
+			_.scrollToSelectedNode(); //<------ was this missing for weeks and weeks????? how was it working?
 			meta64.refreshAllGuiEnablement();
 		},
 

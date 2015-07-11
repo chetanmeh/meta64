@@ -62,21 +62,22 @@ var nav = function() {
 			 */
 			var currentSelNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
 			if (currentSelNode) {
-				console.log("Unhighlighting previous row: currentNodeId=" + meta64.currentNodeUid);
+				//console.log("Unhighlighting previous row: currentNodeId=" + meta64.currentNodeUid);
 
 				/* get node by node identifier */
 				var node = meta64.uidToNodeMap[currentSelNode.uid];
 
 				if (node) {
-					// console.log("found highlighted node.id=" + node.id);
+					//console.log("found highlighted node.id=" + node.id);
 
 					/* now make CSS id from node */
 					var nodeId = node.uid + _UID_ROWID_SUFFIX;
-					// console.log("looking up using element id: "+nodeId);
+					//console.log("looking up using element id: "+nodeId);
 
 					return util.domElm(nodeId);
 				}
 			}
+			
 			return null;
 		},
 
@@ -94,28 +95,27 @@ var nav = function() {
 		 * turn of row selection styling of whatever row is currently selected
 		 */
 		unhighlightRow : function() {
-
 			var currentUid = meta64.currentNodeUid;
-
+			
 			/* check if we have an existing highlighted row to unhighlight */
 			var currentSelNode = meta64.parentUidToFocusNodeMap[currentUid];
+			
 			if (!currentSelNode.uid) {
 				console.log("unhighlight says current node has null uid");
 			}
-
+			
 			if (currentSelNode) {
 				console.log("Unhighlighting previous row: currentNodeUid=" + currentSelNode.uid + ", path: "
 						+ meta64.getPathOfUid(currentSelNode.uid));
 
 				/* get node by node identifier */
-				var node = meta64.uidToNodeMap[currentSelNode.uid];
-
+				var node = meta64.uidToNodeMap[currentSelNode.uid];				
 				if (node) {
-					console.log("    found highlighted node.uid=" + node.uid);
+					//console.log("    found highlighted node.uid=" + node.uid);
 
 					/* now make CSS id from node */
 					var nodeId = node.uid + _UID_ROWID_SUFFIX;
-					console.log("    looking up using element id: " + nodeId);
+					//console.log("    looking up using element id: " + nodeId);
 
 					var elm = util.domElm(nodeId);
 					if (elm) {
@@ -156,9 +156,7 @@ var nav = function() {
 		openNode : function(uid) {
 
 			var node = meta64.uidToNodeMap[uid];
-
-			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node; // new
-			// 7/4/2015
+			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node; 
 
 			if (!node) {
 				alert("Unknown nodeId in openNode: " + uid);
