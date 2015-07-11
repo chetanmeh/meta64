@@ -85,9 +85,11 @@ var edit = function() {
 	}
 
 	var _makeNodeReferencableResponse = function(res) {
-		util.checkSuccess("Make node referencable", res);
+		if (util.checkSuccess("Make node referencable", res)) {
+			alert("This node is now referencable, and can be accessed by unique ID");
+		}
 		
-		//todo: oops need to refresh gui here to reflect change!
+		//todo: need to refresh gui here to reflect change!
 	}
 
 	var _createSubNodeResponse = function(res) {
@@ -245,7 +247,6 @@ var edit = function() {
 					// alert('prop found: ' + prop.name);
 					var propVal = $("#" + fieldId).val();
 
-					// TODO: handle 'values' (multi)
 					if (propVal !== prop.value) {
 						// alert("change detected: " + propVal);
 						propertiesList.push({
@@ -478,9 +479,7 @@ var edit = function() {
 					 * show labels
 					 */
 					// todo: what's the deal with fieldset v.s. form as the
-					// element
-					// to
-					// contain a controlgroup ? not all combos work
+					// element to contain a controlgroup ? not all combos work
 					// apparently.
 					// <fieldset data-role="controlgroup"
 					// data-type="horizontal">

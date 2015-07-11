@@ -247,10 +247,10 @@ var props = function() {
 
 				/*
 				 * We don't need or want a table header, but JQuery displays an
-				 * error in the JS console if it can't find the thead element.
-				 * So we provide empty tags here.
+				 * error in the JS console if it can't find the <thead> element.
+				 * So we provide empty tags here, just to make JQuery happy.
 				 */
-				ret += "<thead>" + "<tr>" + "<th></th>" + "<th></th>" + "</tr>" + "</thead>";
+				ret += "<thead><tr><th></th><th></th></tr></thead>";
 
 				ret += "<tbody>";
 				$.each(properties, function(i, property) {
@@ -280,8 +280,7 @@ var props = function() {
 					return "";
 				}
 
-				ret += "</tbody>";
-				ret += "</table>";
+				ret += "</tbody></table>";
 				return ret;
 			} else {
 				return undefined;

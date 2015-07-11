@@ -1,9 +1,5 @@
 console.log("running module: meta64.js");
 
-/*
- * TODO: I noticed some meta64.whatever scoping in this class, which needs to be
- * removed and replaced with "_."
- */
 var meta64 = function() {
 
 	var _ = {
@@ -176,7 +172,7 @@ var meta64 = function() {
 			}
 			for (uid in _.selectedNodes) {
 				if (_.selectedNodes.hasOwnProperty(uid)) {
-					var node = meta64.uidToNodeMap[uid];
+					var node = _.uidToNodeMap[uid];
 					if (!node) {
 						console.log("unable to find uidToNodeMap for uid=" + uid);
 					} else {
@@ -194,7 +190,7 @@ var meta64 = function() {
 			var uid;
 			for (uid in _.selectedNodes) {
 				if (_.selectedNodes.hasOwnProperty(uid)) {
-					selArray[idx++] = meta64.uidToNodeMap[uid];
+					selArray[idx++] = _.uidToNodeMap[uid];
 				}
 			}
 			return selArray;
@@ -504,7 +500,7 @@ var meta64 = function() {
 			node.properties = props.setPreferredPropertyOrder(node.properties);
 
 			// console.log("******* initNode uid=" + node.uid);
-			meta64.uidToNodeMap[node.uid] = node;
+			_.uidToNodeMap[node.uid] = node;
 		},
 
 		initApp : function() {
@@ -521,10 +517,6 @@ var meta64 = function() {
 		}
 	};
 
-	/*
-	 * TODO: I need to understand this 'on' event better, I never fully
-	 * researched it...
-	 */
 	$(document).on("pagebeforechange", function(e, data) {
 		var toPage = data.toPage[0].id;
 		console.log("Nav to page: " + toPage);
