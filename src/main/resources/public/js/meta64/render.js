@@ -148,6 +148,8 @@ var render = function() {
 				selected = true;
 			}
 
+			var buttonBarHtml = _.makeButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed);
+
 			var cssId = uid + "_row";
 			// console.log("Rendering Node Row[" + index + "] with id: " +cssId)
 			return _.makeTag("div", //
@@ -156,7 +158,7 @@ var render = function() {
 				"onClick" : "nav.clickOnNodeRow(this, '" + uid + "');", //
 				"id" : cssId
 			},// 
-			_.makeButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed) + _.makeTag("div", //
+			buttonBarHtml + _.makeTag("div", //
 			{
 				"id" : uid + "_content"
 			}, _.renderNodeContent(node, true, true, true, true)));
@@ -273,8 +275,14 @@ var render = function() {
 				}, "Share");
 			}
 
-			return _.makeHorizontalFieldSet(selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton + uploadButton
-					+ deleteNodeButton + moveNodeUpButton + moveNodeDownButton + editNodeSharingButton);
+			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton + uploadButton
+					+ deleteNodeButton + moveNodeUpButton + moveNodeDownButton + editNodeSharingButton;
+			
+			if (allButtons.length > 0) {
+				return _.makeHorizontalFieldSet(allButtons);
+			} else {
+				return "";
+			}
 		},
 
 		makeHorizontalFieldSet : function(content) {
@@ -319,10 +327,12 @@ var render = function() {
 			}
 
 			/*
-			 * Note that $.mobile.ignoreContentEnabled = true; is required for this to work.
+			 * Note that $.mobile.ignoreContentEnabled = true; is required for
+			 * this to work.
 			 * 
-			 * This is an interesting piece of code here. What this does it make sure that anchor tags <a> that
-			 * are in our user-edited content don't get processed by JQuery an 'enhanced' in a way that actuall
+			 * This is an interesting piece of code here. What this does it make
+			 * sure that anchor tags <a> that are in our user-edited content
+			 * don't get processed by JQuery an 'enhanced' in a way that actuall
 			 * breaks the functionality of external links.
 			 */
 			return "<div data-ajax='false'>" + _markdown(text) + "</div>";
@@ -384,7 +394,8 @@ var render = function() {
 			}
 
 			var propCount = meta64.currentNode.properties ? meta64.currentNode.properties.length : 0;
-			//console.log("RENDER NODE: " + data.node.id + " propCount=" + propCount);
+			// console.log("RENDER NODE: " + data.node.id + " propCount=" +
+			// propCount);
 			var output = '';
 
 			var mainNodeContent = _.renderNodeContent(data.node, true, false /*
@@ -394,15 +405,15 @@ var render = function() {
 
 			$("#mainNodeContent").html(mainNodeContent);
 
-			//console.log("update status bar.");
+			// console.log("update status bar.");
 			view.updateStatusBar();
 
-			//console.log("rendering page controls.");
+			// console.log("rendering page controls.");
 			_.renderMainPageControls();
 
 			if (data.children) {
 				var childCount = data.children.length;
-				//console.log("childCount: " + childCount);
+				// console.log("childCount: " + childCount);
 				/*
 				 * Number of rows that have actually made it onto the page to
 				 * far. Note: some nodes get filtered out on the client side for
@@ -442,7 +453,7 @@ var render = function() {
 
 					rowCount++;
 					var row = _.renderNodeAsListItem(node, i, childCount, rowCount);
-					//console.log("row[" + rowCount + "]=" + row);
+					// console.log("row[" + rowCount + "]=" + row);
 					output += row;
 				});
 			}
@@ -450,7 +461,8 @@ var render = function() {
 			if (output && output.length == 0 && !meta64.isAnonUser) {
 				output = _getEmptyPagePrompt();
 			}
-			//console.log("**************************** output listView: " + output);
+			// console.log("**************************** output listView: " +
+			// output);
 
 			util.setHtmlEnhancedById("#listView", output);
 		},

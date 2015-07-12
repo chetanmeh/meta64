@@ -149,6 +149,7 @@ public class AppController {
 	 * releases.
 	 */
 	public static final long jsVersion = System.currentTimeMillis();
+	public static final long cssVersion = jsVersion; //match jsVersion for now, why not.
 
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
@@ -168,6 +169,8 @@ public class AppController {
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", "share", "user", "util", "view");
 
+		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), //
+				"meta64");
 		sessionContext.setUrlId(id);
 		return "index";
 	}
