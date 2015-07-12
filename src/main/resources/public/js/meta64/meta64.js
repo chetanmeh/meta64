@@ -531,7 +531,11 @@ var meta64 = function() {
 			console.log("initApp running.");
 
 			_.defineAllActions();
-			_.loadAnonPageHome(false, "");
+			
+			/* This call checks the server to see if we have a session already, and gets back the 
+			 * login information from the session, and then renders page content, after that.
+			 */
+			user.refreshLogin();
 
 			/*
 			 * This was part of an experiment related to figuring out how JQuery alters anchor tags and 

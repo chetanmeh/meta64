@@ -2,26 +2,39 @@ console.log("running module: user.js");
 
 var user = function() {
 
+	var _setTitleUsingLoginResponse = function(res) {
+		var title = "Meta64";
+		if (!meta64.isAnonUser) {
+			title += " - "+res.userName;
+		}
+		$("#headerUserName").html(title);
+	}
+	
+	var _setStateVarsUsingLoginResponse = function(res) {
+		meta64.homeNodeId = res.rootNode.id;
+		meta64.homeNodePath = res.rootNode.path;
+		meta64.isAdminUser = res.userName === "admin";
+		meta64.isAnonUser = res.userName === "anonymous";
+	}
+	
 	/* ret is LoginResponse.java */
 	var _loginResponse = function(res) {
-		//console.log("Login.success=" + JSON.stringify(res));
 		if (util.checkSuccess("Login", res)) {
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 			
-			meta64.homeNodeId = res.rootNode.id;
-			meta64.homeNodePath = res.rootNode.path;
-			
-			meta64.isAdminUser = res.userName === "admin";
-			meta64.isAnonUser = res.userName === "anonymous";
-			
+			_setStateVarsUsingLoginResponse(res);
 			view.refreshTree(meta64.homeNodeId);
-			
-			var title = "Meta64";
-			if (!meta64.isAnonUser) {
-				title += " - "+res.userName;
-			}
-			$("#headerUserName").html(title);
+			_setTitleUsingLoginResponse(res);
 		} 
+	}
+	
+	var _refreshLoginResponse = function(res) {
+		if (res.success) {
+			_setStateVarsUsingLoginResponse(res);
+			_setTitleUsingLoginResponse(res);
+		} 
+		
+		meta64.loadAnonPageHome(false, "");
 	}
 
 	var _logoutResponse = function(res) {
@@ -84,6 +97,14 @@ var user = function() {
 			$("#captchaImage").attr("src", src);
 		},
 
+		refreshLogin : function() {
+
+			util.json("login", {
+				"userName" : "{session}",
+				"password" : "{session}"
+			}, _refreshLoginResponse);
+		},
+		
 		login : function() {
 			if (!util.isActionEnabled("login")) {
 				return;

@@ -104,6 +104,17 @@ public class OakSessionAspect {
 			LoginRequest loginRequest = (LoginRequest) args[0];
 			userName = loginRequest.getUserName();
 			password = loginRequest.getPassword();
+
+			if (userName.equals("{session}")) {
+				SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
+				userName = sessionContext.getUserName();
+				password = sessionContext.getPassword();
+			}
+
+			/* not logged in and page load is checking for logged in session */
+			if (userName == null) {
+				return null;
+			}
 		}
 		else if (req instanceof SignupRequest) {
 			/* we will have no session for user for signup request, so return null */

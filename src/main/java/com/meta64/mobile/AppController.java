@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meta64.mobile.annotate.OakSession;
@@ -149,7 +147,7 @@ public class AppController {
 	 * releases.
 	 */
 	public static final long jsVersion = System.currentTimeMillis();
-	public static final long cssVersion = jsVersion; //match jsVersion for now, why not.
+	public static final long cssVersion = jsVersion; // match jsVersion for now, why not.
 
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
@@ -165,6 +163,8 @@ public class AppController {
 	@RequestMapping("/")
 	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
 		logRequest("mobile", null);
+
+		log.debug("Rendering main page: current userName: " + sessionContext.getUserName());
 
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", "share", "user", "util", "view");
@@ -223,6 +223,15 @@ public class AppController {
 	 * the time we are in this method we can safely assume the userName and password resulted in a
 	 * successful login. If login fails the getJcrSession() call below will return null also.
 	 * 
+	 * IMPORTANT: this method DOES get called even on a fresh page load when the user hasn't logged
+	 * in yet, and this is done passing "{session}" in place of userName/password, which tells this
+	 * login method to get a username/password from the session. So a valid session that's already
+	 * logged in will simply return the correct login information from here as if it were logging in
+	 * the first time. For an SPA (Single Page App), handling page reloads needs to do something
+	 * like this because we aren't just having session beans embedded on some JSP the old-school
+	 * way, this is different and this is better! This is the proper way for an SPA to handle page
+	 * reloads.
+	 * 
 	 * @see OakSessionAspect.loginFromJoinPoint()
 	 */
 	@RequestMapping(value = REST_PATH + "/login", method = RequestMethod.POST)
@@ -233,18 +242,32 @@ public class AppController {
 		String userName = req.getUserName();
 		String password = req.getPassword();
 
-		sessionContext.setUserName(userName);
-		sessionContext.setPassword(password);
+		if (userName.equals("{session}")) {
+			userName = sessionContext.getUserName();
+		}
+		else {
+			sessionContext.setUserName(userName);
+			sessionContext.setPassword(password);
+		}
 
 		LoginResponse res = new LoginResponse();
 		ThreadLocals.setResponse(res);
 		res.setMessage("success: " + String.valueOf(++sessionContext.counter));
-
 		Session session = ThreadLocals.getJcrSession();
 
-		res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
-		res.setUserName(userName);
-		res.setSuccess(true);
+		if (session == null) {
+			/*
+			 * Note: This is not an error condition, this happens whenever the page loads for the
+			 * first time and the user has no session yet,
+			 */
+			res.setMessage("not logged in.");
+			res.setSuccess(false);
+		}
+		else {
+			res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
+			res.setUserName(userName);
+			res.setSuccess(true);
+		}
 		return res;
 	}
 

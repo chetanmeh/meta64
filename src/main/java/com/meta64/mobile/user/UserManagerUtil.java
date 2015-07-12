@@ -40,19 +40,6 @@ public class UserManagerUtil {
 		return ret;
 	}
 
-	// public static String getRootIdForUser(Session session, String userName) throws Exception {
-	// String nodeId = null;
-	// if (userName.equalsIgnoreCase("admin")) {
-	// Node rootNode = session.getRootNode();
-	// nodeId = rootNode.getIdentifier();
-	// }
-	// else {
-	// Node rootNode = session.getNode("/jcr:root/jcr:" + userName);
-	// nodeId = rootNode.getIdentifier();
-	// }
-	// return nodeId;
-	// }
-
 	public static RefInfo getRootNodeRefInfoForUser(Session session, String userName) throws Exception {
 		Node rootNode = null;
 		if (userName.equalsIgnoreCase("admin")) {
