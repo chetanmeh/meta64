@@ -384,7 +384,9 @@ var edit = function() {
 			/* clear this map to get rid of old properties */
 			meta64.fieldIdToPropMap = {};
 
-			/* TODO: this block of code nests to deep. clean this up! */
+			/* TODO: this block of code nests too deep. clean this up! */
+			
+			/* editNode will be null if this is a new node being created */
 			if (_.editNode) {
 				// Iterate PropertyInfo.java objects
 				$.each(_.editNode.properties, function(index, prop) {
@@ -505,6 +507,7 @@ var edit = function() {
 
 					counter++;
 				});
+			
 			} else {
 				var field = render.makeTag("label", {
 					"for" : "newNodeNameId"
@@ -519,6 +522,13 @@ var edit = function() {
 			}
 			util.setHtmlEnhanced($("#propertyEditFieldContainer"), fields);
 
+			if (_.editingUnsavedNode) {
+				$("#editNodeInstructions").html("You may leave this field blank and a unique ID will be assigned. You only need to provide a name if you want this node to have a more meaningful URL.");
+			}
+			else {
+				$("#editNodeInstructions").html("Enter field values and click 'Save' button at the very bottom.");
+			}
+			
 			/*
 			 * Allow adding of new properties as long as this is a saved node we
 			 * are editing, because we don't want to start managing new
@@ -527,6 +537,8 @@ var edit = function() {
 			 * happen.
 			 */
 			util.setVisibility("#addPropertyButton", !_.editingUnsavedNode);
+			
+			util.setVisibility("#makeNodeReferencableButton", !_.editingUnsavedNode);
 		},
 
 		insertNode : function(uid) {
