@@ -1,10 +1,9 @@
-# Meta64: A new kind of Wiki.
-An Open Source "Mobile first" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards a web developer audience, but the technology itself will eventually be a front-end for all web users.
+## Meta64: An Open-Source Portal and Content Repository
+An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is for building portals around any kind of content and any kind of user base. In other words the technology is a "platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, yet also providing a Social Media-type feature set similar to Facebook.
 
 On GitHub.com -> https://github.com/Clay-Ferguson/meta64
 
 ## Key Technologies
-
 * Client: JavaScript, JQuery Mobile, HTML+CSS, RESTful JSON-based Ajax
 * Server: Java, Spring Boot + Spring Framework, Thymeleaf, Apache Oak JCR, MongoDb and/or MySQL, Tomcat Embedded 
 
@@ -16,7 +15,6 @@ http://www.meta64.com/?id=/nt:war-and-peace
 Logged in users can use the Full Text Search feature, on the menu at the upper left, that appears when you log in.
 
 ## Meta64 Overview
-
 Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you are on meta64.com) is actually running this app, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that "everything is content" and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
 
 The meta64 website and content on it is now geared towards the developer and is online as a demonstration of the technology stack, but the ultimate goal is to provide capabilities very similar to Facebook, Reddit, and Wikipedia, etc. if you could imagine them all rolled into one system. With the power of Lucene and MongoDB on the backend, plus the fully standards-based open stack, this only 4-month old codebase is already able to provide incredible power only found in other systems like Wikipedia and Google, or the other large-scale content repositories that are proprietary/commercial products, and built on much older technology stacks.
@@ -46,7 +44,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 
 * Basic JCR Browser capability (Tree browsing with ability to "drill own" into the tree)
 * Login/Logout
-* Signup new users (including captcha, and pasword)
+* Signup new users (including captcha, and password)
 * Node editing (plain text/markdown)
 * Orderable child nodes ("move up" and "move down" supported)
 * Creating Subnodes or Inline nodes
@@ -59,7 +57,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Deleting node attachments
 * Renders image attachments on the page (on the node)
 * Shows JCR properties for nodes.
-* Allows editing of properties (single value and multivalued)
+* Allows editing of properties (single value and multi-valued)
 * Creating/Deleting new JCR node properties
 * Can switch between simple or advanced mode editing
 * Change password feature.
@@ -72,12 +70,12 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 Listed here in the order they will likely be developed...
 
 * More JUnit unit tests.
-* Ability to share node with specific user.
+* Ability to share node with **specific** user.
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
 * Display images at smaller sizes, with click to enlarge capability. Currently all images are displayed at their actual size.
-* Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read.
+* Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
 * Email notification engine to support collaboration
 * RSS Feeds for node changes
 
@@ -110,7 +108,7 @@ Listed here in the order they will likely be developed...
 * Currently uses default storage location for MongoDb (Windows -> c:\data\db)
 * Once app is up and running go here: http://localhost:8083 (8083 port is currently the DEV profile port)
 * Remove anonUserLandingPageNode from application.properties, or set it properly. Sorry no docs exist yet on what that is, other than to say that landing page is the uuid of the page we will show all anonymous users or users before they log in.     
-* Look in the 'docs' folder of the project for more documentation in addition to this readme.
+* Refer to the 'docs' folder of the project for additional technical documentation.
 
 
 
