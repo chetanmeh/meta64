@@ -462,12 +462,10 @@ var render = function() {
 					output += row;
 				});
 			}
-
-			if (output && output.length == 0 && !meta64.isAnonUser) {
+			
+			if (output.length == 0 && !meta64.isAnonUser) {
 				output = _getEmptyPagePrompt();
 			}
-			// console.log("**************************** output listView: " +
-			// output);
 
 			util.setHtmlEnhancedById("#listView", output);
 		},
