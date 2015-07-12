@@ -24,6 +24,10 @@ var user = function() {
 		} 
 	}
 
+	var _logoutResponse = function(res) {
+		location.reload(); 
+	}
+	
 	var _changePasswordResponse = function(res) {
 		if (util.checkSuccess("Change password", res)) {
 			alert("Password changed successfully.");
@@ -92,6 +96,15 @@ var user = function() {
 				"userName" : userNameVal,
 				"password" : passwordVal
 			}, _loginResponse);
+		},
+		
+		logout : function() {
+			if (!util.isActionEnabled("logout")) {
+				return;
+			}
+
+			util.json("logout", {
+			}, _logoutResponse);
 		},
 
 		changePassword : function() {

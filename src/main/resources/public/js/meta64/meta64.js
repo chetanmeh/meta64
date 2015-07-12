@@ -234,6 +234,10 @@ var meta64 = function() {
 				"name" : "login",
 				"enable" : true,
 				"function" : user.login
+			},  {
+				"name" : "logout",
+				"enable" : false,
+				"function" : user.logout
 			}, {
 				"name" : "navHome",
 				"enable" : displayingNode && !nav.displayingRoot(),
@@ -351,7 +355,8 @@ var meta64 = function() {
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 
-			util.setEnablementByName("login", true);
+			util.setEnablementByName("login", _.isAnonUser, _.isAnonUser);
+			util.setEnablementByName("logout", !_.isAnonUser, !_.isAnonUser);
 			util.setEnablementByName("navHome", _.currentNode && !nav.displayingRoot());
 			util.setEnablementByName("navUpLevel", _.currentNode && !nav.displayingRoot());
 

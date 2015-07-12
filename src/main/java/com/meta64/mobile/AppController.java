@@ -11,6 +11,7 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
 import javax.jcr.security.AccessControlEntry;
+import javax.servlet.http.HttpSession;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.spi.security.principal.EveryonePrincipal;
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meta64.mobile.annotate.OakSession;
@@ -53,6 +56,7 @@ import com.meta64.mobile.request.ImportRequest;
 import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.LoginRequest;
+import com.meta64.mobile.request.LogoutRequest;
 import com.meta64.mobile.request.MakeNodeReferencableRequest;
 import com.meta64.mobile.request.MoveNodesRequest;
 import com.meta64.mobile.request.NodeSearchRequest;
@@ -75,6 +79,7 @@ import com.meta64.mobile.response.ImportResponse;
 import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.LoginResponse;
+import com.meta64.mobile.response.LogoutResponse;
 import com.meta64.mobile.response.MakeNodeReferencableResponse;
 import com.meta64.mobile.response.MoveNodesResponse;
 import com.meta64.mobile.response.NodeSearchResponse;
@@ -236,6 +241,29 @@ public class AppController {
 
 		res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
 		res.setUserName(userName);
+		res.setSuccess(true);
+		return res;
+	}
+
+	@RequestMapping(value = REST_PATH + "/logout", method = RequestMethod.POST)
+	// @OakSession // commenting since we currently don't touch the DB during a logout.
+	public @ResponseBody LogoutResponse logout(@RequestBody LogoutRequest req, HttpSession session) throws Exception {
+		logRequest("logout", req);
+
+		/*
+		 * DO NOT DELETE:
+		 * 
+		 * We are defining this method with a 'session' parameter, because Spring will automatically
+		 * autowire that correctly, but here is another good way to do it:
+		 * 
+		 * ServletRequestAttributes attr = (ServletRequestAttributes)
+		 * RequestContextHolder.currentRequestAttributes(); HttpSession session =
+		 * attr.getRequest().getSession();
+		 */
+
+		session.invalidate();
+		LogoutResponse res = new LogoutResponse();
+		ThreadLocals.setResponse(res);
 		res.setSuccess(true);
 		return res;
 	}
@@ -816,18 +844,18 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 
 		String id = null;
-		
+
 		/*
-		 * This was part of a hack I did for troubleshooting a problem, and the it can go away eventually
-		 * and also the urlQuery attribute can be deleted...soon.
+		 * This was part of a hack I did for troubleshooting a problem, and the it can go away
+		 * eventually and also the urlQuery attribute can be deleted...soon.
 		 */
-//		if (!XString.isEmpty(req.getUrlQuery())) {
-//			String query = req.getUrlQuery();
-//			int idx = query.indexOf("id=");
-//			if (idx != -1) {
-//				id = query.substring(idx + 3);
-//			}
-//		}
+		// if (!XString.isEmpty(req.getUrlQuery())) {
+		// String query = req.getUrlQuery();
+		// int idx = query.indexOf("id=");
+		// if (idx != -1) {
+		// id = query.substring(idx + 3);
+		// }
+		// }
 
 		if (id == null) {
 			id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
