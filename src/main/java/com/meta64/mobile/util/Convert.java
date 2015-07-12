@@ -2,8 +2,10 @@ package com.meta64.mobile.util;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
@@ -74,7 +76,7 @@ public class Convert {
 	}
 
 	/* WARNING: skips the check for ordered children and just assigns false for performance reasons */
-	public static NodeInfo convertToNodeInfo(Session session, Node node) throws RepositoryException {
+	public static NodeInfo convertToNodeInfo(Session session, Node node) throws Exception {
 		boolean hasBinary = false;
 		boolean binaryIsImage = false;
 		long binVer = 0;
@@ -97,11 +99,35 @@ public class Convert {
 			// not an error. means node has no binary subnode.
 		}
 
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), node.hasNodes(), false, hasBinary,
-				binaryIsImage, binVer, //
+		/* node.hasNodes() won't work here, because the gui doesn't display nt:bin nodes as actual nodes */
+		boolean hasDisplayableNodes = hasDisplayableNodes(node);
+
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), hasDisplayableNodes, false,
+				hasBinary, binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
 				imageSize != null ? imageSize.getHeight() : 0);
 		return nodeInfo;
+	}
+
+	/*
+	 * Repository doesn't show binaries as actual nodes, so we need to find out using this method if
+	 * there are any non-binary nodes, so this returns true if there are some nodes that aren't
+	 * binaries.
+	 */
+	public static boolean hasDisplayableNodes(Node node) throws Exception {
+		NodeIterator nodeIter = node.getNodes();
+		try {
+			while (true) {
+				Node n = nodeIter.nextNode();
+				if (!n.getName().equals(AppConstant.JCR_PROP_BIN)) {
+					return true;
+				}
+			}
+		}
+		catch (NoSuchElementException ex) {
+			// not an error. Normal iterator end condition.
+		}
+		return false;
 	}
 
 	public static long getBinaryVersion(Node node) throws Exception {
