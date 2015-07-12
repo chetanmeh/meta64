@@ -12,8 +12,6 @@ The book "War and Peace" is stored in the repository for browsing:
 
 http://www.meta64.com/?id=/nt:war-and-peace
 
-Logged in users can use the Full Text Search feature, on the menu at the upper left, that appears when you log in.
-
 ## Meta64 Overview
 Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you are on meta64.com) is actually running this app, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that "everything is content" and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
 
