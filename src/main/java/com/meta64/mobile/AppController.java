@@ -260,6 +260,7 @@ public class AppController {
 			 * Note: This is not an error condition, this happens whenever the page loads for the
 			 * first time and the user has no session yet,
 			 */
+			res.setUserName("anonymous");
 			res.setMessage("not logged in.");
 			res.setSuccess(false);
 		}
@@ -268,6 +269,7 @@ public class AppController {
 			res.setUserName(userName);
 			res.setSuccess(true);
 		}
+		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
 		return res;
 	}
 

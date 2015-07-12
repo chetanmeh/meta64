@@ -5,42 +5,46 @@ var user = function() {
 	var _setTitleUsingLoginResponse = function(res) {
 		var title = "Meta64";
 		if (!meta64.isAnonUser) {
-			title += " - "+res.userName;
+			title += " - " + res.userName;
 		}
 		$("#headerUserName").html(title);
 	}
-	
+
+	/* TODO: move this into meta64 module */
 	var _setStateVarsUsingLoginResponse = function(res) {
-		meta64.homeNodeId = res.rootNode.id;
-		meta64.homeNodePath = res.rootNode.path;
+		if (res.rootNode) {
+			meta64.homeNodeId = res.rootNode.id;
+			meta64.homeNodePath = res.rootNode.path;
+		}
 		meta64.isAdminUser = res.userName === "admin";
 		meta64.isAnonUser = res.userName === "anonymous";
+		meta64.anonUserLandingPageNode = res.anonUserLandingPageNode;
 	}
-	
+
 	/* ret is LoginResponse.java */
 	var _loginResponse = function(res) {
 		if (util.checkSuccess("Login", res)) {
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
-			
+
 			_setStateVarsUsingLoginResponse(res);
 			view.refreshTree(meta64.homeNodeId);
 			_setTitleUsingLoginResponse(res);
-		} 
+		}
 	}
-	
+
 	var _refreshLoginResponse = function(res) {
-		if (res.success) {
-			_setStateVarsUsingLoginResponse(res);
-			_setTitleUsingLoginResponse(res);
-		} 
-		
+		// if (res.success) {
+		_setStateVarsUsingLoginResponse(res);
+		_setTitleUsingLoginResponse(res);
+		// }
+
 		meta64.loadAnonPageHome(false, "");
 	}
 
 	var _logoutResponse = function(res) {
-		location.reload(); 
+		location.reload();
 	}
-	
+
 	var _changePasswordResponse = function(res) {
 		if (util.checkSuccess("Change password", res)) {
 			alert("Password changed successfully.");
@@ -104,7 +108,7 @@ var user = function() {
 				"password" : "{session}"
 			}, _refreshLoginResponse);
 		},
-		
+
 		login : function() {
 			if (!util.isActionEnabled("login")) {
 				return;
@@ -118,14 +122,13 @@ var user = function() {
 				"password" : passwordVal
 			}, _loginResponse);
 		},
-		
+
 		logout : function() {
 			if (!util.isActionEnabled("logout")) {
 				return;
 			}
 
-			util.json("logout", {
-			}, _logoutResponse);
+			util.json("logout", {}, _logoutResponse);
 		},
 
 		changePassword : function() {

@@ -21,6 +21,7 @@ var meta64 = function() {
 
 		/* always start out as anon user until login */
 		isAnonUser : true,
+		anonUserLandingPageNode : null,
 
 		/*
 		 * signals that data has changed and the next time we go to the main
@@ -234,17 +235,17 @@ var meta64 = function() {
 				"name" : "login",
 				"enable" : true,
 				"function" : user.login
-			},  {
+			}, {
 				"name" : "logout",
 				"enable" : false,
 				"function" : user.logout
 			}, {
 				"name" : "navHome",
-				"enable" : displayingNode && !nav.displayingRoot(),
+				"enable" : displayingNode && !nav.displayingHome(),
 				"function" : nav.navHome
 			}, {
 				"name" : "navUpLevel",
-				"enable" : displayingNode && !nav.displayingRoot(),
+				"enable" : displayingNode && nav.parentVisibleToUser(),
 				"function" : nav.navUpLevel
 			}, {
 				"name" : "propsToggle",
@@ -357,8 +358,8 @@ var meta64 = function() {
 
 			util.setEnablementByName("login", _.isAnonUser, _.isAnonUser);
 			util.setEnablementByName("logout", !_.isAnonUser, !_.isAnonUser);
-			util.setEnablementByName("navHome", _.currentNode && !nav.displayingRoot());
-			util.setEnablementByName("navUpLevel", _.currentNode && !nav.displayingRoot());
+			util.setEnablementByName("navHome", _.currentNode && !nav.displayingHome());
+			util.setEnablementByName("navUpLevel", _.currentNode && nav.parentVisibleToUser());
 
 			var propsToggle = _.currentNode && !_.isAnonUser;
 			/*
@@ -376,6 +377,7 @@ var meta64 = function() {
 			util.setEnablementByName("changePasswordDialog", !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;
+			//console.log(">>>>>>>>>>>>>>> currentNode=" + _.currentNode + " anonUser=" + _.anonUser);
 			/*
 			 * this leaves a hole in the toolbar if you hide it. Need to change
 			 * that
@@ -526,29 +528,33 @@ var meta64 = function() {
 			if (appInitialized)
 				return;
 			appInitialized = true;
-			//alert('app initializing');
-			
+			// alert('app initializing');
+
 			console.log("initApp running.");
 
 			_.defineAllActions();
-			
-			/* This call checks the server to see if we have a session already, and gets back the 
-			 * login information from the session, and then renders page content, after that.
+
+			/*
+			 * This call checks the server to see if we have a session already,
+			 * and gets back the login information from the session, and then
+			 * renders page content, after that.
 			 */
 			user.refreshLogin();
 
 			/*
-			 * This was part of an experiment related to figuring out how JQuery alters anchor tags and 
-			 * basically breaks all external anchor tags, and I was using this to determine certain aspects
-			 * of how JQM pageloading works.
+			 * This was part of an experiment related to figuring out how JQuery
+			 * alters anchor tags and basically breaks all external anchor tags,
+			 * and I was using this to determine certain aspects of how JQM
+			 * pageloading works.
 			 */
-//			setInterval(function() {
-//				if (curUrlPath != window.location.pathname + window.location.search) {
-//					curUrlPath = window.location.pathname + window.location.search;
-//					alert('location changed!');
-//					_.loadAnonPageHome(false, window.location.search);
-//				}
-//			}, 1000);
+			// setInterval(function() {
+			// if (curUrlPath != window.location.pathname +
+			// window.location.search) {
+			// curUrlPath = window.location.pathname + window.location.search;
+			// alert('location changed!');
+			// _.loadAnonPageHome(false, window.location.search);
+			// }
+			// }, 1000);
 		},
 
 		loadAnonPageHome : function(ignoreUrl, urlQuery) {

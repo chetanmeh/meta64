@@ -9,6 +9,8 @@ public class LoginResponse extends OakResponseBase {
 
 	/* will be username or 'anonymous' if server rejected login */
 	private String userName;
+	
+	private String anonUserLandingPageNode;
 
 	public String getUserName() {
 		return userName;
@@ -24,5 +26,13 @@ public class LoginResponse extends OakResponseBase {
 
 	public void setRootNode(RefInfo rootNode) {
 		this.rootNode = rootNode;
+	}
+
+	public String getAnonUserLandingPageNode() {
+		return anonUserLandingPageNode;
+	}
+
+	public void setAnonUserLandingPageNode(String anonUserLandingPageNode) {
+		this.anonUserLandingPageNode = anonUserLandingPageNode;
 	}
 }

@@ -70,6 +70,9 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 Listed here in the order they will likely be developed...
 
 * More JUnit unit tests.
+* Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows walking of **one** page per user, and have a standard of like /user/home being the folder that users can create
+that will be 'searchable' on google.
+* Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder.
 * Ability to share node with **specific** user.
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
