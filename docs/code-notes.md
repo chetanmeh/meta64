@@ -14,6 +14,16 @@ Each JS file has a variable that is creates and returns as a function. This is d
 
 A underscore variable in the JS should generally be interpreted at "this". In other words an underscore (_) at the front of a varible or as a scoping variable, means that the variable is referencing the current JS file that it's in. The convention would mean that for example, in a class named 'util.js' if you see something like "_.myVar or _.myFunction" those will be the same as "util.myVar or util.myFunction". So the underscore itself is the scoping variable that is the near equivalent of 'this' in Java or C++. Since JS is a functional language more than an OOP one, we use this name convention. I think this is a common convention used by JS developers also, to have underscore mean something similar to 'this'.
 
+## Markdown 
+
+Meta64 allows markdown text to be entered into content fields and renders them using standard markdown syntax. The markdown formatter api we use is PageDown.
+
+https://code.google.com/p/pagedown/
+
+This is a javascript port of Markdown, as used on Stack Overflow and the rest of Stack Exchange network. Largely based on showdown.js by John Fraser (Attacklab), and original Markdown Copyright (c) 2004-2005 by John Gruber
+http://daringfireball.net/projects/markdown/
+
+
 ## JavaScript Caching Mechanism
 
 To understand how cache lifetime is managed for JS files see the following: *SpringMvcUtil.addJsFileNameProps*. In general the approach is to leave the JS files always the same, but to use a different URL parameter to be able to control which files are read from the browser cach v.s. downloaded new. Each JS url looks something like this:
