@@ -1,10 +1,7 @@
 #List of Known Bugs
 
-* For anonymous users (not logged in) the props and edit buttons on the top controlbar should not be there.
+* When on mobile android, and it's rendering with no buttons above each row (like when edit mode is off) it leaves a full amount of the space for those buttons, so we need to be sure not to generate the button HTML for rows in this situation
 
-* When user clicks a URL link on a page that points back to somewhere on meta64, like the link in the main page to the War and Peace book, sometimes you have to refresh the page or else it won't load.
+* when logged in anonymously it's possible to uplevel your way up out of the content where you can't get back.
 
-* when logged in anonymously it's possile to uplevel your way up out of the content where you can't get back.
-
-* when user clicks a link that points back onto meta64 url, it reloads browser and the session that is in place should be having the effect of logging in the user if they were currently logged in but is not correctly indicating that it's doing that, even though I think the session beans scoping is fine.
 
