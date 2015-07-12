@@ -106,11 +106,10 @@ that will be 'searchable' on google.
 ## Technical Notes
 * To build the app use maven.
 * You need to understand 'spring boot'
-* See application.properties for configurations.
-* Pre-requisites: Java VM installed on machine, and MongoDB server up and running.
+* See application-*.properties files for configurations.
+* Pre-requisites: Java VM installed on machine, and MongoDB server up and running, with a database named 'meta64'
 * Currently uses default storage location for MongoDb (Windows -> c:\data\db)
-* Once app is up and running go here: http://localhost:8083 (8083 port is currently the DEV profile port)
-* Remove anonUserLandingPageNode from application.properties, or set it properly. Sorry no docs exist yet on what that is, other than to say that landing page is the uuid of the page we will show all anonymous users or users before they log in.     
+* Once app is up and running go here: http://localhost:8083 (8083 port is currently the DEV profile port)     
 * Refer to the 'docs' folder of the project for additional technical documentation.
 
 

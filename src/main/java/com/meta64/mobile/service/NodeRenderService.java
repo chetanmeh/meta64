@@ -41,15 +41,16 @@ public class NodeRenderService {
 
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
-	
+
 	public void renderNode(Session session, RenderNodeRequest req, RenderNodeResponse res) throws Exception {
 
 		List<NodeInfo> children = new LinkedList<NodeInfo>();
 		res.setChildren(children);
 
 		String targetId = req.getNodeId();
-		
-		Node node; 
+		//log.debug("renderNode targetId:" + targetId);
+
+		Node node;
 		try {
 			node = JcrUtil.findNode(session, targetId);
 		}

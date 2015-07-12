@@ -100,13 +100,15 @@ var render = function() {
 				}
 			} else {
 				var contentProp = props.getNodeProperty("jcr:content", node);
-				console.log("contentProp: " + contentProp);
+				// console.log("contentProp: " + contentProp);
 				if (contentProp) {
 					var jcrContent = props.renderProperty(contentProp);
 
-					ret += _.makeTag("div", {
-						"class" : "jcr-content"
-					}, _.markdown(jcrContent));
+					if (jcrContent.length > 0) {
+						ret += _.makeTag("div", {
+							"class" : "jcr-content"
+						}, _.markdown(jcrContent));
+					}
 				}
 			}
 			if (renderBinary && node.hasBinary) {
@@ -277,7 +279,7 @@ var render = function() {
 
 			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton + uploadButton
 					+ deleteNodeButton + moveNodeUpButton + moveNodeDownButton + editNodeSharingButton;
-			
+
 			if (allButtons.length > 0) {
 				return _.makeHorizontalFieldSet(allButtons);
 			} else {
@@ -398,12 +400,15 @@ var render = function() {
 			// propCount);
 			var output = '';
 
-			var mainNodeContent = _.renderNodeContent(data.node, true, false /*
-																				 * show
-																				 * path
-																				 */, false, false);
-
-			$("#mainNodeContent").html(mainNodeContent);
+			var mainNodeContent = _.renderNodeContent(data.node, true, false, false, false);
+			// console.log("$$$$$$$$$$$$$$$$ mainNodeContent:
+			// "+mainNodeContent);
+			if (mainNodeContent.length > 0) {
+				$("#mainNodeContent").show();
+				$("#mainNodeContent").html(mainNodeContent);
+			} else {
+				$("#mainNodeContent").hide();
+			}
 
 			// console.log("update status bar.");
 			view.updateStatusBar();

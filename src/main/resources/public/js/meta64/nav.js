@@ -27,7 +27,7 @@ var nav = function() {
 
 		navUpLevel : function() {
 
-			if (_.displayingRoot()) {
+			if (!_.parentVisibleToUser()) {
 				// alert("Already at root. Can't go up.");
 				return;
 			}

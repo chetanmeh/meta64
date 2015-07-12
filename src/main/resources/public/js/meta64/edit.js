@@ -9,12 +9,12 @@ var edit = function() {
 
 	var _saveNodeResponse = function(res) {
 		util.checkSuccess("Save node", res);
-		
+
 		view.refreshTree();
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
-	
+
 	var _exportResponse = function(res) {
 		if (util.checkSuccess("Export", res)) {
 			alert("Export Successful.");
@@ -22,7 +22,7 @@ var edit = function() {
 			view.scrollToSelectedNode();
 		}
 	}
-	
+
 	var _importResponse = function(res) {
 		if (util.checkSuccess("Import", res)) {
 			alert("Import Successful.");
@@ -48,8 +48,8 @@ var edit = function() {
 
 	var _moveNodesResponse = function(res) {
 		util.checkSuccess("Move nodes", res);
-		
-		_.nodesToMove = null; //reset
+
+		_.nodesToMove = null; // reset
 		view.refreshTree();
 	}
 
@@ -88,8 +88,8 @@ var edit = function() {
 		if (util.checkSuccess("Make node referencable", res)) {
 			alert("This node is now referencable, and can be accessed by unique ID");
 		}
-		
-		//todo: need to refresh gui here to reflect change!
+
+		// todo: need to refresh gui here to reflect change!
 	}
 
 	var _createSubNodeResponse = function(res) {
@@ -315,16 +315,16 @@ var edit = function() {
 		openExportDialog : function() {
 			$.mobile.changePage("#exportDialog");
 		},
-		
+
 		exportNodes : function() {
 			var highlightNode = nav.getHighlightedNode();
 			var targetFileName = util.getRequiredElement("#exportTargetNodeName").val();
-			
+
 			if (util.emptyString(targetFileName)) {
 				alert("Please enter a name for the export file.");
 				return;
 			}
-			
+
 			if (highlightNode) {
 				util.json("exportToXml", {
 					"nodeId" : highlightNode.id,
@@ -332,20 +332,20 @@ var edit = function() {
 				}, _exportResponse);
 			}
 		},
-		
+
 		openImportDialog : function() {
 			$.mobile.changePage("#importDialog");
 		},
-		
+
 		importNodes : function() {
 			var highlightNode = nav.getHighlightedNode();
 			var sourceFileName = util.getRequiredElement("#importTargetNodeName").val();
-			
+
 			if (util.emptyString(sourceFileName)) {
 				alert("Please enter a name for the import file.");
 				return;
 			}
-			
+
 			if (highlightNode) {
 				util.json("importFromXml", {
 					"nodeId" : highlightNode.id,
@@ -353,7 +353,7 @@ var edit = function() {
 				}, _importResponse);
 			}
 		},
-		
+
 		runEditNode : function(uid) {
 			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
@@ -421,21 +421,28 @@ var edit = function() {
 						}, //
 						"Clear");
 
-						var deleteButton = render.makeTag("a", //
-						{
-							"onClick" : "props.deleteProperty('" + prop.name + "');", //
-							"data-role" : "button",
-							"data-icon" : "delete"
-						}, //
-						"Del");
-
 						var addMultiButton = "";
-						/*
-						 * I don't think it really makes sense to allow a
-						 * jcr:content property to be multivalued. I may be
-						 * wrong but this is my current assumption
-						 */
+						var deleteButton = "";
+
 						if (prop.name !== "jcr:content") {
+							/*
+							 * For now we just go with the design where the
+							 * actual content property cannot be deleted. User
+							 * can leave content blank but not delete it.
+							 */
+							deleteButton = render.makeTag("a", //
+							{
+								"onClick" : "props.deleteProperty('" + prop.name + "');", //
+								"data-role" : "button",
+								"data-icon" : "delete"
+							}, //
+							"Del");
+
+							/*
+							 * I don't think it really makes sense to allow a
+							 * jcr:content property to be multivalued. I may be
+							 * wrong but this is my current assumption
+							 */
 							addMultiButton = render.makeTag("a", //
 							{
 								"onClick" : "props.addSubProperty('" + fieldId + "');", //
@@ -445,7 +452,12 @@ var edit = function() {
 							"Add Multi");
 						}
 
-						buttonBar = render.makeHorizontalFieldSet(/* selButton + */addMultiButton + clearButton + deleteButton);
+						var allButtons = /* selButton + */addMultiButton + clearButton + deleteButton;
+						if (allButtons.length > 0) {
+							buttonBar = render.makeHorizontalFieldSet(allButtons);
+						} else {
+							buttonBar = "";
+						}
 					}
 
 					var field = buttonBar;
@@ -604,7 +616,8 @@ var edit = function() {
 
 			util.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to a new location ?", "Yes, move.", function() {
 				_.nodesToMove = selNodesArray;
-				meta64.selectedNodes = {}; //clear selections. No longer need or want any selections.
+				meta64.selectedNodes = {}; // clear selections. No longer need
+				// or want any selections.
 				alert("Ok, ready to move nodes. To finish moving, go select the target location, then click 'Finish Moving'");
 				meta64.refreshAllGuiEnablement();
 			});

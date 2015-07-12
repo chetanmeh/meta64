@@ -1,26 +1,3 @@
-## Starting MongoDB
-
-Commands to run MongoDb
-
-	 Windows: 
-	 mongod --dbpath c:\mongodb-data\db --port 27017
-	 
-    Linux:
-    mongod --dbpath /usr/local/mongodb-data --port 27017
-    
-http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
-
-## Running the Meta64 Server (on Windows)
-
-* Note that the spring.config.location argument (as in the command below) you are required to include the main application.properties file as well as one of the profile ones (ending in -test, -dev, or -production)
-
-    Example Windows BAT file to run Server:
-    set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_55
-    set PATH=%JAVA_HOME\bin%;%PATH%
-    java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
-    
-* Note, the above is not the "best" way to start an app on linux, but is the simplest.
-
 ## Single Page Application (SPA)
 
 The app is a SPA and the main loading page is 'index.html', which is technically rendered by Spring+Thymeleaf, but it contains JQuery Mobile code in it, which is what does most of the magic. Once the initial page is loaded, REST/AJAX calls do the rest of the work of updating the page content HTML as the user navigates around the app. The same DIVs are simply reloaded with new content as new information is queried from the server and gotten back as JSON.
@@ -43,7 +20,28 @@ To understand how cache lifetime is managed for JS files see the following: *Spr
 
     /js/meta64/util.js?ver=1
 
+## Starting MongoDB
 
+Commands to run MongoDb
+
+	 Windows: 
+	 mongod --dbpath c:\mongodb-data\db --port 27017
+	 
+    Linux:
+    mongod --dbpath /usr/local/mongodb-data --port 27017
+    
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+
+## Running the Meta64 Server (on Windows)
+
+* Note that the spring.config.location argument (as in the command below) you are required to include the main application.properties file as well as one of the profile ones (ending in -test, -dev, or -production)
+
+    Example Windows BAT file to run Server:
+    set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_55
+    set PATH=%JAVA_HOME\bin%;%PATH%
+    java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
+    
+* Note, the above is not the "best" way to start an app on linux, but is the simplest.
 
 
 

@@ -1,7 +1,7 @@
 console.log("running module: props.js");
 
 var props = function() {
-	
+
 	var _savePropertyResponse = function(res) {
 		util.checkSuccess("Save properties", res);
 
@@ -270,9 +270,8 @@ var props = function() {
 							ret += "<td>" + props.renderPropertyValues(property.values) + "</td>";
 						}
 						ret += "</tr>";
-					}
-					else {
-						console.log("Hiding property: "+property.name);
+					} else {
+						console.log("Hiding property: " + property.name);
 					}
 				});
 
@@ -311,6 +310,9 @@ var props = function() {
 		 */
 		renderProperty : function(property) {
 			if (!property.values) {
+				if (!property.value || property.value.length == 0) {
+					return "";
+				}
 				return render.markdown(property.value);
 			} else {
 				return _.renderPropertyValues(property.values);
