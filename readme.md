@@ -44,6 +44,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 
 * Basic JCR Browser capability (Tree browsing with ability to "drill own" into the tree)
 * Login/Logout
+* Auto-login using Cookies
 * Signup new users (including captcha, and password)
 * Node editing (plain text/markdown)
 * Orderable child nodes ("move up" and "move down" supported)
@@ -71,7 +72,7 @@ Listed here in the order they will likely be developed...
 
 * Implement "soft branding" so that basically the app name comes out of a properties file so admins can name their portal however they want and it won't look like it's meta64. Fully "Brandable"
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
-* Feature for "keep me signed in on this computer" that uses cookies to remember user's login.
+* Need to encrypt password cookie on client.
 * Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows walking of **one** page per user, and have a standard of like /user/home being the folder that users can create
 that will be 'searchable' on google.
 * Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder.
