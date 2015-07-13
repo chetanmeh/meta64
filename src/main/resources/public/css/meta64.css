@@ -47,7 +47,8 @@
 
 .main-node-content {
 	background: lightGray;
-	padding: 10px;
+	padding-top: 5px;
+	padding-left: 5px;
 }
 
 .page-node-header {
