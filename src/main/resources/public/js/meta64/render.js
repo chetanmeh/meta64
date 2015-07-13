@@ -401,11 +401,20 @@ var render = function() {
 			var output = '';
 
 			var mainNodeContent = _.renderNodeContent(data.node, true, false, false, false);
-			// console.log("$$$$$$$$$$$$$$$$ mainNodeContent:
-			// "+mainNodeContent);
+			// console.log("mainNodeContent: "+mainNodeContent);
 			if (mainNodeContent.length > 0) {
+				var uid = data.node.uid;
+				var cssId = uid + "_row";
+				var content = _.makeTag("div", //
+				{
+					"class" : "node-table-row inactive-row",
+					"onClick" : "nav.clickOnNodeRow(this, '" + uid + "');", //
+					"id" : cssId
+				},// 
+				mainNodeContent);
+
 				$("#mainNodeContent").show();
-				$("#mainNodeContent").html(mainNodeContent);
+				$("#mainNodeContent").html(content);
 			} else {
 				$("#mainNodeContent").hide();
 			}
@@ -427,47 +436,44 @@ var render = function() {
 				var rowCount = 0;
 
 				$.each(data.children, function(i, node) {
-					if (meta64.isNodeBlackListed(node))
-						return;
-
-					if (newData) {
-						meta64.initNode(node);
-
-						// console.log(" RENDER ROW[" + i + "]: node.id=" +
-						// node.id);
-
-						/*
-						 * if no row is selected for this parent, select the
-						 * first row
-						 */
-						if (!meta64.parentUidToFocusNodeMap[meta64.currentNodeUid]) {
-							meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-
-							if (!node.uid) {
-								alert("oops, node.uid is null");
-							}
-							// console.log("Setting default row selection to
-							// this
-							// top
-							// row");
-						} else {
-							// console.log(" SEL ROW
-							// KNOWN:"+parentIdToFocusIdMap[meta64.currentNodeData.node.id]);
-						}
+					var row = _.generateRow(i, node, newData, childCount, rowCount);
+					if (row.length != 0) {
+						output += row;
+						rowCount++;
 					}
-
-					rowCount++;
-					var row = _.renderNodeAsListItem(node, i, childCount, rowCount);
-					// console.log("row[" + rowCount + "]=" + row);
-					output += row;
 				});
 			}
-			
+
 			if (output.length == 0 && !meta64.isAnonUser) {
 				output = _getEmptyPagePrompt();
 			}
 
 			util.setHtmlEnhancedById("#listView", output);
+		},
+
+		generateRow : function(i, node, newData, childCount, rowCount) {
+
+			if (meta64.isNodeBlackListed(node))
+				return "";
+
+			if (newData) {
+				meta64.initNode(node);
+
+				// console.log(" RENDER ROW[" + i + "]: node.id=" +
+				// node.id);
+
+				/*
+				 * if no row is selected for this parent, select the first row
+				 */
+				if (!meta64.parentUidToFocusNodeMap[meta64.currentNodeUid]) {
+					meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
+				}
+			}
+
+			rowCount++; // warning: this is the local variable/parameter
+			var row = _.renderNodeAsListItem(node, i, childCount, rowCount);
+			console.log("row[" + rowCount + "]=" + row);
+			return row;
 		},
 
 		getUrlForNodeAttachment : function(node) {

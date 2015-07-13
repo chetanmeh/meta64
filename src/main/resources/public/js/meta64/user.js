@@ -24,13 +24,13 @@ var user = function() {
 	/* ret is LoginResponse.java */
 	var _loginResponse = function(res, info) {
 		if (util.checkSuccess("Login", res)) {
-			// console.log("info.usr="+info.usr);
+			//console.log("info.usr=" + info.usr + " homeNodeOverride: " + res.homeNodeOverride);
 			$.cookie("loginUsr", info.usr);
 			$.cookie("loginPwd", info.pwd);
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 
 			_setStateVarsUsingLoginResponse(res);
-			view.refreshTree(meta64.homeNodeId);
+			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId);
 			_setTitleUsingLoginResponse(res);
 		} else {
 			if (info.usingCookies) {
@@ -140,7 +140,7 @@ var user = function() {
 			var pwd = $.cookie("loginPwd");
 
 			var usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
-
+			//console.log("usingCookies = " + usingCookies);
 			/*
 			 * Session is a special indicator that tells server to just attempt
 			 * the login from the session varibles. perhaps I should have added
@@ -149,6 +149,8 @@ var user = function() {
 			 */
 			var callUsr = usr ? usr : "{session}";
 			var callPwd = pwd ? pwd : "{session}";
+
+			//console.log("refreshLogin with name: " + callUsr);
 
 			util.json("login", {
 				"userName" : callUsr,
@@ -189,8 +191,8 @@ var user = function() {
 			}
 
 			/*
-			 * our choice of behavior here is that when logging out we clean
-			 * out cookies, so the logout is permanent. User can stay logged in
+			 * our choice of behavior here is that when logging out we clean out
+			 * cookies, so the logout is permanent. User can stay logged in
 			 * simply by never logging out, but the logout securely disables the
 			 * client computer from being able to just automatically log in
 			 * again, which seems like the behavior I'd like.

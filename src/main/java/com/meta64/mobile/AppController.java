@@ -164,7 +164,7 @@ public class AppController {
 	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
 		logRequest("mobile", null);
 
-		log.debug("Rendering main page: current userName: " + sessionContext.getUserName());
+		log.debug("Rendering main page: current userName: " + sessionContext.getUserName()+" id="+id);
 
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", "share", "user", "util", "view");
@@ -270,6 +270,7 @@ public class AppController {
 			res.setSuccess(true);
 		}
 		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
+		res.setHomeNodeOverride(sessionContext.getUrlId());
 		return res;
 	}
 

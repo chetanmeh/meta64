@@ -41,7 +41,7 @@ var meta64 = function() {
 		uidToNodeMap : {},
 
 		/* counter for local uids */
-		nextUid : 0,
+		nextUid : 1,
 
 		/*
 		 * maps node 'identifier' (assigned at server) to uid value which is a

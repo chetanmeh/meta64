@@ -105,17 +105,19 @@ var nav = function() {
 		 */
 		unhighlightRow : function() {
 			var currentUid = meta64.currentNodeUid;
+			//console.log("currentUid = "+currentUid);
 
 			/* check if we have an existing highlighted row to unhighlight */
 			var currentSelNode = meta64.parentUidToFocusNodeMap[currentUid];
 
 			if (!currentSelNode.uid) {
 				console.log("unhighlight says current node has null uid");
+				return;
 			}
 
 			if (currentSelNode) {
-				console.log("Unhighlighting previous row: currentNodeUid=" + currentSelNode.uid + ", path: "
-						+ meta64.getPathOfUid(currentSelNode.uid));
+				//console.log("Unhighlighting previous row: currentNodeUid=" + currentSelNode.uid + ", path: "
+				//		+ meta64.getPathOfUid(currentSelNode.uid));
 
 				/* get node by node identifier */
 				var node = meta64.uidToNodeMap[currentSelNode.uid];
@@ -148,6 +150,7 @@ var nav = function() {
 			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
 				console.log("clickOnNodeRow recieved uid that doesn't map to any node. uid=" + uid);
+				return;
 			}
 
 			/*
@@ -155,9 +158,9 @@ var nav = function() {
 			 * this page being the 'key')
 			 */
 			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-			if (!node.uid) {
-				alert("oops, node.uid is null");
-			}
+//			if (!node.uid) {
+//				alert("oops, node.uid is null");
+//			}
 
 			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
 		},
