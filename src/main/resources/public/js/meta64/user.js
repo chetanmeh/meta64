@@ -22,13 +22,28 @@ var user = function() {
 	}
 
 	/* ret is LoginResponse.java */
-	var _loginResponse = function(res) {
+	var _loginResponse = function(res, info) {
 		if (util.checkSuccess("Login", res)) {
+			// console.log("info.usr="+info.usr);
+			$.cookie("loginUsr", info.usr);
+			$.cookie("loginPwd", info.pwd);
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 
 			_setStateVarsUsingLoginResponse(res);
 			view.refreshTree(meta64.homeNodeId);
 			_setTitleUsingLoginResponse(res);
+		} else {
+			if (info.usingCookies) {
+				alert("Cookie login failed. Removing cookies.");
+
+				/*
+				 * blow away failed cookie credentials and reload page, should
+				 * result in brand new page load as anon user.
+				 */
+				$.removeCookie("loginUsr");
+				$.removeCookie("loginPwd");
+				location.reload();
+			}
 		}
 	}
 
@@ -42,6 +57,7 @@ var user = function() {
 	}
 
 	var _logoutResponse = function(res) {
+		$.mobile.changePage("#mainPage");
 		location.reload();
 	}
 
@@ -53,12 +69,29 @@ var user = function() {
 
 	var _signupResponse = function(res) {
 		if (util.checkSuccess("Signup new user", res)) {
+			user.populateLoginDialogFromCookies();
 			$.mobile.changePage("#loginDialogId");
 			alert("Signup successful.");
 		}
 	}
 
 	var _ = {
+		populateLoginDialogFromCookies : function() {
+			var usr = $.cookie("loginUsr");
+			var pwd = $.cookie("loginPwd");
+			if (usr) {
+				$("#userName").val(usr);
+			}
+			if (pwd) {
+				$("#password").val(pwd);
+			}
+		},
+
+		openLoginDialog : function() {
+			user.populateLoginDialogFromCookies();
+			$.mobile.changePage("#loginDialogId");
+		},
+
 		signup : function() {
 			var userName = util.getRequiredElement("#signupUserName").val();
 			var password = util.getRequiredElement("#signupPassword").val();
@@ -103,10 +136,29 @@ var user = function() {
 
 		refreshLogin : function() {
 
+			var usr = $.cookie("loginUsr");
+			var pwd = $.cookie("loginPwd");
+
+			var usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
+
+			/*
+			 * Session is a special indicator that tells server to just attempt
+			 * the login from the session varibles. perhaps I should have added
+			 * a REST attribute for this. It's sort of a an anti-pattern. (TODO:
+			 * fix)
+			 */
+			var callUsr = usr ? usr : "{session}";
+			var callPwd = pwd ? pwd : "{session}";
+
 			util.json("login", {
-				"userName" : "{session}",
-				"password" : "{session}"
-			}, _refreshLoginResponse);
+				"userName" : callUsr,
+				"password" : callPwd,
+				"usingCookies" : usingCookies
+			}, usingCookies ? _loginResponse : _refreshLoginResponse, {
+				usr : callUsr,
+				pwd : callPwd,
+				"usingCookies" : usingCookies
+			});
 		},
 
 		login : function() {
@@ -114,19 +166,37 @@ var user = function() {
 				return;
 			}
 
-			var userNameVal = $.trim($("#userName").val());
-			var passwordVal = $.trim($("#password").val());
+			var usr = $.trim($("#userName").val());
+			var pwd = $.trim($("#password").val());
 
+			/*
+			 * the json is in here twice because we happen to need to feed the
+			 * same INFO to the _loginResponse method. I'll just cod it this way
+			 * instead of creating a var to hold it.
+			 */
 			util.json("login", {
-				"userName" : userNameVal,
-				"password" : passwordVal
-			}, _loginResponse);
+				"userName" : usr,
+				"password" : pwd
+			}, _loginResponse, {
+				"usr" : usr,
+				"pwd" : pwd
+			});
 		},
 
 		logout : function() {
 			if (!util.isActionEnabled("logout")) {
 				return;
 			}
+
+			/*
+			 * our choice of behavior here is that when logging out we clean
+			 * out cookies, so the logout is permanent. User can stay logged in
+			 * simply by never logging out, but the logout securely disables the
+			 * client computer from being able to just automatically log in
+			 * again, which seems like the behavior I'd like.
+			 */
+			$.removeCookie("loginUsr");
+			$.removeCookie("loginPwd");
 
 			util.json("logout", {}, _logoutResponse);
 		},

@@ -38,6 +38,9 @@
 <script type="text/javascript"
 	th:src="@{/js/md/Markdown.Sanitizer.js?ver.md=1}"></script>
 
+<script type="text/javascript"
+	th:src="@{/js/cookie/jquery.cookie.js?ver.md=1}"></script>
+
 <script type="text/javascript" th:inline="javascript"
 	th:src="@{${utilJs}}"></script>
 
@@ -93,8 +96,7 @@
 					-->
 					<li><a id="propsToggleButton" data-icon="forbidden">Props</a></li>
 					<li><a id="editModeButton" data-icon="forbidden">Edit</a></li>
-					<li><a href="#loginDialogId" data-rel="dialog"
-						data-transition="pop" data-icon="user">Login</a></li>
+					<li><a data-icon="user" id="openLoginDialogButton">Login</a></li>
 				</ul>
 			</div>
 			<div class="page-node-header">

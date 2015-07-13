@@ -175,7 +175,6 @@ var srch = function() {
 		},
 
 		clickOnSearchResultRow : function(rowElm, uid) {
-			//verifyFunction();
 
 			_.unhighlightRow();
 			_.highlightRowNode = _.uidToNodeMap[uid];

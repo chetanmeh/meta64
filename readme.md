@@ -1,5 +1,5 @@
 ## Meta64: An Open-Source Portal and Content Repository
-An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is for building portals around any kind of content and any kind of user base. In other words the technology is a "platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, yet also providing a Social Media-type feature set similar to Facebook.
+An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is for building portals around any kind of content and any kind of user base. In other words the technology is a "platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, yet also providing a Social Media-type feature set similar to Facebook. If you don't like the name meta64, that's ok, the **portal system is "Brandable"** meaning you can put your own brand images and logo text on the app and it will not have meta64 mentioned anywhere on it. Meta64.com is the site that demonstrates the technology, but is not intended to be the ultimate destination for end users, or to become an "internet property". Meta64 is intended to be similar to Spring or Apache in the development world, and is not trying to be a product, but is merely offering technology solutions for free.
 
 On GitHub.com -> https://github.com/Clay-Ferguson/meta64
 
@@ -69,7 +69,9 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 ## Next Features to be Developed
 Listed here in the order they will likely be developed...
 
-* More JUnit unit tests.
+* Implement "soft branding" so that basically the app name comes out of a properties file so admins can name their portal however they want and it won't look like it's meta64. Fully "Brandable"
+* Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
+* Feature for "keep me signed in on this computer" that uses cookies to remember user's login.
 * Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows walking of **one** page per user, and have a standard of like /user/home being the folder that users can create
 that will be 'searchable' on google.
 * Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder.
@@ -81,6 +83,7 @@ that will be 'searchable' on google.
 * Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
 * Email notification engine to support collaboration
 * RSS Feeds for node changes
+* More JUnit unit tests.
 
 ## Technology Stack and APIs
 * App is "Mobile First", meaning a primary objective is to run well on mobile

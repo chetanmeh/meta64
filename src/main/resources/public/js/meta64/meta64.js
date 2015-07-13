@@ -236,6 +236,10 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : user.login
 			}, {
+				"name" : "openLoginDialog",
+				"enable" : true,
+				"function" : user.openLoginDialog
+			}, {
 				"name" : "logout",
 				"enable" : false,
 				"function" : user.logout
@@ -377,7 +381,8 @@ var meta64 = function() {
 			util.setEnablementByName("changePasswordDialog", !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;
-			//console.log(">>>>>>>>>>>>>>> currentNode=" + _.currentNode + " anonUser=" + _.anonUser);
+			// console.log(">>>>>>>>>>>>>>> currentNode=" + _.currentNode + "
+			// anonUser=" + _.anonUser);
 			/*
 			 * this leaves a hole in the toolbar if you hide it. Need to change
 			 * that
