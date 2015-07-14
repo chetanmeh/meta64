@@ -525,7 +525,7 @@ var edit = function() {
 			var instr = _.editingUnsavedNode ? //
 			"You may leave this field blank and a unique ID will be assigned. You only need to provide a name if you want this node to have a more meaningful URL."
 					: //
-					"Enter field values and click 'Save' button at the very bottom.";
+					"";
 
 			$("#editNodeInstructions").html(instr);
 

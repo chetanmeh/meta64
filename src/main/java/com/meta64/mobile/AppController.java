@@ -164,7 +164,7 @@ public class AppController {
 	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
 		logRequest("mobile", null);
 
-		log.debug("Rendering main page: current userName: " + sessionContext.getUserName()+" id="+id);
+		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", "share", "user", "util", "view");
@@ -421,7 +421,19 @@ public class AppController {
 			throw new Exception("export is an admin-only feature.");
 		}
 
-		importExportService.importFromXml(session, req, res);
+		String fileName = req.getSourceFileName();
+		if (fileName.toLowerCase().endsWith(".xml")) {
+			importExportService.importFromXml(session, req, res);
+			//It is not a mistake that there is no session.save() here. The import is using the workspace object
+			//which specifically documents that the saving on the session is not needed.
+		}
+		else if (fileName.toLowerCase().endsWith(".zip")) {
+			importExportService.importFromZip(session, req, res);
+			session.save();
+		}
+		else {
+			throw new Exception("Unable to import from file with unknown extension: " + fileName);
+		}
 		return res;
 	}
 

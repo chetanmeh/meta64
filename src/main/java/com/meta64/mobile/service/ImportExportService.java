@@ -5,11 +5,16 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.ExportRequest;
@@ -29,11 +35,18 @@ import com.meta64.mobile.util.JcrUtil;
 
 /**
  * Service for searching the repository
+ * 
+ * TODO: I really need to separate out the ZIP and XML import/export into dedecated service classes.
+ * One for zip and one for xml, instead of this one bigger class.
+ * 
  */
 @Component
 @Scope("session")
 public class ImportExportService {
 	private static final Logger log = LoggerFactory.getLogger(ImportExportService.class);
+
+	public static final int STANDARD_BUF_SIZE = 1024 * 4;
+	private byte[] byteBuf = new byte[STANDARD_BUF_SIZE];
 
 	@Autowired
 	private OakRepositoryBean oak;
@@ -46,6 +59,13 @@ public class ImportExportService {
 
 	@Value("${adminDataFolder}")
 	private String adminDataFolder;
+
+	/*
+	 * This will be made optional in the future, but for my purposes I don't want the zip file name
+	 * being the controller of the JCR names. I'd rather just generate JCR names ad GUIDS, so I have
+	 * to be able to map them
+	 */
+	private Map<String, String> zipToJcrNameMap = new HashMap<String, String>();
 
 	public void exportToXml(Session session, ExportRequest req, ExportResponse res) throws Exception {
 		String nodeId = req.getNodeId();
@@ -98,7 +118,7 @@ public class ImportExportService {
 		String fileName = req.getSourceFileName();
 		fileName = fileName.replace(".", "_");
 		fileName = fileName.replace(File.separator, "_");
-		String fullFileName = adminDataFolder + File.separator + req.getSourceFileName() + ".xml";
+		String fullFileName = adminDataFolder + File.separator + req.getSourceFileName();
 
 		if (!FileTools.fileExists(fullFileName)) {
 			throw new Exception("Import file not found.");
@@ -107,12 +127,14 @@ public class ImportExportService {
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(new FileInputStream(fullFileName));
-			
-			/* This REPLACE_EXISTING option has the effect (in my own words) as meaning that even if the some of the nodes have 
-			 * moved around since they were first exported they will be updated 'in their current place' as part of this import.
+
+			/*
+			 * This REPLACE_EXISTING option has the effect (in my own words) as meaning that even if
+			 * the some of the nodes have moved around since they were first exported they will be
+			 * updated 'in their current place' as part of this import.
 			 * 
-			 * This UUID behavior is so interesting and powerful it really needs to be an option specified at the user level
-			 * that determines how this should work.
+			 * This UUID behavior is so interesting and powerful it really needs to be an option
+			 * specified at the user level that determines how this should work.
 			 */
 			session.getWorkspace().importXML(importNode.getPath(), in, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
 
@@ -129,6 +151,158 @@ public class ImportExportService {
 			if (in != null) {
 				in.close();
 			}
+		}
+	}
+
+	public void importFromZip(Session session, ImportRequest req, ImportResponse res) throws Exception {
+		String nodeId = req.getNodeId();
+		Node importNode = JcrUtil.findNode(session, nodeId);
+		log.debug("Import to Node: " + importNode.getPath());
+
+		if (!FileTools.dirExists(adminDataFolder)) {
+			throw new Exception("adminDataFolder does not exist");
+		}
+
+		String fileName = req.getSourceFileName();
+		fileName = fileName.replace(".", "_");
+		fileName = fileName.replace(File.separator, "_");
+		String fullFileName = adminDataFolder + File.separator + req.getSourceFileName();
+
+		if (!FileTools.fileExists(fullFileName)) {
+			throw new Exception("Import file not found.");
+		}
+
+		ZipInputStream zis = null;
+
+		try {
+			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fullFileName));
+			ZipEntry entry;
+
+			zis = new ZipInputStream(bis);
+
+			while ((entry = zis.getNextEntry()) != null) {
+				importZipEntry(zis, entry, importNode, session);
+			}
+		}
+		finally {
+
+			if (zis != null) {
+				zis.close();
+			}
+		}
+
+		res.setSuccess(true);
+	}
+
+	public void importZipEntry(ZipInputStream zis, ZipEntry zipEntry, Node importNode, Session session) throws Exception {
+		String name = zipEntry.getName();
+
+		if (zipEntry.isDirectory()) {
+			/*
+			 * We are using an approach where we ignore folder entries in the zip file, because
+			 * folders have no actual content
+			 */
+			// log.debug("ZIP D: " + name);
+			// ensureNodeExistsForZipFolder(importNode, name, session);
+		}
+		else {
+			log.debug("ZIP F: " + name);
+			importFileFromZip(zis, zipEntry, importNode, session);
+		}
+	}
+
+	private void importFileFromZip(ZipInputStream zis, ZipEntry zipEntry, Node importNode, Session session) throws Exception {
+		String name = zipEntry.getName();
+
+		/*
+		 * This is a special hack just for Clay Ferguson's machine because the type of zip files i'm
+		 * importing from are the old format export zips from the legacy meta64 zip format, and so I
+		 * focus specifically pulling in files that are named content.html or content.txt.
+		 * 
+		 * This is still alpha testing code but this code runs perfect. Eventually we can remove
+		 * this file name hack and let the system be smarter and actually check MIME types using
+		 * file name extensions and import binaries properly etc.
+		 */
+		if (name.endsWith("/content.html") || name.endsWith("/content.txt")) {
+
+			StringBuilder buffer = new StringBuilder();
+			synchronized (byteBuf) {
+				/*
+				 * todo: got this code snippet online. someday look to see if there is a more
+				 * efficient way
+				 */
+				for (int n; (n = zis.read(byteBuf)) != -1;) {
+					if (n > 0) {
+						buffer.append(new String(byteBuf, 0, n));
+					}
+				}
+			}
+
+			Node newNode = ensureNodeExistsForZipFolder(importNode, name, session);
+			String val = buffer.toString();
+			newNode.setProperty("jcr:content", val);
+		}
+	}
+
+	/*
+	 * Builds a node assuming root is a starting path, and 'path' is a ZipFile folder name.
+	 * 
+	 * Revision: the path is not a file name path.
+	 */
+	private Node ensureNodeExistsForZipFolder(Node root, String path, Session session) throws Exception {
+		String[] tokens = path.split("/");
+		String curPath = root.getPath();
+		Node curNode = root;
+		int tokenIdx = 0;
+		int maxTokenIdx = tokens.length - 1;
+		for (String token : tokens) {
+
+			/*
+			 * This actually is assuming that the path is a file name, and we ignore the file name
+			 * part
+			 */
+			if (tokenIdx >= maxTokenIdx) {
+				break;
+			}
+			String guid = zipToJcrNameMap.get(token);
+			if (guid == null) {
+				guid = JcrUtil.getGUID();
+				zipToJcrNameMap.put(token, guid);
+			}
+
+			String jcrName = AppConstant.NAMESPACE + ":" + guid;
+			curPath += "/" + jcrName;
+			try {
+				// log.debug("Checking for path: " + curPath);
+				curNode = session.getNode(curPath);
+			}
+			catch (Exception e) {
+				// log.debug("path not found, creating");
+				// not an error condition. Simply indicates note at curPath does not exist, so we
+				// create it and continue as part of the algorithm. We will actually build as many
+				// parents as we need to here.
+				curNode = createChildNode(curNode, jcrName, token, session);
+
+				// log.debug("new node now has path: " + curNode.getPath());
+			}
+			tokenIdx++;
+		}
+		return curNode;
+	}
+
+	private Node createChildNode(Node node, String jcrName, String content, Session session) throws Exception {
+		try {
+			Node newNode = node.addNode(jcrName, JcrConstants.NT_UNSTRUCTURED);
+			/*
+			 * Note we don't set content here, but instead set it in the method that calls this one.
+			 */
+			// newNode.setProperty("jcr:content", content);
+			JcrUtil.timestampNewNode(session, newNode);
+			return newNode;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 }
