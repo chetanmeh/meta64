@@ -62,11 +62,12 @@ var attachment = function() {
 			$("#uploadPathDisplay").html("Path: " + render.formatPath(_.uploadNode.path));
 		},
 
-		openUploadDialog : function(uid) {
-			var node = meta64.uidToNodeMap[uid];
+		openUploadDialogMenuClick : function() {
+			var node = node = nav.getHighlightedNode();
+
 			if (!node) {
 				_.uploadNode = null;
-				alert("Unknown nodeId in upload: " + uid);
+				alert("No node is selected.");
 				return;
 			}
 
@@ -75,6 +76,24 @@ var attachment = function() {
 			$.mobile.changePage("#uploadDialog");
 		},
 
+		/*
+		 * function no longer used but do not delete yet.
+		 * 
+		 */
+		// openUploadDialogRowClick : function(uid) {
+		// var node = node = meta64.uidToNodeMap[uid];
+		//			
+		// if (!node) {
+		// _.uploadNode = null;
+		// alert("Unknown nodeId in upload: " + uid);
+		// return;
+		// }
+		//
+		// _.uploadNode = node;
+		// _.populateUploadDialog();
+		// $.mobile.changePage("#uploadDialog");
+		// },
+		
 		closeUploadDialog : function() {
 			$.mobile.changePage("#mainPage");
 			view.scrollToSelectedNode();

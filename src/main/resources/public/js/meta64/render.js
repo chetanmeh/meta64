@@ -166,7 +166,16 @@ var render = function() {
 			}, _.renderNodeContent(node, true, true, true, true)));
 		},
 
+		/*
+		 * TODO: This approach is going to be too heavy weight with large
+		 * numbers of rows, so I will need to make the main menu dropdown
+		 * operate on selected nodes when this happens (like rows > 100) rather
+		 * than having buttons on all rows.
+		 */
 		makeButtonBarHtml : function(uid, canMoveUp, canMoveDown, editingAllowed) {
+
+			/* TODO: make this a user option, each user can choose button sizes */
+			var mini = "true";
 
 			var openButton = selButton = createSubNodeButton = deleteNodeButton = editNodeButton = //
 			moveNodeUpButton = moveNodeDownButton = insertNodeButton = editNodeSharingButton = uploadButton = '';
@@ -177,6 +186,7 @@ var render = function() {
 				{
 					"onClick" : "nav.openNode('" + uid + "');", //
 					"data-role" : "button",
+					"data-mini" : mini,
 					"data-icon" : "plus",
 					"data-theme" : "b"
 				}, //
@@ -196,6 +206,7 @@ var render = function() {
 				var checkboxHtml = _.makeTag("input", //
 				{
 					"type" : "checkbox", //
+					"data-mini" : mini,
 					"id" : uid + "_sel",//
 					"name" : uid + "_check", //
 					"onClick" : "nav.toggleNodeSel('" + uid + "')",
@@ -208,6 +219,7 @@ var render = function() {
 				{
 					"onClick" : "edit.createSubNode('" + uid + "');",
 					"data-role" : "button",
+					"data-mini" : mini,
 					"data-icon" : "star"
 				}, "New");
 
@@ -216,6 +228,7 @@ var render = function() {
 				{
 					"onClick" : "edit.insertNode('" + uid + "');",
 					"data-role" : "button",
+					"data-mini" : mini,
 					"data-icon" : "bars"
 				}, "Ins");
 			}
@@ -226,6 +239,7 @@ var render = function() {
 				{
 					"onClick" : "edit.deleteNode('" + uid + "');",
 					"data-role" : "button",
+					"data-mini" : mini,
 					"data-icon" : "delete"
 				}, "Del");
 
@@ -234,16 +248,20 @@ var render = function() {
 				{
 					"onClick" : "edit.runEditNode('" + uid + "');",
 					"data-role" : "button",
+					"data-mini" : mini,
 					"data-icon" : "edit"
 				}, "Edit");
 
-				/* Construct Create Subnode Button */
-				uploadButton = _.makeTag("a", //
-				{
-					"onClick" : "attachment.openUploadDialog('" + uid + "');",
-					"data-role" : "button",
-					"data-icon" : "action"
-				}, "Upload");
+				/*
+				 * Moved to Dropdown Menu only for now (TODO: get rid of uploadButton var here some day, it's dead)
+				 * 
+				 * Construct Create Subnode Button 
+				 * 
+				 * uploadButton = _.makeTag("a", // {
+				 * "onClick" : "attachment.openUploadDialogRowClick('" + uid + "');",
+				 * "data-role" : "button", "data-mini" : mini, "data-icon" :
+				 * "action" }, "Upload");
+				 */
 
 				if (meta64.currentNode.childrenOrdered) {
 
@@ -253,6 +271,7 @@ var render = function() {
 						{
 							"onClick" : "edit.moveNodeUp('" + uid + "');",
 							"data-role" : "button",
+							"data-mini" : mini,
 							"data-icon" : "arrow-u"
 						}, "Up");
 					}
@@ -263,6 +282,7 @@ var render = function() {
 						{
 							"onClick" : "edit.moveNodeDown('" + uid + "');",
 							"data-role" : "button",
+							"data-mini" : mini,
 							"data-icon" : "arrow-d"
 						}, "Dn");
 					}
@@ -273,6 +293,7 @@ var render = function() {
 				{
 					"onClick" : "share.editNodeSharing('" + uid + "');",
 					"data-role" : "button",
+					"data-mini" : mini,
 					"data-icon" : "eye"
 				}, "Share");
 			}
@@ -472,7 +493,7 @@ var render = function() {
 
 			rowCount++; // warning: this is the local variable/parameter
 			var row = _.renderNodeAsListItem(node, i, childCount, rowCount);
-			//console.log("row[" + rowCount + "]=" + row);
+			// console.log("row[" + rowCount + "]=" + row);
 			return row;
 		},
 

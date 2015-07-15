@@ -351,6 +351,10 @@ var meta64 = function() {
 				"name" : "importNodes",
 				"enable" : true,
 				"function" : edit.importNodes
+			}, {
+				"name" : "manageAttachments",
+				"enable" : true,
+				"function" : attachment.openUploadDialogMenuClick
 			});
 
 			// hookSliderChanges("editMode");
@@ -359,6 +363,7 @@ var meta64 = function() {
 		refreshAllGuiEnablement : function() {
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
+			var highlightNode = nav.getHighlightedNode();
 
 			util.setEnablementByName("login", _.isAnonUser, _.isAnonUser);
 			util.setEnablementByName("logout", !_.isAnonUser, !_.isAnonUser);
@@ -395,9 +400,11 @@ var meta64 = function() {
 			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
 			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
-			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser); 
+			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser);
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
+
+			util.setEnablementByName("manageAttachments", highlightNode != null);
 		},
 
 		/*
@@ -521,6 +528,8 @@ var meta64 = function() {
 				console.log("initNode has null node");
 				return;
 			}
+			/* assign a property for detecting this node type, I'll do this instead of using some kind of custom 
+			 * JS prototype-related approach */
 			node.uid = util.getUidForId(_.identToUidMap, node.id);
 			node.properties = props.setPreferredPropertyOrder(node.properties);
 

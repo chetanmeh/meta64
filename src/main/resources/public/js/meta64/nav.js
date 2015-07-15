@@ -91,8 +91,8 @@ var nav = function() {
 		},
 
 		/*
-		 * Returns the node the user has "highlighted" (last clicked on), or
-		 * null if none is highlighted
+		 * Returns the node (NodeInfo.java) the user has "highlighted" (last
+		 * clicked on), or null if none is highlighted
 		 */
 		getHighlightedNode : function() {
 
@@ -105,7 +105,7 @@ var nav = function() {
 		 */
 		unhighlightRow : function() {
 			var currentUid = meta64.currentNodeUid;
-			//console.log("currentUid = "+currentUid);
+			// console.log("currentUid = "+currentUid);
 
 			/* check if we have an existing highlighted row to unhighlight */
 			var currentSelNode = meta64.parentUidToFocusNodeMap[currentUid];
@@ -116,8 +116,9 @@ var nav = function() {
 			}
 
 			if (currentSelNode) {
-				//console.log("Unhighlighting previous row: currentNodeUid=" + currentSelNode.uid + ", path: "
-				//		+ meta64.getPathOfUid(currentSelNode.uid));
+				// console.log("Unhighlighting previous row: currentNodeUid=" +
+				// currentSelNode.uid + ", path: "
+				// + meta64.getPathOfUid(currentSelNode.uid));
 
 				/* get node by node identifier */
 				var node = meta64.uidToNodeMap[currentSelNode.uid];
@@ -158,9 +159,9 @@ var nav = function() {
 			 * this page being the 'key')
 			 */
 			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-//			if (!node.uid) {
-//				alert("oops, node.uid is null");
-//			}
+			// if (!node.uid) {
+			// alert("oops, node.uid is null");
+			// }
 
 			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
 		},

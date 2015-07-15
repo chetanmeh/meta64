@@ -149,12 +149,17 @@ var edit = function() {
 
 		editMode : function() {
 			meta64.editMode = meta64.editMode ? false : true;
-			// setDataIconUsingId("#editModeButton", editMode ? "edit" :
-			// "forbidden");
 			var elm = $("#editModeButton");
 			elm.toggleClass("ui-icon-edit", meta64.editMode);
 			elm.toggleClass("ui-icon-forbidden", !meta64.editMode);
 			render.renderPageFromData();
+
+			/*
+			 * Since edit mode turns on lots of buttons, the location of the
+			 * node we are viewing can change so much it goes completely
+			 * offscreen out of view, so we scroll it back into view every time
+			 */
+			view.scrollToSelectedNode();
 		},
 
 		makeNodeReferencable : function() {
