@@ -322,10 +322,25 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
+		
+		boolean includeAcl = "y".equals(req.getIncludeAcl());
+		boolean includeOwners = "y".equals(req.getIncludeOwners());
+		
+		if (!includeAcl && !includeOwners) {
+			throw new Exception("no specific information requested for getNodePrivileges");
+		}
 
-		AccessControlEntry[] aclEntries = AccessControlUtil.getAccessControlEntries(session, node);
-		List<AccessControlEntryInfo> aclEntriesInfo = Convert.convertToAclListInfo(aclEntries);
-		res.setAclEntries(aclEntriesInfo);
+		if (includeAcl) {
+			AccessControlEntry[] aclEntries = AccessControlUtil.getAccessControlEntries(session, node);
+			List<AccessControlEntryInfo> aclEntriesInfo = Convert.convertToAclListInfo(aclEntries);
+			res.setAclEntries(aclEntriesInfo);
+		}
+		
+		if (includeOwners) {
+			List<String> owners = AccessControlUtil.getOwnerNames(session, node);
+			res.setOwners(owners);
+		}
+
 		res.setSuccess(true);
 		return res;
 	}
@@ -425,8 +440,9 @@ public class AppController {
 		String fileName = req.getSourceFileName();
 		if (fileName.toLowerCase().endsWith(".xml")) {
 			importExportService.importFromXml(session, req, res);
-			//It is not a mistake that there is no session.save() here. The import is using the workspace object
-			//which specifically documents that the saving on the session is not needed.
+			// It is not a mistake that there is no session.save() here. The import is using the
+			// workspace object
+			// which specifically documents that the saving on the session is not needed.
 		}
 		else if (fileName.toLowerCase().endsWith(".zip")) {
 			importExportService.importFromZip(session, req, res);

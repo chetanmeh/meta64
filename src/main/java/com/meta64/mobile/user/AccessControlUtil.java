@@ -1,6 +1,8 @@
 package com.meta64.mobile.user;
 
 import java.security.Principal;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -17,6 +19,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility methods for changing access controls on nodes. This means, who can read nodes, modify
  * nodes, etc. Standard access privileges.
+ * 
+ * http://jackrabbit.apache.org/oak/docs/security/accesscontrol/editing.html
  */
 public class AccessControlUtil {
 	private static final Logger log = LoggerFactory.getLogger(AccessControlUtil.class);
@@ -50,14 +54,73 @@ public class AccessControlUtil {
 			return true;
 		}
 		else {
-					
+
 		}
 
 		return false;
 	}
 
+	public static List<String> getOwnerNames(Session session, Node node) throws Exception {
+		
+		/* TODO: maybe use a set here to avoid duplidates! */
+		List<String> owners = new LinkedList<String>();
+
+		/*
+		 * We walk up the tree util we get to the root, or find ownership on node, or any of it's
+		 * parents
+		 */
+		try {
+			int sanityCheck = 0;
+			while (++sanityCheck < 50) {
+				List<Principal> principals = getNodePrincipals(session, node);
+				for (Principal p : principals) {
+					owners.add(p.getName());
+				}
+				
+				if (principals.size() == 0) {
+					node = node.getParent();
+				}
+				else {
+					break;
+				}
+			}
+		}
+		catch (Exception e) {
+			// not an error, just reached root.
+		}
+
+		return owners;
+	}
+
+	public static List<Principal> getNodePrincipals(Session session, Node node) throws Exception {
+		List<Principal> principals = new LinkedList<Principal>();
+		
+		AccessControlList acl = getAccessControlList(session, node);
+		if (acl != null) {
+			AccessControlEntry[] aclEntries = acl.getAccessControlEntries();
+			
+			if (aclEntries != null) {
+				for (AccessControlEntry aclEntry : aclEntries) {
+					for (Privilege priv : aclEntry.getPrivileges()) {
+						if ("jcr:all".equals(priv.getName())) {
+							principals.add(aclEntry.getPrincipal());
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return principals;
+	}
+
 	public static AccessControlEntry[] getAccessControlEntries(Session session, Node node) throws Exception {
 		AccessControlList acl = getAccessControlList(session, node);
+
+		if (acl != null) {
+			log.debug(dumpPrivileges(acl.getAccessControlEntries()));
+		}
+
 		return acl != null ? acl.getAccessControlEntries() : null;
 	}
 
@@ -92,6 +155,25 @@ public class AccessControlUtil {
 		/* No access control list found */
 		log.debug("No modifyable ACL found on node.");
 		return null;
+	}
+
+	public static String dumpPrivileges(AccessControlEntry[] aclEntries) {
+		StringBuilder sb = new StringBuilder();
+
+		if (aclEntries != null) {
+			for (AccessControlEntry aclEntry : aclEntries) {
+				sb.append("PRINCIPAL: ");
+				sb.append(aclEntry.getPrincipal().getName());
+				sb.append("[");
+				for (Privilege priv : aclEntry.getPrivileges()) {
+					sb.append(priv.getName());
+					sb.append(" ");
+				}
+				sb.append("]");
+			}
+		}
+
+		return sb.toString();
 	}
 
 	/* search for removePolicy in commented code below for a better way to do this */

@@ -60,7 +60,9 @@ var share = function() {
 
 	var _removePrivilegeResponse = function(res) {
 		util.json("getNodePrivileges", {
-			"nodeId" : _.sharingNode.path
+			"nodeId" : _.sharingNode.path,
+			"includeAcl" : "y",
+			"includeOwners" : "y"
 		}, _getNodePrivilegesResponse);
 	}
 
@@ -117,7 +119,9 @@ var share = function() {
 
 		reload : function() {
 			util.json("getNodePrivileges", {
-				"nodeId" : _.sharingNode.id
+				"nodeId" : _.sharingNode.id,
+				"includeAcl" : "y",
+				"includeOwners" : "y"
 			}, _getNodePrivilegesResponse);
 		}
 	};

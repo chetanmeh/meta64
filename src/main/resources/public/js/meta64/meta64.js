@@ -69,8 +69,6 @@ var meta64 = function() {
 
 		/*
 		 * determines if we should render all the editing buttons on each row
-		 * 
-		 * warning, doesn't currently support defaulting to true right here.
 		 */
 		editMode : false,
 
@@ -202,6 +200,30 @@ var meta64 = function() {
 				}
 			}
 			return selArray;
+		},
+
+		updateNodeInfoResponse : function(res, info) {
+			var ownerBuf = '';
+			$.each(res.owners, function(index, owner) {
+				if (ownerBuf.length > 0) {
+					ownerBuf += ",";
+				}
+				ownerBuf += owner;
+			});
+
+			if (ownerBuf.length > 0) {
+				$("#ownerDisplay" + info.node.uid).html("Owner: "+ownerBuf);
+			}
+		},
+
+		updateNodeInfo : function(node) {
+			util.json("getNodePrivileges", {
+				"nodeId" : node.id,
+				"includeAcl" : "n",
+				"includeOwners" : "y"
+			}, _.updateNodeInfoResponse, {
+				"node" : node
+			});
 		},
 
 		getPathOfUid : function(uid) {
@@ -534,8 +556,11 @@ var meta64 = function() {
 				console.log("initNode has null node");
 				return;
 			}
-			/* assign a property for detecting this node type, I'll do this instead of using some kind of custom 
-			 * JS prototype-related approach */
+			/*
+			 * assign a property for detecting this node type, I'll do this
+			 * instead of using some kind of custom JS prototype-related
+			 * approach
+			 */
 			node.uid = util.getUidForId(_.identToUidMap, node.id);
 			node.properties = props.setPreferredPropertyOrder(node.properties);
 

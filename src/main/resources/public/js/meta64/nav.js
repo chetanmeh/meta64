@@ -164,6 +164,10 @@ var nav = function() {
 			// }
 
 			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
+
+			if (meta64.editMode) {
+				meta64.updateNodeInfo(node);
+			}
 		},
 
 		openNode : function(uid) {

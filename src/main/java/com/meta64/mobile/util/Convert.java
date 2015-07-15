@@ -101,7 +101,7 @@ public class Convert {
 
 		/* node.hasNodes() won't work here, because the gui doesn't display nt:bin nodes as actual nodes */
 		boolean hasDisplayableNodes = hasDisplayableNodes(node);
-
+		
 		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), hasDisplayableNodes, false,
 				hasBinary, binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //

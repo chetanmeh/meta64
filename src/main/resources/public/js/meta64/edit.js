@@ -376,7 +376,6 @@ var edit = function() {
 		 * Generates all the HTML edit fields and puts them into the DOM model
 		 * of the property editor dialog box.
 		 * 
-		 * node is of type NodeInfo.java
 		 */
 		populateEditNodeDialog : function() {
 

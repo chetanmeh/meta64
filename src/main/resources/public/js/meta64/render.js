@@ -56,7 +56,7 @@ var render = function() {
 				var path = meta64.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
-				ret += "Path: " + _.formatPath(path) + "<br>";
+				ret += "Path: " + _.formatPath(path) + "<br><span id='ownerDisplay"+node.uid+"'></span>";
 			}
 
 			if (showIdentifier && meta64.editMode) {
