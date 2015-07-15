@@ -5,10 +5,6 @@ var nav = function() {
 
 	var _ = {
 
-		navScrollTop : function() {
-			scrollToTop();
-		},
-
 		displayingHome : function() {
 			if (meta64.isAnonUser) {
 				return meta64.currentNodeId === meta64.anonUserLandingPageNode;
@@ -144,6 +140,12 @@ var nav = function() {
 			}
 		},
 
+		simulateClickOnNodeRow : function(uid) {
+			var rowElmId = uid + "_row"
+			var rowElm = $("#" + rowElmId);
+			_.clickOnNodeRow(rowElm, uid);
+		},
+
 		clickOnNodeRow : function(rowElm, uid) {
 
 			_.unhighlightRow();
@@ -159,14 +161,19 @@ var nav = function() {
 			 * this page being the 'key')
 			 */
 			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-			// if (!node.uid) {
-			// alert("oops, node.uid is null");
-			// }
 
 			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
 
 			if (meta64.editMode) {
-				meta64.updateNodeInfo(node);
+
+				/*
+				 * if node.owner is currently null, that means we have not
+				 * retrieve the owner from the server yet, but if non-null it's
+				 * already displaying and we do nothing.
+				 */
+				if (!node.owner) {
+					meta64.updateNodeInfo(node);
+				}
 			}
 		},
 
@@ -178,7 +185,7 @@ var nav = function() {
 			if (!node) {
 				alert("Unknown nodeId in openNode: " + uid);
 			} else {
-				view.refreshTree(node.id);
+				view.refreshTree(node.id, false);
 			}
 		},
 

@@ -47,7 +47,7 @@ var attachment = function() {
 				contentType : false,
 				cache : false,
 				success : function() {
-					view.refreshTree();
+					view.refreshTree(null, false);
 					_.closeUploadDialog();
 				},
 				error : function() {

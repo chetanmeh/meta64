@@ -1,7 +1,7 @@
 console.log("running module: view.js");
 
 var view = function() {
-	
+
 	var _ = {
 		updateStatusBar : function() {
 			if (!meta64.currentNodeData)
@@ -18,29 +18,44 @@ var view = function() {
 
 			var visible = statusLine.length > 0;
 			util.setVisibility("#mainNodeStatusBar", visible);
-			
+
 			if (visible) {
 				util.getRequiredElement("#mainNodeStatusBar").html(statusLine);
-			} 
+			}
 		},
 
-		refreshTree : function(nodeId) {
+		refreshTree : function(nodeId, renderParentIfLeaf) {
 			if (!nodeId) {
 				nodeId = meta64.currentNodeId;
 			}
 
 			util.json("renderNode", {
 				"nodeId" : nodeId,
-			}, _.renderNodeResponse);
+				"renderParentIfLeaf" : renderParentIfLeaf ? true : false
+			}, _.renderNodeResponse, {
+				"nodeRenderedId" : nodeId
+			});
 		},
 
 		/*
 		 * data is instanceof RenderNodeResponse.java
 		 */
-		renderNodeResponse : function(data) {
-			//console.log("renderNode: " + JSON.stringify(data));
+		renderNodeResponse : function(data, info) {
+			// console.log("renderNode: " + JSON.stringify(data));
 			render.renderPageFromData(data);
-			_.scrollToSelectedNode(); //<------ was this missing for weeks and weeks????? how was it working?
+			
+			if (info && data.displayedParent) {
+				
+				//this sets the focused node using id
+				var node = meta64.getNodeFromId(info.nodeRenderedId);
+				meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
+				_.scrollToSelectedNode();
+				nav.simulateClickOnNodeRow(node.uid);
+			}
+			else {
+				util.scrollToTop();
+			}
+			
 			meta64.refreshAllGuiEnablement();
 		},
 

@@ -48,7 +48,7 @@ public class NodeRenderService {
 		res.setChildren(children);
 
 		String targetId = req.getNodeId();
-		//log.debug("renderNode targetId:" + targetId);
+		// log.debug("renderNode targetId:" + targetId);
 
 		Node node;
 		try {
@@ -58,6 +58,11 @@ public class NodeRenderService {
 			res.setMessage("Node not found.");
 			res.setSuccess(false);
 			return;
+		}
+
+		if (req.isRenderParentIfLeaf() && !Convert.hasDisplayableNodes(node)) {
+			res.setDisplayedParent(true);
+			req.setUpLevel(1);
 		}
 
 		int levelsUpRemaining = req.getUpLevel();

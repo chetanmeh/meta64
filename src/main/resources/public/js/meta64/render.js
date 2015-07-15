@@ -384,6 +384,7 @@ var render = function() {
 
 			if (newData) {
 				meta64.uidToNodeMap = {};
+				meta64.idToNodeMap = {};
 				meta64.initNode(data.node);
 				meta64.setCurrentNodeData(data);
 			}

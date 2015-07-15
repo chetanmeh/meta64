@@ -1,5 +1,7 @@
 package com.meta64.mobile.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RenderNodeRequest {
 
 	/* can be node id or path. server interprets correctly no matter which */
@@ -10,6 +12,7 @@ public class RenderNodeRequest {
 	 * render at nodeId itself
 	 */
 	private int upLevel;
+	private boolean renderParentIfLeaf;
 
 	public String getNodeId() {
 		return nodeId;
@@ -25,5 +28,14 @@ public class RenderNodeRequest {
 
 	public void setUpLevel(int upLevel) {
 		this.upLevel = upLevel;
+	}
+
+	@JsonProperty(required = false)
+	public boolean isRenderParentIfLeaf() {
+		return renderParentIfLeaf;
+	}
+
+	public void setRenderParentIfLeaf(boolean renderParentIfLeaf) {
+		this.renderParentIfLeaf = renderParentIfLeaf;
 	}
 }

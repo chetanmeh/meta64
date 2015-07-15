@@ -6,7 +6,7 @@ var prefs = function() {
 		savePreferences : function() {
 			meta64.editModeOption = $("#editModeSimple").is(":checked") ? meta64.MODE_SIMPLE : meta64.MODE_ADVANCED;
 
-			view.refreshTree();
+			view.refreshTree(null, false);
 			$.mobile.changePage("#mainPage");
 			view.scrollToSelectedNode();
 		},

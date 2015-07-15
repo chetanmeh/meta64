@@ -39,6 +39,11 @@ var meta64 = function() {
 		 * 'hashCode' on Java objects.
 		 */
 		uidToNodeMap : {},
+		
+		/*
+		 * maps node.id values to NodeInfo.java objects 
+		 */
+		idToNodeMap : {},
 
 		/* counter for local uids */
 		nextUid : 1,
@@ -212,6 +217,7 @@ var meta64 = function() {
 			});
 
 			if (ownerBuf.length > 0) {
+				info.node.owner = ownerBuf;
 				$("#ownerDisplay" + info.node.uid).html("Owner: "+ownerBuf);
 			}
 		},
@@ -226,6 +232,11 @@ var meta64 = function() {
 			});
 		},
 
+		/* Returns the node with the given node.id value */
+		getNodeFromId : function(id) {
+			return _.idToNodeMap[id];
+		},
+		
 		getPathOfUid : function(uid) {
 			var node = _.uidToNodeMap[uid];
 			if (!node) {
@@ -566,6 +577,7 @@ var meta64 = function() {
 
 			// console.log("******* initNode uid=" + node.uid);
 			_.uidToNodeMap[node.uid] = node;
+			_.idToNodeMap[node.id] = node;
 		},
 
 		initApp : function() {

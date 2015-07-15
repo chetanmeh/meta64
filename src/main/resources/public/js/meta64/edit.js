@@ -10,7 +10,7 @@ var edit = function() {
 	var _saveNodeResponse = function(res) {
 		util.checkSuccess("Save node", res);
 
-		view.refreshTree();
+		view.refreshTree(null, false);
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
@@ -26,7 +26,7 @@ var edit = function() {
 	var _importResponse = function(res) {
 		if (util.checkSuccess("Import", res)) {
 			alert("Import Successful.");
-			view.refreshTree();
+			view.refreshTree(null, false);
 			$.mobile.changePage("#mainPage");
 			view.scrollToSelectedNode();
 		}
@@ -36,27 +36,27 @@ var edit = function() {
 		console.log("insertBookResponse running.");
 
 		util.checkSuccess("Insert Book", res);
-		view.refreshTree();
+		view.refreshTree(null, false);
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
 	var _deleteNodesResponse = function(res) {
 		util.checkSuccess("Delete node", res);
-		view.refreshTree();
+		view.refreshTree(null, false);
 	}
 
 	var _moveNodesResponse = function(res) {
 		util.checkSuccess("Move nodes", res);
 
 		_.nodesToMove = null; // reset
-		view.refreshTree();
+		view.refreshTree(null, false);
 	}
 
 	var _setNodePositionResponse = function(res) {
 		util.checkSuccess("Change node position", res);
 
-		view.refreshTree();
+		view.refreshTree(null, false);
 		$.mobile.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
@@ -180,7 +180,7 @@ var edit = function() {
 				 */
 				// console.log("cancel edit, detected dirty, and will call
 				// server.");
-				view.refreshTree();
+				view.refreshTree(null, false);
 
 				/*
 				 * if I had the logic in place to simply update client variables

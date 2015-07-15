@@ -164,10 +164,10 @@ var srch = function() {
 			var openButton = render.makeTag("a", {
 				"onClick" : "srch.clickSearchNode('" + uid + "');",
 				"data-role" : "button",
-				"data-icon" : "plus",
+				"data-icon" : "carat-l",
 				"data-theme" : "b"
 			}, //
-			"Show");
+			"Go to Node");
 
 			return render.makeHorizontalFieldSet(openButton);
 		},
@@ -186,9 +186,7 @@ var srch = function() {
 			 * persist it for later
 			 */
 			srch.highlightRowNode = srch.uidToNodeMap[uid];
-			
-			view.refreshTree(srch.highlightRowNode.id);
-			
+			view.refreshTree(srch.highlightRowNode.id, true);
 			$.mobile.changePage("#");
 		},
 

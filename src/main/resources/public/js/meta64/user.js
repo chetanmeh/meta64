@@ -35,7 +35,7 @@ var user = function() {
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 
 			_setStateVarsUsingLoginResponse(res);
-			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId);
+			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId, false);
 			_setTitleUsingLoginResponse(res);
 		} else {
 			if (info.usingCookies) {
