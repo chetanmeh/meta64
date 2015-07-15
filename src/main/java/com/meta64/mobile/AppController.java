@@ -615,7 +615,6 @@ public class AppController {
 				String dstPath = targetPath + "/" + node.getName();
 				// log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
 				session.move(srcPath, dstPath);
-
 				// session.save();
 
 				/*
