@@ -295,14 +295,17 @@ var render = function() {
 					}
 				}
 
-				/* Construct Create Subnode Button */
-				editNodeSharingButton = _.makeTag("a", //
-				{
-					"onClick" : "share.editNodeSharing('" + uid + "');",
-					"data-role" : "button",
-					"data-mini" : mini,
-					"data-icon" : "eye"
-				}, "Share");
+				/* 
+				 * Decided to make this visible only from main menu link
+				 * 
+				 * Construct Create Subnode Button */
+//				editNodeSharingButton = _.makeTag("a", //
+//				{
+//					"onClick" : "share.editNodeSharingRowClick('" + uid + "');",
+//					"data-role" : "button",
+//					"data-mini" : mini,
+//					"data-icon" : "eye"
+//				}, "Share");
 			}
 
 			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton + uploadButton

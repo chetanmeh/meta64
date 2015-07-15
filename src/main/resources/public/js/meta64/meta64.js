@@ -355,6 +355,10 @@ var meta64 = function() {
 				"name" : "manageAttachments",
 				"enable" : true,
 				"function" : attachment.openUploadDialogMenuClick
+			}, {
+				"name" : "editNodeSharing",
+				"enable" : true,
+				"function" : share.editNodeSharingMenuClick
 			});
 
 			// hookSliderChanges("editMode");
@@ -404,7 +408,9 @@ var meta64 = function() {
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 
+			/* Actions that depend on having a highlighted node */
 			util.setEnablementByName("manageAttachments", highlightNode != null);
+			util.setEnablementByName("editNodeSharing", highlightNode != null);
 		},
 
 		/*
