@@ -1,5 +1,5 @@
 ## Meta64: An Open-Source Portal and Content Repository
-An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is a platform for building portals around any kind of content. The technology is a "portal platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, as well as a Social Media-type feature set similar to Facebook. If you don't like the name meta64, that's ok, the **portal system is "Brandable"** which means you can put your own brand images and logo text on the app and it will not have meta64 mentioned anywhere on it. 
+An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is a platform for building portals around any kind of content. The technology is a "portal platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, as well as a Social Media-type feature set similar to Facebook. 
 
 On GitHub.com -> https://github.com/Clay-Ferguson/meta64
 

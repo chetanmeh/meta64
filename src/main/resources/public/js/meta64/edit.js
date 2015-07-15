@@ -632,7 +632,7 @@ var edit = function() {
 				 * moved nodes.
 				 */
 				util.json("moveNodes", {
-					"targetNodeId" : highlightNode.id, //meta64.currentNodeId,
+					"targetNodeId" : highlightNode.id, 
 					"targetChildId" : highlightNode != null ? highlightNode.id : null,
 					"nodeIds" : _.nodesToMove
 				}, _moveNodesResponse);
