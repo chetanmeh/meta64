@@ -472,7 +472,7 @@ var render = function() {
 
 			rowCount++; // warning: this is the local variable/parameter
 			var row = _.renderNodeAsListItem(node, i, childCount, rowCount);
-			console.log("row[" + rowCount + "]=" + row);
+			//console.log("row[" + rowCount + "]=" + row);
 			return row;
 		},
 

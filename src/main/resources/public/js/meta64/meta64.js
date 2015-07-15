@@ -395,8 +395,7 @@ var meta64 = function() {
 			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
 			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
-			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser);
-
+			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser); 
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 		},

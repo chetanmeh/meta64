@@ -23,8 +23,7 @@ https://code.google.com/p/pagedown/
 This is a javascript port of Markdown, as used on Stack Overflow and the rest of Stack Exchange network. Largely based on showdown.js by John Fraser (Attacklab), and original Markdown Copyright (c) 2004-2005 by John Gruber
 http://daringfireball.net/projects/markdown/
 
-
-## JavaScript Caching Mechanism
+## IMPORTANT!!! - JavaScript Caching Mechanism
 
 To understand how cache lifetime is managed for JS files see the following: *SpringMvcUtil.addJsFileNameProps*. In general the approach is to leave the JS files always the same, but to use a different URL parameter to be able to control which files are read from the browser cach v.s. downloaded new. Each JS url looks something like this:
 

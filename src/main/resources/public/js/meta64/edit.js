@@ -347,7 +347,7 @@ var edit = function() {
 			}
 
 			if (highlightNode) {
-				util.json("importFromXml", {
+				util.json("import", {
 					"nodeId" : highlightNode.id,
 					"sourceFileName" : sourceFileName
 				}, _importResponse);

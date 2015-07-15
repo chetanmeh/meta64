@@ -24,9 +24,14 @@ var user = function() {
 	/* ret is LoginResponse.java */
 	var _loginResponse = function(res, info) {
 		if (util.checkSuccess("Login", res)) {
-			//console.log("info.usr=" + info.usr + " homeNodeOverride: " + res.homeNodeOverride);
-			$.cookie("loginUsr", info.usr);
-			$.cookie("loginPwd", info.pwd);
+			// console.log("info.usr=" + info.usr + " homeNodeOverride: " +
+			// res.homeNodeOverride);
+
+			if (info.usr != "anonymous") {
+				_.writeCookie("loginUsr", info.usr);
+				_.writeCookie("loginPwd", info.pwd);
+			}
+
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 
 			_setStateVarsUsingLoginResponse(res);
@@ -34,7 +39,7 @@ var user = function() {
 			_setTitleUsingLoginResponse(res);
 		} else {
 			if (info.usingCookies) {
-				alert("Cookie login failed. Removing cookies.");
+				alert("Cookie login failed.");
 
 				/*
 				 * blow away failed cookie credentials and reload page, should
@@ -76,6 +81,14 @@ var user = function() {
 	}
 
 	var _ = {
+		/* Write a cookie that expires in a year for all paths */
+		writeCookie : function(name, val) {
+			$.cookie(name, val, {
+				expires : 365,
+				path : '/'
+			});
+		},
+
 		populateLoginDialogFromCookies : function() {
 			var usr = $.cookie("loginUsr");
 			var pwd = $.cookie("loginPwd");
@@ -140,7 +153,7 @@ var user = function() {
 			var pwd = $.cookie("loginPwd");
 
 			var usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
-			//console.log("usingCookies = " + usingCookies);
+			console.log("cookieUser=" + usr + " usingCookies = " + usingCookies);
 			/*
 			 * Session is a special indicator that tells server to just attempt
 			 * the login from the session varibles. perhaps I should have added
@@ -150,7 +163,7 @@ var user = function() {
 			var callUsr = usr ? usr : "{session}";
 			var callPwd = pwd ? pwd : "{session}";
 
-			//console.log("refreshLogin with name: " + callUsr);
+			// console.log("refreshLogin with name: " + callUsr);
 
 			util.json("login", {
 				"userName" : callUsr,

@@ -167,7 +167,8 @@ public class AppController {
 		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
-				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", "share", "user", "util", "view");
+				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", //
+				"share", "user", "util", "view", "constant");
 
 		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), //
 				"meta64");
@@ -408,10 +409,10 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/importFromXml", method = RequestMethod.POST)
+	@RequestMapping(value = REST_PATH + "/import", method = RequestMethod.POST)
 	@OakSession
-	public @ResponseBody ImportResponse importFromXml(@RequestBody ImportRequest req) throws Exception {
-		logRequest("importFromXml", req);
+	public @ResponseBody ImportResponse importFromFile(@RequestBody ImportRequest req) throws Exception {
+		logRequest("impor", req);
 
 		ImportResponse res = new ImportResponse();
 		ThreadLocals.setResponse(res);

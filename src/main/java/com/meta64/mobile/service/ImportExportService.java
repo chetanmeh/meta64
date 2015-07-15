@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -240,8 +241,44 @@ public class ImportExportService {
 
 			Node newNode = ensureNodeExistsForZipFolder(importNode, name, session);
 			String val = buffer.toString();
-			newNode.setProperty("jcr:content", val);
+
+			/*
+			 * I had a special need to rip HTML tags out of the data I was importing, so I'm
+			 * commenting out this hack but leaving it in place so show where and how you can do
+			 * some processing of the data as it's imported. Ideally of course this capability would
+			 * be some kind of "extension point" (Eclipse plugin terminology) in a production JCR
+			 * Browder for filteringinput data, or else this entire class could be pluggable via
+			 * inteface and IoC.
+			 */
+			// val = val.replace("<p>", "\n\n");
+			// val = val.replace("<br>", "\n");
+			// val = ripTags(val);
+			newNode.setProperty("jcr:content", val.trim());
 		}
+	}
+
+	public static String ripTags(String text) {
+		StringTokenizer t = new StringTokenizer(text, "<>", true);
+		String token;
+		boolean inTag = false;
+		StringBuilder ret = new StringBuilder();
+
+		while (t.hasMoreTokens()) {
+			token = t.nextToken();
+			if (token.equals("<")) {
+				inTag = true;
+			}
+			else if (token.equals(">")) {
+				inTag = false;
+			}
+			else {
+				if (!inTag) {
+					ret.append(token);
+				}
+			}
+		}
+
+		return ret.toString();
 	}
 
 	/*
