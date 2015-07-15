@@ -224,7 +224,7 @@ public class ImportExportService {
 		 * this file name hack and let the system be smarter and actually check MIME types using
 		 * file name extensions and import binaries properly etc.
 		 */
-		if (name.endsWith("/content.html") || name.endsWith("/content.txt")) {
+		//if (name.endsWith("/content.html") || name.endsWith("/content.txt")) {
 
 			StringBuilder buffer = new StringBuilder();
 			synchronized (byteBuf) {
@@ -254,7 +254,7 @@ public class ImportExportService {
 			// val = val.replace("<br>", "\n");
 			// val = ripTags(val);
 			newNode.setProperty("jcr:content", val.trim());
-		}
+		//}
 	}
 
 	public static String ripTags(String text) {

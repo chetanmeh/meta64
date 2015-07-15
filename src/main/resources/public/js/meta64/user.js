@@ -101,7 +101,11 @@ var user = function() {
 		},
 
 		openLoginDialog : function() {
-			user.populateLoginDialogFromCookies();
+			_.populateLoginDialogFromCookies();
+			
+			/* make credentials visible only if not logged in */
+			util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
+			
 			$.mobile.changePage("#loginDialogId");
 		},
 

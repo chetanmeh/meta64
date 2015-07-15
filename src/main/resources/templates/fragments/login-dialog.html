@@ -9,24 +9,28 @@
 		</div>
 		<div role="main" class="ui-content">
 
-			<div class="ui-field-contain">
+			<div class="ui-field-contain" id="loginCredentialFields">
 				<label for="userName">User:</label>
 				<!--  -->
-				<input type="text" name="userName" id="userName" value="" />
-			</div>
-			<div class="ui-field-contain">
-				<label for="password">Password:</label>
+				<input type="text" name="userName" id="userName" value="" /> <label
+					for="password">Password:</label>
 				<!--  -->
 				<input type="password" name="password" id="password" value="" />
 			</div>
 
 			<div data-type="horizontal" data-role="controlgroup">
-				<a id="loginButton" data-theme="b" data-role="button">Login</a> <a
-					id="logoutButton" data-role="button">Logout</a> <a
-					href="#signupDialog" data-rel="dialog" data-role="button"
-					data-transition="pop">Signup</a> <a href="#"
-					id="cancelLoginActionButton" data-rel="back" data-theme="a"
-					data-role="button">Cancel</a>
+				<a id="loginButton" data-theme="b" data-role="button">Login</a>
+
+				<!--  -->
+				<a id="logoutButton" data-theme="b" data-role="button">Logout</a>
+
+				<!--  -->
+				<a href="#signupDialog" data-rel="dialog" data-role="button"
+					data-transition="pop">Signup</a>
+
+				<!--  -->
+				<a href="#" id="cancelLoginActionButton" data-rel="back"
+					data-theme="a" data-role="button">Cancel</a>
 			</div>
 
 		</div>
