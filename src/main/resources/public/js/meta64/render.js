@@ -234,14 +234,21 @@ var render = function() {
 			}
 
 			if (meta64.editMode && editingAllowed) {
-				/* Construct Create Subnode Button */
-				deleteNodeButton = _.makeTag("a", //
-				{
-					"onClick" : "edit.deleteNode('" + uid + "');",
-					"data-role" : "button",
-					"data-mini" : mini,
-					"data-icon" : "delete"
-				}, "Del");
+				/* 
+				 * I decided having delete menu option is better and rendering a delete button on each row
+				 * was just extra load and complexity on the browser rendering engine, and clutter for the user.
+				 * (Leaving code intact instead of deleting, for now)
+				 * 
+				 * Construct Create Subnode Button  
+				 * 
+				 */
+//				deleteNodeButton = _.makeTag("a", //
+//				{
+//					"onClick" : "edit.deleteNodeRowClick('" + uid + "');",
+//					"data-role" : "button",
+//					"data-mini" : mini,
+//					"data-icon" : "delete"
+//				}, "Del");
 
 				/* Construct Create Subnode Button */
 				editNodeButton = _.makeTag("a", //

@@ -582,13 +582,13 @@ var edit = function() {
 			_.nodeInsertTarget = null;
 			_.startEditingNewNode();
 		},
-
+		
 		/*
 		 * Delete the single node identified by 'uid' parameter if uid parameter
 		 * is passed, and if uid parameter is not passed then use the node
 		 * selections for multiple selections on the page.
 		 */
-		deleteNode : function(uid) {
+		deleteNodeRowClick : function(uid) {
 
 			var node = meta64.uidToNodeMap[uid];
 			var selNodesArray = [];
