@@ -114,19 +114,6 @@ var share = function() {
 			_.sharingNode = node;
 			_.reload();
 		},
-		
-		/*
-		 * Handles 'Sharing' button on a specific node, from button bar above
-		 * node display in edit mode
-		 */
-		editNodeSharingRowClick : function(uid) {
-			_.sharingNode = meta64.uidToNodeMap[uid];
-			if (_.sharingNode == null) {
-				alert("Unable to edit node: uid=" + uid);
-			}
-
-			_.reload();
-		},
 
 		reload : function() {
 			util.json("getNodePrivileges", {

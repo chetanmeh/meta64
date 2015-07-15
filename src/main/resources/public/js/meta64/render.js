@@ -177,8 +177,8 @@ var render = function() {
 			/* TODO: make this a user option, each user can choose button sizes */
 			var mini = "true";
 
-			var openButton = selButton = createSubNodeButton = deleteNodeButton = editNodeButton = //
-			moveNodeUpButton = moveNodeDownButton = insertNodeButton = editNodeSharingButton = uploadButton = '';
+			var openButton = selButton = createSubNodeButton = editNodeButton = //
+			moveNodeUpButton = moveNodeDownButton = insertNodeButton = '';
 
 			/* Construct Open Button */
 			if (_.nodeHasChildren(uid)) {
@@ -234,22 +234,7 @@ var render = function() {
 			}
 
 			if (meta64.editMode && editingAllowed) {
-				/* 
-				 * I decided having delete menu option is better and rendering a delete button on each row
-				 * was just extra load and complexity on the browser rendering engine, and clutter for the user.
-				 * (Leaving code intact instead of deleting, for now)
-				 * 
-				 * Construct Create Subnode Button  
-				 * 
-				 */
-//				deleteNodeButton = _.makeTag("a", //
-//				{
-//					"onClick" : "edit.deleteNodeRowClick('" + uid + "');",
-//					"data-role" : "button",
-//					"data-mini" : mini,
-//					"data-icon" : "delete"
-//				}, "Del");
-
+				
 				/* Construct Create Subnode Button */
 				editNodeButton = _.makeTag("a", //
 				{
@@ -258,17 +243,6 @@ var render = function() {
 					"data-mini" : mini,
 					"data-icon" : "edit"
 				}, "Edit");
-
-				/*
-				 * Moved to Dropdown Menu only for now (TODO: get rid of uploadButton var here some day, it's dead)
-				 * 
-				 * Construct Create Subnode Button 
-				 * 
-				 * uploadButton = _.makeTag("a", // {
-				 * "onClick" : "attachment.openUploadDialogRowClick('" + uid + "');",
-				 * "data-role" : "button", "data-mini" : mini, "data-icon" :
-				 * "action" }, "Upload");
-				 */
 
 				if (meta64.currentNode.childrenOrdered) {
 
@@ -294,22 +268,10 @@ var render = function() {
 						}, "Dn");
 					}
 				}
-
-				/* 
-				 * Decided to make this visible only from main menu link
-				 * 
-				 * Construct Create Subnode Button */
-//				editNodeSharingButton = _.makeTag("a", //
-//				{
-//					"onClick" : "share.editNodeSharingRowClick('" + uid + "');",
-//					"data-role" : "button",
-//					"data-mini" : mini,
-//					"data-icon" : "eye"
-//				}, "Share");
 			}
 
-			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton + uploadButton
-					+ deleteNodeButton + moveNodeUpButton + moveNodeDownButton + editNodeSharingButton;
+			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton 
+				 + moveNodeUpButton + moveNodeDownButton;
 
 			if (allButtons.length > 0) {
 				return _.makeHorizontalFieldSet(allButtons);

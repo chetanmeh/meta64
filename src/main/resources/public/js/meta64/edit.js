@@ -582,25 +582,6 @@ var edit = function() {
 			_.nodeInsertTarget = null;
 			_.startEditingNewNode();
 		},
-		
-		/*
-		 * Delete the single node identified by 'uid' parameter if uid parameter
-		 * is passed, and if uid parameter is not passed then use the node
-		 * selections for multiple selections on the page.
-		 */
-		deleteNodeRowClick : function(uid) {
-
-			var node = meta64.uidToNodeMap[uid];
-			var selNodesArray = [];
-			selNodesArray[0] = node.id;
-
-			util.areYouSure("Confirm Delete", "Delete node ?", "Yes, delete.", function() {
-
-				util.json("deleteNodes", {
-					"nodeIds" : selNodesArray
-				}, _deleteNodesResponse);
-			});
-		},
 
 		/*
 		 * Delete the single node identified by 'uid' parameter if uid parameter

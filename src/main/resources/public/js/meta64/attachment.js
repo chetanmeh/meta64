@@ -75,24 +75,6 @@ var attachment = function() {
 			_.populateUploadDialog();
 			$.mobile.changePage("#uploadDialog");
 		},
-
-		/*
-		 * function no longer used but do not delete yet.
-		 * 
-		 */
-		// openUploadDialogRowClick : function(uid) {
-		// var node = node = meta64.uidToNodeMap[uid];
-		//			
-		// if (!node) {
-		// _.uploadNode = null;
-		// alert("Unknown nodeId in upload: " + uid);
-		// return;
-		// }
-		//
-		// _.uploadNode = node;
-		// _.populateUploadDialog();
-		// $.mobile.changePage("#uploadDialog");
-		// },
 		
 		closeUploadDialog : function() {
 			$.mobile.changePage("#mainPage");
