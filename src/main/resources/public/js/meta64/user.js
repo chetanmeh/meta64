@@ -28,8 +28,8 @@ var user = function() {
 			// res.homeNodeOverride);
 
 			if (info.usr != "anonymous") {
-				_.writeCookie("loginUsr", info.usr);
-				_.writeCookie("loginPwd", info.pwd);
+				_.writeCookie(cnst.COOKIE_LOGIN_USR, info.usr);
+				_.writeCookie(cnst.COOKIE_LOGIN_PWD, info.pwd);
 			}
 
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
@@ -45,8 +45,8 @@ var user = function() {
 				 * blow away failed cookie credentials and reload page, should
 				 * result in brand new page load as anon user.
 				 */
-				$.removeCookie("loginUsr");
-				$.removeCookie("loginPwd");
+				$.removeCookie(cnst.COOKIE_LOGIN_USR);
+				$.removeCookie(cnst.COOKIE_LOGIN_PWD);
 				location.reload();
 			}
 		}
@@ -90,8 +90,8 @@ var user = function() {
 		},
 
 		populateLoginDialogFromCookies : function() {
-			var usr = $.cookie("loginUsr");
-			var pwd = $.cookie("loginPwd");
+			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
+			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
 			if (usr) {
 				$("#userName").val(usr);
 			}
@@ -153,8 +153,8 @@ var user = function() {
 
 		refreshLogin : function() {
 
-			var usr = $.cookie("loginUsr");
-			var pwd = $.cookie("loginPwd");
+			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
+			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
 
 			var usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
 			console.log("cookieUser=" + usr + " usingCookies = " + usingCookies);
@@ -214,8 +214,8 @@ var user = function() {
 			 * client computer from being able to just automatically log in
 			 * again, which seems like the behavior I'd like.
 			 */
-			$.removeCookie("loginUsr");
-			$.removeCookie("loginPwd");
+			$.removeCookie(cnst.COOKIE_LOGIN_USR);
+			$.removeCookie(cnst.COOKIE_LOGIN_PWD);
 
 			util.json("logout", {}, _logoutResponse);
 		},

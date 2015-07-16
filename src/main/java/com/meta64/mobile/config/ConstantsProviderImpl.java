@@ -23,9 +23,17 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 
 	@Value("${metaRestPath}")
 	private String metaRestPath;
+	
+	@Value("${cookiePrefix}")
+	private String cookiePrefix;
 
 	@Override
 	public String getRestUrl() {
 		return "http://" + metaHost + ":" + serverPort + metaRestPath;
+	}
+	
+	@Override
+	public String getCookiePrefix() {
+		return cookiePrefix;
 	}
 }

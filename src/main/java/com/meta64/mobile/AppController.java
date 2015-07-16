@@ -168,7 +168,7 @@ public class AppController {
 
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", //
-				"share", "user", "util", "view", "constant");
+				"share", "user", "util", "view", "cnst");
 
 		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), //
 				"meta64");

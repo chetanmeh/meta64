@@ -11,9 +11,9 @@
 
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	//var postTargetUrl = /*[[${@constantsProvider.getRestUrl()}]]*/"";
+	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
 	var postTargetUrl = window.location.origin + "/mobile/rest/";
-	//console.log("REST HOST: " + postTargetUrl);
+	//console.log("CookiePrefix[" + cookiePrefix + "]");
 	/*]]>*/
 </script>
 
@@ -78,7 +78,7 @@
 	th:src="@{${searchJs}}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{${constantJs}}"></script>
+	th:src="@{${cnstJs}}"></script>
 
 </head>
 
