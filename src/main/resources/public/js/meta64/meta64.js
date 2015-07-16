@@ -206,6 +206,10 @@ var meta64 = function() {
 			}
 			return selArray;
 		},
+		
+		clearSelectedNodes : function() {
+			_.selectedNodes = {};
+		},
 
 		updateNodeInfoResponse : function(res, info) {
 			var ownerBuf = '';

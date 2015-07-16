@@ -42,8 +42,10 @@ var edit = function() {
 	}
 
 	var _deleteNodesResponse = function(res) {
-		util.checkSuccess("Delete node", res);
-		view.refreshTree(null, false);
+		if (util.checkSuccess("Delete node", res)) {
+			meta64.clearSelectedNodes();
+			view.refreshTree(null, false);
+		}
 	}
 
 	var _moveNodesResponse = function(res) {
@@ -632,7 +634,7 @@ var edit = function() {
 				 * moved nodes.
 				 */
 				util.json("moveNodes", {
-					"targetNodeId" : highlightNode.id, 
+					"targetNodeId" : highlightNode.id,
 					"targetChildId" : highlightNode != null ? highlightNode.id : null,
 					"nodeIds" : _.nodesToMove
 				}, _moveNodesResponse);
