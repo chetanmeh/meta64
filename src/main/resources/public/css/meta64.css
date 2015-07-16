@@ -7,12 +7,11 @@
 .privilege-list {
 }
 
-.binary-link {
-	
+.binary-link {	
 }
 
 .privilege-entry {
-	margin-left: 1em;
+	margin: 1em;
 	background: lightGray;
 	border-bottom: 1px solid #d6d6d6;
 }

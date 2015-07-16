@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<body>
+	<div data-role="page" id="shareNodeToPersonDialog">
+		<div data-role="header">
+			<h2>Share Node with Person</h2>
+		</div>
+		<div role="main" class="ui-content">
+
+			Enter the username of the person you want to share this node with:
+			
+			<div class="ui-field-contain">
+				<label for="shareToUserName">User to Share With:</label>
+				<!--  -->
+				<input type="text" name="shareToUserName" id="shareToUserName" value="" /> 
+			</div>
+
+			<div data-type="horizontal" data-role="controlgroup">
+				<a id="shareNodeToPersonButton" data-theme="b" data-role="button">Share</a>
+
+				<!--  -->
+				<a href="#" id="cancelShareToPersonActionButton" data-rel="back"
+					data-theme="a" data-role="button">Cancel</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

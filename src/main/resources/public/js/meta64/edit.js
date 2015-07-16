@@ -458,7 +458,7 @@ var edit = function() {
 							"Add Multi");
 						}
 
-						var allButtons = /* selButton + */addMultiButton + clearButton + deleteButton;
+						var allButtons = addMultiButton + clearButton + deleteButton;
 						if (allButtons.length > 0) {
 							buttonBar = render.makeHorizontalFieldSet(allButtons);
 						} else {

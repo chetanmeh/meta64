@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.spi.security.principal.EveryonePrincipal;
+import org.apache.jackrabbit.oak.spi.security.principal.PrincipalImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -358,19 +359,19 @@ public class AppController {
 		Node node = JcrUtil.findNode(session, nodeId);
 
 		String principal = req.getPrincipal();
-		String privilege = req.getPrivilege();
+		List<String> privileges = req.getPrivileges();
 		Principal principalObj = null;
 
 		if (principal.equalsIgnoreCase("everyone")) {
 			principalObj = EveryonePrincipal.getInstance();
 		}
 		else {
-			throw new Exception("Code not yet able to handle non-everyone principle privilege adds.");
+			principalObj = new PrincipalImpl(principal);
 		}
 
 		boolean success = false;
 		try {
-			success = AccessControlUtil.grantPrivileges(session, node, principalObj, privilege);
+			success = AccessControlUtil.grantPrivileges(session, node, principalObj, privileges);
 		}
 		catch (Exception e) {
 			// leave success==false and continue.

@@ -13,6 +13,7 @@ import javax.jcr.security.AccessControlPolicy;
 import javax.jcr.security.AccessControlPolicyIterator;
 import javax.jcr.security.Privilege;
 
+import org.apache.jackrabbit.oak.spi.security.principal.PrincipalImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,20 +30,31 @@ public class AccessControlUtil {
 		if (name.equalsIgnoreCase("read") || name.equalsIgnoreCase("jcr:read")) {
 			return Privilege.JCR_READ;
 		}
+		if (name.equalsIgnoreCase("write")) {
+			return Privilege.JCR_WRITE;
+		}
+		if (name.equalsIgnoreCase("addChildren")) {
+			return Privilege.JCR_ADD_CHILD_NODES;
+		}
+		if (name.equalsIgnoreCase("nodeTypeManagement")) {
+			return Privilege.JCR_NODE_TYPE_MANAGEMENT;
+		}
 		return name;
 	}
 
-	public static Privilege[] makePrivilegesFromNames(AccessControlManager acMgr, String[] names) throws Exception {
-		Privilege[] privileges = new Privilege[names.length];
-		int idx = 0;
+	public static Privilege[] makePrivilegesFromNames(AccessControlManager acMgr, List<String> names) throws Exception {
+		List<Privilege> privileges = new LinkedList<Privilege>();
+		
 		for (String name : names) {
 			name = interpretPrivilegeName(name);
-			privileges[idx++] = acMgr.privilegeFromName(name);
+			privileges.add(acMgr.privilegeFromName(name));
 		}
-		return privileges;
+		
+		Privilege[] privArr = new Privilege[privileges.size()];
+		return privileges.toArray(privArr);
 	}
 
-	public static boolean grantPrivileges(Session session, Node node, Principal principal, String... privilegeNames) throws Exception {
+	public static boolean grantPrivileges(Session session, Node node, Principal principal, List<String> privilegeNames) throws Exception {
 
 		AccessControlManager acMgr = session.getAccessControlManager();
 		AccessControlList acl = getAccessControlList(session, node);
@@ -54,10 +66,8 @@ public class AccessControlUtil {
 			return true;
 		}
 		else {
-
+			throw new Exception("Unable to find AccessControlList");
 		}
-
-		return false;
 	}
 
 	public static List<String> getOwnerNames(Session session, Node node) throws Exception {
@@ -227,8 +237,10 @@ public class AccessControlUtil {
 	}
 
 	public static boolean grantFullAccess(Session session, Node node, final String ownerName) throws Exception {
-		Principal principal = new CustomPrincipal(ownerName);
-		return grantPrivileges(session, node, principal, Privilege.JCR_ALL);
+		Principal principal = new PrincipalImpl(ownerName);
+		List<String> privs = new LinkedList<String>();
+		privs.add(Privilege.JCR_ALL);
+		return grantPrivileges(session, node, principal, privs);
 	}
 
 	//

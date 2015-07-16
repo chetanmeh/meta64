@@ -52,7 +52,9 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Full text search
 * Deleting Nodes
 * Moving nodes to new locations (supports multi-select)
-* Sharing a node as Public, and removing shares
+* Sharing a node as Public
+* Sharing a node to a specific User
+* Removing individual Share privileges from nodes
 * Short URL GUID for any node, so it can be referenced by URL
 * Uploading attachments (attached files) onto a node
 * Deleting node attachments
@@ -70,21 +72,18 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 ## Next Features to be Developed
 Listed here in the order they will likely be developed...
 
-* Need mode that can toggle on/off quickly that makes each row show owner's name, and last update time.
 * Implement "soft branding" so that basically the app name comes out of a properties file so admins can name their portal however they want and it won't look like it's meta64. Fully "Brandable"
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
 * Need to encrypt password cookie on client.
 * Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows walking of **one** page per user, and have a standard of like /user/home being the folder that users can create
 that will be 'searchable' on google.
 * Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder.
-* Ability to share node with **specific** user.
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
 * Display images at smaller sizes, with click to enlarge capability. Currently all images are displayed at their actual size.
 * Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
 * Email notification engine to support collaboration
-* RSS Feeds for node changes
 * More JUnit unit tests.
 
 ## Technology Stack and APIs

@@ -21,6 +21,16 @@ var nav = function() {
 			$.mobile.changePage("#searchResultsDialog");
 		},
 
+		upLevelResponse : function(res) {
+			if (!res || !res.node) {
+				alert("No data is visible to you above this node.");
+				util.setEnablementByName("navUpLevel", false);
+			}
+			else {
+				view.renderNodeResponse(res);
+			}
+		},
+		
 		navUpLevel : function() {
 
 			if (!_.parentVisibleToUser()) {
@@ -31,7 +41,7 @@ var nav = function() {
 			util.json("renderNode", {
 				"nodeId" : meta64.currentNodeId,
 				"upLevel" : 1
-			}, view.renderNodeResponse);
+			}, _.upLevelResponse);
 		},
 
 		/*

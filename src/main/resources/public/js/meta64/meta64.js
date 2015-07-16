@@ -392,6 +392,14 @@ var meta64 = function() {
 				"name" : "editNodeSharing",
 				"enable" : true,
 				"function" : share.editNodeSharingMenuClick
+			}, {
+				"name" : "shareNodeToPersonDialog",
+				"enable" : false,
+				"function" : share.shareNodeToPersonDialog
+			}, {
+				"name" : "shareNodeToPerson",
+				"enable" : false,
+				"function" : share.shareNodeToPerson
 			});
 
 			// hookSliderChanges("editMode");
@@ -444,6 +452,8 @@ var meta64 = function() {
 			/* Actions that depend on having a highlighted node */
 			util.setEnablementByName("manageAttachments", highlightNode != null);
 			util.setEnablementByName("editNodeSharing", highlightNode != null);
+			util.setEnablementByName("shareNodeToPersonDialog", highlightNode != null);
+			util.setEnablementByName("shareNodeToPerson", highlightNode != null);
 		},
 
 		/*

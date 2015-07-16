@@ -86,6 +86,27 @@ var share = function() {
 			}, _removePrivilegeResponse);
 		},
 
+		shareNodeToPersonDialog : function() {
+			$.mobile.changePage("#shareNodeToPersonDialog");
+		},
+		
+		shareNodeToPerson : function() {
+			var targetUser = $("#shareToUserName").val(); 
+			if (!targetUser) {
+				alert("Please enter a username");
+				return;
+			}
+			
+			/* TODO: Need to test of 'nodeTypeManagement' is actually required. What is below does work, but need
+			 * to make it as minimal as possible
+			 */
+			util.json("addPrivilege", {
+				"nodeId" : _.sharingNode.id,
+				"principal" : targetUser,
+				"privileges" : ["read", "write", "addChildren", "nodeTypeManagement"]
+			}, _.reloadFromShareWithPerson);
+		},
+		
 		shareNodeToPublic : function() {
 
 			/*
@@ -98,7 +119,7 @@ var share = function() {
 			util.json("addPrivilege", {
 				"nodeId" : _.sharingNode.id,
 				"principal" : "everyone",
-				"privilege" : "read"
+				"privileges" : ["read"]
 			}, _.reload);
 		},
 
@@ -117,6 +138,16 @@ var share = function() {
 			_.reload();
 		},
 
+		reloadFromShareWithPerson : function(res) {
+			if (util.checkSuccess("Share Node with Person", res)) {
+				_.reload();
+			}
+		},
+		
+		/*
+		 * Gets privileges from server and displays in GUI also changing to the
+		 * correct gui dialog if required
+		 */
 		reload : function() {
 			util.json("getNodePrivileges", {
 				"nodeId" : _.sharingNode.id,

@@ -3,7 +3,11 @@ package com.meta64.mobile;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.jcr.Session;
+import javax.jcr.security.Privilege;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,7 +111,10 @@ public class AppServerTests {
 				 */
 				AddPrivilegeRequest addPrivReq = new AddPrivilegeRequest();
 				addPrivReq.setPrincipal("everyone");
-				addPrivReq.setPrivilege("read");
+				
+				List<String> privs = new LinkedList<String>();
+				privs.add("read");
+				addPrivReq.setPrivileges(privs);
 				addPrivReq.setNodeId(newNodeId);
 				AddPrivilegeResponse addPrivRes = controller.addPrivilege(addPrivReq);
 				assertTrue(addPrivRes.isSuccess());
@@ -123,9 +130,9 @@ public class AppServerTests {
 				/*
 				 * Verify public share (in a very lazy hacky way for now)
 				 */
-				String privs = Convert.JsonStringify(getPrivsRes);
-				log.debug("***** PRIVS (with public): " + privs);
-				assertTrue(privs.contains("read"));
+				String privsCheck = Convert.JsonStringify(getPrivsRes);
+				log.debug("***** PRIVS (with public): " + privsCheck);
+				assertTrue(privsCheck.contains("read"));
 
 				/*
 				 * Now we remove the share we just added
@@ -145,9 +152,9 @@ public class AppServerTests {
 				getPrivsRes = controller.getNodePrivileges(getPrivsReq);
 				assertTrue(getPrivsRes.isSuccess());
 
-				privs = Convert.JsonStringify(getPrivsRes);
-				log.debug("***** PRIVS (with public REMOVED): " + privs);
-				assertTrue(!privs.contains("read"));
+				privsCheck = Convert.JsonStringify(getPrivsRes);
+				log.debug("***** PRIVS (with public REMOVED): " + privsCheck);
+				assertTrue(!privsCheck.contains("read"));
 
 				// shareNodeTest(newUserName);
 			}

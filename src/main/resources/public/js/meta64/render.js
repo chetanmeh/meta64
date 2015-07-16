@@ -56,7 +56,7 @@ var render = function() {
 				var path = meta64.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
-				ret += "Path: " + _.formatPath(path) + "<br><span id='ownerDisplay"+node.uid+"'></span>";
+				ret += "Path: " + _.formatPath(path) + "<div id='ownerDisplay"+node.uid+"'></div>";
 			}
 
 			if (showIdentifier && meta64.editMode) {
@@ -70,7 +70,7 @@ var render = function() {
 					 * but then again it's not an ID either.
 					 */
 					// if (!node.id.contains("/")) {
-					ret += "ID: " + node.id + "<br>";
+					ret += "ID: " + node.id + "<br>"; //TODO: this <br> tag here is ugly and wrong.
 					// }
 				}
 			}
