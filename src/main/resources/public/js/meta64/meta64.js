@@ -77,6 +77,7 @@ var meta64 = function() {
 		 */
 		editMode : false,
 
+		//TODO: move these to cnst.js.
 		MODE_ADVANCED : "advanced",
 		MODE_SIMPLE : "simple",
 

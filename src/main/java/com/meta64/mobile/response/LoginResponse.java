@@ -1,6 +1,7 @@
 package com.meta64.mobile.response;
 
 import com.meta64.mobile.model.RefInfo;
+import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.response.base.OakResponseBase;
 
 public class LoginResponse extends OakResponseBase {
@@ -17,6 +18,8 @@ public class LoginResponse extends OakResponseBase {
 	 * anything else.
 	 */
 	private String homeNodeOverride;
+	
+	private UserPreferences userPreferences;
 
 	public String getUserName() {
 		return userName;
@@ -48,5 +51,13 @@ public class LoginResponse extends OakResponseBase {
 
 	public void setHomeNodeOverride(String homeNodeOverride) {
 		this.homeNodeOverride = homeNodeOverride;
+	}
+
+	public UserPreferences getUserPreferences() {
+		return userPreferences;
+	}
+
+	public void setUserPreferences(UserPreferences userPreferences) {
+		this.userPreferences = userPreferences;
 	}
 }

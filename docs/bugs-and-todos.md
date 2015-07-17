@@ -2,6 +2,8 @@
 
 * We have numerous places in the code where we do something like delete nodes, etc, and we are going back to the server to refresh the page, when really the client-side has enough information to refresh the page without going back to server, but it takes additional work. Waiting for the feature set to become more stable before attacking these kinds of performance optimizations.
 
+* Need to put all DOM IDs in the Const.js file, and also all other strings that are dupliate throughout the JS. Put them all in const.js file so that at least there's only one place for a typo.
+
 # Technical Work List
 
 * Need ability to expose a URL that can send back all the JS as one single file. Having multiple files is good for development, but for production we need to send one JS file, and also minify it eventually.

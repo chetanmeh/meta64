@@ -34,9 +34,10 @@ import com.mongodb.MongoTimeoutException;
 
 /**
  * Wrapper and abstraction around a JCR Repository instance
- *  
- * This class can initialize either a mongoDb or an RDB backing store for the repository. One could argue that 
- * mongo stuff should not be mixed with rdb stuff, but this will be refactored later if it becomes ugly.
+ * 
+ * This class can initialize either a mongoDb or an RDB backing store for the repository. One could
+ * argue that mongo stuff should not be mixed with rdb stuff, but this will be refactored later if
+ * it becomes ugly.
  */
 public class OakRepository {
 
@@ -131,26 +132,35 @@ public class OakRepository {
 			@Override
 			public void run(Session session) throws Exception {
 
-				Node jcrRoot = session.getNode("/");
-				if (jcrRoot == null) {
-					throw new Exception("System failure. No root");
-				}
-
-				Node allUsersRoot = JcrUtil.getNodeByPath(session, "/jcr:root");
-
-				if (allUsersRoot == null) {
-					log.debug("Creating jcr:root node, which didn't exist.");
-
-					allUsersRoot = jcrRoot.addNode("jcr:root", JcrConstants.NT_UNSTRUCTURED);
-					if (allUsersRoot == null) {
-						throw new Exception("unable to create jcr:root");
-					}
-					allUsersRoot.setProperty("jcr:content", "");
-					session.save();
-				}
+				ensureNodeExists(session, "/", "jcr:root", "Root of All Users");
+				ensureNodeExists(session, "/", "jcr:userPreferences", "Preferences of All Users");
 				// log.debug(UserManagerUtil.dumpPrivileges(session, allUsersRoot));
 			}
 		});
+	}
+
+	public Node ensureNodeExists(Session session, String parentPath, String name, String defaultContent) throws Exception {
+
+		Node parent = session.getNode(parentPath);
+		if (parent == null) {
+			throw new Exception("Expected parent not found: "+parentPath);
+		}
+		
+		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
+
+		if (node == null) {
+			log.debug("Creating " + name + " node, which didn't exist.");
+
+			node = parent.addNode(name, JcrConstants.NT_UNSTRUCTURED);
+			if (node == null) {
+				throw new Exception("unable to create " + name);
+			}
+			node.setProperty("jcr:content", defaultContent);
+			session.save();
+		}
+		log.debug("node found: "+node.getPath());
+		
+		return node;
 	}
 
 	public void close() {

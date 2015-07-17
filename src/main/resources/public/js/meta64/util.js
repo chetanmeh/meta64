@@ -2,6 +2,8 @@ console.log("running module: util.js");
 
 var util = function() {
 
+	var logAjax = true;
+
 	if (typeof String.prototype.startsWith != 'function') {
 		// see below for better implementation!
 		String.prototype.startsWith = function(str) {
@@ -43,7 +45,10 @@ var util = function() {
 				console.log("callback not valid function for postName " + postName);
 			}
 
-			//console.log("JSON-POST: " + JSON.stringify(postData));
+			if (logAjax) {
+				console.log("JSON-POST: " + JSON.stringify(postData));
+			}
+			
 			$.ajax({
 				url : postTargetUrl + postName,
 				contentType : "application/json",
@@ -52,8 +57,11 @@ var util = function() {
 				cache : false,
 				data : JSON.stringify(postData),
 				success : function(jqXHR, textStatus) {
-					//console.log("JSON-RESULT: " + postName + " -> " + textStatus);
-					//console.log("JSON-RESULT-DATA: " + JSON.stringify(jqXHR));
+					if (logAjax) {
+						console.log("JSON-RESULT: " + postName + " -> " + textStatus + //
+						"\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
+					}
+					
 					if (textStatus === "success") {
 						callback(jqXHR, info);
 					} else {
@@ -341,31 +349,30 @@ var util = function() {
 		// elm.ehanceWithin();
 		// }
 
-		//part of some troubleshooting i'll eventually delete.
-//		setHtmlEnhancedById2 : function(elmId, content) {
-//			console.log("setting content: "+content+" on id "+elmId);
-//			//var elm = _.getRequiredElement(elmId);
-//			var elm = document.getElementById(elmId);
-//			if (elm) {
-//				console.log("setting innerHTML is successful");
-//				elm.innerHtml = content;
-//				//elm.html(content);
-//				//elm.enhanceWithin();
-//			}
-//			else {
-//				console.log("setting failed.");
-//			}
-//		},
-		
+		// part of some troubleshooting i'll eventually delete.
+		// setHtmlEnhancedById2 : function(elmId, content) {
+		// console.log("setting content: "+content+" on id "+elmId);
+		// //var elm = _.getRequiredElement(elmId);
+		// var elm = document.getElementById(elmId);
+		// if (elm) {
+		// console.log("setting innerHTML is successful");
+		// elm.innerHtml = content;
+		// //elm.html(content);
+		// //elm.enhanceWithin();
+		// }
+		// else {
+		// console.log("setting failed.");
+		// }
+		// },
+
 		setHtmlEnhancedById : function(elmId, content) {
-			//console.log("setting content: "+content+" on id "+elmId);
+			// console.log("setting content: "+content+" on id "+elmId);
 			var elm = _.getRequiredElement(elmId);
 			if (elm) {
 				$(elm).html(content);
 				$(elm).enhanceWithin();
-				//console.log("setting is successful");
-			}
-			else {
+				// console.log("setting is successful");
+			} else {
 				console.log("setting failed.");
 			}
 		},

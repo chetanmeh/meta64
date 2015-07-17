@@ -42,6 +42,7 @@ import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.image.ImageUtil;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.model.PropertyInfo;
+import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.AddPrivilegeRequest;
 import com.meta64.mobile.request.AnonPageLoadRequest;
 import com.meta64.mobile.request.ChangePasswordRequest;
@@ -63,6 +64,7 @@ import com.meta64.mobile.request.RemovePrivilegeRequest;
 import com.meta64.mobile.request.RenderNodeRequest;
 import com.meta64.mobile.request.SaveNodeRequest;
 import com.meta64.mobile.request.SavePropertyRequest;
+import com.meta64.mobile.request.SaveUserPreferencesRequest;
 import com.meta64.mobile.request.SetNodePositionRequest;
 import com.meta64.mobile.request.SignupRequest;
 import com.meta64.mobile.response.AddPrivilegeResponse;
@@ -86,6 +88,7 @@ import com.meta64.mobile.response.RemovePrivilegeResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
 import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
+import com.meta64.mobile.response.SaveUserPreferencesResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
 import com.meta64.mobile.service.ImportExportService;
@@ -137,6 +140,9 @@ public class AppController {
 
 	@Autowired
 	private ImportExportService importExportService;
+
+	@Autowired
+	private OakRepositoryBean oak;
 
 	/*
 	 * Each time the server restarts we have a new version number here and will cause clients to
@@ -269,6 +275,17 @@ public class AppController {
 		else {
 			res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
 			res.setUserName(userName);
+
+			try {
+				res.setUserPreferences(userManagerService.getUserPreferences(session));
+			}
+			catch (Exception e) {
+				/*
+				 * If something goes wrong loading preferences just log and continue. Should never
+				 * happen but we might as well be resilient here.
+				 */
+				log.error("Failed loading preferences: ", e);
+			}
 			res.setSuccess(true);
 		}
 		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
@@ -323,10 +340,10 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-		
+
 		boolean includeAcl = "y".equals(req.getIncludeAcl());
 		boolean includeOwners = "y".equals(req.getIncludeOwners());
-		
+
 		if (!includeAcl && !includeOwners) {
 			throw new Exception("no specific information requested for getNodePrivileges");
 		}
@@ -336,7 +353,7 @@ public class AppController {
 			List<AccessControlEntryInfo> aclEntriesInfo = Convert.convertToAclListInfo(aclEntries);
 			res.setAclEntries(aclEntriesInfo);
 		}
-		
+
 		if (includeOwners) {
 			List<String> owners = AccessControlUtil.getOwnerNames(session, node);
 			res.setOwners(owners);
@@ -950,6 +967,20 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 
 		nodeSearchService.search(session, req, res);
+		return res;
+	}
+
+	@RequestMapping(value = REST_PATH + "/saveUserPreferences", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody SaveUserPreferencesResponse saveUserPreferences(@RequestBody SaveUserPreferencesRequest req) throws Exception {
+		logRequest("saveUserPreferences", req);
+
+		SaveUserPreferencesResponse res = new SaveUserPreferencesResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+		userManagerService.saveUserPreferences(session, req, res);
+		session.save();
+		res.setSuccess(true);
 		return res;
 	}
 }

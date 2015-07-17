@@ -52,7 +52,7 @@ public class JcrUtil {
 
 	public static Node getNodeByPath(Session session, String path) {
 		try {
-			return session.getNode("/jcr:root");
+			return session.getNode(path);
 		}
 		catch (Exception e) {
 			// do nothing. Not error condition. Means allUsersRoot is not found, so will still be

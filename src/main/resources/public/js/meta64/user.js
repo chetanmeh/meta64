@@ -19,6 +19,7 @@ var user = function() {
 		meta64.isAdminUser = res.userName === "admin";
 		meta64.isAnonUser = res.userName === "anonymous";
 		meta64.anonUserLandingPageNode = res.anonUserLandingPageNode;
+		meta64.editModeOption = res.userPreferences.advancedMode ? meta64.MODE_ADVANCED : meta64.MODE_SIMPLE;
 	}
 
 	/* ret is LoginResponse.java */
@@ -32,6 +33,7 @@ var user = function() {
 				_.writeCookie(cnst.COOKIE_LOGIN_PWD, info.pwd);
 			}
 
+			//TODO; Do I want "pop" here? This is very old code. may not be best.
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 
 			_setStateVarsUsingLoginResponse(res);

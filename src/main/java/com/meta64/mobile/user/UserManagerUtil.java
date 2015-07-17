@@ -51,6 +51,10 @@ public class UserManagerUtil {
 		return new RefInfo(rootNode.getIdentifier(), rootNode.getPath());
 	}
 
+	/*
+	 * TODO: refactor this method to use ensureNodeExists do look up existing node(s), Also throw exception
+	 * if the node we are looking up EXISTS, because someone could be hijacking an old account.
+	 */
 	public static boolean createUserRootNode(Session session, String userName) throws Exception {
 
 		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/jcr:root");
