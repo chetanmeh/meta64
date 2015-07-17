@@ -21,16 +21,17 @@ var nav = function() {
 			$.mobile.changePage("#searchResultsDialog");
 		},
 
-		upLevelResponse : function(res) {
+		upLevelResponse : function(res, info) {
 			if (!res || !res.node) {
 				alert("No data is visible to you above this node.");
 				util.setEnablementByName("navUpLevel", false);
-			}
-			else {
-				view.renderNodeResponse(res);
+			} else {
+				render.renderPageFromData(res);
+				meta64.highlightRowById(info.id, true, true);
+				meta64.refreshAllGuiEnablement();
 			}
 		},
-		
+
 		navUpLevel : function() {
 
 			if (!_.parentVisibleToUser()) {
@@ -41,7 +42,9 @@ var nav = function() {
 			util.json("renderNode", {
 				"nodeId" : meta64.currentNodeId,
 				"upLevel" : 1
-			}, _.upLevelResponse);
+			}, _.upLevelResponse, {
+				"id" : meta64.currentNodeId
+			});
 		},
 
 		/*
@@ -211,6 +214,13 @@ var nav = function() {
 			// alert("selections: " + printKeys(selectedNodes));
 		},
 
+		navHomeResponse : function(res) {
+			meta64.clearSelectedNodes();
+			render.renderPageFromData(res);
+			_.scrollToTop();
+			meta64.refreshAllGuiEnablement();
+		},
+
 		navHome : function() {
 			if (meta64.isAnonUser) {
 				meta64.loadAnonPageHome(true);
@@ -218,7 +228,7 @@ var nav = function() {
 			} else {
 				util.json("renderNode", {
 					"nodeId" : meta64.homeNodeId
-				}, view.renderNodeResponse);
+				}, _.navHomeResponse);
 			}
 		}
 	};

@@ -45,6 +45,7 @@ var props = function() {
 			elm.toggleClass("ui-icon-grid", meta64.showProperties);
 			elm.toggleClass("ui-icon-forbidden", !meta64.showProperties);
 			render.renderPageFromData();
+			view.scrollToSelectedNode();
 		},
 
 		/*

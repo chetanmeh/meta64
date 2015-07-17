@@ -39,9 +39,9 @@ var meta64 = function() {
 		 * 'hashCode' on Java objects.
 		 */
 		uidToNodeMap : {},
-		
+
 		/*
-		 * maps node.id values to NodeInfo.java objects 
+		 * maps node.id values to NodeInfo.java objects
 		 */
 		idToNodeMap : {},
 
@@ -206,7 +206,7 @@ var meta64 = function() {
 			}
 			return selArray;
 		},
-		
+
 		clearSelectedNodes : function() {
 			_.selectedNodes = {};
 		},
@@ -222,7 +222,7 @@ var meta64 = function() {
 
 			if (ownerBuf.length > 0) {
 				info.node.owner = ownerBuf;
-				$("#ownerDisplay" + info.node.uid).html("Owner: "+ownerBuf);
+				$("#ownerDisplay" + info.node.uid).html("Owner: " + ownerBuf);
 			}
 		},
 
@@ -240,7 +240,7 @@ var meta64 = function() {
 		getNodeFromId : function(id) {
 			return _.idToNodeMap[id];
 		},
-		
+
 		getPathOfUid : function(uid) {
 			var node = _.uidToNodeMap[uid];
 			if (!node) {
@@ -409,6 +409,17 @@ var meta64 = function() {
 			// hookSliderChanges("editMode");
 		},
 
+		highlightRowById : function(id, scroll, click) {
+			var node = _.getNodeFromId(id); 
+			_.parentUidToFocusNodeMap[_.currentNodeUid] = node;
+			if (scroll) {
+				view.scrollToSelectedNode();
+			}
+			if (click) {
+				nav.simulateClickOnNodeRow(node.uid);
+			}
+		},
+
 		refreshAllGuiEnablement : function() {
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
@@ -552,16 +563,15 @@ var meta64 = function() {
 				// _.initApp();
 			});
 		},
-
+		
 		anonPageLoadResponse : function(res) {
 			if (res.renderNodeResponse) {
-				console.log("res.renderNodeResponse exists.");
-
+			
 				util.setVisibility("#mainNodeContent", true);
 				util.setVisibility("#mainNodeStatusBar", true);
 
-				console.log("rendering anon page response.");
-				view.renderNodeResponse(res.renderNodeResponse);
+				render.renderPageFromData(res.renderNodeResponse);
+				meta64.refreshAllGuiEnablement();
 			} else {
 				util.setVisibility("#mainNodeContent", false);
 				util.setVisibility("#mainNodeStatusBar", false);

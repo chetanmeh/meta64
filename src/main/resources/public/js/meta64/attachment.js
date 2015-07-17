@@ -4,12 +4,17 @@ var attachment = function() {
 
 	function _deleteAttachmentResponse(res) {
 		if (util.checkSuccess("Delete attachment", res)) {
-			/*
-			 * All that's needed to update client is to set the binary flag on
-			 * the node to false, and re-render
-			 */
-			_.uploadNode.hasBinary = false;
-			render.renderPageFromData();
+//			/*
+//			 * All that's needed to update client is to set the binary flag on
+//			 * the node to false, and re-render
+//			 */
+//			_.uploadNode.hasBinary = false;
+//			render.renderPageFromData();
+			
+			/* noticed the above is broken so for now let's just refresh the page,but the above USED to work,
+			 * simply by setting hasBinary to false. So something's changed and that no longer works.  */
+			view.refreshTree(null, false);
+			
 			_.closeUploadDialog();
 		}
 	}

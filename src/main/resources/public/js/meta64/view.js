@@ -24,6 +24,16 @@ var view = function() {
 			}
 		},
 
+		refreshTreeResponse : function(res, info) {
+			render.renderPageFromData(res);
+			if (info && info.targetId && info.renderParentIfLeaf && res.displayedParent) {
+				meta64.highlightRowById(info.targetId, true, true);
+			} else {
+				_.scrollToSelectedNode();
+			}
+			meta64.refreshAllGuiEnablement();
+		},
+
 		refreshTree : function(nodeId, renderParentIfLeaf) {
 			if (!nodeId) {
 				nodeId = meta64.currentNodeId;
@@ -32,31 +42,10 @@ var view = function() {
 			util.json("renderNode", {
 				"nodeId" : nodeId,
 				"renderParentIfLeaf" : renderParentIfLeaf ? true : false
-			}, _.renderNodeResponse, {
-				"nodeRenderedId" : nodeId
+			}, _.refreshTreeResponse, {
+				"targetId" : nodeId,
+				"renderParentIfLeaf" : renderParentIfLeaf
 			});
-		},
-
-		/*
-		 * data is instanceof RenderNodeResponse.java
-		 */
-		renderNodeResponse : function(data, info) {
-			// console.log("renderNode: " + JSON.stringify(data));
-			render.renderPageFromData(data);
-			
-			if (info && data.displayedParent) {
-				
-				//this sets the focused node using id
-				var node = meta64.getNodeFromId(info.nodeRenderedId);
-				meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-				_.scrollToSelectedNode();
-				nav.simulateClickOnNodeRow(node.uid);
-			}
-			else {
-				util.scrollToTop();
-			}
-			
-			meta64.refreshAllGuiEnablement();
 		},
 
 		scrollToSelectedNode : function() {
