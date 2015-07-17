@@ -264,11 +264,11 @@ var props = function() {
 						ret += "<td class='prop-table-name-col'>" + render.sanitizePropertyName(property.name) + "</td>";
 
 						if (isBinaryProp) {
-							ret += "<td>[binary]</td>";
+							ret += "<td class='prop-table-val-col'>[binary]</td>";
 						} else if (!property.values) {
-							ret += "<td>" + render.markdown(property.value) + "</td>";
+							ret += "<td class='prop-table-val-col'>" + render.markdown(property.value) + "</td>";
 						} else {
-							ret += "<td>" + props.renderPropertyValues(property.values) + "</td>";
+							ret += "<td class='prop-table-val-col'>" + props.renderPropertyValues(property.values) + "</td>";
 						}
 						ret += "</tr>";
 					} else {
@@ -323,7 +323,7 @@ var props = function() {
 		renderPropertyValues : function(values) {
 			var ret = "<div>";
 			$.each(values, function(i, value) {
-				ret += render.markdown(value) + "<br>";
+				ret += render.markdown(value) + cnst.BR;
 			});
 			ret += "</div>";
 			return ret;

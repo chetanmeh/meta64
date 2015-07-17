@@ -1,3 +1,12 @@
+.vert-space {
+	display: block;
+	height: .5em;
+}
+
+tr td div p {
+	margin: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+}
 
 .captcha {
 	margin-top: 20px;
@@ -5,9 +14,11 @@
 }
 
 .privilege-list {
+	
 }
 
-.binary-link {	
+.binary-link {
+	
 }
 
 .privilege-entry {
@@ -21,7 +32,7 @@
 }
 
 .property-text {
-	margin-left: 1em; 
+	margin-left: 1em;
 }
 
 .prop-table-row {
@@ -31,11 +42,25 @@
 
 .prop-table-name-col {
 	border-right: 1px solid gray;
+	/*
+	margin: 0px;
+	paddign: 0px;
+	border: 1px solid red;
+	*/
 	width: 25%;
 }
 
-.prop-table {
-	//border: 1px solid gray;
+.prop-table-val-col {
+	/*
+	margin: 0px;
+	paddign: 0px;
+	border: 1px solid green;
+	*/
+	width: 70%;
+}
+
+.prop-table { 
+	/* border: 1px solid gray; */
 	width: 100%;
 }
 
@@ -60,7 +85,7 @@
 }
 
 .active-row {
-	border-left: 10px solid red;	
+	border-left: 10px solid red;
 }
 
 .inactive-row {

@@ -70,7 +70,7 @@ var render = function() {
 					 * but then again it's not an ID either.
 					 */
 					// if (!node.id.contains("/")) {
-					ret += "ID: " + node.id + "<br>"; //TODO: this <br> tag here is ugly and wrong.
+					ret += "ID: " + node.id + cnst.BR; //TODO: this <br> tag here is ugly and wrong.
 					// }
 				}
 			}
