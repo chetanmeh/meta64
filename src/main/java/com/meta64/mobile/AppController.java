@@ -284,12 +284,17 @@ public class AppController {
 				 * If something goes wrong loading preferences just log and continue. Should never
 				 * happen but we might as well be resilient here.
 				 */
-				log.error("Failed loading preferences: ", e);
+				// log.error("Failed loading preferences: ", e);
 			}
 			res.setSuccess(true);
 		}
 		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
 		res.setHomeNodeOverride(sessionContext.getUrlId());
+
+		if (res.getUserPreferences() == null) {
+			res.setUserPreferences(userManagerService.getDefaultUserPreferences());
+		}
+
 		return res;
 	}
 

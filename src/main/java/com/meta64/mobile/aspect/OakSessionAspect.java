@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
+import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.SignupRequest;
@@ -100,6 +101,7 @@ public class OakSessionAspect {
 		LoginResponse res = null;
 		if (req instanceof LoginRequest) {
 			res = new LoginResponse();
+			res.setUserPreferences(new UserPreferences());
 			ThreadLocals.setResponse(res);
 
 			LoginRequest loginRequest = (LoginRequest) args[0];

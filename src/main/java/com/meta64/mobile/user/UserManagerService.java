@@ -86,6 +86,10 @@ public class UserManagerService {
 
 		// We let session.save() be done by calling method.
 	}
+	
+	public UserPreferences getDefaultUserPreferences() {
+		return new UserPreferences();
+	}
 
 	public UserPreferences getUserPreferences(Session session) throws Exception {
 		Node prefsNode = getPrefsNodeForSessionUser(session);
