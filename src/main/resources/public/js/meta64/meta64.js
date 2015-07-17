@@ -77,7 +77,7 @@ var meta64 = function() {
 		 */
 		editMode : false,
 
-		//TODO: move these to cnst.js.
+		// TODO: move these to cnst.js.
 		MODE_ADVANCED : "advanced",
 		MODE_SIMPLE : "simple",
 
@@ -410,21 +410,60 @@ var meta64 = function() {
 			// hookSliderChanges("editMode");
 		},
 
-		highlightRowById : function(id, scroll, click) {
-			var node = _.getNodeFromId(id); 
-			_.parentUidToFocusNodeMap[_.currentNodeUid] = node;
+		getHighlightedNode : function() {
+			return _.parentUidToFocusNodeMap[_.currentNodeUid];
+		},
+
+		highlightRowById : function(id, scroll) {
+			var node = _.getNodeFromId(id);
+			if (node) {
+				_.highlightNode(node, scroll);
+			} else {
+				console.log("highlightRowById failed to find id: " + id);
+			}
+		},
+
+		/*
+		 * Important: We want this to be the only method that can set values on
+		 * 'parentUidToFocusNodeMap', and always setting that value should go
+		 * thru this function.
+		 */
+		highlightNode : function(node, scroll) {
+			if (!node)
+				return;
+
+			var doneHighlighting = false;
+
+			/* Unhighlight currently highlighted node if any */
+			var curHighlightedNode = _.parentUidToFocusNodeMap[_.currentNodeUid];
+			if (curHighlightedNode) {
+				if (curHighlightedNode.uid === node.uid) {
+					console.log("already highlighted.");
+					doneHighlighting = true;
+				} else {
+					var rowElmId = curHighlightedNode.uid + "_row";
+					var rowElm = $("#" + rowElmId);
+					util.changeOrAddClass(rowElm, "active-row", "inactive-row");
+				}
+			}
+
+			if (!doneHighlighting) {
+				_.parentUidToFocusNodeMap[_.currentNodeUid] = node;
+
+				var rowElmId = node.uid + "_row";
+				var rowElm = $("#" + rowElmId);
+				util.changeOrAddClass(rowElm, "inactive-row", "active-row");
+			}
+			
 			if (scroll) {
 				view.scrollToSelectedNode();
-			}
-			if (click) {
-				nav.simulateClickOnNodeRow(node.uid);
 			}
 		},
 
 		refreshAllGuiEnablement : function() {
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
-			var highlightNode = nav.getHighlightedNode();
+			var highlightNode = meta64.getHighlightedNode();
 
 			util.setEnablementByName("login", _.isAnonUser, _.isAnonUser);
 			util.setEnablementByName("logout", !_.isAnonUser, !_.isAnonUser);
@@ -564,10 +603,10 @@ var meta64 = function() {
 				// _.initApp();
 			});
 		},
-		
+
 		anonPageLoadResponse : function(res) {
 			if (res.renderNodeResponse) {
-			
+
 				util.setVisibility("#mainNodeContent", true);
 				util.setVisibility("#mainNodeStatusBar", true);
 

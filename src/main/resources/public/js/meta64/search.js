@@ -59,7 +59,7 @@ var srch = function() {
 		},
 
 		searchNodes : function() {
-			var node = nav.getFocusedNode();
+			var node = meta64.getHighlightedNode();
 			if (!node) {
 				alert("No node is selected to search under.");
 				return;
@@ -131,19 +131,6 @@ var srch = function() {
 			 */
 			var isRep = node.name.startsWith("rep:") || meta64.currentNodeData.node.path.contains("/rep:");
 			var editingAllowed = meta64.isAdminUser || !isRep;
-
-			// /*
-			// * if not selected by being the new child, then we try to select
-			// * based on if this node was the last one clicked on for this
-			// page.
-			// */
-			// // console.log("test: [" + parentIdToFocusIdMap[currentNodeId]
-			// // +"]==["+ node.id + "]")
-			// var focusNode =
-			// meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
-			// if (!selected && focusNode && focusNode.uid === uid) {
-			// selected = true;
-			// }
 
 			var cssId = uid + _UID_ROWID_SUFFIX;
 			// console.log("Rendering Node Row[" + index + "] with id: " +cssId)

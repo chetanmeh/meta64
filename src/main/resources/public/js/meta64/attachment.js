@@ -68,7 +68,7 @@ var attachment = function() {
 		},
 
 		openUploadDialogMenuClick : function() {
-			var node = nav.getHighlightedNode();
+			var node = meta64.getHighlightedNode();
 
 			if (!node) {
 				_.uploadNode = null;

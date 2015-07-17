@@ -77,12 +77,9 @@ var edit = function() {
 		meta64.newChildNodeId = res.newNode.id;
 		console.log("new child identifier: " + meta64.newChildNodeId);
 
-		/*
-		 * todo: initNode needed here ?
-		 */
-		meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = res.newNode;
+		meta64.initNode(res.newNode);		
+		meta64.highlightNode(res.newNode, true);
 
-		meta64.initNode(res.newNode);
 		edit.runEditNode(res.newNode.uid);
 	}
 
@@ -324,7 +321,7 @@ var edit = function() {
 		},
 
 		exportNodes : function() {
-			var highlightNode = nav.getHighlightedNode();
+			var highlightNode = meta64.getHighlightedNode();
 			var targetFileName = util.getRequiredElement("#exportTargetNodeName").val();
 
 			if (util.emptyString(targetFileName)) {
@@ -345,7 +342,7 @@ var edit = function() {
 		},
 
 		importNodes : function() {
-			var highlightNode = nav.getHighlightedNode();
+			var highlightNode = meta64.getHighlightedNode();
 			var sourceFileName = util.getRequiredElement("#importTargetNodeName").val();
 
 			if (util.emptyString(sourceFileName)) {
@@ -625,7 +622,7 @@ var edit = function() {
 		finishMovingSelNodes : function() {
 			util.areYouSure("Confirm Move", "Move " + _.nodesToMove.length + " node(s) to selected location ?", "Yes, move.", function() {
 
-				var highlightNode = nav.getHighlightedNode();
+				var highlightNode = meta64.getHighlightedNode();
 
 				/*
 				 * For now, we will just cram the nodes onto the end of the
@@ -646,7 +643,7 @@ var edit = function() {
 			util.areYouSure("Confirm", "Insert book War and Peace?", "Yes, insert book.", function() {
 
 				/* inserting under whatever node user has focused */
-				var node = nav.getFocusedNode();
+				var node = meta64.getHighlightedNode();
 
 				if (!node) {
 					alert("No node is selected.");

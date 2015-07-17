@@ -2,7 +2,7 @@ console.log("running module: util.js");
 
 var util = function() {
 
-	var logAjax = true;
+	var logAjax = false;
 
 	if (typeof String.prototype.startsWith != 'function') {
 		// see below for better implementation!

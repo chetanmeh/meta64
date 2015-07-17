@@ -27,7 +27,7 @@ var view = function() {
 		refreshTreeResponse : function(res, info) {
 			render.renderPageFromData(res);
 			if (info && info.targetId && info.renderParentIfLeaf && res.displayedParent) {
-				meta64.highlightRowById(info.targetId, true, true);
+				meta64.highlightRowById(info.targetId, true);
 			} else {
 				_.scrollToSelectedNode();
 			}
@@ -52,7 +52,7 @@ var view = function() {
 			setTimeout(function() {
 				var elm = nav.getSelectedDomElement();
 				if (elm) {
-					var node = nav.getFocusedNode();
+					var node = meta64.getHighlightedNode();
 					var ordinal = meta64.getOrdinalOfNode(node);
 
 					/*
@@ -60,7 +60,8 @@ var view = function() {
 					 * first (top) child node, or else scroll exactly to it
 					 */
 					var scrollPos = (ordinal == 0 ? 0 : $('#' + elm.id).offset().top - $('#mainPageHeader').height());
-
+					console.log("scrollPos: "+scrollPos);
+					
 					// console.log("Scrolling to dom element id: " +elm.id);
 					$('html, body').animate({
 						scrollTop : scrollPos

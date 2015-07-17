@@ -128,7 +128,7 @@ var share = function() {
 		 * node display in edit mode
 		 */
 		editNodeSharingMenuClick : function() {
-			var node = nav.getHighlightedNode();
+			var node = meta64.getHighlightedNode();
 
 			if (!node) {
 				alert("No node is selected.");

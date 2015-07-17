@@ -27,7 +27,7 @@ var nav = function() {
 				util.setEnablementByName("navUpLevel", false);
 			} else {
 				render.renderPageFromData(res);
-				meta64.highlightRowById(info.id, true, true);
+				meta64.highlightRowById(info.id, true);
 				meta64.refreshAllGuiEnablement();
 			}
 		},
@@ -48,39 +48,13 @@ var nav = function() {
 		},
 
 		/*
-		 * turn of row selection NodeInfo.java obj of whatever row is currently
-		 * selected
-		 */
-		getFocusedNode : function() {
-
-			/*
-			 * check if we have an existing highlighted row to unhighlight, and
-			 * is done by looking up current parent node for the page
-			 */
-			var currentSelNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
-
-			if (currentSelNode) {
-				/* get node by node identifier */
-				var node = meta64.uidToNodeMap[currentSelNode.uid];
-				return node;
-			}
-			return null;
-		},
-
-		/*
 		 * turn of row selection DOM element of whatever row is currently
 		 * selected
 		 */
 		getSelectedDomElement : function() {
 
-			/*
-			 * check if we have an existing highlighted row to unhighlight, and
-			 * is done by looking up current parent node for the page
-			 */
-			var currentSelNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
+			var currentSelNode = meta64.getHighlightedNode();
 			if (currentSelNode) {
-				// console.log("Unhighlighting previous row: currentNodeId=" +
-				// meta64.currentNodeUid);
 
 				/* get node by node identifier */
 				var node = meta64.uidToNodeMap[currentSelNode.uid];
@@ -99,69 +73,10 @@ var nav = function() {
 			return null;
 		},
 
-		/*
-		 * Returns the node (NodeInfo.java) the user has "highlighted" (last
-		 * clicked on), or null if none is highlighted
-		 */
-		getHighlightedNode : function() {
-
-			/* check if we have an existing highlighted row to unhighlight */
-			return meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
-		},
-
-		/*
-		 * turn of row selection styling of whatever row is currently selected
-		 */
-		unhighlightRow : function() {
-			var currentUid = meta64.currentNodeUid;
-			// console.log("currentUid = "+currentUid);
-
-			/* check if we have an existing highlighted row to unhighlight */
-			var currentSelNode = meta64.parentUidToFocusNodeMap[currentUid];
-
-			if (!currentSelNode.uid) {
-				console.log("unhighlight says current node has null uid");
-				return;
-			}
-
-			if (currentSelNode) {
-				// console.log("Unhighlighting previous row: currentNodeUid=" +
-				// currentSelNode.uid + ", path: "
-				// + meta64.getPathOfUid(currentSelNode.uid));
-
-				/* get node by node identifier */
-				var node = meta64.uidToNodeMap[currentSelNode.uid];
-				if (node) {
-					// console.log(" found highlighted node.uid=" + node.uid);
-
-					/* now make CSS id from node */
-					var nodeId = node.uid + _UID_ROWID_SUFFIX;
-					// console.log(" looking up using element id: " + nodeId);
-
-					var elm = util.domElm(nodeId);
-					if (elm) {
-						/* change class on element */
-						util.changeOrAddClass(elm, "active-row", "inactive-row");
-					} else {
-						console.log("ERR: unable to find row element with id: " + nodeId);
-					}
-				} else {
-					console.log("ERR: failed to find uidToNodeMap item for uid:" + currentSelNode.uid);
-				}
-			} else {
-				console.log("  no parent node found for: currentUid=" + currentUid);
-			}
-		},
-
-		simulateClickOnNodeRow : function(uid) {
-			var rowElmId = uid + "_row"
-			var rowElm = $("#" + rowElmId);
-			_.clickOnNodeRow(rowElm, uid);
-		},
-
 		clickOnNodeRow : function(rowElm, uid) {
 
-			_.unhighlightRow();
+			//moving this logic inside meta64.highlightNode
+			//_.unhighlightRow();
 
 			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
@@ -173,9 +88,7 @@ var nav = function() {
 			 * sets which node is selected on this page (i.e. parent node of
 			 * this page being the 'key')
 			 */
-			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-
-			util.changeOrAddClass(rowElm, "inactive-row", "active-row");
+			meta64.highlightNode(node, false);
 
 			if (meta64.editMode) {
 
@@ -193,7 +106,8 @@ var nav = function() {
 		openNode : function(uid) {
 
 			var node = meta64.uidToNodeMap[uid];
-			meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
+			
+			meta64.highlightNode(node, true);
 
 			if (!node) {
 				alert("Unknown nodeId in openNode: " + uid);

@@ -145,7 +145,7 @@ var render = function() {
 			 */
 			// console.log("test: [" + parentIdToFocusIdMap[currentNodeId]
 			// +"]==["+ node.id + "]")
-			var focusNode = meta64.parentUidToFocusNodeMap[meta64.currentNodeUid];
+			var focusNode = meta64.getHighlightedNode();
 			if (!selected && focusNode && focusNode.uid === uid) {
 				selected = true;
 			}
@@ -456,12 +456,12 @@ var render = function() {
 				// console.log(" RENDER ROW[" + i + "]: node.id=" +
 				// node.id);
 
-				/*
+				/* &&& rethinking this.
 				 * if no row is selected for this parent, select the first row
 				 */
-				if (!meta64.parentUidToFocusNodeMap[meta64.currentNodeUid]) {
-					meta64.parentUidToFocusNodeMap[meta64.currentNodeUid] = node;
-				}
+//				if (!meta64.getHighlightedNode()) {
+//					meta64.highlightNode(node, false);
+//				}
 			}
 
 			rowCount++; // warning: this is the local variable/parameter
