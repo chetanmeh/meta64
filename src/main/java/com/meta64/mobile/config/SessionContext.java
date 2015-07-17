@@ -36,6 +36,10 @@ public class SessionContext {
 		return "admin".equalsIgnoreCase(userName);
 	}
 
+	/*
+	 * This can create nasty bugs. I should bet always getting user name from the actual session object itself
+	 * in all the logic... in most every case except maybe login process.
+	 */
 	public String getUserName() {
 		return userName;
 	}

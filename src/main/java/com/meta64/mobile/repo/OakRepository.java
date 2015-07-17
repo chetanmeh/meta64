@@ -143,9 +143,10 @@ public class OakRepository {
 
 		Node parent = session.getNode(parentPath);
 		if (parent == null) {
-			throw new Exception("Expected parent not found: "+parentPath);
+			throw new Exception("Expected parent not found: " + parentPath);
 		}
-		
+
+		log.debug("ensuring node exists: parentPath=" + parentPath + " name=" + name);
 		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
 
 		if (node == null) {
@@ -158,8 +159,8 @@ public class OakRepository {
 			node.setProperty("jcr:content", defaultContent);
 			session.save();
 		}
-		log.debug("node found: "+node.getPath());
-		
+		log.debug("node found: " + node.getPath());
+
 		return node;
 	}
 

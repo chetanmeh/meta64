@@ -983,6 +983,7 @@ public class AppController {
 		SaveUserPreferencesResponse res = new SaveUserPreferencesResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
+		log.debug("saveUserPreferences()");
 		userManagerService.saveUserPreferences(session, req, res);
 		session.save();
 		res.setSuccess(true);

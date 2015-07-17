@@ -71,33 +71,46 @@ public class UserManagerService {
 	/*
 	 * Get node that contains all preferences for this user, as properties on it.
 	 */
-	public Node getPrefsNodeForSessionUser(Session session) throws Exception {
-		return oak.ensureNodeExists(session, "/jcr:userPreferences/", "jcr:" + sessionContext.getUserName(), //
-				"Preferences fo User: " + sessionContext.getUserName());
+	public Node getPrefsNodeForSessionUser(Session session, String userName) throws Exception {
+		return oak.ensureNodeExists(session, "/jcr:userPreferences/", "jcr:" + userName, //
+				"Preferences fo User: " + userName);
 	}
 
-	public void saveUserPreferences(Session session, SaveUserPreferencesRequest req, SaveUserPreferencesResponse res) throws Exception {
-		Node prefsNode = getPrefsNodeForSessionUser(session);
+	public void saveUserPreferences(Session session, final SaveUserPreferencesRequest req, final SaveUserPreferencesResponse res) throws Exception {
 
-		/*
-		 * Assign preferences as properties on this node,
-		 */
-		prefsNode.setProperty("jcr:advMode", req.getUserPreferences().isAdvancedMode());
+		final String userName = sessionContext.getUserName();
+		
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
 
-		// We let session.save() be done by calling method.
+				/*
+				 * Assign preferences as properties on this node,
+				 */
+				prefsNode.setProperty("jcr:advMode", req.getUserPreferences().isAdvancedMode());
+				session.save();
+			}
+		});
 	}
-	
+
 	public UserPreferences getDefaultUserPreferences() {
 		return new UserPreferences();
 	}
 
 	public UserPreferences getUserPreferences(Session session) throws Exception {
-		Node prefsNode = getPrefsNodeForSessionUser(session);
-		UserPreferences userPrefs = new UserPreferences();
-
-		Property prop = prefsNode.getProperty("jcr:advMode");
-		userPrefs.setAdvancedMode(prop != null ? prop.getBoolean() : false);
-		log.debug("advMode="+userPrefs.isAdvancedMode());
+		final String userName = sessionContext.getUserName();
+		final UserPreferences userPrefs = new UserPreferences();
+		
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
+				Property prop = prefsNode.getProperty("jcr:advMode");
+				userPrefs.setAdvancedMode(prop != null ? prop.getBoolean() : false);
+				log.debug("advMode=" + userPrefs.isAdvancedMode());
+			}
+		});
 
 		return userPrefs;
 	}
