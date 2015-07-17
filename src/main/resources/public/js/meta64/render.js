@@ -443,6 +443,10 @@ var render = function() {
 			}
 
 			util.setHtmlEnhancedById("#listView", output);
+			
+			if (!meta64.getHighlightedNode()) {
+				util.scrollToTop();
+			}
 		},
 
 		generateRow : function(i, node, newData, childCount, rowCount) {

@@ -131,7 +131,7 @@ var nav = function() {
 		navHomeResponse : function(res) {
 			meta64.clearSelectedNodes();
 			render.renderPageFromData(res);
-			_.scrollToTop();
+			util.scrollToTop();
 			meta64.refreshAllGuiEnablement();
 		},
 

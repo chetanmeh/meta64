@@ -438,7 +438,7 @@ var meta64 = function() {
 			var curHighlightedNode = _.parentUidToFocusNodeMap[_.currentNodeUid];
 			if (curHighlightedNode) {
 				if (curHighlightedNode.uid === node.uid) {
-					console.log("already highlighted.");
+					//console.log("already highlighted.");
 					doneHighlighting = true;
 				} else {
 					var rowElmId = curHighlightedNode.uid + "_row";
