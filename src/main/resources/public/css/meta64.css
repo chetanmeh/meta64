@@ -8,6 +8,24 @@ tr td div p {
 	padding: 1px 1px 1px 1px;
 }
 
+.donations {
+	text-align:center;
+}
+
+.donate-back-button {
+	margin: 3em;
+}
+
+.donate-center {
+	margin-top: 2em;
+	text-align:center;
+}
+
+.donate-link {
+	font-size: small;
+	cursor: pointer;
+}
+
 .captcha {
 	margin-top: 20px;
 	border: 1px solid black;

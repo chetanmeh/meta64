@@ -405,7 +405,15 @@ var meta64 = function() {
 				"name" : "shareNodeToPerson",
 				"enable" : false,
 				"function" : share.shareNodeToPerson
+			}, {
+				"name" : "donateDialog",
+				"enable" : true,
+				"function" : _.openDonateDialog
 			});
+		},
+		
+		openDonateDialog : function() {
+			$.mobile.changePage("#donateDialogId"); 
 		},
 
 		getHighlightedNode : function() {
