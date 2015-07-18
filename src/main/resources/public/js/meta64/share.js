@@ -10,12 +10,12 @@ var share = function() {
 	 * res.aclEntries = list of AccessControlEntryInfo.java json objects
 	 */
 	var _getNodePrivilegesResponse = function(res) {
-		_populateSharingDialog(res);
+		_populateSharingPg(res);
 
-		$.mobile.changePage("#shareNodeDialog");
+		$.mobile.changePage("#shareNodePg");
 	}
 
-	var _populateSharingDialog = function(res) {
+	var _populateSharingPg = function(res) {
 
 		var html = "<h2>Access Control Entries</h2>";
 
@@ -86,8 +86,8 @@ var share = function() {
 			}, _removePrivilegeResponse);
 		},
 
-		shareNodeToPersonDialog : function() {
-			$.mobile.changePage("#shareNodeToPersonDialog");
+		shareNodeToPersonPg : function() {
+			$.mobile.changePage("#shareNodeToPersonPg");
 		},
 		
 		shareNodeToPerson : function() {

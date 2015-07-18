@@ -3,21 +3,21 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
 <body>
-	<div data-role="page" id="importDialog">
+	<div data-role="page" id="exportPg">
 		<div data-role="header">
-			<h2 th:text="${brandingTitle}+' - Import from XML'"></h2>
+			<h2 th:text="${brandingTitle}+' - Export to XML'"></h2>
 		</div>
 		<div role="main" class="ui-content">
 
 			<div class="ui-field-contain">
-				<label for="importTargetNodeName">Import Target Node Name:</label>
+				<label for="exportTargetNodeName">Export Target Node Name:</label>
 				<!--  -->
-				<input type="text" name="importTargetNodeName" id="importTargetNodeName" value="" />
+				<input type="text" name="exportTargetNodeName" id="exportTargetNodeName" value="" />
 			</div>
 
 			<div data-type="horizontal" data-role="controlgroup">
-				<a id="importNodesButton" data-theme="b" data-role="button">Import</a>
-				<a href="#" id="cancelImportButton" data-rel="back"
+				<a id="exportNodesButton" data-theme="b" data-role="button">Export</a>
+				<a href="#" id="cancelExportButton" data-rel="back"
 					data-theme="a" data-role="button">Cancel</a>
 			</div>
 

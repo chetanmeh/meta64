@@ -3,12 +3,13 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
 <body>
-	<div data-role="page" id="signupDialog">
+	<div data-role="page" id="signupPg">
 		<div data-role="header">
 			<h2 th:text="${brandingTitle}+' - Signup'"></h2>
 		</div>
 		<div role="main" class="ui-content">
-			Note: No email address is required currently, because this app is an alpha site that doesn't yet have email support.
+			Note: No email address is required currently, because this app is an
+			alpha site that doesn't yet have email support.
 			<div class="ui-field-contain">
 				<label for="signupUserName">User:</label>
 				<!--  -->
@@ -23,23 +24,26 @@
 				<label for="signupEmail">Email:</label>
 				<input type="text" name="signupEmail" id="signupEmail"/>
 				-->
-				
+
 				<!--  -->
 				<label for="signupCaptcha">Captcha:</label>
 				<!--  -->
 				<input type="text" name="signupCaptcha" id="signupCaptcha" />
 
 				<!--  -->
-				<img id="captchaImage" class="captcha" src="" />
-				
-				<button type="button" id="tryAnotherCaptchaButton">Try Different Image</button>
+				<div class="captcha-image">
+					<img id="captchaImage" class="captcha" src="" />
+				</div>
+
+				<button type="button" id="tryAnotherCaptchaButton">Try
+					Different Image</button>
 
 			</div>
 
 			<div data-type="horizontal" data-role="controlgroup">
-				<a id="signupButton" data-theme="b" data-role="button">Signup</a>
-				<a href="#" id="cancelSignupButton" data-rel="back"
-					data-theme="a" data-role="button">Cancel</a>
+				<a id="signupButton" data-theme="b" data-role="button">Signup</a> <a
+					href="#" id="cancelSignupButton" data-rel="back" data-theme="a"
+					data-role="button">Cancel</a>
 			</div>
 
 		</div>

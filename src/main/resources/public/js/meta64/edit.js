@@ -142,8 +142,8 @@ var edit = function() {
 			_.editingUnsavedNode = true;
 			_.editNode = null;
 
-			_.populateEditNodeDialog();
-			$.mobile.changePage("#editNodeDialog");
+			_.populateEditNodePg();
+			$.mobile.changePage("#editNodePg");
 		},
 
 		editMode : function() {
@@ -316,8 +316,8 @@ var edit = function() {
 			}
 		},
 
-		openExportDialog : function() {
-			$.mobile.changePage("#exportDialog");
+		openExportPg : function() {
+			$.mobile.changePage("#exportPg");
 		},
 
 		exportNodes : function() {
@@ -337,8 +337,8 @@ var edit = function() {
 			}
 		},
 
-		openImportDialog : function() {
-			$.mobile.changePage("#importDialog");
+		openImportPg : function() {
+			$.mobile.changePage("#importPg");
 		},
 
 		importNodes : function() {
@@ -367,8 +367,8 @@ var edit = function() {
 			}
 			_.editingUnsavedNode = false;
 			_.editNode = node;
-			_.populateEditNodeDialog();
-			$.mobile.changePage("#editNodeDialog");
+			_.populateEditNodePg();
+			$.mobile.changePage("#editNodePg");
 		},
 
 		/*
@@ -376,7 +376,7 @@ var edit = function() {
 		 * of the property editor dialog box.
 		 * 
 		 */
-		populateEditNodeDialog : function() {
+		populateEditNodePg : function() {
 
 			/* display the node path at the top of the edit page */
 			view.initEditPathDisplayById("#editNodePathDisplay");

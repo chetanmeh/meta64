@@ -15,7 +15,7 @@ var attachment = function() {
 			 * simply by setting hasBinary to false. So something's changed and that no longer works.  */
 			view.refreshTree(null, false);
 			
-			_.closeUploadDialog();
+			_.closeUploadPg();
 		}
 	}
 
@@ -53,7 +53,7 @@ var attachment = function() {
 				cache : false,
 				success : function() {
 					view.refreshTree(null, false);
-					_.closeUploadDialog();
+					_.closeUploadPg();
 				},
 				error : function() {
 					alert("Upload failed.");
@@ -61,13 +61,13 @@ var attachment = function() {
 			});
 		},
 
-		populateUploadDialog : function() {
+		populateUploadPg : function() {
 
 			/* display the node path at the top of the edit page */
 			$("#uploadPathDisplay").html("Path: " + render.formatPath(_.uploadNode.path));
 		},
 
-		openUploadDialogMenuClick : function() {
+		openUploadPgMenuClick : function() {
 			var node = meta64.getHighlightedNode();
 
 			if (!node) {
@@ -77,11 +77,11 @@ var attachment = function() {
 			}
 
 			_.uploadNode = node;
-			_.populateUploadDialog();
-			$.mobile.changePage("#uploadDialog");
+			_.populateUploadPg();
+			$.mobile.changePage("#uploadPg");
 		},
 		
-		closeUploadDialog : function() {
+		closeUploadPg : function() {
 			$.mobile.changePage("#mainPage");
 			view.scrollToSelectedNode();
 		}

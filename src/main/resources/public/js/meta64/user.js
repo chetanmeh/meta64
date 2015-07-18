@@ -76,8 +76,8 @@ var user = function() {
 
 	var _signupResponse = function(res) {
 		if (util.checkSuccess("Signup new user", res)) {
-			user.populateLoginDialogFromCookies();
-			$.mobile.changePage("#loginDialogId");
+			user.populateLoginPgFromCookies();
+			$.mobile.changePage("#loginPg");
 			alert("Signup successful.");
 		}
 	}
@@ -91,7 +91,7 @@ var user = function() {
 			});
 		},
 
-		populateLoginDialogFromCookies : function() {
+		populateLoginPgFromCookies : function() {
 			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
 			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
 			if (usr) {
@@ -102,13 +102,13 @@ var user = function() {
 			}
 		},
 
-		openLoginDialog : function() {
-			_.populateLoginDialogFromCookies();
+		openLoginPg : function() {
+			_.populateLoginPgFromCookies();
 			
 			/* make credentials visible only if not logged in */
 			util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
 			
-			$.mobile.changePage("#loginDialogId");
+			$.mobile.changePage("#loginPg");
 		},
 
 		signup : function() {
@@ -131,7 +131,7 @@ var user = function() {
 			}, _signupResponse);
 		},
 
-		pageInitSignupDialog : function() {
+		pageInitSignupPg : function() {
 			user.tryAnotherCaptcha();
 		},
 
@@ -234,8 +234,8 @@ var user = function() {
 			}
 		},
 
-		changePasswordDialog : function() {
-			$.mobile.changePage("#changePasswordDialog");
+		changePasswordPg : function() {
+			$.mobile.changePage("#changePasswordPg");
 		},
 
 		updateLoginButton : function(enablement) {

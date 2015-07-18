@@ -20,15 +20,15 @@ var prefs = function() {
 			}, _.savePreferencesResponse);
 		},
 
-		populatePreferencesDialog : function() {
+		populatePreferencesPg : function() {
 			$('#editModeSimple').prop('checked', meta64.editModeOption === meta64.MODE_SIMPLE).checkboxradio('refresh');
 			$('#editModeAdvanced').prop('checked', meta64.editModeOption === meta64.MODE_ADVANCED).checkboxradio('refresh');
 		},
 		
-		accountPreferencesDialog : function() {
+		accountPreferencesPg : function() {
 			
-			$.mobile.changePage("#accountPreferencesDialog");
-			_.populatePreferencesDialog();
+			$.mobile.changePage("#accountPreferencesPg");
+			_.populatePreferencesPg();
 		}
 	};
 

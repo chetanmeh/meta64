@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
 <body>
-	<div data-role="page" id="loginDialogId">
+	<div data-role="page" id="loginPg">
 		<div data-role="header">
 			<h2 th:text="${brandingTitle}+' - Login'"></h2>
 		</div>
@@ -25,8 +25,7 @@
 				<a id="logoutButton" data-theme="b" data-role="button">Logout</a>
 
 				<!--  -->
-				<a href="#signupDialog" data-rel="dialog" data-role="button"
-					data-transition="pop">Signup</a>
+				<a href="#signupPg" data-role="button">Signup</a>
 
 				<!--  -->
 				<a href="#" id="cancelLoginActionButton" data-rel="back"

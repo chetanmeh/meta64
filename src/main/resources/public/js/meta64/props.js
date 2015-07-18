@@ -7,8 +7,8 @@ var props = function() {
 
 		edit.editNode.properties.push(res.propertySaved)
 
-		edit.populateEditNodeDialog();
-		$.mobile.changePage("#editNodeDialog");
+		edit.populateEditNodePg();
+		$.mobile.changePage("#editNodePg");
 
 		// $("#editPropertyDialogCloseButton").trigger('click');
 		// $.mobile.changePage(getPreviousPage()); //"#editNodeDialog");
@@ -27,8 +27,8 @@ var props = function() {
 			props.deletePropertyFromLocalData(info.propertyToDelete);
 
 			/* now just re-render screen from local variables */
-			edit.populateEditNodeDialog();
-			$.mobile.changePage("#editNodeDialog");
+			edit.populateEditNodePg();
+			$.mobile.changePage("#editNodePg");
 			meta64.treeDirty = true;
 		}
 	}
@@ -106,7 +106,7 @@ var props = function() {
 			view.initEditPathDisplayById("#editPropertyPathDisplay");
 
 			util.setHtmlEnhanced($("#addPropertyFieldContainer"), field);
-			$.mobile.changePage("#editPropertyDialog");
+			$.mobile.changePage("#editPropertyPg");
 		},
 
 		saveProperty : function() {
@@ -142,7 +142,7 @@ var props = function() {
 			 * entire edit page is what I'm doing for simplicity.
 			 */
 			prop.values.push('');
-			edit.populateEditNodeDialog();
+			edit.populateEditNodePg();
 		},
 
 		clearProperty : function(fieldId) {

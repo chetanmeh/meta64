@@ -77,8 +77,8 @@ var srch = function() {
 			}, _searchNodesResponse);
 		},
 
-		searchNodesDialog : function() {
-			$.mobile.changePage("#searchNodesDialog");
+		searchNodesPg : function() {
+			$.mobile.changePage("#searchNodesPg");
 		},
 
 		initSearchNode : function(node) {
@@ -112,7 +112,7 @@ var srch = function() {
 			});
 
 			util.setHtmlEnhanced($("#searchResultsView"), output);
-			$.mobile.changePage("#searchResultsDialog");
+			$.mobile.changePage("#searchResultsPg");
 		},
 
 		/*

@@ -274,9 +274,9 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : user.login
 			}, {
-				"name" : "openLoginDialog",
+				"name" : "openLoginPg",
 				"enable" : true,
-				"function" : user.openLoginDialog
+				"function" : user.openLoginPg
 			}, {
 				"name" : "logout",
 				"enable" : false,
@@ -314,9 +314,9 @@ var meta64 = function() {
 				"enable" : false,
 				"function" : props.saveProperty
 			}, {
-				"name" : "changePasswordDialog",
+				"name" : "changePasswordPg",
 				"enable" : false,
-				"function" : user.changePasswordDialog
+				"function" : user.changePasswordPg
 			}, {
 				"name" : "changePassword",
 				"enable" : false,
@@ -330,9 +330,9 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : user.signup
 			}, {
-				"name" : "accountPreferencesDialog",
+				"name" : "accountPreferencesPg",
 				"enable" : true,
-				"function" : prefs.accountPreferencesDialog
+				"function" : prefs.accountPreferencesPg
 			}, {
 				"name" : "savePreferences",
 				"enable" : true,
@@ -358,9 +358,9 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : srch.searchNodes
 			}, {
-				"name" : "searchNodesDialog",
+				"name" : "searchNodesPg",
 				"enable" : true,
-				"function" : srch.searchNodesDialog
+				"function" : srch.searchNodesPg
 			}, {
 				"name" : "deleteSelNodes",
 				"enable" : true,
@@ -374,17 +374,17 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : edit.finishMovingSelNodes
 			}, {
-				"name" : "openExportDialog",
+				"name" : "openExportPg",
 				"enable" : true,
-				"function" : edit.openExportDialog
+				"function" : edit.openExportPg
 			}, {
 				"name" : "exportNodes",
 				"enable" : true,
 				"function" : edit.exportNodes
 			}, {
-				"name" : "openImportDialog",
+				"name" : "openImportPg",
 				"enable" : true,
-				"function" : edit.openImportDialog
+				"function" : edit.openImportPg
 			}, {
 				"name" : "importNodes",
 				"enable" : true,
@@ -392,28 +392,28 @@ var meta64 = function() {
 			}, {
 				"name" : "manageAttachments",
 				"enable" : true,
-				"function" : attachment.openUploadDialogMenuClick
+				"function" : attachment.openUploadPgMenuClick
 			}, {
 				"name" : "editNodeSharing",
 				"enable" : true,
 				"function" : share.editNodeSharingMenuClick
 			}, {
-				"name" : "shareNodeToPersonDialog",
+				"name" : "shareNodeToPersonPg",
 				"enable" : false,
-				"function" : share.shareNodeToPersonDialog
+				"function" : share.shareNodeToPersonPg
 			}, {
 				"name" : "shareNodeToPerson",
 				"enable" : false,
 				"function" : share.shareNodeToPerson
 			}, {
-				"name" : "donateDialog",
+				"name" : "donatePg",
 				"enable" : true,
-				"function" : _.openDonateDialog
+				"function" : _.openDonatePg
 			});
 		},
 		
-		openDonateDialog : function() {
-			$.mobile.changePage("#donateDialogId"); 
+		openDonatePg : function() {
+			$.mobile.changePage("#donatePg"); 
 		},
 
 		getHighlightedNode : function() {
@@ -489,7 +489,7 @@ var meta64 = function() {
 			util.setEnablementByName("deleteProperty", !_.isAnonUser);
 			util.setEnablementByName("saveProperty", !_.isAnonUser);
 			util.setEnablementByName("changePassword", !_.isAnonUser);
-			util.setEnablementByName("changePasswordDialog", !_.isAnonUser);
+			util.setEnablementByName("changePasswordPg", !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;
 			// console.log(">>>>>>>>>>>>>>> currentNode=" + _.currentNode + "
@@ -505,15 +505,15 @@ var meta64 = function() {
 
 			/* Disable and hide things only available to admin users */
 			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
-			util.setEnablementByName("openExportDialog", _.isAdminUser, _.isAdminUser);
-			util.setEnablementByName("openImportDialog", _.isAdminUser, _.isAdminUser);
+			util.setEnablementByName("openExportPg", _.isAdminUser, _.isAdminUser);
+			util.setEnablementByName("openImportPg", _.isAdminUser, _.isAdminUser);
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
 			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
 
 			/* Actions that depend on having a highlighted node */
 			util.setEnablementByName("manageAttachments", highlightNode != null);
 			util.setEnablementByName("editNodeSharing", highlightNode != null);
-			util.setEnablementByName("shareNodeToPersonDialog", highlightNode != null);
+			util.setEnablementByName("shareNodeToPersonPg", highlightNode != null);
 			util.setEnablementByName("shareNodeToPerson", highlightNode != null);
 		},
 
@@ -695,10 +695,11 @@ var meta64 = function() {
 		var toPage = data.toPage[0].id;
 		console.log("Nav to page: " + toPage);
 
-		if (toPage == "signupDialog") {
-			user.pageInitSignupDialog();
+		if (toPage == "signupPg") {
+			user.pageInitSignupPg();
 			// $.mobile.pageContainer.pagecontainer("change", "#pageZ");
 		}
+		
 		// this doesn't execute ???? so I'm just updating enablement
 		// very time a
 		// selection changes.

@@ -101,7 +101,7 @@
 					-->
 					<li><a id="propsToggleButton" data-icon="forbidden">Props</a></li>
 					<li><a id="editModeButton" data-icon="forbidden">Edit</a></li>
-					<li><a data-icon="user" id="openLoginDialogButton">Login</a></li>
+					<li><a data-icon="user" id="openLoginPgButton">Login</a></li>
 				</ul>
 			</div>
 			<div class="page-node-header">
@@ -117,7 +117,7 @@
 
 			<div class="donate-center">
 				<a data-ajax="false" class="donate-link"
-					onClick="meta64.openDonateDialog();">[ Contribute to Meta64 ]</a>
+					onClick="meta64.openDonatePg();">[ Contribute to Meta64 ]</a>
 			</div>
 		</div>
 		<!-- /content -->
@@ -136,20 +136,20 @@
 		</div>
 	</div>
 
-	<div th:replace="fragments/login-dialog">...</div>
-	<div th:replace="fragments/signup-dialog">...</div>
-	<div th:replace="fragments/edit-node-dialog">...</div>
-	<div th:replace="fragments/share-node-dialog">...</div>
-	<div th:replace="fragments/edit-property-dialog">...</div>
-	<div th:replace="fragments/change-password-dialog">...</div>
-	<div th:replace="fragments/account-preferences-dialog">...</div>
-	<div th:replace="fragments/upload-dialog">...</div>
-	<div th:replace="fragments/search-dialog">...</div>
-	<div th:replace="fragments/search-results-dialog">...</div>
-	<div th:replace="fragments/export-dialog">...</div>
-	<div th:replace="fragments/import-dialog">...</div>
-	<div th:replace="fragments/share-node-to-person-dialog">...</div>
-	<div th:replace="fragments/donate-dialog">...</div>
+	<div th:replace="fragments/login">...</div>
+	<div th:replace="fragments/signup">...</div>
+	<div th:replace="fragments/edit-node">...</div>
+	<div th:replace="fragments/share-node">...</div>
+	<div th:replace="fragments/edit-property">...</div>
+	<div th:replace="fragments/change-password">...</div>
+	<div th:replace="fragments/account-preferences">...</div>
+	<div th:replace="fragments/upload">...</div>
+	<div th:replace="fragments/search">...</div>
+	<div th:replace="fragments/search-results">...</div>
+	<div th:replace="fragments/export">...</div>
+	<div th:replace="fragments/import">...</div>
+	<div th:replace="fragments/share-node-to-person">...</div>
+	<div th:replace="fragments/donate">...</div>
 
 	<script>
 		meta64.initApp();

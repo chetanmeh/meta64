@@ -8,6 +8,10 @@ tr td div p {
 	padding: 1px 1px 1px 1px;
 }
 
+.captcha-image {
+	text-align:center;
+}
+
 .donations {
 	text-align:center;
 }

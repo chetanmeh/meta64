@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
 <body>
-	<div data-role="page" id="uploadDialog">
+	<div data-role="page" id="uploadPg">
 		<div data-role="header">
 			<h2 th:text="${brandingTitle}+' - Upload File Attachment'"></h2>
 		</div>
@@ -24,7 +24,7 @@
 				
 				<!--  -->
 				<a href="#" id="cancelUploadButton" 
-					data-role="button" onClick="attachment.closeUploadDialog()">Close</a>
+					data-role="button" onClick="attachment.closeUploadPg()">Close</a>
 			</div>
 			
 		</div>
