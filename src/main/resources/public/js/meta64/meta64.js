@@ -406,8 +406,6 @@ var meta64 = function() {
 				"enable" : false,
 				"function" : share.shareNodeToPerson
 			});
-
-			// hookSliderChanges("editMode");
 		},
 
 		getHighlightedNode : function() {

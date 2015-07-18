@@ -97,6 +97,7 @@ import com.meta64.mobile.service.NodeSearchService;
 import com.meta64.mobile.user.AccessControlUtil;
 import com.meta64.mobile.user.UserManagerService;
 import com.meta64.mobile.user.UserManagerUtil;
+import com.meta64.mobile.util.BrandingUtil;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.ImportWarAndPeace;
 import com.meta64.mobile.util.JcrUtil;
@@ -143,6 +144,9 @@ public class AppController {
 
 	@Autowired
 	private OakRepositoryBean oak;
+	
+	@Autowired
+	private BrandingUtil brandingUtil;
 
 	/*
 	 * Each time the server restarts we have a new version number here and will cause clients to
@@ -173,6 +177,8 @@ public class AppController {
 
 		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
+		brandingUtil.addBrandingAttributes(model);
+		
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", //
 				"share", "user", "util", "view", "cnst");

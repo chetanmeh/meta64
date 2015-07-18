@@ -42,7 +42,10 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 
 ## Current Features (already working)
 
-* Basic JCR Browser capability (Tree browsing with ability to "drill own" into the tree)
+* Basic JCR Browser capability 
+	- Tree browsing with ability to "drill own" into the tree
+* Soft "Brandable" 
+	- Rebrand the entire portal by entering brand name in the properties file.
 * Login/Logout
 * Auto-login using Cookies
 * Signup new users (including captcha, and password)
@@ -72,7 +75,6 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 ## Next Features to be Developed
 Listed here in the order they will likely be developed...
 
-* Implement "soft branding" so that basically the app name comes out of a properties file so admins can name their portal however they want and it won't look like it's meta64. Fully "Brandable"
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
 * Need to encrypt password cookie on client.
 * Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows walking of **one** page per user, and have a standard of like /user/home being the folder that users can create

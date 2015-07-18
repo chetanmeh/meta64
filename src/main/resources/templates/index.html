@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
-<title>meta64</title>
+<title th:text="${brandingTitle}">Branding Title</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -12,6 +12,7 @@
 <script th:inline="javascript">
 	/*<![CDATA[*/
 	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
+	var BRANDING_TITLE =  /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var postTargetUrl = window.location.origin + "/mobile/rest/";
 	//console.log("CookiePrefix[" + cookiePrefix + "]");
 	/*]]>*/
@@ -86,7 +87,7 @@
 	<div id="mainPage" data-role="page">
 		<div id="mainPageHeader" data-role="header" data-position="fixed"
 			data-tap-toggle="false">
-			<h1 id="headerUserName">Meta64</h1>
+			<h1 id="headerUserName" th:text="${brandingTitle}">Branding Title</h1>
 			<a href="#popupMenu" data-rel="popup" data-icon="bars"
 				id="menuButton">Menu</a>
 			<div data-role="navbar">
