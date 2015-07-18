@@ -1,6 +1,11 @@
 ## Meta64: An Open-Source Portal and Content Repository
 An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is a platform for building portals around any kind of content. The technology is a "portal platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, as well as a Social Media-type feature set similar to Facebook. 
 
+## Technology Stack
+* Client: JavaScript, JQuery Mobile, HTML+CSS, RESTful JSON-based Ajax
+* Server: Java, Spring Boot + Spring Framework, Thymeleaf, Apache Oak JCR, MongoDb and/or MySQL, Tomcat Embedded 
+
+## Links
 * GitHub Main Page
   - https://github.com/Clay-Ferguson/meta64
 
@@ -9,17 +14,12 @@ An Open Source "Mobile First" Wiki-type content repository built on Apache Oak J
 
 * Screencasts on Youtube
   - https://www.youtube.com/channel/UCbeE-Pwu5AyeSPKuR_9vEeA/feed
-
-## Technology Stack
-* Client: JavaScript, JQuery Mobile, HTML+CSS, RESTful JSON-based Ajax
-* Server: Java, Spring Boot + Spring Framework, Thymeleaf, Apache Oak JCR, MongoDb and/or MySQL, Tomcat Embedded 
-
-## Technology Demo (War and Peace)
-The book "War and Peace" is stored in the repository for browsing:
-
-http://www.meta64.com/?id=/nt:war-and-peace
-
-Logged in users can use the Full Text Search feature, on the menu at the upper left, that appears when you log in.
+  
+* Developer Site on Linkedin
+  - https://www.linkedin.com/in/wclayf
+  
+* Browse Demo Content (Book: War and Peace) 
+  - http://www.meta64.com/?id=/nt:war-and-peace
 
 ## Meta64 Overview
 Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you are on meta64.com) is actually running this app, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that "everything is content" and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
