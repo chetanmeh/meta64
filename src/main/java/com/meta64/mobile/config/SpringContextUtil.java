@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Manages certain aspects of Spring application context. 
+ * Manages certain aspects of Spring application context.
  */
 @Component
 @Scope("singleton")

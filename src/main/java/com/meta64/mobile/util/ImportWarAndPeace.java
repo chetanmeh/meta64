@@ -125,9 +125,7 @@ public class ImportWarAndPeace {
 		line = line.replace(".   ", ".  ");
 
 		if (line.length() == 0) return false;
-
 		if (curChapter == null || curBook == null) return false;
-
 		globalVerse++;
 
 		// line = XString.injectForQuotations(line);

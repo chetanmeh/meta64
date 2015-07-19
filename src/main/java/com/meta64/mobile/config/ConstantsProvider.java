@@ -6,6 +6,8 @@ package com.meta64.mobile.config;
  */
 public interface ConstantsProvider {
 	public String getRestUrl();
+
 	public String getCookiePrefix();
+
 	public String getBrandingTitle();
 }

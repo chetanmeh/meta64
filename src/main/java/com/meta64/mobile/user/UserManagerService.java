@@ -79,7 +79,7 @@ public class UserManagerService {
 	public void saveUserPreferences(Session session, final SaveUserPreferencesRequest req, final SaveUserPreferencesResponse res) throws Exception {
 
 		final String userName = sessionContext.getUserName();
-		
+
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
@@ -101,7 +101,7 @@ public class UserManagerService {
 	public UserPreferences getUserPreferences(Session session) throws Exception {
 		final String userName = sessionContext.getUserName();
 		final UserPreferences userPrefs = new UserPreferences();
-		
+
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {

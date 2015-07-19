@@ -107,9 +107,8 @@ import com.meta64.mobile.util.XString;
 
 /**
  * Primary Spring MVC controller, that returns the main page, process REST calls from the client
- * javascript, and also performs the uploading/download, and serving of images. These major areas
- * probably will eventually be broken out onto separate controllers, and much of the business rules
- * in here will be moved out into service or utility classes.
+ * javascript, and also performs the uploading/download, and serving of images. All of the business
+ * logic in here will eventually be moved out into service or utility classes.
  * 
  * Note, it's critical to understand the OakSession AOP code or else this class will be confusing
  * regarding how the OAK transations are managed and how logging in is done.
@@ -121,9 +120,6 @@ public class AppController {
 
 	private static final String REST_PATH = "/mobile/rest";
 
-	/*
-	 * Relational Database Connection Info
-	 */
 	@Value("${anonUserLandingPageNode}")
 	private String anonUserLandingPageNode;
 
@@ -144,7 +140,7 @@ public class AppController {
 
 	@Autowired
 	private OakRepositoryBean oak;
-	
+
 	@Autowired
 	private BrandingUtil brandingUtil;
 
@@ -153,9 +149,8 @@ public class AppController {
 	 * download new version of JS files into their local browser cache. For now the assumption is
 	 * that this is better then having to remember to update version numbers to invalidate client
 	 * caches, but in production systems we may not want to push new JS just because of a server
-	 * restart so this will change in the future. That is the 'currentTimeMillis' part will change
-	 * to some kind of an actual version number or something, that will be parts of managed
-	 * releases.
+	 * restart so this will change in the future. That is, the 'currentTimeMillis' part will change
+	 * to some kind of an actual version number or something, that will be part of managed releases.
 	 */
 	public static final long jsVersion = System.currentTimeMillis();
 	public static final long cssVersion = jsVersion; // match jsVersion for now, why not.
@@ -170,7 +165,6 @@ public class AppController {
 	 * ID is optional url parameter that user can specify to access a specific node in the
 	 * repository by uuid.
 	 */
-	// @RequestMapping("/mobile")
 	@RequestMapping("/")
 	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
 		logRequest("mobile", null);
@@ -178,7 +172,7 @@ public class AppController {
 		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
 		brandingUtil.addBrandingAttributes(model);
-		
+
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
 				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", //
 				"share", "user", "util", "view", "cnst");
@@ -628,7 +622,7 @@ public class AppController {
 		String targetId = req.getTargetNodeId();
 		Node targetNode = JcrUtil.findNode(session, targetId);
 		String targetPath = targetNode.getPath();
-		String targetChildId = req.getTargetChildId();
+		// String targetChildId = req.getTargetChildId();
 
 		for (String nodeId : req.getNodeIds()) {
 			log.debug("Moving ID: " + nodeId);

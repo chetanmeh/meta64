@@ -7,6 +7,9 @@ var meta64 = function() {
 
 	var _ = {
 
+		deviceWidth : 0,
+		deviceHeight : 0,
+
 		/*
 		 * User's root node. Top level of what logged in user is allowed to see.
 		 */
@@ -411,9 +414,9 @@ var meta64 = function() {
 				"function" : _.openDonatePg
 			});
 		},
-		
+
 		openDonatePg : function() {
-			$.mobile.changePage("#donatePg"); 
+			$.mobile.changePage("#donatePg");
 		},
 
 		getHighlightedNode : function() {
@@ -444,7 +447,7 @@ var meta64 = function() {
 			var curHighlightedNode = _.parentUidToFocusNodeMap[_.currentNodeUid];
 			if (curHighlightedNode) {
 				if (curHighlightedNode.uid === node.uid) {
-					//console.log("already highlighted.");
+					// console.log("already highlighted.");
 					doneHighlighting = true;
 				} else {
 					var rowElmId = curHighlightedNode.uid + "_row";
@@ -460,7 +463,7 @@ var meta64 = function() {
 				var rowElm = $("#" + rowElmId);
 				util.changeOrAddClass(rowElm, "inactive-row", "active-row");
 			}
-			
+
 			if (scroll) {
 				view.scrollToSelectedNode();
 			}
@@ -657,8 +660,11 @@ var meta64 = function() {
 			// alert('app initializing');
 
 			console.log("initApp running.");
-
+			$(window).on('orientationchange', _.orientationHandler);
 			_.defineAllActions();
+
+			_.deviceWidth = $(window).width();
+			_.deviceHeight = $(window).height();
 
 			/*
 			 * This call checks the server to see if we have a session already,
@@ -681,6 +687,45 @@ var meta64 = function() {
 			// _.loadAnonPageHome(false, window.location.search);
 			// }
 			// }, 1000);
+			/*
+			 * Check for screen size in a timer. We don't want to monitor actual
+			 * screen resize events because if a user is expanding a window we
+			 * basically want to limit the CPU and chaos that would ensue if we
+			 * tried to adjust things every time it changes. So we throttle back
+			 * to only reorganizing the screen once per second. This timer is a
+			 * throttle sort of.
+			 */
+			setInterval(function() {
+				var width = $(window).width();
+
+				if (width != _.deviceWidth) {
+					//console.log("Screen width changed: " + width);
+
+					_.deviceWidth = width;
+					_.deviceHeight = $(window).height();
+
+					_.screenSizeChange();
+				}
+			}, 1500);
+		},
+
+		screenSizeChange : function() {
+			if (_.currentNodeData) {
+				$.each(_.currentNodeData.children, function(i, node) {
+					if (node.imgId) {
+						render.adjustImageSize(node);
+					}
+				});
+			}
+		},
+
+		/* Don't need this method yet, and haven't tested to see if works */
+		orientationHandler : function(event) {
+			if (event.orientation) {
+				if (event.orientation == 'portrait') {
+				} else if (event.orientation == 'landscape') {
+				}
+			}
 		},
 
 		loadAnonPageHome : function(ignoreUrl, urlQuery) {
@@ -699,7 +744,7 @@ var meta64 = function() {
 			user.pageInitSignupPg();
 			// $.mobile.pageContainer.pagecontainer("change", "#pageZ");
 		}
-		
+
 		// this doesn't execute ???? so I'm just updating enablement
 		// very time a
 		// selection changes.

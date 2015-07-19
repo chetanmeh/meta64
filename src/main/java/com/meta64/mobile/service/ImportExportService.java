@@ -224,37 +224,36 @@ public class ImportExportService {
 		 * this file name hack and let the system be smarter and actually check MIME types using
 		 * file name extensions and import binaries properly etc.
 		 */
-		//if (name.endsWith("/content.html") || name.endsWith("/content.txt")) {
+		// if (name.endsWith("/content.html") || name.endsWith("/content.txt")) {
 
-			StringBuilder buffer = new StringBuilder();
-			synchronized (byteBuf) {
-				/*
-				 * todo: got this code snippet online. someday look to see if there is a more
-				 * efficient way
-				 */
-				for (int n; (n = zis.read(byteBuf)) != -1;) {
-					if (n > 0) {
-						buffer.append(new String(byteBuf, 0, n));
-					}
+		StringBuilder buffer = new StringBuilder();
+		synchronized (byteBuf) {
+			/*
+			 * todo: got this code snippet online. someday look to see if there is a more efficient
+			 * way
+			 */
+			for (int n; (n = zis.read(byteBuf)) != -1;) {
+				if (n > 0) {
+					buffer.append(new String(byteBuf, 0, n));
 				}
 			}
+		}
 
-			Node newNode = ensureNodeExistsForZipFolder(importNode, name, session);
-			String val = buffer.toString();
+		Node newNode = ensureNodeExistsForZipFolder(importNode, name, session);
+		String val = buffer.toString();
 
-			/*
-			 * I had a special need to rip HTML tags out of the data I was importing, so I'm
-			 * commenting out this hack but leaving it in place so show where and how you can do
-			 * some processing of the data as it's imported. Ideally of course this capability would
-			 * be some kind of "extension point" (Eclipse plugin terminology) in a production JCR
-			 * Browder for filteringinput data, or else this entire class could be pluggable via
-			 * inteface and IoC.
-			 */
-			// val = val.replace("<p>", "\n\n");
-			// val = val.replace("<br>", "\n");
-			// val = ripTags(val);
-			newNode.setProperty("jcr:content", val.trim());
-		//}
+		/*
+		 * I had a special need to rip HTML tags out of the data I was importing, so I'm commenting
+		 * out this hack but leaving it in place so show where and how you can do some processing of
+		 * the data as it's imported. Ideally of course this capability would be some kind of
+		 * "extension point" (Eclipse plugin terminology) in a production JCR Browder for
+		 * filteringinput data, or else this entire class could be pluggable via inteface and IoC.
+		 */
+		// val = val.replace("<p>", "\n\n");
+		// val = val.replace("<br>", "\n");
+		// val = ripTags(val);
+		newNode.setProperty("jcr:content", val.trim());
+		// }
 	}
 
 	public static String ripTags(String text) {

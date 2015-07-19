@@ -9,7 +9,7 @@ public class SpringMvcUtil {
 			model.addAttribute(fileName + "Js", "/js/meta64/" + fileName + ".js?ver=" + ver);
 		}
 	}
-	
+
 	public static void addCssFileNameProps(Model model, String ver, String... fileNames) {
 		for (String fileName : fileNames) {
 			model.addAttribute(fileName + "Css", "../css/" + fileName + ".css?ver=" + ver);

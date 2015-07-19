@@ -56,7 +56,7 @@ var render = function() {
 				var path = meta64.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
-				ret += "Path: " + _.formatPath(path) + "<div id='ownerDisplay"+node.uid+"'></div>";
+				ret += "Path: " + _.formatPath(path) + "<div id='ownerDisplay" + node.uid + "'></div>";
 			}
 
 			if (showIdentifier && meta64.editMode) {
@@ -70,7 +70,9 @@ var render = function() {
 					 * but then again it's not an ID either.
 					 */
 					// if (!node.id.contains("/")) {
-					ret += "ID: " + node.id + cnst.BR; //TODO: this <br> tag here is ugly and wrong.
+					ret += "ID: " + node.id + cnst.BR; // TODO: this <br> tag
+					// here is ugly and
+					// wrong.
 					// }
 				}
 			}
@@ -234,7 +236,7 @@ var render = function() {
 			}
 
 			if (meta64.editMode && editingAllowed) {
-				
+
 				/* Construct Create Subnode Button */
 				editNodeButton = _.makeTag("a", //
 				{
@@ -270,8 +272,8 @@ var render = function() {
 				}
 			}
 
-			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton 
-				 + moveNodeUpButton + moveNodeDownButton;
+			var allButtons = selButton + openButton + insertNodeButton + createSubNodeButton + editNodeButton + moveNodeUpButton
+					+ moveNodeDownButton;
 
 			if (allButtons.length > 0) {
 				return _.makeHorizontalFieldSet(allButtons);
@@ -443,7 +445,7 @@ var render = function() {
 			}
 
 			util.setHtmlEnhancedById("#listView", output);
-			
+
 			if (!meta64.getHighlightedNode()) {
 				util.scrollToTop();
 			}
@@ -460,12 +462,13 @@ var render = function() {
 				// console.log(" RENDER ROW[" + i + "]: node.id=" +
 				// node.id);
 
-				/* &&& rethinking this.
-				 * if no row is selected for this parent, select the first row
+				/*
+				 * &&& rethinking this. if no row is selected for this parent,
+				 * select the first row
 				 */
-//				if (!meta64.getHighlightedNode()) {
-//					meta64.highlightNode(node, false);
-//				}
+				// if (!meta64.getHighlightedNode()) {
+				// meta64.highlightNode(node, false);
+				// }
 			}
 
 			rowCount++; // warning: this is the local variable/parameter
@@ -477,17 +480,93 @@ var render = function() {
 		getUrlForNodeAttachment : function(node) {
 			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path + "/nt:bin") + "&ver=" + node.binVer;
 		},
+		
+		/* see also: makeImageTag() */
+		adjustImageSize : function(node) {
 
+			var elm = $("#" + node.imgId);
+			if (elm) {
+				var width = elm.attr("width");
+				var height = elm.attr("height");
+				//console.log("width=" + width + " height=" + height);
+				
+				if (node.width && node.height) {
+
+					if (node.width > meta64.deviceWidth - 50) {
+
+						/* set the width we want to go for */
+						var width = meta64.deviceWidth - 50;
+
+						/*
+						 * and set the height to the value it needs to be at for
+						 * same w/h ratio (no image stretching)
+						 */
+						var height = width * node.height / node.width;
+
+						elm.attr("width", width);
+						elm.attr("height", height);
+					}
+					/* Image does fit on screen so render it at it's exact size */
+					else {
+						elm.attr("width", node.width);
+						elm.attr("height", node.height);
+					}
+				}
+			}
+		},
+
+		/* see also: adjustImageSize() */
 		makeImageTag : function(node) {
+			var src = _.getUrlForNodeAttachment(node);
+			node.imgId = "imgUid_" + node.uid;
+
 			if (node.width && node.height) {
-				return _.makeTag("img", {
-					"src" : _.getUrlForNodeAttachment(node),
-					"width" : node.width + "px",
-					"height" : node.height + "px"
-				}, null, false);
+
+				/*
+				 * if image won't fit on screen we want to size it down to fit
+				 * 
+				 * Yes, it would have been simpler to just use something like
+				 * width=100% for the image width but then the hight would not
+				 * be set explicitly and that would mean that as images are
+				 * loading into the page, the effective scroll position of each
+				 * row will be increasing each time the URL request for a new
+				 * image completes. What we want is to have it so that once we
+				 * set the scroll position to scroll a particular row into view,
+				 * it will stay the correct scroll location EVEN AS the images
+				 * are streaming in asynchronously.
+				 * 
+				 */
+				if (node.width > meta64.deviceWidth - 50) {
+
+					/* set the width we want to go for */
+					var width = meta64.deviceWidth - 50;
+
+					/*
+					 * and set the height to the value it needs to be at for
+					 * same w/h ratio (no image stretching)
+					 */
+					var height = width * node.height / node.width;
+
+					return _.makeTag("img", {
+						"src" : src,
+						"id" : node.imgId,
+						"width" : width + "px",
+						"height" : height + "px"
+					}, null, false);
+				}
+				/* Image does fit on screen so render it at it's exact size */
+				else {
+					return _.makeTag("img", {
+						"src" : src,
+						"id" : node.imgId,
+						"width" : node.width + "px",
+						"height" : node.height + "px"
+					}, null, false);
+				}
 			} else {
 				return _.makeTag("img", {
-					"src" : _.getUrlForNodeAttachment(node)
+					"src" : src,
+					"id" : node.imgId
 				}, null, false);
 			}
 		},

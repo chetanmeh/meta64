@@ -44,12 +44,12 @@ public class AccessControlUtil {
 
 	public static Privilege[] makePrivilegesFromNames(AccessControlManager acMgr, List<String> names) throws Exception {
 		List<Privilege> privileges = new LinkedList<Privilege>();
-		
+
 		for (String name : names) {
 			name = interpretPrivilegeName(name);
 			privileges.add(acMgr.privilegeFromName(name));
 		}
-		
+
 		Privilege[] privArr = new Privilege[privileges.size()];
 		return privileges.toArray(privArr);
 	}
@@ -71,7 +71,7 @@ public class AccessControlUtil {
 	}
 
 	public static List<String> getOwnerNames(Session session, Node node) throws Exception {
-		
+
 		/* TODO: maybe use a set here to avoid duplidates! */
 		List<String> owners = new LinkedList<String>();
 
@@ -86,7 +86,7 @@ public class AccessControlUtil {
 				for (Principal p : principals) {
 					owners.add(p.getName());
 				}
-				
+
 				if (principals.size() == 0) {
 					node = node.getParent();
 				}
@@ -104,11 +104,11 @@ public class AccessControlUtil {
 
 	public static List<Principal> getNodePrincipals(Session session, Node node) throws Exception {
 		List<Principal> principals = new LinkedList<Principal>();
-		
+
 		AccessControlList acl = getAccessControlList(session, node);
 		if (acl != null) {
 			AccessControlEntry[] aclEntries = acl.getAccessControlEntries();
-			
+
 			if (aclEntries != null) {
 				for (AccessControlEntry aclEntry : aclEntries) {
 					for (Privilege priv : aclEntry.getPrivileges()) {
@@ -120,7 +120,7 @@ public class AccessControlUtil {
 				}
 			}
 		}
-		
+
 		return principals;
 	}
 

@@ -26,7 +26,8 @@ import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
- * Service for searching the repository
+ * Service for searching the repository. This searching is currently very basic, and just grabs the
+ * first 100 results and returns.
  */
 @Component
 @Scope("session")
@@ -46,7 +47,7 @@ public class NodeSearchService {
 	 * see also: http://docs.jboss.org/jbossdna/0.7/manuals/reference/html/jcr-query-and-search.html
 	 * https://wiki.magnolia-cms.com/display/WIKI/JCR+Query+Cheat+Sheet
 	 * 
-	 * Ordering example: 
+	 * Ordering example:
 	 * 
 	 * final String statement = String.format(
 	 * "SELECT * FROM [%s] WHERE ISDESCENDANTNODE('/%s') ORDER BY [jcr:content/jcr:lastModified]",

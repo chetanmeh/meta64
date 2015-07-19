@@ -3,7 +3,7 @@ package com.meta64.mobile.config;
 /**
  * Keeping this for future reference.
  */
-//@Configuration
+// @Configuration
 public class MyConfiguration {
 
 	// DO NOT DELETE.

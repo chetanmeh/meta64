@@ -134,7 +134,6 @@ public class OakRepository {
 
 				ensureNodeExists(session, "/", "jcr:root", "Root of All Users");
 				ensureNodeExists(session, "/", "jcr:userPreferences", "Preferences of All Users");
-				// log.debug(UserManagerUtil.dumpPrivileges(session, allUsersRoot));
 			}
 		});
 	}

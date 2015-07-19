@@ -99,11 +99,14 @@ public class Convert {
 			// not an error. means node has no binary subnode.
 		}
 
-		/* node.hasNodes() won't work here, because the gui doesn't display nt:bin nodes as actual nodes */
+		/*
+		 * node.hasNodes() won't work here, because the gui doesn't display nt:bin nodes as actual
+		 * nodes
+		 */
 		boolean hasDisplayableNodes = hasDisplayableNodes(node);
-		
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), hasDisplayableNodes, false,
-				hasBinary, binaryIsImage, binVer, //
+
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), hasDisplayableNodes, false, hasBinary,
+				binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
 				imageSize != null ? imageSize.getHeight() : 0);
 		return nodeInfo;

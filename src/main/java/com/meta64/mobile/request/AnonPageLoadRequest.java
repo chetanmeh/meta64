@@ -3,7 +3,7 @@ package com.meta64.mobile.request;
 public class AnonPageLoadRequest {
 	private boolean ignoreUrl;
 	private String urlQuery;
-	
+
 	public boolean isIgnoreUrl() {
 		return ignoreUrl;
 	}

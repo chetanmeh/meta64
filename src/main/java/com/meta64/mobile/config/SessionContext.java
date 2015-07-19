@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.meta64.mobile.repo.OakRepositoryBean;
 
 /**
- * Wrapper for holding variables that we do need to maintain server state of for a specific session.
+ * Wrapper for holding variables that we need to maintain server state of for a specific session.
  * Basic session state storage is all collected here.
  */
 @Component
@@ -37,8 +37,8 @@ public class SessionContext {
 	}
 
 	/*
-	 * This can create nasty bugs. I should bet always getting user name from the actual session object itself
-	 * in all the logic... in most every case except maybe login process.
+	 * This can create nasty bugs. I should bet always getting user name from the actual session
+	 * object itself in all the logic... in most every case except maybe login process.
 	 */
 	public String getUserName() {
 		return userName;

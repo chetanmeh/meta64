@@ -52,8 +52,9 @@ public class UserManagerUtil {
 	}
 
 	/*
-	 * TODO: refactor this method to use ensureNodeExists do look up existing node(s), Also throw exception
-	 * if the node we are looking up EXISTS, because someone could be hijacking an old account.
+	 * TODO: refactor this method to use ensureNodeExists do look up existing node(s), Also throw
+	 * exception if the node we are looking up EXISTS, because someone could be hijacking an old
+	 * account.
 	 */
 	public static boolean createUserRootNode(Session session, String userName) throws Exception {
 
