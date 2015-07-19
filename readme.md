@@ -44,7 +44,7 @@ Code is "open sourced" (and on GitHub) but pre-alpha prototype currently, meanin
 ## Code Ownership
 Project is currently being managed and developed by Clay Ferguson (author of this document). I am very actively developing meta64 mobile, and looking for funding to continue development at some point hopefully with corporate sponsorship. I also hope to recruit other developers to join the effort and form a GitHub team who share the same goal of a state-of-the-art modern JCR Browser.
 
-## Current Features (already working)
+## Current Features
 
 * Basic JCR Browser capability 
 	- Tree browsing with ability to "drill own" into the tree
@@ -76,7 +76,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Admin feature to insert entire book "War and Peace", for quickly
   creating test data for exploring all the features, and especially 'search'.
 
-## Next Features to be Developed
+## Future Features
 Listed here in the order they will likely be developed...
 
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
@@ -107,11 +107,6 @@ that will be 'searchable' on google.
 * Entire app is Spring Boot-based. 
 * Built using Maven
 * Launches from a single "uber jar" containing Tomcat embedded and pre-configured
-
-## Next Actions on the Agenda
-* Will create a screencast showing a 5 minute demo, on youtube.
-* Will be seeking crowdsource funding
-* Hoping to get publicized at first in the JCR developer community.
 
 ## Technical Notes
 * To build the app use maven.
