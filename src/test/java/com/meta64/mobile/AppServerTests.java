@@ -1,15 +1,12 @@
 package com.meta64.mobile;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.jcr.Session;
-import javax.jcr.security.Privilege;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +28,8 @@ import com.meta64.mobile.response.GetNodePrivilegesResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.RemovePrivilegeResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.user.RunAsJcrAdmin;
-import com.meta64.mobile.user.UserManagerService;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.ThreadLocals;
@@ -111,7 +108,7 @@ public class AppServerTests {
 				 */
 				AddPrivilegeRequest addPrivReq = new AddPrivilegeRequest();
 				addPrivReq.setPrincipal("everyone");
-				
+
 				List<String> privs = new LinkedList<String>();
 				privs.add("read");
 				addPrivReq.setPrivileges(privs);
@@ -165,20 +162,18 @@ public class AppServerTests {
 	}
 
 	public String addNewUser(Session session) throws Exception {
+		SignupRequest req = new SignupRequest();
+
 		String userName = "wclayf" + System.currentTimeMillis();
-		String password = userName;
-		String email = "xxx";
-		String captcha = null;
+		req.setUserName(userName);
+		req.setPassword(req.getUserName());
+		req.setEmail("xxx");
+		req.setCaptcha(null);
 
 		SignupResponse res = new SignupResponse();
 		ThreadLocals.setResponse(res);
 
-		if (userManagerService.signup(userName, password, email, captcha)) {
-			log.debug("Signup success.");
-		}
-		else {
-			fail("signup failed.");
-		}
+		userManagerService.signup(req, res);
 		return userName;
 	}
 }

@@ -728,10 +728,9 @@ var meta64 = function() {
 			}
 		},
 
-		loadAnonPageHome : function(ignoreUrl, urlQuery) {
+		loadAnonPageHome : function(ignoreUrl) {
 			util.json("anonPageLoad", {
-				"ignoreUrl" : ignoreUrl,
-				"urlQuery" : urlQuery
+				"ignoreUrl" : ignoreUrl
 			}, _.anonPageLoadResponse);
 		}
 	};

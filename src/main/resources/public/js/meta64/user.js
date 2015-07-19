@@ -60,7 +60,7 @@ var user = function() {
 		_setTitleUsingLoginResponse(res);
 		// }
 
-		meta64.loadAnonPageHome(false, "");
+		meta64.loadAnonPageHome(false);
 	}
 
 	var _logoutResponse = function(res) {

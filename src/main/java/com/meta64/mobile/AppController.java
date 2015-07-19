@@ -2,20 +2,15 @@ package com.meta64.mobile;
 
 import java.awt.image.BufferedImage;
 import java.net.URLConnection;
-import java.security.Principal;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
-import javax.jcr.security.AccessControlEntry;
 import javax.servlet.http.HttpSession;
 
 import org.apache.jackrabbit.JcrConstants;
-import org.apache.jackrabbit.oak.spi.security.principal.EveryonePrincipal;
-import org.apache.jackrabbit.oak.spi.security.principal.PrincipalImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +35,6 @@ import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.image.ImageUtil;
-import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.model.PropertyInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.AddPrivilegeRequest;
@@ -91,11 +85,11 @@ import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.response.SaveUserPreferencesResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.service.AclService;
 import com.meta64.mobile.service.ImportExportService;
 import com.meta64.mobile.service.NodeRenderService;
 import com.meta64.mobile.service.NodeSearchService;
-import com.meta64.mobile.user.AccessControlUtil;
-import com.meta64.mobile.user.UserManagerService;
+import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.BrandingUtil;
 import com.meta64.mobile.util.Convert;
@@ -137,6 +131,9 @@ public class AppController {
 
 	@Autowired
 	private ImportExportService importExportService;
+
+	@Autowired
+	private AclService aclService;
 
 	@Autowired
 	private OakRepositoryBean oak;
@@ -198,30 +195,7 @@ public class AppController {
 
 		SignupResponse res = new SignupResponse();
 		ThreadLocals.setResponse(res);
-
-		String userName = req.getUserName();
-		if (userName.equalsIgnoreCase("admin")) {
-			throw new Exception("Sorry, you can't be the new admin.");
-		}
-
-		if (userName.equalsIgnoreCase("everyone")) {
-			throw new Exception("Sorry, you can't be everyone.");
-		}
-
-		String password = req.getPassword();
-		String email = req.getEmail();
-		String captcha = req.getCaptcha();
-
-		/* lever let null be used */
-		if (captcha == null) {
-			captcha = "";
-		}
-
-		if (userManagerService.signup(userName, password, email, captcha)) {
-			res.setMessage("success: " + String.valueOf(++sessionContext.counter));
-			res.setSuccess(true);
-		}
-
+		userManagerService.signup(req, res);
 		return res;
 	}
 
@@ -247,54 +221,11 @@ public class AppController {
 	public @ResponseBody LoginResponse login(@RequestBody LoginRequest req) throws Exception {
 		logRequest("login", req);
 
-		String userName = req.getUserName();
-		String password = req.getPassword();
-
-		if (userName.equals("{session}")) {
-			userName = sessionContext.getUserName();
-		}
-		else {
-			sessionContext.setUserName(userName);
-			sessionContext.setPassword(password);
-		}
-
 		LoginResponse res = new LoginResponse();
 		ThreadLocals.setResponse(res);
 		res.setMessage("success: " + String.valueOf(++sessionContext.counter));
 		Session session = ThreadLocals.getJcrSession();
-
-		if (session == null) {
-			/*
-			 * Note: This is not an error condition, this happens whenever the page loads for the
-			 * first time and the user has no session yet,
-			 */
-			res.setUserName("anonymous");
-			res.setMessage("not logged in.");
-			res.setSuccess(false);
-		}
-		else {
-			res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
-			res.setUserName(userName);
-
-			try {
-				res.setUserPreferences(userManagerService.getUserPreferences(session));
-			}
-			catch (Exception e) {
-				/*
-				 * If something goes wrong loading preferences just log and continue. Should never
-				 * happen but we might as well be resilient here.
-				 */
-				// log.error("Failed loading preferences: ", e);
-			}
-			res.setSuccess(true);
-		}
-		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
-		res.setHomeNodeOverride(sessionContext.getUrlId());
-
-		if (res.getUserPreferences() == null) {
-			res.setUserPreferences(userManagerService.getDefaultUserPreferences());
-		}
-
+		userManagerService.login(session, req, res);
 		return res;
 	}
 
@@ -329,7 +260,6 @@ public class AppController {
 		RenderNodeResponse res = new RenderNodeResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
-
 		nodeRenderService.renderNode(session, req, res);
 		return res;
 	}
@@ -341,30 +271,8 @@ public class AppController {
 
 		GetNodePrivilegesResponse res = new GetNodePrivilegesResponse();
 		ThreadLocals.setResponse(res);
-
 		Session session = ThreadLocals.getJcrSession();
-		String nodeId = req.getNodeId();
-		Node node = JcrUtil.findNode(session, nodeId);
-
-		boolean includeAcl = "y".equals(req.getIncludeAcl());
-		boolean includeOwners = "y".equals(req.getIncludeOwners());
-
-		if (!includeAcl && !includeOwners) {
-			throw new Exception("no specific information requested for getNodePrivileges");
-		}
-
-		if (includeAcl) {
-			AccessControlEntry[] aclEntries = AccessControlUtil.getAccessControlEntries(session, node);
-			List<AccessControlEntryInfo> aclEntriesInfo = Convert.convertToAclListInfo(aclEntries);
-			res.setAclEntries(aclEntriesInfo);
-		}
-
-		if (includeOwners) {
-			List<String> owners = AccessControlUtil.getOwnerNames(session, node);
-			res.setOwners(owners);
-		}
-
-		res.setSuccess(true);
+		aclService.getNodePrivileges(session, req, res);
 		return res;
 	}
 
@@ -375,37 +283,8 @@ public class AppController {
 
 		AddPrivilegeResponse res = new AddPrivilegeResponse();
 		ThreadLocals.setResponse(res);
-
 		Session session = ThreadLocals.getJcrSession();
-		String nodeId = req.getNodeId();
-		Node node = JcrUtil.findNode(session, nodeId);
-
-		String principal = req.getPrincipal();
-		List<String> privileges = req.getPrivileges();
-		Principal principalObj = null;
-
-		if (principal.equalsIgnoreCase("everyone")) {
-			principalObj = EveryonePrincipal.getInstance();
-		}
-		else {
-			principalObj = new PrincipalImpl(principal);
-		}
-
-		boolean success = false;
-		try {
-			success = AccessControlUtil.grantPrivileges(session, node, principalObj, privileges);
-		}
-		catch (Exception e) {
-			// leave success==false and continue.
-		}
-
-		if (success) {
-			session.save();
-		}
-		else {
-			res.setMessage("Unable to alter privileges on node.");
-		}
-		res.setSuccess(success);
+		aclService.addPrivilege(session, req, res);
 		return res;
 	}
 
@@ -416,17 +295,8 @@ public class AppController {
 
 		RemovePrivilegeResponse res = new RemovePrivilegeResponse();
 		ThreadLocals.setResponse(res);
-
 		Session session = ThreadLocals.getJcrSession();
-		String nodeId = req.getNodeId();
-		Node node = JcrUtil.findNode(session, nodeId);
-
-		String principal = req.getPrincipal();
-		String privilege = req.getPrivilege();
-
-		boolean success = AccessControlUtil.removeAclEntry(session, node, principal, privilege);
-		session.save();
-		res.setSuccess(success);
+		aclService.removePrivilege(session, req, res);
 		return res;
 	}
 
@@ -924,19 +794,6 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 
 		String id = null;
-
-		/*
-		 * This was part of a hack I did for troubleshooting a problem, and the it can go away
-		 * eventually and also the urlQuery attribute can be deleted...soon.
-		 */
-		// if (!XString.isEmpty(req.getUrlQuery())) {
-		// String query = req.getUrlQuery();
-		// int idx = query.indexOf("id=");
-		// if (idx != -1) {
-		// id = query.substring(idx + 3);
-		// }
-		// }
-
 		if (id == null) {
 			id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
 		}

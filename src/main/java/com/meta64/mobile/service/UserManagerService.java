@@ -1,4 +1,4 @@
-package com.meta64.mobile.user;
+package com.meta64.mobile.service;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -8,14 +8,22 @@ import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.SaveUserPreferencesRequest;
+import com.meta64.mobile.request.SignupRequest;
+import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.SaveUserPreferencesResponse;
+import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.user.AccessControlUtil;
+import com.meta64.mobile.user.RunAsJcrAdmin;
+import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.ValContainer;
@@ -30,6 +38,9 @@ import com.meta64.mobile.util.XString;
 public class UserManagerService {
 	private static final Logger log = LoggerFactory.getLogger(UserManagerService.class);
 
+	@Value("${anonUserLandingPageNode}")
+	private String anonUserLandingPageNode;
+
 	@Autowired
 	private OakRepositoryBean oak;
 
@@ -39,8 +50,66 @@ public class UserManagerService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
-	/* returns true if successful */
-	public boolean signup(final String userName, final String password, String email, String captcha) throws Exception {
+	public void login(Session session, LoginRequest req, LoginResponse res) throws Exception {
+		String userName = req.getUserName();
+		String password = req.getPassword();
+
+		if (userName.equals("{session}")) {
+			userName = sessionContext.getUserName();
+		}
+		else {
+			sessionContext.setUserName(userName);
+			sessionContext.setPassword(password);
+		}
+
+		if (session == null) {
+			/*
+			 * Note: This is not an error condition, this happens whenever the page loads for the
+			 * first time and the user has no session yet,
+			 */
+			res.setUserName("anonymous");
+			res.setMessage("not logged in.");
+			res.setSuccess(false);
+		}
+		else {
+			res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
+			res.setUserName(userName);
+
+			try {
+				res.setUserPreferences(getUserPreferences(session));
+			}
+			catch (Exception e) {
+				/*
+				 * If something goes wrong loading preferences just log and continue. Should never
+				 * happen but we might as well be resilient here.
+				 */
+				// log.error("Failed loading preferences: ", e);
+			}
+			res.setSuccess(true);
+		}
+		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
+		res.setHomeNodeOverride(sessionContext.getUrlId());
+
+		if (res.getUserPreferences() == null) {
+			res.setUserPreferences(getDefaultUserPreferences());
+		}
+	}
+
+	public void signup(SignupRequest req, SignupResponse res) throws Exception {
+
+		final String userName = req.getUserName();
+		if (userName.equalsIgnoreCase("admin")) {
+			throw new Exception("Sorry, you can't be the new admin.");
+		}
+
+		if (userName.equalsIgnoreCase("everyone")) {
+			throw new Exception("Sorry, you can't be everyone.");
+		}
+
+		final String password = req.getPassword();
+		final String email = req.getEmail();
+		final String captcha = req.getCaptcha() == null ? "" : req.getCaptcha();
+
 		log.debug("Signup: userName=" + userName + " email=" + email + " captcha=" + captcha);
 
 		/* throw exceptions of the username or password are not valid */
@@ -65,7 +134,10 @@ public class UserManagerService {
 			}
 		});
 
-		return success.getVal();
+		if (success.getVal()) {
+			res.setMessage("success: " + String.valueOf(++sessionContext.counter));
+			res.setSuccess(true);
+		}
 	}
 
 	/*
