@@ -25,13 +25,17 @@ import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.ExportRequest;
 import com.meta64.mobile.request.ImportRequest;
+import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.response.ExportResponse;
 import com.meta64.mobile.response.ImportResponse;
+import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.FileTools;
+import com.meta64.mobile.util.ImportWarAndPeace;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
@@ -69,6 +73,10 @@ public class ImportExportService {
 	private Map<String, String> zipToJcrNameMap = new HashMap<String, String>();
 
 	public void exportToXml(Session session, ExportRequest req, ExportResponse res) throws Exception {
+		if (!sessionContext.isAdmin()) {
+			throw new Exception("export is an admin-only feature.");
+		}
+		
 		String nodeId = req.getNodeId();
 		Node exportNode = JcrUtil.findNode(session, nodeId);
 		log.debug("Export Node: " + exportNode.getPath());
@@ -108,6 +116,10 @@ public class ImportExportService {
 	}
 
 	public void importFromXml(Session session, ImportRequest req, ImportResponse res) throws Exception {
+		if (!sessionContext.isAdmin()) {
+			throw new Exception("export is an admin-only feature.");
+		}
+		
 		String nodeId = req.getNodeId();
 		Node importNode = JcrUtil.findNode(session, nodeId);
 		log.debug("Import to Node: " + importNode.getPath());
@@ -156,6 +168,10 @@ public class ImportExportService {
 	}
 
 	public void importFromZip(Session session, ImportRequest req, ImportResponse res) throws Exception {
+		if (!sessionContext.isAdmin()) {
+			throw new Exception("export is an admin-only feature.");
+		}
+		
 		String nodeId = req.getNodeId();
 		Node importNode = JcrUtil.findNode(session, nodeId);
 		log.debug("Import to Node: " + importNode.getPath());
@@ -341,4 +357,24 @@ public class ImportExportService {
 			throw e;
 		}
 	}
+	
+	public void insertBook(Session session, InsertBookRequest req, InsertBookResponse res) throws Exception {
+		
+		if (!sessionContext.isAdmin()) {
+			throw new Exception("insertBook is an admin-only feature.");
+		}
+
+		String nodeId = req.getNodeId();
+		Node node = JcrUtil.findNode(session, nodeId);
+
+		/* for now we don't check book name. Only one book exists: War and Peace */
+		// String name = req.getBookName();
+
+		ImportWarAndPeace iwap = SpringContextUtil.getApplicationContext().getBean(ImportWarAndPeace.class);
+		iwap.importBook(session, "classpath:war-and-peace.txt", node);
+
+		session.save();
+		res.setSuccess(true);
+	}
+
 }

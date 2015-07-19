@@ -11,13 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.request.ChangePasswordRequest;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.SaveUserPreferencesRequest;
 import com.meta64.mobile.request.SignupRequest;
+import com.meta64.mobile.response.ChangePasswordResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.SaveUserPreferencesResponse;
 import com.meta64.mobile.response.SignupResponse;
@@ -26,6 +30,7 @@ import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
+import com.meta64.mobile.util.ThreadLocals;
 import com.meta64.mobile.util.ValContainer;
 import com.meta64.mobile.util.XString;
 
@@ -210,5 +215,11 @@ public class UserManagerService {
 
 		return allUsersRoot;
 	}
-
+	
+	public void changePassword(Session session, ChangePasswordRequest req, ChangePasswordResponse res) throws Exception {
+		UserManagerUtil.changePassword(session, req.getNewPassword());
+		session.save();
+		sessionContext.setPassword(req.getNewPassword());
+		res.setSuccess(true);
+	}
 }

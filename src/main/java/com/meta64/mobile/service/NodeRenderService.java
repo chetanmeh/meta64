@@ -12,18 +12,25 @@ import javax.jcr.nodetype.NodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.request.AnonPageLoadRequest;
 import com.meta64.mobile.request.RenderNodeRequest;
+import com.meta64.mobile.response.AnonPageLoadResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.Log;
+import com.meta64.mobile.util.ThreadLocals;
+import com.meta64.mobile.util.XString;
 
 /**
  * Service for rendering the content of a page.
@@ -33,6 +40,9 @@ import com.meta64.mobile.util.Log;
 public class NodeRenderService {
 	private static final Logger log = LoggerFactory.getLogger(NodeRenderService.class);
 
+	@Value("${anonUserLandingPageNode}")
+	private String anonUserLandingPageNode;
+	
 	@Autowired
 	private OakRepositoryBean oak;
 
@@ -92,5 +102,32 @@ public class NodeRenderService {
 		catch (NoSuchElementException ex) {
 			// not an error. Normal iterator end condition.
 		}
+	}
+	
+	public void anonPageLoad(Session session, AnonPageLoadRequest req, AnonPageLoadResponse res) throws Exception {
+
+		String id = null;
+		if (id == null) {
+			id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
+		}
+
+		if (!XString.isEmpty(id)) {
+			RenderNodeResponse renderNodeRes = new RenderNodeResponse();
+			RenderNodeRequest renderNodeReq = new RenderNodeRequest();
+
+			/*
+			 * if user specified an ID= parameter on the url, we display that immediately, or else
+			 * we display the node that the admin has configured to be the default landing page
+			 * node.
+			 */
+			renderNodeReq.setNodeId(id);
+			renderNode(session, renderNodeReq, renderNodeRes);
+			res.setRenderNodeResponse(renderNodeRes);
+		}
+		else {
+			res.setContent("No content available.");
+		}
+
+		res.setSuccess(true);
 	}
 }
