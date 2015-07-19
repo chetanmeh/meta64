@@ -15,9 +15,6 @@ An Open Source "Mobile First" Wiki-type content repository built on Apache Oak J
 * Screencasts on Youtube
   - https://www.youtube.com/channel/UCbeE-Pwu5AyeSPKuR_9vEeA/feed
   
-* Developer Site on Linkedin
-  - https://www.linkedin.com/in/wclayf
-  
 * Browse Demo Content (Book: War and Peace) 
   - http://www.meta64.com/?id=/nt:war-and-peace
 
