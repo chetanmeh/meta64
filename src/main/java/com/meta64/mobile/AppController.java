@@ -48,6 +48,7 @@ import com.meta64.mobile.request.SavePropertyRequest;
 import com.meta64.mobile.request.SaveUserPreferencesRequest;
 import com.meta64.mobile.request.SetNodePositionRequest;
 import com.meta64.mobile.request.SignupRequest;
+import com.meta64.mobile.request.UploadFromUrlRequest;
 import com.meta64.mobile.response.AddPrivilegeResponse;
 import com.meta64.mobile.response.AnonPageLoadResponse;
 import com.meta64.mobile.response.ChangePasswordResponse;
@@ -72,6 +73,7 @@ import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.response.SaveUserPreferencesResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.response.SignupResponse;
+import com.meta64.mobile.response.UploadFromUrlResponse;
 import com.meta64.mobile.service.AclService;
 import com.meta64.mobile.service.AttachmentService;
 import com.meta64.mobile.service.ImportExportService;
@@ -86,9 +88,9 @@ import com.meta64.mobile.util.SpringMvcUtil;
 import com.meta64.mobile.util.ThreadLocals;
 
 /**
- * Primary Spring MVC controller, that returns the main page, process REST calls from the client
- * javascript, and also performs the uploading/download, and serving of images. All of the business
- * logic in here will eventually be moved out into service or utility classes.
+ * Primary Spring MVC controller. All application logic from the browser connects directly to this
+ * controller which is the only controller. Importantly the main SPA page is retrieved thru this
+ * controller, and the binary attachments are also served up thru this interface.
  * 
  * Note, it's critical to understand the OakSession AOP code or else this class will be confusing
  * regarding how the OAK transations are managed and how logging in is done.
@@ -171,7 +173,7 @@ public class AppController {
 
 		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), "scriptLoader");
 		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), "meta64");
-		
+
 		sessionContext.setUrlId(id);
 		return "index";
 	}
@@ -477,6 +479,16 @@ public class AppController {
 		logRequest("upload", null);
 		Session session = ThreadLocals.getJcrSession();
 		return attachmentService.upload(session, nodeId, uploadFile);
+	}
+	
+	@RequestMapping(value = REST_PATH + "/uploadFromUrl", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody UploadFromUrlResponse uploadFromUrl(@RequestBody UploadFromUrlRequest req) throws Exception {
+		logRequest("uploadFromUrl", req);
+		UploadFromUrlResponse res = new UploadFromUrlResponse();
+		Session session = ThreadLocals.getJcrSession();
+		attachmentService.uploadFromUrl(session, req, res);
+		return res;
 	}
 
 	@RequestMapping(value = REST_PATH + "/anonPageLoad", method = RequestMethod.POST)

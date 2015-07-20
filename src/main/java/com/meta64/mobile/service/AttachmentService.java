@@ -1,9 +1,17 @@
 package com.meta64.mobile.service;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLConnection;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -19,8 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meta64.mobile.config.AppConstant;
@@ -28,9 +34,12 @@ import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.ImageUtil;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.DeleteAttachmentRequest;
+import com.meta64.mobile.request.UploadFromUrlRequest;
 import com.meta64.mobile.response.DeleteAttachmentResponse;
+import com.meta64.mobile.response.UploadFromUrlResponse;
 import com.meta64.mobile.util.JcrUtil;
-import com.meta64.mobile.util.ThreadLocals;
+import com.meta64.mobile.util.LimitedInputStream;
+import com.meta64.mobile.util.ValContainer;
 
 /**
  * Service for editing content of nodes.
@@ -46,65 +55,12 @@ public class AttachmentService {
 	@Autowired
 	private SessionContext sessionContext;
 
-	public ResponseEntity<?> upload(Session session, String nodeId, MultipartFile uploadFile) throws Exception {		
+	/* Upload from User's computer. Standard HTML form-based uploading */
+	public ResponseEntity<?> upload(Session session, String nodeId, MultipartFile uploadFile) throws Exception {
 		try {
 			String fileName = uploadFile.getOriginalFilename();
-
 			log.debug("Uploading onto nodeId: " + nodeId + " file: " + fileName);
-			Node node = JcrUtil.findNode(session, nodeId);
-			String mimeType = URLConnection.guessContentTypeFromName(fileName);
-
-			String name = AppConstant.JCR_PROP_BIN;
-
-			Node binaryNode = null;
-			long version = 0;
-			try {
-				binaryNode = session.getNode(node.getPath() + "/" + name);
-
-				/*
-				 * Based on my reading of the JCR docs, I don't need to remove old properties,
-				 * because new property will overwrite. TODO: testing pending
-				 */
-				Property versionProperty = binaryNode.getProperty(AppConstant.JCR_PROP_BIN_VER);
-				if (versionProperty != null) {
-					version = versionProperty.getValue().getLong();
-				}
-			}
-			catch (Exception e) {
-				// not an error. Indicates this node didn't already have an attachment node.
-			}
-
-			/* if no existing node existed we need to create */
-			if (binaryNode == null) {
-				binaryNode = node.addNode(name, JcrConstants.NT_UNSTRUCTURED);
-				JcrUtil.timestampNewNode(session, binaryNode);
-			}
-
-			Binary binary = session.getValueFactory().createBinary(uploadFile.getInputStream());
-
-			/*
-			 * The above 'createBinary' call will have already read the entire stream so we can now
-			 * assume all data is present and width/height of image will ba available.
-			 */
-			if (ImageUtil.isImageMime(mimeType)) {
-				BufferedImage image = ImageIO.read(binary.getStream());
-				int width = image.getWidth();
-				int height = image.getHeight();
-				binaryNode.setProperty(AppConstant.JCR_PROP_IMG_WIDTH, String.valueOf(width));
-				binaryNode.setProperty(AppConstant.JCR_PROP_IMG_HEIGHT, String.valueOf(height));
-			}
-
-			binaryNode.setProperty(AppConstant.JCR_PROP_BIN_DATA, binary);
-			binaryNode.setProperty(AppConstant.JCR_PROP_BIN_MIME, mimeType);
-			binaryNode.setProperty(AppConstant.JCR_PROP_BIN_VER, ++version);
-
-			/*
-			 * DO NOT DELETE (this code can be used to test uploading) String directory =
-			 * "c:/temp-upload"; String filepath = Paths.get(directory, fileName).toString();
-			 * BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new
-			 * File(filepath))); stream.write(uploadfile.getBytes()); stream.close();
-			 */
-
+			attachBinaryFromStream(session, nodeId, fileName, uploadFile.getInputStream(), null, -1, -1);
 			session.save();
 		}
 		catch (Exception e) {
@@ -114,7 +70,74 @@ public class AttachmentService {
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+	public void attachBinaryFromStream(Session session, String nodeId, String fileName, InputStream is, String mimeType, int width, int height) throws Exception {
+		Node node = JcrUtil.findNode(session, nodeId);
+
+		/* mimeType can be passed as null if it's not yet determined */
+		if (mimeType == null) {
+			mimeType = URLConnection.guessContentTypeFromName(fileName);
+		}
+
+		ValContainer<Long> version = new ValContainer<Long>();
+		Node binaryNode = findOrCreateBinaryNode(session, node, version);
+		Binary binary = session.getValueFactory().createBinary(is);
+
+		/*
+		 * The above 'createBinary' call will have already read the entire stream so we can now
+		 * assume all data is present and width/height of image will ba available.
+		 */
+		if (ImageUtil.isImageMime(mimeType)) {
+			if (width == -1 || height == -1) {
+				BufferedImage image = ImageIO.read(binary.getStream());
+				width = image.getWidth();
+				height = image.getHeight();
+			}
+
+			binaryNode.setProperty(AppConstant.JCR_PROP_IMG_WIDTH, String.valueOf(width));
+			binaryNode.setProperty(AppConstant.JCR_PROP_IMG_HEIGHT, String.valueOf(height));
+		}
+
+		binaryNode.setProperty(AppConstant.JCR_PROP_BIN_DATA, binary);
+		binaryNode.setProperty(AppConstant.JCR_PROP_BIN_MIME, mimeType);
+		binaryNode.setProperty(AppConstant.JCR_PROP_BIN_VER, version.getVal().longValue() + 1);
+
+		/*
+		 * DO NOT DELETE (this code can be used to test uploading) String directory =
+		 * "c:/temp-upload"; String filepath = Paths.get(directory, fileName).toString();
+		 * BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new
+		 * File(filepath))); stream.write(uploadfile.getBytes()); stream.close();
+		 */
+	}
+
+	public Node findOrCreateBinaryNode(Session session, Node parent, ValContainer<Long> version) throws Exception {
+		String name = AppConstant.JCR_PROP_BIN;
+		Node binaryNode = null;
+		version.setVal(0L);
+		try {
+			binaryNode = session.getNode(parent.getPath() + "/" + name);
+
+			/*
+			 * Based on my reading of the JCR docs, I don't need to remove old properties, because
+			 * new property will overwrite. TODO: testing pending
+			 */
+			Property versionProperty = binaryNode.getProperty(AppConstant.JCR_PROP_BIN_VER);
+			if (versionProperty != null) {
+				version.setVal(versionProperty.getValue().getLong());
+			}
+		}
+		catch (Exception e) {
+			// not an error. Indicates this node didn't already have an attachment node.
+		}
+
+		/* if no existing node existed we need to create */
+		if (binaryNode == null) {
+			binaryNode = parent.addNode(name, JcrConstants.NT_UNSTRUCTURED);
+			JcrUtil.timestampNewNode(session, binaryNode);
+		}
+		return binaryNode;
+	}
+
 	public void deleteAttachment(Session session, DeleteAttachmentRequest req, DeleteAttachmentResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -155,5 +178,126 @@ public class AttachmentService {
 			System.out.println(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	public void uploadFromUrl(Session session, UploadFromUrlRequest req, UploadFromUrlResponse res) throws Exception {
+		String nodeId = req.getNodeId();
+		String sourceUrl = req.getSourceUrl();
+		String FAKE_USER_AGENT = "Mozilla/5.0";
+		int maxFileSize = 2 * 1024 * 1024;
+
+		URL url = new URL(sourceUrl);
+		InputStream uis = null;
+		HttpURLConnection httpcon = null;
+
+		try {
+			String mimeType = URLConnection.guessContentTypeFromName(sourceUrl);
+
+			/*
+			 * if this is an image extension, handle it in a special way, mainly to extract the
+			 * width, height from it
+			 */
+			if (ImageUtil.isImageMime(mimeType)) {
+
+				/*
+				 * DO NOT DELETE
+				 * 
+				 * Basic version without masquerading as a web browser can cause a 403 error because
+				 * some sites don't want just any old stream reading from them. Leave this note here
+				 * as a warning and explanation
+				 */
+
+				httpcon = (HttpURLConnection) url.openConnection();
+				httpcon.addRequestProperty("User-Agent", FAKE_USER_AGENT);
+				httpcon.connect();
+				InputStream is = httpcon.getInputStream();
+				uis = new LimitedInputStream(is, maxFileSize);
+				attachBinaryFromStream(session, nodeId, sourceUrl, uis, mimeType, -1, -1);
+			}
+			/*
+			 * if not an image extension, we can just stream directly into the database, but we want
+			 * to try to get the mime type first, from calling detectImage so that if we do detect
+			 * its an image we can handle it as one.
+			 */
+			else {
+				if (!detectAndSaveImage(session, nodeId, sourceUrl, url)) {
+					httpcon = (HttpURLConnection) url.openConnection();
+					httpcon.addRequestProperty("User-Agent", FAKE_USER_AGENT);
+					httpcon.connect();
+					InputStream is = httpcon.getInputStream();
+					uis = new LimitedInputStream(is, maxFileSize);
+					attachBinaryFromStream(session, nodeId, sourceUrl, is, "", -1, -1);
+				}
+			}
+		}
+		/* finally block just for extra safety */
+		finally {
+			if (uis != null) {
+				uis.close();
+				uis = null;
+			}
+
+			/*
+			 * I may not need this after the stream was close, but I'm calling it just in case
+			 */
+			if (httpcon != null) {
+				httpcon.disconnect();
+				httpcon = null;
+			}
+		}
+		session.save();
+		res.setSuccess(true);
+	}
+
+	// FYI: this never worked:
+	// String mimeType = URLConnection.guessContentTypeFromStream(uis);
+	// ALog.log("guessed mime:" + mimeType);
+	//
+	// but this below works...
+	//
+	/* returns true if it was detected AND saved as an image */
+	private boolean detectAndSaveImage(Session session, String nodeId, String fileName, URL url) throws Exception {
+		ImageInputStream is = null;
+		InputStream is2 = null;
+		ImageReader reader = null;
+
+		try {
+			is = ImageIO.createImageInputStream(url.openStream());
+			Iterator<ImageReader> readers = ImageIO.getImageReaders(is);
+
+			if (readers.hasNext()) {
+				reader = readers.next();
+				String formatName = reader.getFormatName();
+
+				if (formatName != null) {
+					formatName = formatName.toLowerCase();
+					log.debug("determined format name of image url: " + formatName);
+					reader.setInput(is, true, false);
+					BufferedImage bufImg = reader.read(0);
+					String mimeType = "image/" + formatName;
+
+					ByteArrayOutputStream os = new ByteArrayOutputStream();
+					ImageIO.write(bufImg, formatName, os);
+					is2 = new ByteArrayInputStream(os.toByteArray());
+
+					attachBinaryFromStream(session, nodeId, fileName, is2, mimeType, bufImg.getWidth(null), bufImg.getHeight(null));
+					return true;
+				}
+			}
+		}
+		finally {
+			if (is != null) {
+				is.close();
+			}
+
+			if (is2 != null) {
+				is2.close();
+			}
+
+			if (reader != null) {
+				reader.dispose();
+			}
+		}
+		return false;
 	}
 }

@@ -11,10 +11,21 @@
 			<div id="uploadPathDisplay" class="path-display-in-editor"></div>
 
 			<div id="uploadFieldContainer">
+				<p>Upload from your computer</p>
 				<form id="uploadForm" method="POST" enctype="multipart/form-data">
 	    			<input type="file" name="file"/>
 	    			<input id="uploadFormNodeId" type="hidden" name="nodeId"/>
 	  			</form>
+			</div>
+			
+			<div>
+			<h3>-- OR --</h3>
+			</div>
+			
+			<div>
+				<label for="uploadFromUrl">Upload from URL</label>
+				<!--  -->
+				<input type="text" name="uploadFromUrl" id="uploadFromUrl" value="" />
 			</div>
 			
 			<div data-type="horizontal" data-role="controlgroup">
