@@ -595,23 +595,24 @@ var meta64 = function() {
 			_.currentNodePath = data.node.path;
 		},
 
-		hookInitFunction : function() {
-			/*
-			 * JQM docs says do the 'pagecreate' thing instead of
-			 * $(document).ready()
-			 * 
-			 * Warning: If you leave off the second parameter it calls this for
-			 * each page load, which can hook buttons multiple times, etc.,
-			 * which is a major malfunction, so I target the specific page
-			 * "#mainPage" so that it can only call this ONE time.
-			 */
-			// $(document).ready(function() {
-			// _.loadAnonPageHome(false);
-			// };
-			$(document).on("pagecreate", "#mainPage", function(event) {
-				// _.initApp();
-			});
-		},
+//		hookInitFunction : function() {
+//			/*
+//			 * JQM docs says do the 'pagecreate' thing instead of
+//			 * $(document).ready()
+//			 * 
+//			 * Warning: If you leave off the second parameter it calls this for
+//			 * each page load, which can hook buttons multiple times, etc.,
+//			 * which is a major malfunction, so I target the specific page
+//			 * "#mainPage" so that it can only call this ONE time.
+//			 */
+//			// $(document).ready(function() {
+//			// _.loadAnonPageHome(false);
+//			// };
+//			
+//			$(document).on("pagecreate", "#mainPage", function(event) {
+//				// _.initApp();
+//			});
+//		},
 
 		anonPageLoadResponse : function(res) {
 			if (res.renderNodeResponse) {

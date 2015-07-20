@@ -4,6 +4,7 @@
 <head>
 <title th:text="${brandingTitle}">Branding Title</title>
 
+<meta charset="UTF-8" />
 <!--  Required for JQuery Large Rendering -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,7 +16,6 @@
 	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var postTargetUrl = window.location.origin + "/mobile/rest/";
-	//console.log("CookiePrefix[" + cookiePrefix + "]");
 	/*]]>*/
 </script>
 
@@ -153,8 +153,9 @@
 	<div th:replace="fragments/donate">...</div>
 
 	<script>
-		meta64.initApp();
-		meta64.hookInitFunction();
+		$(window).load(function() {
+			meta64.initApp();
+		});
 	</script>
 
 </body>

@@ -75,8 +75,6 @@ var edit = function() {
 		 * IMMEDIATELY to the treeview after creates
 		 */
 		meta64.newChildNodeId = res.newNode.id;
-		console.log("new child identifier: " + meta64.newChildNodeId);
-
 		meta64.initNode(res.newNode);		
 		meta64.highlightNode(res.newNode, true);
 
