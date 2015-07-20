@@ -117,6 +117,15 @@ that will be 'searchable' on google.
 * Once app is up and running go here: http://localhost:8083 (8083 port is currently the DEV profile port)     
 * Refer to the 'docs' folder of the project for additional technical documentation.
 
+## About the Developer
+Meta64 is currently owned and maintained by Clay Ferguson. I am a 47 yr old Java Developer located in Dallas, Texas. I have 24 years of coding experience primarily in business intelligence, financial analysis, and for the past 14 years web development. Feel free to get in touch with me here:
+
+**linkedin.com:** http://www.linkedin.com/in/wclayf
+
+**email:** wclayf@gmail.com
+
+**twitter:** @ClayFerguson
+
 
 
 
