@@ -76,19 +76,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Admin feature to insert entire book "War and Peace", for quickly
   creating test data for exploring all the features, and especially 'search'.
 * Smart dynamic image sizing. Images are sized to look best on your device regardless of screen size or orientation,.
-
-## Future Features
-Listed here in the order they will likely be developed...
-
-* Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
-* SEO (Search Engine Optimization): Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows WebCrawling of **one** page per user, and have a standard of like **/nt:user/nt:home** being the folder that users can create that will be 'searchable' on google.
-* Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder, etc.
-* Usage of email address for verification of new accounts.
-* Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
-* Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
-* Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
-* Email notification engine to support collaboration
-* More JUnit unit tests.
+* For future planned features see file: /docs/bugs-and-todos.md
 
 ## Technology Stack and APIs
 * App is "Mobile First", meaning a primary objective is to run well on mobile
