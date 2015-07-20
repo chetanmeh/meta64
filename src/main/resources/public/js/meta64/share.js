@@ -41,8 +41,7 @@ var share = function() {
 			var removeButton = render.makeTag("a", //
 			{
 				"onClick" : "share.removePrivilege('" + principal + "', '" + privilege.privilegeName + "');", //
-				"data-role" : "button",
-				"data-icon" : "delete"
+				"class" : "ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left"
 			}, //
 			"Remove");
 

@@ -3,6 +3,7 @@
 * Need to put all DOM IDs in the Const.js file, and also all other strings that are dupliate throughout the JS. Put them all in const.js file so that at least there's only one place for a typo.
 
 # TODO
+* After implementing dynamic javascript loading, Chrome no longer shows line numbers and file names on files that have errors. This is a BIG PROBLEM. I can't go without line numbers. If there's no workaround I will have to revert back to loading scripts the old fashioned normal Stript-Tag way.
 * Need ability to expose a URL that can send back all the JS as one single file. Having multiple files is good for development, but for production we need to send one JS file, and also minify it eventually.
 * Need to be able to block simultaneous requests from user, for example, clicking the same button twice in a row, before the first request completes. I haven't checked how JQuery handles simultaneous requests, and spring is definitely not thread-safe on the session yet, until I add that. So app is not ready for production until this work is done.
 * Need some kind of progress indication of any long running processes (like an export) happening on the server.

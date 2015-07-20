@@ -150,8 +150,7 @@ var srch = function() {
 
 			var openButton = render.makeTag("a", {
 				"onClick" : "srch.clickSearchNode('" + uid + "');",
-				"data-role" : "button",
-				"data-icon" : "carat-l",
+				"class" : "ui-btn ui-btn-inline ui-icon-carat-l ui-btn-icon-left",
 				"data-theme" : "b"
 			}, //
 			"Go to Node");

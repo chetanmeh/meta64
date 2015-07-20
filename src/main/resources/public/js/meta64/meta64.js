@@ -420,7 +420,10 @@ var meta64 = function() {
 		},
 
 		getHighlightedNode : function() {
-			return _.parentUidToFocusNodeMap[_.currentNodeUid];
+			//console.log("getHighlightedNode looking up: " + _.currentNodeUid);
+			var ret = _.parentUidToFocusNodeMap[_.currentNodeUid];
+			//console.log("    found it: " + (ret ? true : false));
+			return ret;
 		},
 
 		highlightRowById : function(id, scroll) {
@@ -470,9 +473,11 @@ var meta64 = function() {
 		},
 
 		refreshAllGuiEnablement : function() {
+			console.log("Refreshing Gui Enablement.");
+
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
-			var highlightNode = meta64.getHighlightedNode();
+			var highlightNode = _.getHighlightedNode();
 
 			util.setEnablementByName("login", _.isAnonUser, _.isAnonUser);
 			util.setEnablementByName("logout", !_.isAnonUser, !_.isAnonUser);
@@ -595,24 +600,24 @@ var meta64 = function() {
 			_.currentNodePath = data.node.path;
 		},
 
-//		hookInitFunction : function() {
-//			/*
-//			 * JQM docs says do the 'pagecreate' thing instead of
-//			 * $(document).ready()
-//			 * 
-//			 * Warning: If you leave off the second parameter it calls this for
-//			 * each page load, which can hook buttons multiple times, etc.,
-//			 * which is a major malfunction, so I target the specific page
-//			 * "#mainPage" so that it can only call this ONE time.
-//			 */
-//			// $(document).ready(function() {
-//			// _.loadAnonPageHome(false);
-//			// };
-//			
-//			$(document).on("pagecreate", "#mainPage", function(event) {
-//				// _.initApp();
-//			});
-//		},
+		// hookInitFunction : function() {
+		// /*
+		// * JQM docs says do the 'pagecreate' thing instead of
+		// * $(document).ready()
+		// *
+		// * Warning: If you leave off the second parameter it calls this for
+		// * each page load, which can hook buttons multiple times, etc.,
+		// * which is a major malfunction, so I target the specific page
+		// * "#mainPage" so that it can only call this ONE time.
+		// */
+		// // $(document).ready(function() {
+		// // _.loadAnonPageHome(false);
+		// // };
+		//			
+		// $(document).on("pagecreate", "#mainPage", function(event) {
+		// // _.initApp();
+		// });
+		// },
 
 		anonPageLoadResponse : function(res) {
 			if (res.renderNodeResponse) {
@@ -621,7 +626,7 @@ var meta64 = function() {
 				util.setVisibility("#mainNodeStatusBar", true);
 
 				render.renderPageFromData(res.renderNodeResponse);
-				meta64.refreshAllGuiEnablement();
+				_.refreshAllGuiEnablement();
 			} else {
 				util.setVisibility("#mainNodeContent", false);
 				util.setVisibility("#mainNodeStatusBar", false);
@@ -700,7 +705,7 @@ var meta64 = function() {
 				var width = $(window).width();
 
 				if (width != _.deviceWidth) {
-					//console.log("Screen width changed: " + width);
+					// console.log("Screen width changed: " + width);
 
 					_.deviceWidth = width;
 					_.deviceHeight = $(window).height();

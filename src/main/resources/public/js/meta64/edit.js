@@ -75,7 +75,7 @@ var edit = function() {
 		 * IMMEDIATELY to the treeview after creates
 		 */
 		meta64.newChildNodeId = res.newNode.id;
-		meta64.initNode(res.newNode);		
+		meta64.initNode(res.newNode);
 		meta64.highlightNode(res.newNode, true);
 
 		edit.runEditNode(res.newNode.uid);
@@ -419,8 +419,7 @@ var edit = function() {
 						var clearButton = render.makeTag("a", //
 						{
 							"onClick" : "props.clearProperty('" + fieldId + "');", //
-							"data-role" : "button",
-							"data-icon" : "carat-l"
+							"class" : "ui-btn ui-btn-inline ui-icon-carat-l ui-btn-icon-left"
 						}, //
 						"Clear");
 
@@ -436,8 +435,10 @@ var edit = function() {
 							deleteButton = render.makeTag("a", //
 							{
 								"onClick" : "props.deleteProperty('" + prop.name + "');", //
-								"data-role" : "button",
-								"data-icon" : "delete"
+								// "onClick" : function() {
+								// props.deleteProperty(prop.name);
+								// }, //
+								"class" : "ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left"
 							}, //
 							"Del");
 
@@ -449,8 +450,7 @@ var edit = function() {
 							addMultiButton = render.makeTag("a", //
 							{
 								"onClick" : "props.addSubProperty('" + fieldId + "');", //
-								"data-role" : "button",
-								"data-icon" : "star"
+								"class" : "ui-btn ui-btn-inline ui-icon-star ui-btn-icon-left"
 							}, //
 							"Add Multi");
 						}

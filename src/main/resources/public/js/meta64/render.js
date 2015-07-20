@@ -15,8 +15,7 @@ var render = function() {
 		var createSubNodeButton = _.makeTag("a", //
 		{
 			"onClick" : "edit.createSubNode();",
-			"data-role" : "button",
-			"data-icon" : "star"
+			"class" : "ui-btn ui-btn-inline ui-icon-star ui-btn-icon-left",
 		}, "Create Content");
 
 		return createSubNodeButton;
@@ -187,9 +186,7 @@ var render = function() {
 				openButton = _.makeTag("a", //
 				{
 					"onClick" : "nav.openNode('" + uid + "');", //
-					"data-role" : "button",
-					"data-mini" : mini,
-					"data-icon" : "plus",
+					"class" : "ui-btn ui-btn-inline ui-icon-plus ui-mini ui-btn-icon-left",
 					"data-theme" : "b"
 				}, //
 				"Open");
@@ -204,34 +201,27 @@ var render = function() {
 			if (meta64.editMode) {
 				// console.log("Editing allowed: " + nodeId);
 
-				/* Construct SelectButton */
-				var checkboxHtml = _.makeTag("input", //
+				var selClass = meta64.selectedNodes[uid] ? "ui-btn-b" : "ui-btn-a";
+
+				selButton = _.makeTag("a", //
 				{
-					"type" : "checkbox", //
-					"data-mini" : mini,
 					"id" : uid + "_sel",//
-					"name" : uid + "_check", //
-					"onClick" : "nav.toggleNodeSel('" + uid + "')",
-					"data-icon" : "bullets"
-				}, "", false);
-				selButton = _.makeTag("label", null, checkboxHtml + "Sel");
+					"onClick" : "nav.toggleNodeSel('" + uid + "');",
+					"class" : "ui-btn ui-btn-inline ui-icon-star ui-mini ui-btn-icon-left " + selClass
+				}, "Sel");
 
 				/* Construct Create Subnode Button */
 				createSubNodeButton = _.makeTag("a", //
 				{
 					"onClick" : "edit.createSubNode('" + uid + "');",
-					"data-role" : "button",
-					"data-mini" : mini,
-					"data-icon" : "star"
+					"class" : "ui-btn ui-btn-inline ui-icon-star ui-mini ui-btn-icon-left"
 				}, "New");
 
 				/* Construct Create Subnode Button */
 				insertNodeButton = _.makeTag("a", //
 				{
 					"onClick" : "edit.insertNode('" + uid + "');",
-					"data-role" : "button",
-					"data-mini" : mini,
-					"data-icon" : "bars"
+					"class" : "ui-btn ui-btn-inline ui-icon-bars ui-mini ui-btn-icon-left"
 				}, "Ins");
 			}
 
@@ -241,9 +231,7 @@ var render = function() {
 				editNodeButton = _.makeTag("a", //
 				{
 					"onClick" : "edit.runEditNode('" + uid + "');",
-					"data-role" : "button",
-					"data-mini" : mini,
-					"data-icon" : "edit"
+					"class" : "ui-btn ui-btn-inline ui-icon-edit ui-mini ui-btn-icon-left"
 				}, "Edit");
 
 				if (meta64.currentNode.childrenOrdered) {
@@ -253,9 +241,7 @@ var render = function() {
 						moveNodeUpButton = _.makeTag("a", //
 						{
 							"onClick" : "edit.moveNodeUp('" + uid + "');",
-							"data-role" : "button",
-							"data-mini" : mini,
-							"data-icon" : "arrow-u"
+							"class" : "ui-btn ui-btn-inline ui-icon-arrow ui-mini ui-btn-icon-left",
 						}, "Up");
 					}
 
@@ -264,9 +250,7 @@ var render = function() {
 						moveNodeDownButton = _.makeTag("a", //
 						{
 							"onClick" : "edit.moveNodeDown('" + uid + "');",
-							"data-role" : "button",
-							"data-mini" : mini,
-							"data-icon" : "arrow-d"
+							"class" : "ui-btn ui-btn-inline ui-icon-arrow-d ui-mini ui-btn-icon-left",
 						}, "Dn");
 					}
 				}
@@ -348,8 +332,7 @@ var render = function() {
 				html += render.makeTag("a", //
 				{
 					"onClick" : "nav.showSearchPage();", //
-					"data-role" : "button",
-					"data-icon" : "search"
+					"class" : "ui-btn ui-btn-inline ui-icon-search ui-btn-icon-left"
 				}, //
 				"Back to Search Results");
 			}
@@ -387,6 +370,15 @@ var render = function() {
 			if (newData) {
 				meta64.uidToNodeMap = {};
 				meta64.idToNodeMap = {};
+
+				/*
+				 * I'm choosing to reset selected nodes when a new page loads,
+				 * but this is not a requirement. I just don't have a "clear
+				 * selections" feature which would be needed so user has a way
+				 * to clear out.
+				 */
+				meta64.selectedNodes = {};
+				
 				meta64.initNode(data.node);
 				meta64.setCurrentNodeData(data);
 			}
@@ -480,7 +472,7 @@ var render = function() {
 		getUrlForNodeAttachment : function(node) {
 			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path + "/nt:bin") + "&ver=" + node.binVer;
 		},
-		
+
 		/* see also: makeImageTag() */
 		adjustImageSize : function(node) {
 
@@ -488,8 +480,8 @@ var render = function() {
 			if (elm) {
 				var width = elm.attr("width");
 				var height = elm.attr("height");
-				//console.log("width=" + width + " height=" + height);
-				
+				// console.log("width=" + width + " height=" + height);
+
 				if (node.width && node.height) {
 
 					if (node.width > meta64.deviceWidth - 50) {

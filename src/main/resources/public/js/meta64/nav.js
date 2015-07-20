@@ -117,12 +117,34 @@ var nav = function() {
 		},
 
 		toggleNodeSel : function(uid) {
-			var checked = util.getRequiredElement('#' + uid + "_sel").is(":checked");
+			var btn = util.getRequiredElement();
+			if (!btn) {
+				console.log("Unable to find Sel button for uid: "+uid);
+				return;
+			}
+			
+			var elm = $('#' + uid + "_sel");
+			var classes = elm.attr("class");
+			
+			var checked = classes.contains("ui-btn-b");
+			
+			if (checked) {
+				util.changeOrAddClass(elm, "ui-btn-b", "ui-btn-a");
+				checked = false;
+			}
+			else {
+				util.changeOrAddClass(elm, "ui-btn-a", "ui-btn-b");
+				checked = true;
+			}
+			
+			console.log("Classes: "+classes);
+			
 			if (checked) {
 				meta64.selectedNodes[uid] = true;
 			} else {
 				delete meta64.selectedNodes[uid];
 			}
+			elm.enhanceWithin();
 			view.updateStatusBar();
 			meta64.refreshAllGuiEnablement();
 			// alert("selections: " + printKeys(selectedNodes));
