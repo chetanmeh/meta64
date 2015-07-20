@@ -1,9 +1,9 @@
 ## Meta64: An Open-Source Portal and Content Repository
-An Open Source "Mobile First" Wiki-type content repository built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, but the technology itself is a platform for building portals around any kind of content. The technology is a "portal platform" that can host any type of group of users, and their content, and allow collaboration similar to Wikipedia, as well as a Social Media-type feature set similar to Facebook. 
+Meta64 is an Open Source "Mobile First" Wiki-type content repository (or CMS) built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, and the development of the platform; but the technology itself is a platform for building portals. This "Portal Platform" allows users to signup and create accounts where they can host content. The content can be any kind of text, data, images, and/or binaries, and can be shared to other users, who can then browse and/or edit the content collaboratively. The goal is to create a portal that is somewhat similar to Wikipedia (collaborative editing and sharing of markdown), but having many Social Media-types of capabilities. Another goal, from a technology standpoint, was to use only content repository open-standards for data, open source APIs, highly scalable data storage, and a very modern Mobile front end.
 
 ## Technology Stack
-* Client: JavaScript, JQuery Mobile, HTML+CSS, RESTful JSON-based Ajax
-* Server: Java, Spring Boot + Spring Framework, Thymeleaf, Apache Oak JCR, MongoDb and/or MySQL, Tomcat Embedded 
+* Client: JavaScript, JQueryMobile, HTML+CSS, RESTful JSON-based Ajax
+* Server: Java, SpringBoot + Spring Framework, Thymeleaf, Apache Oak JCR (Lucene embedded), MongoDb and/or MySQL, Tomcat Embedded 
 
 ## Links
 * GitHub Main Page
@@ -19,35 +19,35 @@ An Open Source "Mobile First" Wiki-type content repository built on Apache Oak J
   - http://www.meta64.com/?id=/nt:war-and-peace
 
 ## Meta64 Overview
-Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you are on meta64.com) is actually running this app, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that "everything is content" and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
+Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you're on meta64.com) is actually running this portal, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that *"everything is content"* and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
 
-The meta64 website and content on it is now geared towards the developer and is online as a demonstration of the technology stack, but the ultimate goal is to provide capabilities very similar to Facebook, Reddit, and Wikipedia, etc. if you could imagine them all rolled into one system. With the power of Lucene and MongoDB on the backend, plus the fully standards-based open stack, this only 4-month old codebase is already able to provide incredible power only found in other systems like Wikipedia and Google, or the other large-scale content repositories that are proprietary/commercial products, and built on much older technology stacks.
+The meta64 website and content on it is now geared towards the developer and is online as a demonstration of platform, but the ultimate goal is to provide capabilities very similar to Facebook, Reddit, and Wikipedia, etc. if you could imagine them all rolled into one system. With the power of Lucene and MongoDB on the backend, plus the fully standards-based open stack, this only 4-month old codebase is already able to provide incredible power only found in other commercial content repositories that are proprietary products, which are also mostly built on much older technology stacks.
 
 For a social media user, meta64 can function as a blogging platform, file-sharing platform, social commenting platform, wiki system, personal website host, etc., while simultaneously functioning as a full-blown back-end JCR repository used by technical users like software developers, data architects, DB admins, etc. The way this is accomplished is by having a simplified set of features (i.e. rendering of the GUI) presented to non-technical users, while having the full featured JCR browser capabilities available at the flip of a switch, using a single button click. There is a 'simple' mode and 'advanced' mode, that does this.
 
 There are just a few key concepts to know for a basic understanding of what JCR is all about, if you aren't familiar with the term:
 
-* Everything is content, and a JCR is a Content Repository (database) standard for Java.
+### Key Concepts
+
+* Everything is content: Text, images, file attachments, etc. are individual content nodes.
+* JCR is a Content Repository (database) standard for Java.
 * Data exists as a tree structure consisting of editable nodes.
-* Each user owns a part of the tree and subnodes under that make up their "account root".
+* Each user owns a part of the tree and all subnodes under that make up their "account root".
 * Node text and attachments can be edited (like on a Wiki)
 * Markdown is used to do formatting of the nodes when displayed.
 * Each node can be shared by its owner to the public or to specific users or groups.
-* Nodes can be copied, cut, pasted, deleted just like in a file system.
+* Nodes can be created, edited, moved, and deleted just like in a file system.
 * Any type of binary content can be uploaded onto nodes, and attached images show up as part of the page.
 * Each node can be referenced by direct-linking to it on the URL, so users can publish their own pages with specific urls.
 * Essentially meta64 itself is a kind of tree-structured wiki, or just a tree of editable, sharable content, just like you see on social media, but completely general purpose.
 
-## Source Code Status
-Code is "open sourced" (and on GitHub) but pre-alpha prototype currently, meaning it's not considered production ready, but does follow architectural best practices. The code is not perfectly 'clean' or perfectly organized at this time, but neither is it sloppy or low quality. It is what you would expect from a rapidly evolving prototype. Correct frameworks and architectures are in place, but some minor refactoring changes need to be done, as is true in any proof-of-concept.
-
-## Code Ownership
-Project is currently being managed and developed by Clay Ferguson (author of this document). I am very actively developing meta64 mobile, and looking for funding to continue development at some point hopefully with corporate sponsorship. I also hope to recruit other developers to join the effort and form a GitHub team who share the same goal of a state-of-the-art modern JCR Browser.
+## Source Code
+The code is "Open Source" (and on GitHub) but still pre-alpha prototype currently, meaning it's not considered production ready, but does follow architectural best practices. The project is currently being managed and developed by Clay Ferguson (author of this document). I'm actively developing meta64 nearly every day, and looking for other interested developers to join the effort. 
 
 ## Current Features
 
-* Basic JCR Browser capability 
-	- Tree browsing with ability to "drill own" into the tree
+* Basic JCR Browsing capability 
+	- Tree browsing with ability to navigate around on the tree
 * Soft "Brandable" 
 	- Rebrand the entire portal by entering brand name in the properties file.
 * Login/Logout
@@ -56,7 +56,7 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Node editing (plain text/markdown)
 * Orderable child nodes ("move up" and "move down" supported)
 * Creating Subnodes or Inline nodes
-* Full text search
+* Full text search (by Lucene)
 * Deleting Nodes
 * Moving nodes to new locations (supports multi-select)
 * Sharing a node as Public
@@ -75,19 +75,17 @@ Project is currently being managed and developed by Clay Ferguson (author of thi
 * Import/Export to XML
 * Admin feature to insert entire book "War and Peace", for quickly
   creating test data for exploring all the features, and especially 'search'.
+* Smart dynamic image sizing. Images are sized to look best on your device regardless of screen size or orientation,.
 
 ## Future Features
 Listed here in the order they will likely be developed...
 
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
-* Need to encrypt password cookie on client.
-* Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows walking of **one** page per user, and have a standard of like /user/home being the folder that users can create
-that will be 'searchable' on google.
-* Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder.
+* SEO (Search Engine Optimization): Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows WebCrawling of **one** page per user, and have a standard of like **/nt:user/nt:home** being the folder that users can create that will be 'searchable' on google.
+* Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder, etc.
 * Usage of email address for verification of new accounts.
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
-* Display images at smaller sizes, with click to enlarge capability. Currently all images are displayed at their actual size.
 * Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
 * Email notification engine to support collaboration
 * More JUnit unit tests.
@@ -122,12 +120,8 @@ Meta64 is currently owned and maintained by Clay Ferguson. I am a 47 yr old Java
 
 **linkedin.com:** http://www.linkedin.com/in/wclayf
 
+**GitHub:** https://github.com/Clay-Ferguson
+
 **email:** wclayf@gmail.com
 
 **twitter:** @ClayFerguson
-
-
-
-
-
-
