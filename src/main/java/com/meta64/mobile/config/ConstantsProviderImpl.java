@@ -29,6 +29,8 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 
 	@Value("${brandingTitle}")
 	private String brandingTitle;
+	
+	public static String cacheVersion;
 
 	@Override
 	public String getRestUrl() {
@@ -43,5 +45,14 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 	@Override
 	public String getBrandingTitle() {
 		return brandingTitle;
+	}
+	
+	@Override
+	public String getCacheVersion() {
+		return cacheVersion;
+	}
+	
+	public static void setCacheVersion(String v) {
+		cacheVersion = v;
 	}
 }

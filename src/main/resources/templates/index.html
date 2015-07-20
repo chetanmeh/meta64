@@ -15,6 +15,7 @@
 	/*<![CDATA[*/
 	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
+	var cacheVersion = /*[[${@constantsProvider.getCacheVersion()}]]*/"";
 	var postTargetUrl = window.location.origin + "/mobile/rest/";
 	/*]]>*/
 </script>
@@ -44,43 +45,7 @@
 	th:src="@{/js/cookie/jquery.cookie.js?ver.md=1}"></script>
 
 <script type="text/javascript" th:inline="javascript"
-	th:src="@{${utilJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${renderJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${navJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${viewJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${shareJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${userJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${prefsJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${propsJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${editJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${attachmentJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${meta64Js}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${searchJs}}"></script>
-
-<script type="text/javascript" th:inline="javascript"
-	th:src="@{${cnstJs}}"></script>
+	th:src="@{${scriptLoaderJs}}"></script>
 
 </head>
 
@@ -154,7 +119,27 @@
 
 	<script>
 		$(window).load(function() {
-			meta64.initApp();
+			/*
+			Loads all JS files, and then calls initApp once they are all completely loaded
+			 */
+			loader.loadScripts([ //
+			"/js/meta64/attachment.js", //
+			"/js/meta64/edit.js", //
+			"/js/meta64/meta64.js", //
+			"/js/meta64/nav.js", //
+			"/js/meta64/prefs.js", //
+			"/js/meta64/props.js", //
+			"/js/meta64/render.js", //
+			"/js/meta64/search.js", //
+			"/js/meta64/share.js", //
+			"/js/meta64/user.js", //
+			"/js/meta64/util.js", //
+			"/js/meta64/view.js", //
+			"/js/meta64/cnst.js"//
+			], //
+			function() {
+				meta64.initApp();
+			});
 		});
 	</script>
 

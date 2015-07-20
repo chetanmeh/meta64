@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meta64.mobile.annotate.OakSession;
+import com.meta64.mobile.config.ConstantsProviderImpl;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -143,6 +144,13 @@ public class AppController {
 	public static final long jsVersion = System.currentTimeMillis();
 	public static final long cssVersion = jsVersion; // match jsVersion for now, why not.
 
+	/*
+	 * This is an acceptable hack to reference the Impl class directly like this.
+	 */
+	static {
+		ConstantsProviderImpl.setCacheVersion(String.valueOf(jsVersion));
+	}
+
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
 	}
@@ -161,12 +169,9 @@ public class AppController {
 
 		brandingUtil.addBrandingAttributes(model);
 
-		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), //
-				"attachment", "edit", "meta64", "nav", "prefs", "props", "render", "search", //
-				"share", "user", "util", "view", "cnst");
-
-		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), //
-				"meta64");
+		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), "scriptLoader");
+		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), "meta64");
+		
 		sessionContext.setUrlId(id);
 		return "index";
 	}
