@@ -186,8 +186,7 @@ var render = function() {
 				openButton = _.makeTag("a", //
 				{
 					"onClick" : "nav.openNode('" + uid + "');", //
-					"class" : "ui-btn ui-btn-inline ui-icon-plus ui-mini ui-btn-icon-left",
-					"data-theme" : "b"
+					"class" : "ui-btn ui-btn-b ui-btn-inline ui-icon-plus ui-mini ui-btn-icon-left"
 				}, //
 				"Open");
 			}
