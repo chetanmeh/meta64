@@ -333,3 +333,5 @@ var props = function() {
 	console.log("Module ready: props.js");
 	return _;
 }();
+
+//# sourceURL=props.js

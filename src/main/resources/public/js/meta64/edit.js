@@ -658,3 +658,5 @@ var edit = function() {
 	console.log("Module ready: edit.js");
 	return _;
 }();
+
+//# sourceURL=edit.js

@@ -35,3 +35,5 @@ var prefs = function() {
 	console.log("Module ready: prefs.js");
 	return _;
 }();
+
+//# sourceURL=prefs.js

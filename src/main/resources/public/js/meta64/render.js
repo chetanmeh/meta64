@@ -240,7 +240,7 @@ var render = function() {
 						moveNodeUpButton = _.makeTag("a", //
 						{
 							"onClick" : "edit.moveNodeUp('" + uid + "');",
-							"class" : "ui-btn ui-btn-inline ui-icon-arrow ui-mini ui-btn-icon-left",
+							"class" : "ui-btn ui-btn-inline ui-icon-arrow-u ui-mini ui-btn-icon-left",
 						}, "Up");
 					}
 
@@ -623,3 +623,5 @@ var render = function() {
 	console.log("Module ready: render.js");
 	return _;
 }();
+
+//# sourceURL=render.js

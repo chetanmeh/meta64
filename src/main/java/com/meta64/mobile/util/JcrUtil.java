@@ -22,6 +22,11 @@ public class JcrUtil {
 	static {
 		nonSavableProperties.add("jcr:mixinTypes");
 		nonSavableProperties.add("jcr:uuid");
+
+		nonSavableProperties.add("jcr:created");
+		nonSavableProperties.add("jcr:createdBy");
+		nonSavableProperties.add("jcr:lastModified");
+		nonSavableProperties.add("jcr:lastModifiedBy");
 	}
 
 	public static Node findNode(Session session, String id) throws Exception {

@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.UserPreferences;
@@ -30,7 +28,6 @@ import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
-import com.meta64.mobile.util.ThreadLocals;
 import com.meta64.mobile.util.ValContainer;
 import com.meta64.mobile.util.XString;
 
@@ -215,7 +212,7 @@ public class UserManagerService {
 
 		return allUsersRoot;
 	}
-	
+
 	public void changePassword(Session session, ChangePasswordRequest req, ChangePasswordResponse res) throws Exception {
 		UserManagerUtil.changePassword(session, req.getNewPassword());
 		session.save();

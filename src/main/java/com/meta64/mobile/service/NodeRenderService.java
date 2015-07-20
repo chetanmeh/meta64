@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
@@ -29,7 +27,6 @@ import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.Log;
-import com.meta64.mobile.util.ThreadLocals;
 import com.meta64.mobile.util.XString;
 
 /**
@@ -42,7 +39,7 @@ public class NodeRenderService {
 
 	@Value("${anonUserLandingPageNode}")
 	private String anonUserLandingPageNode;
-	
+
 	@Autowired
 	private OakRepositoryBean oak;
 
@@ -103,7 +100,7 @@ public class NodeRenderService {
 			// not an error. Normal iterator end condition.
 		}
 	}
-	
+
 	public void anonPageLoad(Session session, AnonPageLoadRequest req, AnonPageLoadResponse res) throws Exception {
 
 		String id = null;

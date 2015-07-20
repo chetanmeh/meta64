@@ -250,3 +250,5 @@ var user = function() {
 	console.log("Module ready: user.js");
 	return _;
 }();
+
+//# sourceURL=user.js

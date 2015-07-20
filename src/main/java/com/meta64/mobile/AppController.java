@@ -480,7 +480,7 @@ public class AppController {
 		Session session = ThreadLocals.getJcrSession();
 		return attachmentService.upload(session, nodeId, uploadFile);
 	}
-	
+
 	@RequestMapping(value = REST_PATH + "/uploadFromUrl", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody UploadFromUrlResponse uploadFromUrl(@RequestBody UploadFromUrlRequest req) throws Exception {

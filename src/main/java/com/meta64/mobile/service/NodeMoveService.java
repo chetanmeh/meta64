@@ -3,32 +3,21 @@ package com.meta64.mobile.service;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.repo.OakRepositoryBean;
-import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.DeleteNodesRequest;
-import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.MoveNodesRequest;
 import com.meta64.mobile.request.SetNodePositionRequest;
-import com.meta64.mobile.response.CreateSubNodeResponse;
 import com.meta64.mobile.response.DeleteNodesResponse;
-import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.MoveNodesResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
-import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
-import com.meta64.mobile.util.ThreadLocals;
-import com.meta64.mobile.util.XString;
 
 /**
  * Service for editing content of nodes.
@@ -51,7 +40,7 @@ public class NodeMoveService {
 		session.save();
 		res.setSuccess(true);
 	}
-	
+
 	public void deleteNodes(Session session, DeleteNodesRequest req, DeleteNodesResponse res) throws Exception {
 
 		for (String nodeId : req.getNodeIds()) {
@@ -67,7 +56,7 @@ public class NodeMoveService {
 		session.save();
 		res.setSuccess(true);
 	}
-	
+
 	public void moveNodes(Session session, MoveNodesRequest req, MoveNodesResponse res) throws Exception {
 		String targetId = req.getTargetNodeId();
 		Node targetNode = JcrUtil.findNode(session, targetId);

@@ -365,6 +365,10 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : srch.searchNodesPg
 			}, {
+				"name" : "timeline",
+				"enable" : true,
+				"function" : srch.timeline
+			}, {
 				"name" : "deleteSelNodes",
 				"enable" : true,
 				"function" : edit.deleteSelNodes
@@ -523,6 +527,8 @@ var meta64 = function() {
 			util.setEnablementByName("editNodeSharing", highlightNode != null);
 			util.setEnablementByName("shareNodeToPersonPg", highlightNode != null);
 			util.setEnablementByName("shareNodeToPerson", highlightNode != null);
+//			util.setEnablementByName("searchNodesPg", highlightNode != null);
+//			util.setEnablementByName("timeline", highlightNode != null);
 		},
 
 		/*
@@ -762,3 +768,5 @@ var meta64 = function() {
 	console.log("Module ready: meta64.js");
 	return _;
 }();
+
+//# sourceURL=meta64.js

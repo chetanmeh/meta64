@@ -48,3 +48,5 @@ var loader = function() {
 	console.log("Module ready: loader.js");
 	return _;
 }();
+
+//# sourceURL=scriptLoader.js

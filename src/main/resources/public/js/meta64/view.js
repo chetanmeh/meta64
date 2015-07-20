@@ -85,3 +85,5 @@ var view = function() {
 	console.log("Module ready: view.js");
 	return _;
 }();
+
+//# sourceURL=view.js

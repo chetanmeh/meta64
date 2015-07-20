@@ -159,3 +159,5 @@ var share = function() {
 	console.log("Module ready: share.js");
 	return _;
 }();
+
+//# sourceURL=share.js

@@ -2,6 +2,8 @@ package com.meta64.mobile.request;
 
 public class NodeSearchRequest {
 
+	private boolean modSortDesc;
+
 	/* can be node id or path. server interprets correctly no matter which */
 	private String nodeId;
 
@@ -21,5 +23,13 @@ public class NodeSearchRequest {
 
 	public void setSearchText(String searchText) {
 		this.searchText = searchText;
+	}
+
+	public boolean isModSortDesc() {
+		return modSortDesc;
+	}
+
+	public void setModSortDesc(boolean modSortDesc) {
+		this.modSortDesc = modSortDesc;
 	}
 }

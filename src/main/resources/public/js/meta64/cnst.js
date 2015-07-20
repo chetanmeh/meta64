@@ -12,3 +12,5 @@ var cnst = function() {
 	console.log("Module ready: cnst.js");
 	return _;
 }();
+
+//# sourceURL=cnst.js

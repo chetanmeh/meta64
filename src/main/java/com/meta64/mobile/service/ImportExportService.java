@@ -76,7 +76,7 @@ public class ImportExportService {
 		if (!sessionContext.isAdmin()) {
 			throw new Exception("export is an admin-only feature.");
 		}
-		
+
 		String nodeId = req.getNodeId();
 		Node exportNode = JcrUtil.findNode(session, nodeId);
 		log.debug("Export Node: " + exportNode.getPath());
@@ -119,7 +119,7 @@ public class ImportExportService {
 		if (!sessionContext.isAdmin()) {
 			throw new Exception("export is an admin-only feature.");
 		}
-		
+
 		String nodeId = req.getNodeId();
 		Node importNode = JcrUtil.findNode(session, nodeId);
 		log.debug("Import to Node: " + importNode.getPath());
@@ -171,7 +171,7 @@ public class ImportExportService {
 		if (!sessionContext.isAdmin()) {
 			throw new Exception("export is an admin-only feature.");
 		}
-		
+
 		String nodeId = req.getNodeId();
 		Node importNode = JcrUtil.findNode(session, nodeId);
 		log.debug("Import to Node: " + importNode.getPath());
@@ -357,9 +357,9 @@ public class ImportExportService {
 			throw e;
 		}
 	}
-	
+
 	public void insertBook(Session session, InsertBookRequest req, InsertBookResponse res) throws Exception {
-		
+
 		if (!sessionContext.isAdmin()) {
 			throw new Exception("insertBook is an admin-only feature.");
 		}

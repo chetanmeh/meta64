@@ -29,7 +29,7 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 
 	@Value("${brandingTitle}")
 	private String brandingTitle;
-	
+
 	public static String cacheVersion;
 
 	@Override
@@ -46,12 +46,12 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 	public String getBrandingTitle() {
 		return brandingTitle;
 	}
-	
+
 	@Override
 	public String getCacheVersion() {
 		return cacheVersion;
 	}
-	
+
 	public static void setCacheVersion(String v) {
 		cacheVersion = v;
 	}

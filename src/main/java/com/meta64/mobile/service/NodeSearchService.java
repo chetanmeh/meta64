@@ -60,19 +60,28 @@ public class NodeSearchService {
 	 */
 	public void search(Session session, NodeSearchRequest req, NodeSearchResponse res) throws Exception {
 
-		int FETCH_NODES = 100;
+		int MAX_NODES = 100;
 		Node searchRoot = JcrUtil.findNode(session, req.getNodeId());
 
 		QueryManager qm = session.getWorkspace().getQueryManager();
 		String absPath = searchRoot.getPath();
-		Query q = qm.createQuery("SELECT * from [nt:base] AS t WHERE ISDESCENDANTNODE([" + absPath + "]) AND contains(t.*, '" + req.getSearchText() + "')",
-				Query.JCR_SQL2);
+		String queryString = "SELECT * from [nt:base] AS t WHERE ISDESCENDANTNODE([" + absPath + "])";
+
+		if (req.getSearchText().length() > 0) {
+			queryString += " AND contains(t.*, '" + req.getSearchText() + "')";
+		}
+
+		if (req.isModSortDesc()) {
+			queryString += " ORDER BY [jcr:lastModified] DESC";
+		}
+
+		Query q = qm.createQuery(queryString, Query.JCR_SQL2);
 		QueryResult r = q.execute();
 		NodeIterator nodes = r.getNodes();
 		int counter = 0;
 		List<NodeInfo> searchResults = new LinkedList<NodeInfo>();
 		res.setSearchResults(searchResults);
-		while (nodes.hasNext() && counter++ < FETCH_NODES) {
+		while (nodes.hasNext() && counter++ < MAX_NODES) {
 			searchResults.add(Convert.convertToNodeInfo(session, nodes.nextNode()));
 		}
 		res.setSuccess(true);

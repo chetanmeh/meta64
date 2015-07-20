@@ -1,5 +1,7 @@
 package com.meta64.mobile.service;
 
+import java.util.Calendar;
+
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
@@ -10,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
@@ -31,7 +31,6 @@ import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
-import com.meta64.mobile.util.ThreadLocals;
 import com.meta64.mobile.util.XString;
 
 /**
@@ -47,7 +46,7 @@ public class NodeEditService {
 
 	@Autowired
 	private SessionContext sessionContext;
-	
+
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -65,7 +64,7 @@ public class NodeEditService {
 		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
 		res.setSuccess(true);
 	}
-	
+
 	public void insertNode(Session session, InsertNodeRequest req, InsertNodeResponse res) throws Exception {
 
 		String parentNodeId = req.getParentId();
@@ -88,7 +87,7 @@ public class NodeEditService {
 		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
 		res.setSuccess(true);
 	}
-	
+
 	public void saveProperty(Session session, SavePropertyRequest req, SavePropertyResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -99,7 +98,7 @@ public class NodeEditService {
 		res.setPropertySaved(propertySaved);
 		res.setSuccess(true);
 	}
-	
+
 	public void makeNodeReferencable(Session session, MakeNodeReferencableRequest req, MakeNodeReferencableResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -113,7 +112,7 @@ public class NodeEditService {
 			res.setSuccess(true);
 		}
 	}
-	
+
 	public void saveNode(Session session, SaveNodeRequest req, SaveNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		log.debug("saveNode. nodeId=" + nodeId);
@@ -125,7 +124,7 @@ public class NodeEditService {
 				/*
 				 * save only if server determines the property is savable. Just protection. Client
 				 * shouldn't be trying to save stuff that is illegal to save, but we have to assume
-				 * the worst behaviour from client code, for security and robustness.
+				 * the worst behavior from client code, for security and robustness.
 				 */
 				if (JcrUtil.isSavableProperty(property.getName())) {
 					log.debug("Property to save: " + property.getName() + "=" + property.getValue());
@@ -136,11 +135,15 @@ public class NodeEditService {
 				}
 			}
 
+			Calendar lastModified = Calendar.getInstance();
+			node.setProperty("jcr:lastModified", lastModified);
+			node.setProperty("jcr:lastModifiedBy", session.getUserID());
+
 			session.save();
 		}
 		res.setSuccess(true);
 	}
-	
+
 	public void deleteProperty(Session session, DeletePropertyRequest req, DeletePropertyResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);

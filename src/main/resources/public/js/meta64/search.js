@@ -73,7 +73,22 @@ var srch = function() {
 
 			util.json("nodeSearch", {
 				"nodeId" : node.id,
-				"searchText" : searchText
+				"searchText" : searchText,
+				"modSortDesc" : false
+			}, _searchNodesResponse);
+		},
+		
+		timeline : function() {
+			var node = meta64.getHighlightedNode();
+			if (!node) {
+				alert("No node is selected to search under.");
+				return;
+			}
+
+			util.json("nodeSearch", {
+				"nodeId" : node.id,
+				"searchText" : "",
+				"modSortDesc" : true
 			}, _searchNodesResponse);
 		},
 
@@ -198,3 +213,5 @@ var srch = function() {
 	console.log("Module ready: search.js");
 	return _;
 }();
+
+//# sourceURL=search.js
