@@ -20,6 +20,15 @@ tr td div p {
 	margin: 3em;
 }
 
+.header-text {
+	font-size: small;
+	
+	/*
+	background: yellow;
+	border: 1px dotted gray;
+	*/
+}
+
 .donate-center {
 	margin-top: 2em;
 	text-align:center;
