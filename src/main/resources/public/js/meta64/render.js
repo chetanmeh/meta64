@@ -52,7 +52,14 @@ var render = function() {
 			var ret = '';
 
 			if (showPath && meta64.editMode) {
-				var path = meta64.isAdminUser ? node.path : node.path.replaceAll("/jcr:root", "");
+				/*
+				 * todo: come up with a solid plan for wether to show jcr:root
+				 * to ende users or not
+				 */
+				// var path = meta64.isAdminUser ? node.path :
+				// node.path.replaceAll("/jcr:root", "");
+				var path = node.path;
+
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
 				ret += "Path: " + _.formatPath(path) + "<div id='ownerDisplay" + node.uid + "'></div>";
@@ -377,7 +384,7 @@ var render = function() {
 				 * to clear out.
 				 */
 				meta64.selectedNodes = {};
-				
+
 				meta64.initNode(data.node);
 				meta64.setCurrentNodeData(data);
 			}
@@ -387,7 +394,7 @@ var render = function() {
 			// propCount);
 			var output = '';
 
-			var mainNodeContent = _.renderNodeContent(data.node, true, false, false, false);
+			var mainNodeContent = _.renderNodeContent(data.node, true, true, true, true);
 			// console.log("mainNodeContent: "+mainNodeContent);
 			if (mainNodeContent.length > 0) {
 				var uid = data.node.uid;
@@ -624,4 +631,4 @@ var render = function() {
 	return _;
 }();
 
-//# sourceURL=render.js
+// # sourceURL=render.js
