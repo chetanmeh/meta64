@@ -33,7 +33,8 @@ var user = function() {
 				_.writeCookie(cnst.COOKIE_LOGIN_PWD, info.pwd);
 			}
 
-			//TODO; Do I want "pop" here? This is very old code. may not be best.
+			// TODO; Do I want "pop" here? This is very old code. may not be
+			// best.
 			$.mobile.changePage($('#mainPage'), 'pop', false, true);
 
 			_setStateVarsUsingLoginResponse(res);
@@ -104,10 +105,10 @@ var user = function() {
 
 		openLoginPg : function() {
 			_.populateLoginPgFromCookies();
-			
+
 			/* make credentials visible only if not logged in */
 			util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
-			
+
 			$.mobile.changePage("#loginPg");
 		},
 
@@ -159,7 +160,8 @@ var user = function() {
 			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
 
 			var usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
-			console.log("cookieUser=" + usr + " usingCookies = " + usingCookies);
+			// console.log("cookieUser=" + usr + " usingCookies = " +
+			// usingCookies);
 			/*
 			 * Session is a special indicator that tells server to just attempt
 			 * the login from the session varibles. perhaps I should have added
@@ -244,6 +246,59 @@ var user = function() {
 			} else {
 				$("#loginLogoutButton").text("Logout");
 			}
+		},
+
+		signupPgBuilder : function() {
+
+			var header = render.makeTag("div", //
+			{
+				"data-role" : "header" //
+			}, //
+			"<h2>" + BRANDING_TITLE + " - Signup</h2>");
+
+			var formControls = render.makeEditField("User", "signupUserName") + //
+			render.makePasswordField("Password", "signupPassword") + //
+			render.makeEditField("Captcha", "signupCaptcha");
+
+			var captchaImage = render.makeTag("div", //
+			{
+				"class" : "captcha-image" //
+			}, //
+			render.makeTag("img", //
+			{
+				"id" : "captchaImage",
+				"class" : "captcha",
+				"src" : ""//
+			}, //
+			"", false));
+
+			var signupButton = render.makeButton("Signup", "signupButton", "b");
+			var newCaptchaButton = render.makeButton("Try Different Image", "tryAnotherCaptchaButton", "a");
+			var backButton = render.makeBackButton("Close", "cancelSignupButton", "a");
+
+			var buttonBar = render.makeButtonBar(signupButton + newCaptchaButton + backButton);
+
+			var form = render.makeTag("div", //
+			{
+				"class" : "ui-field-contain" //
+			}, //
+			formControls + captchaImage + buttonBar);
+
+			var internalMainContent = "Note: No email address is required currently, because this app is an alpha site that doesn't yet have email support.";
+
+			var mainContent = render.makeTag("div", //
+			{
+				"role" : "main", //
+				"class" : "ui-content"
+			}, //
+			internalMainContent + form);
+
+			var content = header + mainContent;
+
+			util.setHtmlEnhanced($("#signupPg"), content);
+
+			$("#tryAnotherCaptchaButton").on("click", _.tryAnotherCaptcha);
+			$("#signupButton").on("click", _.signup);
 		}
 	};
 
@@ -251,4 +306,4 @@ var user = function() {
 	return _;
 }();
 
-//# sourceURL=user.js
+// # sourceURL=user.js

@@ -48,7 +48,7 @@ var util = function() {
 			if (logAjax) {
 				console.log("JSON-POST: " + JSON.stringify(postData));
 			}
-			
+
 			$.ajax({
 				url : postTargetUrl + postName,
 				contentType : "application/json",
@@ -61,7 +61,7 @@ var util = function() {
 						console.log("JSON-RESULT: " + postName + " -> " + textStatus + //
 						"\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
 					}
-					
+
 					if (textStatus === "success") {
 						callback(jqXHR, info);
 					} else {
@@ -247,7 +247,8 @@ var util = function() {
 			// $('input').val(randomString[Math.floor(Math.random() * 3)]);
 			// });
 
-			_.getRequiredElement(id).click(func);
+			// _.getRequiredElement(id).click(func);
+			$(id).on("click", func);
 			return true;
 		},
 
@@ -445,4 +446,4 @@ var util = function() {
 	return _;
 }();
 
-//# sourceURL=util.js
+// # sourceURL=util.js

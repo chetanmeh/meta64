@@ -285,6 +285,15 @@ var render = function() {
 			}, buttonBar);
 		},
 
+		makeButtonBar : function(content) {
+			/* Now build entire control bar */
+			return _.makeTag("div", //
+			{
+				"data-role" : "controlgroup", //
+				"data-type" : "horizontal"
+			}, content);
+		},
+		
 		/*
 		 * Returns true if the nodeId (see makeNodeId()) NodeInfo object has
 		 * 'hasChildren' true
@@ -606,6 +615,44 @@ var render = function() {
 			return ret;
 		},
 
+		makeEditField : function(fieldName, fieldId) {
+			return _.makeTag("label", {
+				"for" : fieldId
+			}, fieldName) +
+
+			_.makeTag("input", {
+				"type" : "text",
+				"name" : fieldId,
+				"id" : fieldId
+			}, "", true);
+		},
+		
+		makePasswordField : function(fieldName, fieldId) {
+			return _.makeTag("label", {
+				"for" : fieldId
+			}, fieldName) +
+			_.makeTag("input", {
+				"type" : "password",
+				"name" : fieldId,
+				"id" : fieldId
+			}, "", true);
+		},
+		
+		makeButton : function(text, id, theme) {
+			return render.makeTag("a", {
+				"id" : id,
+				"class" : "ui-btn ui-btn-inline ui-btn-"+theme
+			}, text);
+		},
+		
+		makeBackButton : function(text, id, theme) {
+			return render.makeTag("a", {
+				"id" : id,
+				"class" : "ui-btn ui-btn-inline ui-btn-"+theme,
+				"data-rel" : "back"
+			}, text);
+		},
+		
 		allowPropertyToDisplay : function(propName) {
 			return meta64.simpleModePropertyBlackList[propName] == null;
 		},

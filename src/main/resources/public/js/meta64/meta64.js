@@ -94,6 +94,13 @@ var meta64 = function() {
 		showProperties : false,
 
 		/*
+		 * Contains a mapping of all page names and the functions to call to
+		 * generate that page. Each page initializer will usually only be run
+		 * one time to generate the HTML.
+		 */
+		pageBuilders : [],
+
+		/*
 		 * List of node prefixes to flag nodes to not allow to be shown in the
 		 * page in simple mode
 		 */
@@ -269,10 +276,6 @@ var meta64 = function() {
 			 * 'Button'). Example: id='loginButton'
 			 */
 			_.defineActions({
-				"name" : "tryAnotherCaptcha",
-				"enable" : true,
-				"function" : user.tryAnotherCaptcha
-			}, {
 				"name" : "login",
 				"enable" : true,
 				"function" : user.login
@@ -328,10 +331,6 @@ var meta64 = function() {
 				"name" : "editMode",
 				"enable" : displayingNode,
 				"function" : edit.editMode
-			}, {
-				"name" : "signup",
-				"enable" : true,
-				"function" : user.signup
 			}, {
 				"name" : "accountPreferencesPg",
 				"enable" : true,
@@ -424,9 +423,10 @@ var meta64 = function() {
 		},
 
 		getHighlightedNode : function() {
-			//console.log("getHighlightedNode looking up: " + _.currentNodeUid);
+			// console.log("getHighlightedNode looking up: " +
+			// _.currentNodeUid);
 			var ret = _.parentUidToFocusNodeMap[_.currentNodeUid];
-			//console.log("    found it: " + (ret ? true : false));
+			// console.log(" found it: " + (ret ? true : false));
 			return ret;
 		},
 
@@ -477,7 +477,7 @@ var meta64 = function() {
 		},
 
 		refreshAllGuiEnablement : function() {
-			console.log("Refreshing Gui Enablement.");
+			// console.log("Refreshing Gui Enablement.");
 
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
@@ -511,7 +511,6 @@ var meta64 = function() {
 			 * that
 			 */
 			util.setEnablementByName("editMode", editMode);
-			util.setEnablementByName("signup", true);
 
 			util.setVisibility("#menuButton", !_.isAnonUser);
 
@@ -527,8 +526,8 @@ var meta64 = function() {
 			util.setEnablementByName("editNodeSharing", highlightNode != null);
 			util.setEnablementByName("shareNodeToPersonPg", highlightNode != null);
 			util.setEnablementByName("shareNodeToPerson", highlightNode != null);
-//			util.setEnablementByName("searchNodesPg", highlightNode != null);
-//			util.setEnablementByName("timeline", highlightNode != null);
+			// util.setEnablementByName("searchNodesPg", highlightNode != null);
+			// util.setEnablementByName("timeline", highlightNode != null);
 		},
 
 		/*
@@ -685,6 +684,8 @@ var meta64 = function() {
 			 */
 			user.refreshLogin();
 
+			_.initializePageBuilders();
+
 			/*
 			 * This was part of an experiment related to figuring out how JQuery
 			 * alters anchor tags and basically breaks all external anchor tags,
@@ -721,6 +722,19 @@ var meta64 = function() {
 			}, 1500);
 		},
 
+		initializePageBuilders : function() {
+			if (_.pageBuilders.length > 0) {
+				console.log("initializePageBuilders called twice ?");
+				return;
+			}
+
+			_.pageBuilders.push({
+				name : "#signupPg",
+				builder : user.signupPgBuilder,
+				content : null
+			});
+		},
+
 		screenSizeChange : function() {
 			if (_.currentNodeData) {
 				$.each(_.currentNodeData.children, function(i, node) {
@@ -747,26 +761,75 @@ var meta64 = function() {
 		}
 	};
 
-	$(document).on("pagebeforechange", function(e, data) {
-		var toPage = data.toPage[0].id;
-		console.log("Nav to page: " + toPage);
+	$(document).on("pagecontainerbeforechange", function(event, data) {
 
-		if (toPage == "signupPg") {
-			user.pageInitSignupPg();
-			// $.mobile.pageContainer.pagecontainer("change", "#pageZ");
+		/* all properties shouldn't return "undefined" */
+		var toPage = data.toPage, //
+		prevPage = data.prevPage ? data.prevPage : "", //
+		options = data.options, //
+		/* to determine which page (hash) the user is navigating to */
+		absUrl = data.absUrl ? $.mobile.path.parseUrl(data.absUrl).hash.split("#")[1] : "",
+		/* assuming the user is logged off */
+		userLogged = false;
+
+		if (typeof data.toPage == "string") {
+			for (var i = 0; i < _.pageBuilders.length; i++) {
+				var builderObj = _.pageBuilders[i];
+				// console.log("Checking page builder: "+builderObj.name);
+				if (data.toPage.contains(builderObj.name)) {
+					// console.log("found page builder.");
+					if (!builderObj.content) {
+						// console.log("building page.");
+						builderObj.builder();
+						builderObj.content = true;
+					}
+					break;
+				}
+			}
+
+			// console.log("STRING: page change ****************** toPage[" +
+			// toPage + "] absUrl[" + absUrl + "]");
+			if (data.toPage.contains("#signupPg")) {
+				user.pageInitSignupPg();
+			}
 		}
 
-		// this doesn't execute ???? so I'm just updating enablement
-		// very time a
-		// selection changes.
-		// else if (toPage == "popupMenu") {
-		// console.log("popup showing now.");
-		// refreshAllGuiEnablement();
-		// }
+		else if (typeof toPage == "object") {
+			// console.log("OBJECT: page change ****************** toPage[" +
+			// toPage + "] absUrl[" + absUrl + "]");
+			/*
+			 * if user wants to access pageX but he is logged off move to pageY
+			 * with transition "flip" and don't update hash in URL
+			 */
+			// data.toPage[0] = $("#pageY")[0];
+			//
+			// $.extend(data.options, {
+			// transition : "flip",
+			// changeHash : false
+			// });
+		}
 	});
+
+	// $(document).on("pagebeforechange", function(e, data) {
+	// var toPage = data.toPage[0].id;
+	// console.log("Nav to page: " + toPage);
+	//
+	// if (toPage == "signupPg") {
+	// user.pageInitSignupPg();
+	// // $.mobile.pageContainer.pagecontainer("change", "#pageZ");
+	// }
+	//
+	// // this doesn't execute ???? so I'm just updating enablement
+	// // very time a
+	// // selection changes.
+	// // else if (toPage == "popupMenu") {
+	// // console.log("popup showing now.");
+	// // refreshAllGuiEnablement();
+	// // }
+	// });
 
 	console.log("Module ready: meta64.js");
 	return _;
 }();
 
-//# sourceURL=meta64.js
+// # sourceURL=meta64.js
