@@ -6,7 +6,8 @@ var cnst = function() {
 		ANON : "anonymous",
 		COOKIE_LOGIN_USR : cookiePrefix + "loginUsr",
 		COOKIE_LOGIN_PWD : cookiePrefix + "loginPwd",
-		BR : "<div class='vert-space'></div>"
+		BR : "<div class='vert-space'></div>",
+		INSERT_ATTACHMENT : "{{insert-attachment}}"
 	};
 
 	console.log("Module ready: cnst.js");

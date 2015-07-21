@@ -76,7 +76,8 @@ var render = function() {
 					 * but then again it's not an ID either.
 					 */
 					// if (!node.id.contains("/")) {
-					headerText += "ID: " + node.id + cnst.BR; // TODO: this <br> tag
+					headerText += "ID: " + node.id + cnst.BR; // TODO: this
+					// <br> tag
 					// here is ugly and
 					// wrong.
 					// }
@@ -100,13 +101,13 @@ var render = function() {
 			}
 
 			var ret = '';
-			
+
 			if (headerText) {
 				ret += _.makeTag("div", {
 					"class" : "header-text"
 				}, headerText);
 			}
-			
+
 			if (meta64.showProperties) {
 				// console.log("showProperties = " +
 				// meta64.showProperties);
@@ -127,9 +128,23 @@ var render = function() {
 					}
 				}
 			}
+
 			if (renderBinary && node.hasBinary) {
-				ret += _renderBinary(node);
+				var binary = _renderBinary(node);
+
+				/*
+				 * We append the binary image or resource link either at the end
+				 * of the text or at the location where the user has put
+				 * {{insert-attachment}} if they are using that to make the
+				 * image appear in a specific locatio in the content text.
+				 */
+				if (ret.contains(cnst.INSERT_ATTACHMENT)) {
+					ret = ret.replaceAll(cnst.INSERT_ATTACHMENT, binary);
+				} else {
+					ret += binary;
+				}
 			}
+
 			return ret;
 		},
 
@@ -301,7 +316,7 @@ var render = function() {
 				"data-type" : "horizontal"
 			}, content);
 		},
-		
+
 		/*
 		 * Returns true if the nodeId (see makeNodeId()) NodeInfo object has
 		 * 'hasChildren' true
@@ -634,33 +649,32 @@ var render = function() {
 				"id" : fieldId
 			}, "", true);
 		},
-		
+
 		makePasswordField : function(fieldName, fieldId) {
 			return _.makeTag("label", {
 				"for" : fieldId
-			}, fieldName) +
-			_.makeTag("input", {
+			}, fieldName) + _.makeTag("input", {
 				"type" : "password",
 				"name" : fieldId,
 				"id" : fieldId
 			}, "", true);
 		},
-		
+
 		makeButton : function(text, id, theme) {
 			return render.makeTag("a", {
 				"id" : id,
-				"class" : "ui-btn ui-btn-inline ui-btn-"+theme
+				"class" : "ui-btn ui-btn-inline ui-btn-" + theme
 			}, text);
 		},
-		
+
 		makeBackButton : function(text, id, theme) {
 			return render.makeTag("a", {
 				"id" : id,
-				"class" : "ui-btn ui-btn-inline ui-btn-"+theme,
+				"class" : "ui-btn ui-btn-inline ui-btn-" + theme,
 				"data-rel" : "back"
 			}, text);
 		},
-		
+
 		allowPropertyToDisplay : function(propName) {
 			return meta64.simpleModePropertyBlackList[propName] == null;
 		},
