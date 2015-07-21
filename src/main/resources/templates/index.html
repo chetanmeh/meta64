@@ -56,7 +56,17 @@
 			<h1 id="headerUserName" th:text="${brandingTitle}">Branding
 				Title</h1>
 			<a href="#popupMenu" data-rel="popup" data-icon="bars"
-				id="menuButton">Menu</a>
+				id="menuButton" class="ui-btn ui-btn-inline ui-btn-b">Menu</a>
+
+			<div data-type="horizontal" data-role="controlgroup"
+				class="ui-btn-right">
+				<!--  -->
+				<a  href="#signupPg" class="ui-btn ui-btn-inline ui-btn-a">Signup</a>
+				<!--  -->
+				<a data-icon="user" id="openLoginPgButton"
+					class="ui-btn ui-btn-inline ui-btn-b">Login</a>
+			</div>
+
 			<div data-role="navbar">
 				<ul>
 					<li><a id="navHomeButton" data-icon="home">Home</a></li>
@@ -67,7 +77,6 @@
 					-->
 					<li><a id="propsToggleButton" data-icon="forbidden">Props</a></li>
 					<li><a id="editModeButton" data-icon="forbidden">Edit</a></li>
-					<li><a data-icon="user" id="openLoginPgButton">Login</a></li>
 				</ul>
 			</div>
 			<div class="page-node-header">
