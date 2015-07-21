@@ -275,18 +275,10 @@ var meta64 = function() {
 			 * associated with it that is like [name]Button (i.e. suffixed with
 			 * 'Button'). Example: id='loginButton'
 			 */
-			_.defineActions({
-				"name" : "login",
-				"enable" : true,
-				"function" : user.login
-			}, {
+			_.defineActions( {
 				"name" : "openLoginPg",
 				"enable" : true,
 				"function" : user.openLoginPg
-			}, {
-				"name" : "logout",
-				"enable" : false,
-				"function" : user.logout
 			}, {
 				"name" : "navHome",
 				"enable" : displayingNode && !nav.displayingHome(),
@@ -483,8 +475,6 @@ var meta64 = function() {
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 			var highlightNode = _.getHighlightedNode();
 
-			util.setEnablementByName("login", _.isAnonUser, _.isAnonUser);
-			util.setEnablementByName("logout", !_.isAnonUser, !_.isAnonUser);
 			util.setEnablementByName("navHome", _.currentNode && !nav.displayingHome());
 			util.setEnablementByName("navUpLevel", _.currentNode && nav.parentVisibleToUser());
 
@@ -731,7 +721,15 @@ var meta64 = function() {
 			_.pageBuilders.push({
 				name : "#signupPg",
 				builder : user.signupPgBuilder,
-				content : null
+				content : null,
+				initFunc : null
+			});
+			
+			_.pageBuilders.push({
+				name : "#loginPg",
+				builder : user.loginPgBuilder,
+				content : null,
+				initFunc : user.loginPgInit
 			});
 		},
 
@@ -782,6 +780,10 @@ var meta64 = function() {
 						// console.log("building page.");
 						builderObj.builder();
 						builderObj.content = true;
+					}
+					
+					if (builderObj.initFunc) {
+						builderObj.initFunc();
 					}
 					break;
 				}

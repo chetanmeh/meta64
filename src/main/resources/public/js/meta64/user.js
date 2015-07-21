@@ -8,6 +8,10 @@ var user = function() {
 			title += " - " + res.userName;
 		}
 		$("#headerUserName").html(title);
+
+		var loginEnable = meta64.isAnonUser;
+		//console.log("loginEnable: "+loginEnable);
+		$("#openLoginPgButton").text(loginEnable ? "Login" : "Logout");
 	}
 
 	/* TODO: move this into meta64 module */
@@ -18,6 +22,7 @@ var user = function() {
 		}
 		meta64.isAdminUser = res.userName === "admin";
 		meta64.isAnonUser = res.userName === "anonymous";
+		//console.log("***** isAnonUser = "+meta64.isAnonUser);
 		meta64.anonUserLandingPageNode = res.anonUserLandingPageNode;
 		meta64.editModeOption = res.userPreferences.advancedMode ? meta64.MODE_ADVANCED : meta64.MODE_SIMPLE;
 	}
@@ -103,13 +108,26 @@ var user = function() {
 			}
 		},
 
+		/*
+		 * This method is ugly. It is the button that can be login *or* logout. 
+		 */
 		openLoginPg : function() {
-			_.populateLoginPgFromCookies();
+			
+			var loginEnable = meta64.isAnonUser;
+			
+			/* Open login dialog */
+			if (loginEnable) {
+				_.populateLoginPgFromCookies();
 
-			/* make credentials visible only if not logged in */
-			util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
+				/* make credentials visible only if not logged in */
+				util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
 
-			$.mobile.changePage("#loginPg");
+				$.mobile.changePage("#loginPg");
+			}
+			/* or log out immediately */
+			else {
+				_.logout();
+			}
 		},
 
 		signup : function() {
@@ -183,11 +201,8 @@ var user = function() {
 				"usingCookies" : usingCookies
 			});
 		},
-
+		
 		login : function() {
-			if (!util.isActionEnabled("login")) {
-				return;
-			}
 
 			var usr = $.trim($("#userName").val());
 			var pwd = $.trim($("#password").val());
@@ -207,9 +222,6 @@ var user = function() {
 		},
 
 		logout : function() {
-			if (!util.isActionEnabled("logout")) {
-				return;
-			}
 
 			/*
 			 * our choice of behavior here is that when logging out we clean out
@@ -238,14 +250,6 @@ var user = function() {
 
 		changePasswordPg : function() {
 			$.mobile.changePage("#changePasswordPg");
-		},
-
-		updateLoginButton : function(enablement) {
-			if (enablement.userName === "anonymous") {
-				$("#loginLogoutButton").text("Login");
-			} else {
-				$("#loginLogoutButton").text("Logout");
-			}
 		},
 
 		signupPgBuilder : function() {
@@ -299,6 +303,63 @@ var user = function() {
 
 			$("#tryAnotherCaptchaButton").on("click", _.tryAnotherCaptcha);
 			$("#signupButton").on("click", _.signup);
+		},
+
+		loginPgBuilder : function() {
+
+			var header = render.makeTag("div", //
+			{
+				"data-role" : "header" //
+			}, //
+			"<h2>" + BRANDING_TITLE + " - Login</h2>");
+
+			var formControls = render.makeEditField("User", "userName") + //
+			render.makePasswordField("Password", "password");
+
+			var loginButton = render.makeButton("Login", "loginButton", "b");
+			var backButton = render.makeBackButton("Close", "cancelLoginButton", "a");
+			var buttonBar = render.makeButtonBar(loginButton + backButton);
+
+			var form = render.makeTag("div", //
+			{
+				"class" : "ui-field-contain" //
+			}, //
+			formControls + buttonBar);
+
+			var internalMainContent = "";
+			var mainContent = render.makeTag("div", //
+			{
+				"role" : "main", //
+				"class" : "ui-content"
+			}, //
+			internalMainContent + form);
+
+			var content = header + mainContent;
+
+			util.setHtmlEnhanced($("#loginPg"), content);
+			
+			$("#loginButton").on("click", _.login);
+		},
+
+		loginPgInit : function() {
+			// var loginButtonElm = $("#loginButton");
+			// var logoutButtonElm = $("#logoutButton");
+			//			
+			// loginButtonElm.on("click", _.login);
+			// logoutButtonElm.on("click", _.logout);
+			//			
+			var loginEnable = meta64.isAnonUser;
+			
+			console.log("loginEnable: "+loginEnable);
+			// util.setEnablement(loginButtonElm, loginEnable);
+			// util.setVisibility(loginButtonElm, loginEnable);
+			//			
+			// var logoutEnable = !meta64.isAnonUser;
+			// console.log("loginEnable: "+logoutEnable);
+			// util.setEnablement(logoutButtonElm, logoutEnable);
+			// util.setVisibility(logoutButtonElm, logoutEnable);
+
+			$("#loginButton").text(loginEnable ? "Login" : "Logout");
 		}
 	};
 
