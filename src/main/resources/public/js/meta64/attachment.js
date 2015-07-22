@@ -84,14 +84,6 @@ var attachment = function() {
 			}
 		},
 
-		populateUploadPg : function() {
-
-			$("#uploadFromUrl").val("");
-			
-			/* display the node path at the top of the edit page */
-			$("#uploadPathDisplay").html("Path: " + render.formatPath(_.uploadNode.path));
-		},
-
 		openUploadPgMenuClick : function() {
 			var node = meta64.getHighlightedNode();
 
@@ -102,7 +94,6 @@ var attachment = function() {
 			}
 
 			_.uploadNode = node;
-			_.populateUploadPg();
 			$.mobile.changePage("#uploadPg");
 		},
 

@@ -321,10 +321,6 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : share.shareNodeToPublic
 			}, {
-				"name" : "deleteAttachment",
-				"enable" : true,
-				"function" : attachment.deleteAttachment
-			}, {
 				"name" : "makeNodeReferencable",
 				"enable" : true,
 				"function" : edit.makeNodeReferencable

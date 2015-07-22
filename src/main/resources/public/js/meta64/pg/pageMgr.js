@@ -84,6 +84,13 @@ var pageMgr = function() {
 				built : false,
 				init : null
 			});
+			
+			_.pageBuilders.push({
+				name : "#uploadPg",
+				build : uploadPg.build,
+				built : false,
+				init : uploadPg.init
+			});
 		}
 	};
 
