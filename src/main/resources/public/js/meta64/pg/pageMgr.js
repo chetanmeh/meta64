@@ -37,8 +37,7 @@ var pageMgr = function() {
 				return;
 			}
 
-			pageBuilders = [
-			{
+			pageBuilders = [ {
 				name : "#signupPg",
 				build : signupPg.build,
 				built : false,
@@ -88,6 +87,11 @@ var pageMgr = function() {
 				build : shareToPersonPg.build,
 				built : false,
 				init : shareToPersonPg.init
+			}, {
+				name : "#searchResultsPg",
+				build : searchResultsPg.build,
+				built : false,
+				init : searchResultsPg.init
 			} ];
 		}
 	};

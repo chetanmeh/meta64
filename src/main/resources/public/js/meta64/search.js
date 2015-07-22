@@ -16,8 +16,7 @@ var srch = function() {
 
 	var _searchNodesResponse = function(res) {
 		_.searchResults = res;
-
-		_.renderSearchResultsFromData(res);
+		$.mobile.changePage("#searchResultsPg");
 	};
 
 	var _ = {
@@ -103,9 +102,12 @@ var srch = function() {
 
 			_.uidToNodeMap[node.uid] = node;
 		},
-
-		renderSearchResultsFromData : function(data) {
-
+		
+		populateSearchResultsPage : function(data) {
+			if (!data) {
+				data = _.searchResults;
+			}
+			
 			var output = '';
 			var childCount = data.searchResults.length;
 
@@ -125,11 +127,10 @@ var srch = function() {
 				rowCount++;
 				output += _.renderSearchResultAsListItem(node, i, childCount, rowCount);
 			});
-
+			
 			util.setHtmlEnhanced($("#searchResultsView"), output);
-			$.mobile.changePage("#searchResultsPg");
 		},
-
+		
 		/*
 		 * Renders a single line of search results on the search results page.
 		 * 

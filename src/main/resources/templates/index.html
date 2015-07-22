@@ -119,12 +119,12 @@
 	<div data-role="page" id="importPg"></div>
 	<div data-role="page" id="searchPg"></div>
 	<div data-role="page" id="uploadPg"></div>
+	<div data-role="page" id="searchResultsPg"></div>
 	<div data-role="page" id="sharingPg"></div>
 	<div data-role="page" id="shareToPersonPg"></div>
 
 	<div th:replace="fragments/edit-node">...</div>
 	<div th:replace="fragments/edit-property">...</div>
-	<div th:replace="fragments/search-results">...</div>
 	<div th:replace="fragments/donate">...</div>
 
 	<script>
@@ -146,6 +146,7 @@
 			"/js/meta64/util.js", //
 			"/js/meta64/view.js", //
 			"/js/meta64/cnst.js",//
+			"/js/meta64/pg/searchResultsPg.js",//
 			"/js/meta64/pg/pageMgr.js",//
 			"/js/meta64/pg/loginPg.js",//
 			"/js/meta64/pg/signupPg.js",//
