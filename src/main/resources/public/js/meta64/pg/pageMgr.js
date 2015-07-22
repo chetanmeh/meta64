@@ -17,7 +17,7 @@ var pageMgr = function() {
 				// console.log("Checking page builder: "+builderObj.name);
 				if (pageName.contains(builder.name)) {
 					// console.log("found page builder.");
-					
+
 					if (!builder.built) {
 						// console.log("building page.");
 						builder.build();
@@ -76,6 +76,14 @@ var pageMgr = function() {
 				name : "#searchResultsPg",
 				build : searchResultsPg.build,
 				init : searchResultsPg.init
+			}, {
+				name : "#editNodePg",
+				build : editNodePg.build,
+				init : editNodePg.init
+			}, {
+				name : "#editPropertyPg",
+				build : editPropertyPg.build,
+				init : editPropertyPg.init
 			} ];
 		}
 	};

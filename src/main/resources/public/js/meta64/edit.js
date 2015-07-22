@@ -140,7 +140,7 @@ var edit = function() {
 			_.editingUnsavedNode = true;
 			_.editNode = null;
 
-			_.populateEditNodePg();
+			//_.populateEditNodePg();
 			$.mobile.changePage("#editNodePg");
 		},
 
@@ -365,7 +365,7 @@ var edit = function() {
 			}
 			_.editingUnsavedNode = false;
 			_.editNode = node;
-			_.populateEditNodePg();
+			//_.populateEditNodePg();
 			$.mobile.changePage("#editNodePg");
 		},
 

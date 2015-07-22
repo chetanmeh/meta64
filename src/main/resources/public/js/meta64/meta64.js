@@ -284,26 +284,10 @@ var meta64 = function() {
 				"name" : "propsToggle",
 				"enable" : displayingNode,
 				"function" : props.propsToggle
-			}, {
-				"name" : "saveNode",
-				"enable" : false,
-				"function" : edit.saveNode
-			}, {
-				"name" : "cancelEdit",
-				"enable" : false,
-				"function" : edit.cancelEdit
-			}, {
-				"name" : "addProperty",
-				"enable" : false,
-				"function" : props.addProperty
-			}, {
+			},{
 				"name" : "deleteProperty",
 				"enable" : false,
 				"function" : props.deleteProperty
-			}, {
-				"name" : "saveProperty",
-				"enable" : false,
-				"function" : props.saveProperty
 			}, {
 				"name" : "changePasswordPg",
 				"enable" : false,
@@ -446,11 +430,7 @@ var meta64 = function() {
 			 */
 			util.setEnablementByName("propsToggle", propsToggle);
 
-			util.setEnablementByName("saveNode", !_.isAnonUser);
-			util.setEnablementByName("cancelEdit", true);
-			util.setEnablementByName("addProperty", !_.isAnonUser);
 			util.setEnablementByName("deleteProperty", !_.isAnonUser);
-			util.setEnablementByName("saveProperty", !_.isAnonUser);
 			util.setEnablementByName("changePasswordPg", !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;

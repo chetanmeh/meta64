@@ -57,6 +57,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Orderable child nodes ("move up" and "move down" supported)
 * Creating Subnodes or Inline nodes
 * Full text search (by Lucene)
+* Timeline feature: Reverse Chronological list of any tree branch.
 * Deleting Nodes
 * Moving nodes to new locations (supports multi-select)
 * Sharing a node as Public

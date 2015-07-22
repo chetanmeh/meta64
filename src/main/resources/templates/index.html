@@ -122,9 +122,9 @@
 	<div data-role="page" id="searchResultsPg"></div>
 	<div data-role="page" id="sharingPg"></div>
 	<div data-role="page" id="shareToPersonPg"></div>
+	<div data-role="page" id="editNodePg"></div>
+	<div data-role="page" id="editPropertyPg"></div>
 
-	<div th:replace="fragments/edit-node">...</div>
-	<div th:replace="fragments/edit-property">...</div>
 	<div th:replace="fragments/donate">...</div>
 
 	<script>
@@ -156,9 +156,10 @@
 			"/js/meta64/pg/searchPg.js",//
 			"/js/meta64/pg/changePasswordPg.js",//
 			"/js/meta64/pg/uploadPg.js",//
+			"/js/meta64/pg/editNodePg.js",//
+			"/js/meta64/pg/editPropertyPg.js",//
 			"/js/meta64/pg/shareToPersonPg.js",//,
-			"/js/meta64/pg/sharingPg.js"
-			], //
+			"/js/meta64/pg/sharingPg.js" ], //
 			function() {
 				meta64.initApp();
 			});

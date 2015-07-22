@@ -7,7 +7,7 @@ var props = function() {
 
 		edit.editNode.properties.push(res.propertySaved)
 
-		edit.populateEditNodePg();
+		//edit.populateEditNodePg();
 		$.mobile.changePage("#editNodePg");
 
 		// $("#editPropertyDialogCloseButton").trigger('click');
@@ -27,7 +27,7 @@ var props = function() {
 			props.deletePropertyFromLocalData(info.propertyToDelete);
 
 			/* now just re-render screen from local variables */
-			edit.populateEditNodePg();
+			//edit.populateEditNodePg();
 			$.mobile.changePage("#editNodePg");
 			meta64.treeDirty = true;
 		}
@@ -70,6 +70,10 @@ var props = function() {
 		},
 
 		addProperty : function() {
+			$.mobile.changePage("#editPropertyPg");
+		},
+
+		populatePropertyEdit : function() {
 			var field = '';
 
 			/* Property Name Field */
@@ -106,9 +110,8 @@ var props = function() {
 			view.initEditPathDisplayById("#editPropertyPathDisplay");
 
 			util.setHtmlEnhanced($("#addPropertyFieldContainer"), field);
-			$.mobile.changePage("#editPropertyPg");
 		},
-
+		
 		saveProperty : function() {
 			var propertyNameData = $("#addPropertyNameTextContent").val();
 			var propertyValueData = $("#addPropertyValueTextContent").val();
