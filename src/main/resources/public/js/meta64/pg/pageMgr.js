@@ -77,6 +77,13 @@ var pageMgr = function() {
 				built : false,
 				init : null
 			});
+			
+			_.pageBuilders.push({
+				name : "#searchPg",
+				build : searchPg.build,
+				built : false,
+				init : null
+			});
 		}
 	};
 

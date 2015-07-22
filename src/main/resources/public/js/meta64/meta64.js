@@ -333,13 +333,9 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : edit.insertBookWarAndPeace
 			}, {
-				"name" : "searchNodes",
+				"name" : "searchPg",
 				"enable" : true,
-				"function" : srch.searchNodes
-			}, {
-				"name" : "searchNodesPg",
-				"enable" : true,
-				"function" : srch.searchNodesPg
+				"function" : srch.searchPg
 			}, {
 				"name" : "timeline",
 				"enable" : true,

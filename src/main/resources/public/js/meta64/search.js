@@ -92,8 +92,8 @@ var srch = function() {
 			}, _searchNodesResponse);
 		},
 
-		searchNodesPg : function() {
-			$.mobile.changePage("#searchNodesPg");
+		searchPg : function() {
+			$.mobile.changePage("#searchPg");
 		},
 
 		initSearchNode : function(node) {

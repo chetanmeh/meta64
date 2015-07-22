@@ -1,0 +1,46 @@
+console.log("running module: searchPg.js");
+
+var searchPg = function() {
+
+	var _ = {
+		build : function() {
+
+			var header = render.makeTag("div", //
+			{
+				"data-role" : "header" //
+			}, //
+			"<h2>" + BRANDING_TITLE + " - Search</h2>");
+
+			var formControls = render.makeEditField("Search", "searchText");
+
+			var searchButton = render.makeButton("Search", "searchNodesButton", "b");
+			var backButton = render.makeBackButton("Close", "cancelSearchButton", "a");
+			var buttonBar = render.makeHorzControlGroup(searchButton + backButton);
+
+			var form = render.makeTag("div", //
+			{
+				"class" : "ui-field-contain" //
+			}, //
+			formControls + buttonBar);
+
+			var internalMainContent = "";
+			var mainContent = render.makeTag("div", //
+			{
+				"role" : "main", //
+				"class" : "ui-content"
+			}, //
+			internalMainContent + form);
+
+			var content = header + mainContent;
+
+			util.setHtmlEnhanced($("#searchPg"), content);
+
+			$("#searchNodesButton").on("click", srch.searchNodes);
+		}
+	};
+
+	console.log("Module ready: searchPg.js");
+	return _;
+}();
+
+// # sourceURL=searchPg.js
