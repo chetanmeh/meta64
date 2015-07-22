@@ -83,6 +83,11 @@ var pageMgr = function() {
 				build : sharingPg.build,
 				built : false,
 				init : sharingPg.init
+			}, {
+				name : "#shareToPersonPg",
+				build : shareToPersonPg.build,
+				built : false,
+				init : shareToPersonPg.init
 			} ];
 		}
 	};

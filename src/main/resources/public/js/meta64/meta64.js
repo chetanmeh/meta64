@@ -365,10 +365,6 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : share.editNodeSharingMenuClick
 			},{
-				"name" : "shareNodeToPerson",
-				"enable" : false,
-				"function" : share.shareNodeToPerson
-			}, {
 				"name" : "donatePg",
 				"enable" : true,
 				"function" : _.openDonatePg
@@ -478,10 +474,6 @@ var meta64 = function() {
 			/* Actions that depend on having a highlighted node */
 			util.setEnablementByName("manageAttachments", highlightNode != null);
 			util.setEnablementByName("editNodeSharing", highlightNode != null);
-			//util.setEnablementByName("shareNodeToPersonPg", highlightNode != null);
-			util.setEnablementByName("shareNodeToPerson", highlightNode != null);
-			// util.setEnablementByName("searchNodesPg", highlightNode != null);
-			// util.setEnablementByName("timeline", highlightNode != null);
 		},
 
 		/*

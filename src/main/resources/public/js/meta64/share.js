@@ -76,7 +76,7 @@ var share = function() {
 		},
 
 		shareNodeToPersonPg : function() {
-			$.mobile.changePage("#shareNodeToPersonPg");
+			$.mobile.changePage("#shareToPersonPg");
 		},
 		
 		shareNodeToPerson : function() {
