@@ -40,24 +40,6 @@ var loginPg = function() {
 		},
 
 		init : function() {
-			// var loginButtonElm = $("#loginButton");
-			// var logoutButtonElm = $("#logoutButton");
-			//			
-			// loginButtonElm.on("click", _.login);
-			// logoutButtonElm.on("click", _.logout);
-			//			
-			var loginEnable = meta64.isAnonUser;
-
-			console.log("loginEnable: " + loginEnable);
-			// util.setEnablement(loginButtonElm, loginEnable);
-			// util.setVisibility(loginButtonElm, loginEnable);
-			//			
-			// var logoutEnable = !meta64.isAnonUser;
-			// console.log("loginEnable: "+logoutEnable);
-			// util.setEnablement(logoutButtonElm, logoutEnable);
-			// util.setVisibility(logoutButtonElm, logoutEnable);
-
-			$("#loginButton").text(loginEnable ? "Login" : "Logout");
 		}
 	};
 

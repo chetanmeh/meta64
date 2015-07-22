@@ -52,8 +52,8 @@ var signupPg = function() {
 
 				util.setHtmlEnhanced($("#signupPg"), content);
 
-				$("#tryAnotherCaptchaButton").on("click", _.tryAnotherCaptcha);
-				$("#signupButton").on("click", _.signup);
+				$("#tryAnotherCaptchaButton").on("click", user.tryAnotherCaptcha);
+				$("#signupButton").on("click", user.signup);
 			}
 	};
 

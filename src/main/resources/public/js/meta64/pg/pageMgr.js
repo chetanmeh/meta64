@@ -17,6 +17,7 @@ var pageMgr = function() {
 				// console.log("Checking page builder: "+builderObj.name);
 				if (pageName.contains(builder.name)) {
 					// console.log("found page builder.");
+					
 					if (!builder.built) {
 						// console.log("building page.");
 						builder.build();
@@ -39,58 +40,41 @@ var pageMgr = function() {
 
 			pageBuilders = [ {
 				name : "#signupPg",
-				build : signupPg.build,
-				built : false,
-				init : null
+				build : signupPg.build
 			}, {
 				name : "#loginPg",
 				build : loginPg.build,
-				built : false,
 				init : loginPg.init
 			}, {
 				name : "#prefsPg",
-				build : prefsPg.build,
-				built : false,
-				init : null
+				build : prefsPg.build
 			}, {
 				name : "#changePasswordPg",
-				build : changePasswordPg.build,
-				built : false,
-				init : null
+				build : changePasswordPg.build
 			}, {
 				name : "#exportPg",
-				build : exportPg.build,
-				built : false,
-				init : null
+				build : exportPg.build
 			}, {
 				name : "#importPg",
-				build : importPg.build,
-				built : false,
-				init : null
+				build : importPg.build
 			}, {
 				name : "#searchPg",
-				build : searchPg.build,
-				built : false,
-				init : null
+				build : searchPg.build
 			}, {
 				name : "#uploadPg",
 				build : uploadPg.build,
-				built : false,
 				init : uploadPg.init
 			}, {
 				name : "#sharingPg",
 				build : sharingPg.build,
-				built : false,
 				init : sharingPg.init
 			}, {
 				name : "#shareToPersonPg",
 				build : shareToPersonPg.build,
-				built : false,
 				init : shareToPersonPg.init
 			}, {
 				name : "#searchResultsPg",
 				build : searchResultsPg.build,
-				built : false,
 				init : searchResultsPg.init
 			} ];
 		}
