@@ -31,7 +31,7 @@ var signupPg = function() {
 				var newCaptchaButton = render.makeButton("Try Different Image", "tryAnotherCaptchaButton", "a");
 				var backButton = render.makeBackButton("Close", "cancelSignupButton", "a");
 
-				var buttonBar = render.makeButtonBar(signupButton + newCaptchaButton + backButton);
+				var buttonBar = render.makeHorzControlGroup(signupButton + newCaptchaButton + backButton);
 
 				var form = render.makeTag("div", //
 				{

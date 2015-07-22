@@ -308,13 +308,27 @@ var render = function() {
 			}, buttonBar);
 		},
 
-		makeButtonBar : function(content) {
+		makeHorzControlGroup : function(content) {
 			/* Now build entire control bar */
 			return _.makeTag("div", //
 			{
 				"data-role" : "controlgroup", //
 				"data-type" : "horizontal"
 			}, content);
+		},
+
+		makeRadioButton : function(name, group, id, on) {
+			return _.makeTag("input", //
+			{
+				"type" : "radio", //
+				"name" : group,
+				"id" : id,
+				"checked" : on ? "checked" : "unchecked"
+			}, "", true) + // + //
+
+			_.makeTag("label", {
+				"for" : id
+			}, name);
 		},
 
 		/*

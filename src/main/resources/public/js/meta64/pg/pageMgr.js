@@ -49,6 +49,13 @@ var pageMgr = function() {
 				built : false,
 				init : loginPg.init
 			});
+			
+			_.pageBuilders.push({
+				name : "#prefsPg",
+				build : prefsPg.build,
+				built : false,
+				init : null
+			});
 		}
 	};
 

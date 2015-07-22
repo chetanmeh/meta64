@@ -16,7 +16,7 @@ var loginPg = function() {
 
 			var loginButton = render.makeButton("Login", "loginButton", "b");
 			var backButton = render.makeBackButton("Close", "cancelLoginButton", "a");
-			var buttonBar = render.makeButtonBar(loginButton + backButton);
+			var buttonBar = render.makeHorzControlGroup(loginButton + backButton);
 
 			var form = render.makeTag("div", //
 			{

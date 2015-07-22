@@ -321,10 +321,6 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : prefs.accountPreferencesPg
 			}, {
-				"name" : "savePreferences",
-				"enable" : true,
-				"function" : prefs.savePreferences
-			}, {
 				"name" : "shareNodeToPublic",
 				"enable" : true,
 				"function" : share.shareNodeToPublic

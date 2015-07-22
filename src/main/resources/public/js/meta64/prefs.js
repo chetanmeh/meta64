@@ -27,7 +27,7 @@ var prefs = function() {
 		
 		accountPreferencesPg : function() {
 			
-			$.mobile.changePage("#accountPreferencesPg");
+			$.mobile.changePage("#prefsPg");
 			_.populatePreferencesPg();
 		}
 	};
