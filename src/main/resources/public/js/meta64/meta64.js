@@ -94,13 +94,6 @@ var meta64 = function() {
 		showProperties : false,
 
 		/*
-		 * Contains a mapping of all page names and the functions to call to
-		 * generate that page. Each page initializer will usually only be run
-		 * one time to generate the HTML.
-		 */
-		pageBuilders : [],
-
-		/*
 		 * List of node prefixes to flag nodes to not allow to be shown in the
 		 * page in simple mode
 		 */
@@ -674,7 +667,7 @@ var meta64 = function() {
 			 */
 			user.refreshLogin();
 
-			_.initializePageBuilders();
+			pageMgr.initializePageBuilders();
 
 			/*
 			 * This was part of an experiment related to figuring out how JQuery
@@ -710,27 +703,6 @@ var meta64 = function() {
 					_.screenSizeChange();
 				}
 			}, 1500);
-		},
-
-		initializePageBuilders : function() {
-			if (_.pageBuilders.length > 0) {
-				console.log("initializePageBuilders called twice ?");
-				return;
-			}
-
-			_.pageBuilders.push({
-				name : "#signupPg",
-				builder : user.signupPgBuilder,
-				content : null,
-				initFunc : null
-			});
-			
-			_.pageBuilders.push({
-				name : "#loginPg",
-				builder : user.loginPgBuilder,
-				content : null,
-				initFunc : user.loginPgInit
-			});
 		},
 
 		screenSizeChange : function() {
@@ -771,23 +743,8 @@ var meta64 = function() {
 		userLogged = false;
 
 		if (typeof data.toPage == "string") {
-			for (var i = 0; i < _.pageBuilders.length; i++) {
-				var builderObj = _.pageBuilders[i];
-				// console.log("Checking page builder: "+builderObj.name);
-				if (data.toPage.contains(builderObj.name)) {
-					// console.log("found page builder.");
-					if (!builderObj.content) {
-						// console.log("building page.");
-						builderObj.builder();
-						builderObj.content = true;
-					}
-					
-					if (builderObj.initFunc) {
-						builderObj.initFunc();
-					}
-					break;
-				}
-			}
+			
+			pageMgr.buildPage(data.toPage);
 
 			// console.log("STRING: page change ****************** toPage[" +
 			// toPage + "] absUrl[" + absUrl + "]");
