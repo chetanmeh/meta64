@@ -100,7 +100,7 @@ public class UserManagerService {
 	public void signup(SignupRequest req, SignupResponse res) throws Exception {
 
 		final String userName = req.getUserName();
-		if (userName.equalsIgnoreCase("admin")) {
+		if (userName.toLowerCase().startsWith("admin")) {
 			throw new Exception("Sorry, you can't be the new admin.");
 		}
 
