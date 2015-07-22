@@ -309,10 +309,6 @@ var meta64 = function() {
 				"enable" : false,
 				"function" : user.changePasswordPg
 			}, {
-				"name" : "changePassword",
-				"enable" : false,
-				"function" : user.changePassword
-			}, {
 				"name" : "editMode",
 				"enable" : displayingNode,
 				"function" : edit.editMode
@@ -479,7 +475,6 @@ var meta64 = function() {
 			util.setEnablementByName("addProperty", !_.isAnonUser);
 			util.setEnablementByName("deleteProperty", !_.isAnonUser);
 			util.setEnablementByName("saveProperty", !_.isAnonUser);
-			util.setEnablementByName("changePassword", !_.isAnonUser);
 			util.setEnablementByName("changePasswordPg", !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;

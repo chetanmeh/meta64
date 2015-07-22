@@ -79,9 +79,9 @@ public class UserManagerUtil {
 		return true;
 	}
 
-	public static void changePassword(Session session, String newPassword) throws Exception {
+	public static void changePassword(Session session, String userId, String newPassword) throws Exception {
 		UserManager userManager = ((JackrabbitSession) session).getUserManager();
-		String userId = session.getUserID();
+		//String userId = session.getUserID();
 		Authorizable authorizable = userManager.getAuthorizable(userId);
 		((User) authorizable).changePassword(newPassword);
 	}
@@ -101,7 +101,7 @@ public class UserManagerUtil {
 				session = oak.getRepository().login(new SimpleCredentials("admin", "admin".toCharArray()));
 				log.debug("Admin user login verified, using defaults.");
 
-				changePassword(session, oak.getJcrAdminPassword());
+				changePassword(session, "admin", oak.getJcrAdminPassword());
 				session.save();
 			}
 			catch (Exception e2) {

@@ -1,0 +1,47 @@
+console.log("running module: changePasswordPg.js");
+
+var changePasswordPg = function() {
+
+	var _ = {
+		build : function() {
+
+			var header = render.makeTag("div", //
+			{
+				"data-role" : "header" //
+			}, //
+			"<h2>" + BRANDING_TITLE + " - Login</h2>");
+
+			var formControls = render.makePasswordField("Password", "changePassword1") + //
+			render.makePasswordField("Repeat Password", "changePassword2");
+
+			var changePasswordButton = render.makeButton("Change Password", "changePasswordActionButton", "b");
+			var backButton = render.makeBackButton("Close", "cancelChangePasswordButton", "a");
+			var buttonBar = render.makeHorzControlGroup(changePasswordButton + backButton);
+
+			var form = render.makeTag("div", //
+			{
+				"class" : "ui-field-contain" //
+			}, //
+			formControls + buttonBar);
+
+			var internalMainContent = "";
+			var mainContent = render.makeTag("div", //
+			{
+				"role" : "main", //
+				"class" : "ui-content"
+			}, //
+			internalMainContent + form);
+
+			var content = header + mainContent;
+
+			util.setHtmlEnhanced($("#changePasswordPg"), content);
+
+			$("#changePasswordActionButton").on("click", user.changePassword);
+		}
+	};
+
+	console.log("Module ready: changePasswordPg.js");
+	return _;
+}();
+
+// # sourceURL=changePasswordPg.js

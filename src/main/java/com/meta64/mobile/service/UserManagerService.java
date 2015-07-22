@@ -213,9 +213,19 @@ public class UserManagerService {
 		return allUsersRoot;
 	}
 
-	public void changePassword(Session session, ChangePasswordRequest req, ChangePasswordResponse res) throws Exception {
-		UserManagerUtil.changePassword(session, req.getNewPassword());
-		session.save();
+	public void changePassword(Session session, final ChangePasswordRequest req, ChangePasswordResponse res) throws Exception {
+		final String userName = sessionContext.getUserName();
+		
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				UserManagerUtil.changePassword(session, userName, req.getNewPassword());
+				session.save();
+			}
+		});
+		
+		//UserManagerUtil.changePassword(session, req.getNewPassword());
+		//session.save();
 		sessionContext.setPassword(req.getNewPassword());
 		res.setSuccess(true);
 	}

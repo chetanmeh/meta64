@@ -56,6 +56,13 @@ var pageMgr = function() {
 				built : false,
 				init : null
 			});
+			
+			_.pageBuilders.push({
+				name : "#changePasswordPg",
+				build : changePasswordPg.build,
+				built : false,
+				init : null
+			});
 		}
 	};
 
