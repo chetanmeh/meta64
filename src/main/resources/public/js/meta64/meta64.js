@@ -361,10 +361,6 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : edit.openExportPg
 			}, {
-				"name" : "exportNodes",
-				"enable" : true,
-				"function" : edit.exportNodes
-			}, {
 				"name" : "openImportPg",
 				"enable" : true,
 				"function" : edit.openImportPg

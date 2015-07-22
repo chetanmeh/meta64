@@ -115,6 +115,8 @@
 	<div data-role="page" id="loginPg"></div>
 	<div data-role="page" id="prefsPg"></div>
 	<div data-role="page" id="changePasswordPg"></div>
+	<div data-role="page" id="exportPg"></div>
+	<div data-role="page" id="importPg"></div>
 
 	<div th:replace="fragments/edit-node">...</div>
 	<div th:replace="fragments/share-node">...</div>
@@ -122,8 +124,6 @@
 	<div th:replace="fragments/upload">...</div>
 	<div th:replace="fragments/search">...</div>
 	<div th:replace="fragments/search-results">...</div>
-	<div th:replace="fragments/export">...</div>
-	<div th:replace="fragments/import">...</div>
 	<div th:replace="fragments/share-node-to-person">...</div>
 	<div th:replace="fragments/donate">...</div>
 
@@ -150,6 +150,8 @@
 			"/js/meta64/pg/loginPg.js",//
 			"/js/meta64/pg/signupPg.js",//
 			"/js/meta64/pg/prefsPg.js",//
+			"/js/meta64/pg/exportPg.js",//
+			"/js/meta64/pg/importPg.js",//
 			"/js/meta64/pg/changePasswordPg.js",//
 			], //
 			function() {

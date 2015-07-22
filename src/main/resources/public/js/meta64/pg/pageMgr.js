@@ -63,6 +63,20 @@ var pageMgr = function() {
 				built : false,
 				init : null
 			});
+			
+			_.pageBuilders.push({
+				name : "#exportPg",
+				build : exportPg.build,
+				built : false,
+				init : null
+			});
+			
+			_.pageBuilders.push({
+				name : "#importPg",
+				build : importPg.build,
+				built : false,
+				init : null
+			});
 		}
 	};
 
