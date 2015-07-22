@@ -119,9 +119,9 @@
 	<div data-role="page" id="importPg"></div>
 	<div data-role="page" id="searchPg"></div>
 	<div data-role="page" id="uploadPg"></div>
+	<div data-role="page" id="sharingPg"></div>
 
 	<div th:replace="fragments/edit-node">...</div>
-	<div th:replace="fragments/share-node">...</div>
 	<div th:replace="fragments/edit-property">...</div>
 	<div th:replace="fragments/search-results">...</div>
 	<div th:replace="fragments/share-node-to-person">...</div>
@@ -154,7 +154,8 @@
 			"/js/meta64/pg/importPg.js",//
 			"/js/meta64/pg/searchPg.js",//
 			"/js/meta64/pg/changePasswordPg.js",//
-			"/js/meta64/pg/uploadPg.js"//
+			"/js/meta64/pg/uploadPg.js",//,
+			"/js/meta64/pg/sharingPg.js"
 			], //
 			function() {
 				meta64.initApp();

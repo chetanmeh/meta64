@@ -78,6 +78,11 @@ var pageMgr = function() {
 				build : uploadPg.build,
 				built : false,
 				init : uploadPg.init
+			}, {
+				name : "#sharingPg",
+				build : sharingPg.build,
+				built : false,
+				init : sharingPg.init
 			} ];
 		}
 	};

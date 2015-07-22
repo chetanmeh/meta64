@@ -10,28 +10,7 @@ var share = function() {
 	 * res.aclEntries = list of AccessControlEntryInfo.java json objects
 	 */
 	var _getNodePrivilegesResponse = function(res) {
-		_populateSharingPg(res);
-
-		$.mobile.changePage("#shareNodePg");
-	}
-
-	var _populateSharingPg = function(res) {
-
-		var html = "<h2>Access Control Entries</h2>";
-
-		$.each(res.aclEntries, function(index, aclEntry) {
-			html += "<h4>User: " + aclEntry.principalName + "</h4>";
-			html += render.makeTag("div", {
-				"class" : "privilege-list"
-			}, _renderAclPrivileges(aclEntry.principalName, aclEntry));
-
-		});
-
-		if (html === "") {
-			html = "Node is not shared with anyone.";
-		}
-
-		util.setHtmlEnhanced($("#sharingListFieldContainer"), html);
+		_.populateSharingPg(res);
 	}
 
 	var _renderAclPrivileges = function(principal, aclEntry) {
@@ -47,7 +26,7 @@ var share = function() {
 
 			var row = render.makeHorizontalFieldSet(removeButton);
 
-			row += "<b>" + principal + "</b> has privilege <b>" + privilege.privilegeName /* _makeFriendlyPrivilegeName(privilege.privilegeName) */
+			row += "<b>" + principal + "</b> has privilege <b>" + privilege.privilegeName 
 					+ "</b> on this node.";
 
 			ret += render.makeTag("div", {
@@ -65,18 +44,29 @@ var share = function() {
 		}, _getNodePrivilegesResponse);
 	}
 
-	// var _makeFriendlyPrivilegeName = function(privName) {
-	// if (privName === "jcr:read") {
-	// return "read";
-	// } else {
-	// return privName;
-	// }
-	// }
-
 	var _ = {
 
 		sharingNode : null,
 
+		populateSharingPg : function(res) {
+
+			var html = "<h2>Access Control Entries</h2>";
+
+			$.each(res.aclEntries, function(index, aclEntry) {
+				html += "<h4>User: " + aclEntry.principalName + "</h4>";
+				html += render.makeTag("div", {
+					"class" : "privilege-list"
+				}, _renderAclPrivileges(aclEntry.principalName, aclEntry));
+
+			});
+
+			if (html === "") {
+				html = "Node is not shared with anyone.";
+			}
+
+			util.setHtmlEnhanced($("#sharingListFieldContainer"), html);
+		},
+		
 		removePrivilege : function(principal, privilege) {
 			util.json("removePrivilege", {
 				"nodeId" : _.sharingNode.id,
@@ -107,7 +97,7 @@ var share = function() {
 		},
 		
 		shareNodeToPublic : function() {
-
+			console.log("Sharing node to public.");
 			/*
 			 * Add privilege and then reload share nodes dialog from scratch
 			 * doing another callback to server
@@ -134,20 +124,22 @@ var share = function() {
 				return;
 			}
 			_.sharingNode = node;
-			_.reload();
+			$.mobile.changePage("#sharingPg");
 		},
 
 		reloadFromShareWithPerson : function(res) {
 			if (util.checkSuccess("Share Node with Person", res)) {
-				_.reload();
+				$.mobile.changePage("#sharingPg");
 			}
 		},
 		
 		/*
-		 * Gets privileges from server and displays in GUI also changing to the
-		 * correct gui dialog if required
+		 * Gets privileges from server and displays in GUI also. Assumes gui is already
+		 * at correct page.
 		 */
 		reload : function() {
+			console.log("Loading node sharing info.");
+			
 			util.json("getNodePrivileges", {
 				"nodeId" : _.sharingNode.id,
 				"includeAcl" : "y",

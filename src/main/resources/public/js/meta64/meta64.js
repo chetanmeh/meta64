@@ -317,10 +317,6 @@ var meta64 = function() {
 				"enable" : true,
 				"function" : prefs.accountPreferencesPg
 			}, {
-				"name" : "shareNodeToPublic",
-				"enable" : true,
-				"function" : share.shareNodeToPublic
-			}, {
 				"name" : "makeNodeReferencable",
 				"enable" : true,
 				"function" : edit.makeNodeReferencable
@@ -368,11 +364,7 @@ var meta64 = function() {
 				"name" : "editNodeSharing",
 				"enable" : true,
 				"function" : share.editNodeSharingMenuClick
-			}, {
-				"name" : "shareNodeToPersonPg",
-				"enable" : false,
-				"function" : share.shareNodeToPersonPg
-			}, {
+			},{
 				"name" : "shareNodeToPerson",
 				"enable" : false,
 				"function" : share.shareNodeToPerson
@@ -486,7 +478,7 @@ var meta64 = function() {
 			/* Actions that depend on having a highlighted node */
 			util.setEnablementByName("manageAttachments", highlightNode != null);
 			util.setEnablementByName("editNodeSharing", highlightNode != null);
-			util.setEnablementByName("shareNodeToPersonPg", highlightNode != null);
+			//util.setEnablementByName("shareNodeToPersonPg", highlightNode != null);
 			util.setEnablementByName("shareNodeToPerson", highlightNode != null);
 			// util.setEnablementByName("searchNodesPg", highlightNode != null);
 			// util.setEnablementByName("timeline", highlightNode != null);
