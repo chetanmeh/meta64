@@ -12,6 +12,10 @@
 <link rel="stylesheet" th:href="@{${meta64Css}}" />
 
 <script th:inline="javascript">
+	window.onerror = function(message, url, line) {
+		console.log("ERROR: " + message + " [url:" + url + "] line " + line);
+	};
+
 	/*<![CDATA[*/
 	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
@@ -55,7 +59,7 @@
 			data-tap-toggle="false">
 			<h1 id="headerUserName" th:text="${brandingTitle}">Branding
 				Title</h1>
-			<a href="#popupMenu" data-rel="popup" data-icon="bars"
+			<a href="#popupMenuPg" data-rel="popup" data-icon="bars"
 				id="menuButton" class="ui-btn ui-btn-inline ui-btn-b">Menu</a>
 
 			<div data-type="horizontal" data-role="controlgroup"
@@ -88,7 +92,7 @@
 			<div id="mainNodeContent" class="main-node-content"></div>
 			<div id="mainPageControls"></div>
 			<div id="listView"></div>
-			<div th:replace="fragments/popup-menu">...</div>
+			<div data-role="popup" id="popupMenuPg"></div>
 
 			<div class="donate-center">
 				<a data-ajax="false" class="donate-link"
@@ -147,6 +151,7 @@
 			"/js/meta64/view.js", //
 			"/js/meta64/cnst.js",//
 			"/js/meta64/pageMgr.js",//
+			"/js/meta64/pg/popupMenuPg.js",//
 			"/js/meta64/pg/searchResultsPg.js",//
 			"/js/meta64/pg/loginPg.js",//
 			"/js/meta64/pg/signupPg.js",//

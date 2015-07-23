@@ -139,8 +139,6 @@ var edit = function() {
 		startEditingNewNode : function() {
 			_.editingUnsavedNode = true;
 			_.editNode = null;
-
-			//_.populateEditNodePg();
 			$.mobile.changePage("#editNodePg");
 		},
 
@@ -250,7 +248,6 @@ var edit = function() {
 					var propVal = $("#" + fieldId).val();
 
 					if (propVal !== prop.value) {
-						// alert("change detected: " + propVal);
 						propertiesList.push({
 							"name" : prop.name,
 							"value" : propVal
@@ -489,19 +486,6 @@ var edit = function() {
 						}
 					}
 
-					/*
-					 * NO MATTER WHAT I did, a fieldset breaks the ability to
-					 * show labels
-					 */
-					// todo: what's the deal with fieldset v.s. form as the
-					// element to contain a controlgroup ? not all combos work
-					// apparently.
-					// <fieldset data-role="controlgroup"
-					// data-type="horizontal">
-					// var horzSet = makeTag("fieldset", {
-					// "data-role" : "controlgroup", //,
-					// "data-type" : "horizontal",
-					// }, field, true);
 					fields += render.makeTag("div", {
 						"class" : "ui-field-contain"
 					}, field);

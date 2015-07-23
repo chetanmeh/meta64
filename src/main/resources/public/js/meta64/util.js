@@ -407,6 +407,18 @@ var util = function() {
 			return val;
 		},
 
+		/*
+		 * iterates over an object creating a string containing it's keys and
+		 * values
+		 */
+		printProperties : function(obj) {
+			var val = '';
+			$.each(obj, function(k, v) {
+				val += k + "\n";
+			});
+			return val;
+		},
+
 		scrollToTop : function() {
 			// setTimeout(function() {
 			window.scrollTo(0, 0);

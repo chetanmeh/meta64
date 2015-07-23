@@ -1,5 +1,8 @@
 console.log("running module: loader.js");
 
+/*
+ * Performs dynamic/programmatic loading of multiple JavaScript files
+ */
 var loader = function() {
 
 	var scriptsRemaining = 0;
@@ -12,12 +15,23 @@ var loader = function() {
 				"dataType" : "script",
 				"cache" : true,
 				"url" : url,
-				success : function(jqXHR, textStatus) {
+				success : function(xhr, textStatus) {
 					callback(url, textStatus);
 				},
 				error : function(xhr, status, error) {
-					console.log("Failed loading url: " + url + " status=" + status + " error=" + error); // xhr.responseText);
-					// //JSON.parse(xhr.responseText));
+					/*
+					 * If script fails because of a syntax error you will get an
+					 * error message below, but no line number. I spent several
+					 * hours trying to google and find out how to get line
+					 * number for a syntax error and it appears to be absolutely
+					 * impossible, even though it seems easy. If you think i'm
+					 * wrong just go ahead and try it! :) I'd love to be proven
+					 * wrong.
+					 * 
+					 * Will have to find some fancy LINTER to help out with line
+					 * numbers.
+					 */
+					console.log("ERROR: url=" + url + " status[" + status + "] error[" + error);
 				}
 			});
 		},
@@ -35,7 +49,7 @@ var loader = function() {
 				_.loadScript(script + "?ver=" + cacheVersion, //
 				function(url, textStatus) {
 					scriptsRemaining--;
-					console.log("Script Load Response for [" + url + "] (remaining=" + scriptsRemaining + " status: " + textStatus);
+					console.log("Script Load Response for [" + url + "] remaining=" + scriptsRemaining + " status: " + textStatus);
 					if (scriptsRemaining == 0) {
 						console.log("All scripts loaded!");
 						allScriptsLoaded();
@@ -49,4 +63,4 @@ var loader = function() {
 	return _;
 }();
 
-//# sourceURL=scriptLoader.js
+// # sourceURL=scriptLoader.js

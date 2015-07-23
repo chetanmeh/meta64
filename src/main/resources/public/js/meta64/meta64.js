@@ -268,7 +268,7 @@ var meta64 = function() {
 			 * associated with it that is like [name]Button (i.e. suffixed with
 			 * 'Button'). Example: id='loginButton'
 			 */
-			_.defineActions( {
+			_.defineActions({
 				"name" : "openLoginPg",
 				"enable" : true,
 				"function" : user.openLoginPg
@@ -284,74 +284,18 @@ var meta64 = function() {
 				"name" : "propsToggle",
 				"enable" : displayingNode,
 				"function" : props.propsToggle
-			},{
+			}, {
 				"name" : "deleteProperty",
 				"enable" : false,
 				"function" : props.deleteProperty
-			}, {
-				"name" : "changePasswordPg",
-				"enable" : false,
-				"function" : user.changePasswordPg
 			}, {
 				"name" : "editMode",
 				"enable" : displayingNode,
 				"function" : edit.editMode
 			}, {
-				"name" : "accountPreferencesPg",
-				"enable" : true,
-				"function" : prefs.accountPreferencesPg
-			}, {
 				"name" : "makeNodeReferencable",
 				"enable" : true,
 				"function" : edit.makeNodeReferencable
-			}, {
-				"name" : "insertBookWarAndPeace",
-				"enable" : true,
-				"function" : edit.insertBookWarAndPeace
-			}, {
-				"name" : "searchPg",
-				"enable" : true,
-				"function" : srch.searchPg
-			}, {
-				"name" : "timeline",
-				"enable" : true,
-				"function" : srch.timeline
-			}, {
-				"name" : "deleteSelNodes",
-				"enable" : true,
-				"function" : edit.deleteSelNodes
-			}, {
-				"name" : "moveSelNodes",
-				"enable" : true,
-				"function" : edit.moveSelNodes
-			}, {
-				"name" : "finishMovingSelNodes",
-				"enable" : true,
-				"function" : edit.finishMovingSelNodes
-			}, {
-				"name" : "openExportPg",
-				"enable" : true,
-				"function" : edit.openExportPg
-			}, {
-				"name" : "openImportPg",
-				"enable" : true,
-				"function" : edit.openImportPg
-			}, {
-				"name" : "importNodes",
-				"enable" : true,
-				"function" : edit.importNodes
-			}, {
-				"name" : "manageAttachments",
-				"enable" : true,
-				"function" : attachment.openUploadPgMenuClick
-			}, {
-				"name" : "editNodeSharing",
-				"enable" : true,
-				"function" : share.editNodeSharingMenuClick
-			},{
-				"name" : "donatePg",
-				"enable" : true,
-				"function" : _.openDonatePg
 			});
 		},
 
@@ -413,9 +357,7 @@ var meta64 = function() {
 			}
 		},
 
-		refreshAllGuiEnablement : function() {
-			// console.log("Refreshing Gui Enablement.");
-
+		refreshAllGuiEnablement : function() {		
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 			var highlightNode = _.getHighlightedNode();
@@ -431,7 +373,6 @@ var meta64 = function() {
 			util.setEnablementByName("propsToggle", propsToggle);
 
 			util.setEnablementByName("deleteProperty", !_.isAnonUser);
-			util.setEnablementByName("changePasswordPg", !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;
 			// console.log(">>>>>>>>>>>>>>> currentNode=" + _.currentNode + "
@@ -442,18 +383,7 @@ var meta64 = function() {
 			 */
 			util.setEnablementByName("editMode", editMode);
 
-			util.setVisibility("#menuButton", !_.isAnonUser);
-
-			/* Disable and hide things only available to admin users */
-			util.setEnablementByName("insertBookWarAndPeace", _.isAdminUser, _.isAdminUser);
-			util.setEnablementByName("openExportPg", _.isAdminUser, _.isAdminUser);
-			util.setEnablementByName("openImportPg", _.isAdminUser, _.isAdminUser);
-			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
-			util.setEnablementByName("finishMovingSelNodes", canFinishMoving, canFinishMoving);
-
-			/* Actions that depend on having a highlighted node */
-			util.setEnablementByName("manageAttachments", highlightNode != null);
-			util.setEnablementByName("editNodeSharing", highlightNode != null);
+			util.setVisibility("#menuButton", !_.isAnonUser);			
 		},
 
 		/*
@@ -686,7 +616,7 @@ var meta64 = function() {
 		userLogged = false;
 
 		if (typeof data.toPage == "string") {
-			
+
 			pageMgr.buildPage(data.toPage);
 
 			// console.log("STRING: page change ****************** toPage[" +

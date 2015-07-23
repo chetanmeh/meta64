@@ -27,7 +27,6 @@ var props = function() {
 			props.deletePropertyFromLocalData(info.propertyToDelete);
 
 			/* now just re-render screen from local variables */
-			//edit.populateEditNodePg();
 			$.mobile.changePage("#editNodePg");
 			meta64.treeDirty = true;
 		}

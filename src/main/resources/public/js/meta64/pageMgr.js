@@ -84,6 +84,10 @@ var pageMgr = function() {
 				name : "#editPropertyPg",
 				build : editPropertyPg.build,
 				init : editPropertyPg.init
+			}, {
+				name : "#popupMenuPg",
+				build : popupMenuPg.build,
+				init : popupMenuPg.init
 			} ];
 		}
 	};
