@@ -20,6 +20,7 @@
 	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var cacheVersion = /*[[${@constantsProvider.getCacheVersion()}]]*/"";
+	var profileName = /*[[${@constantsProvider.getProfileName()}]]*/"";
 	var postTargetUrl = window.location.origin + "/mobile/rest/";
 	/*]]>*/
 </script>
@@ -132,10 +133,9 @@
 
 	<script>
 		$(window).load(function() {
-			/*
-			Loads all JS files, and then calls initApp once they are all completely loaded
-			 */
-			loader.loadScripts([ //
+
+			var scripts = (profileName === 'prod') ? [ "/js/meta64.min.js" ] : //
+			[ //
 			"/js/meta64/attachment.js", //
 			"/js/meta64/edit.js", //
 			"/js/meta64/meta64.js", //
@@ -163,7 +163,12 @@
 			"/js/meta64/pg/editNodePg.js",//
 			"/js/meta64/pg/editPropertyPg.js",//
 			"/js/meta64/pg/shareToPersonPg.js",//,
-			"/js/meta64/pg/sharingPg.js" ], //
+			"/js/meta64/pg/sharingPg.js" ];
+
+			/*
+			Loads all JS files, and then calls initApp once they are all completely loaded
+			 */
+			loader.loadScripts(scripts, //
 			function() {
 				meta64.initApp();
 			});

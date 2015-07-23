@@ -12,4 +12,6 @@ public interface ConstantsProvider {
 	public String getBrandingTitle();
 
 	public String getCacheVersion();
+	
+	public String getProfileName();
 }

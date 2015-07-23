@@ -38,7 +38,7 @@ var prefsPg = function() {
 
 			util.setHtmlEnhanced($("#prefsPg"), content);
 			$("#savePreferencesButton").on("click", prefs.savePreferences);
-		},
+		}
 	};
 
 	console.log("Module ready: prefsPg.js");

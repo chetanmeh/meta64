@@ -67,7 +67,7 @@ var uploadPg = function() {
 			
 			/* display the node path at the top of the edit page */
 			$("#uploadPathDisplay").html("Path: " + render.formatPath(attachment.uploadNode.path));
-		},
+		}
 	};
 
 	console.log("Module ready: uploadPg.js");

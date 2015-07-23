@@ -159,7 +159,7 @@ var edit = function() {
 
 		makeNodeReferencable : function() {
 			util.json("makeNodeReferencable", {
-				"nodeId" : _.editNode.id,
+				"nodeId" : _.editNode.id
 			}, _makeNodeReferencableResponse);
 		},
 

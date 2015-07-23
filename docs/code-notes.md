@@ -25,9 +25,29 @@ http://daringfireball.net/projects/markdown/
 
 ## IMPORTANT!!! - JavaScript Caching Mechanism
 
-To understand how cache lifetime is managed for JS files see the following: *SpringMvcUtil.addJsFileNameProps*. In general the approach is to leave the JS files always the same, but to use a different URL parameter to be able to control which files are read from the browser cach v.s. downloaded new. Each JS url looks something like this:
+To understand how cache lifetime is managed for JS files see the following: *SpringMvcUtil.addJsFileNameProp*. In general the approach is to leave the JS files always the same, but to use a different URL parameter to be able to control which files are read from the browser cach v.s. downloaded new. Each JS url looks something like this:
 
     /js/meta64/util.js?ver=1
+
+## JavaScript Loading
+
+Most all javascript is loaded using an 'ajax' query. The main file 'index.html' is responsible for loading the files. It also detects if the system is running as 'production' Spring Profile, and if so then it only loads one single minified script file containing all the meta64 javascript, minified by the **Google Closure JS Compiler**, here's the command that minifies the script. Currently I am running this in a batch file that runs before the maven builder:
+
+    java -jar google-compiler.jar --js_output_file="[root]\src\main\resources\public\js\meta64.min.js" "[root]\src\main\resources\public\js\meta64\**.js"
+
+Note that in the command above you of course need your own path insead of **[root]**.
+See also: https://developers.google.com/closure/compiler/
+
+Also: If you want to ignore the minification stuff to get started using meta64, just change this string:
+
+    (profileName === 'prod')
+To this... (in index.html)
+
+    (profileName === '')
+
+## JQuery + JQueryMobile Javascript CDN
+
+The default configurtion in the spring config files is to specify the CDN (Content Delivery Network) location of the minified versions of the jars if you are running in PRODUCTION profile, but for TEST and DEV profiles, it loads the normal (non minified) jars, and loads them from local folder.
 
 ## Starting MongoDB
 
@@ -47,7 +67,7 @@ http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
     Example Windows BAT file to run Server:
     set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_55
-    set PATH=%JAVA_HOME\bin%;%PATH%
+    set PATH=%JAVA_HOME%\bin;%PATH%
     java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
     
 * Note, the above is not the "best" way to start an app on linux, but is the simplest.

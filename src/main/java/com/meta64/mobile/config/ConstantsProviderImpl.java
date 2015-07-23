@@ -29,6 +29,9 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 
 	@Value("${brandingTitle}")
 	private String brandingTitle;
+	
+	@Value("${profileName}")
+	private String profileName;
 
 	public static String cacheVersion;
 
@@ -50,6 +53,11 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 	@Override
 	public String getCacheVersion() {
 		return cacheVersion;
+	}
+	
+	@Override
+	public String getProfileName() {
+		return profileName;
 	}
 
 	public static void setCacheVersion(String v) {

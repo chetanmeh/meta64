@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meta64.mobile.annotate.OakSession;
-import com.meta64.mobile.config.ConstantsProviderImpl;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -138,24 +137,6 @@ public class AppController {
 	@Autowired
 	private SpringMvcUtil springMvcUtil;
 
-	/*
-	 * Each time the server restarts we have a new version number here and will cause clients to
-	 * download new version of JS files into their local browser cache. For now the assumption is
-	 * that this is better then having to remember to update version numbers to invalidate client
-	 * caches, but in production systems we may not want to push new JS just because of a server
-	 * restart so this will change in the future. That is, the 'currentTimeMillis' part will change
-	 * to some kind of an actual version number or something, that will be part of managed releases.
-	 */
-	public static final long jsVersion = System.currentTimeMillis();
-	public static final long cssVersion = jsVersion; // match jsVersion for now, why not.
-
-	/*
-	 * This is an acceptable hack to reference the Impl class directly like this.
-	 */
-	static {
-		ConstantsProviderImpl.setCacheVersion(String.valueOf(jsVersion));
-	}
-
 	private static void logRequest(String url, Object req) throws Exception {
 		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
 	}
@@ -174,8 +155,8 @@ public class AppController {
 
 		brandingUtil.addBrandingAttributes(model);
 
-		springMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), "scriptLoader");
-		springMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), "meta64");
+		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
+		springMvcUtil.addCssFileNameProp(model, "meta64Css", "../css/meta64");
 		springMvcUtil.addThirdPartyLibs(model);
 		
 		sessionContext.setUrlId(id);

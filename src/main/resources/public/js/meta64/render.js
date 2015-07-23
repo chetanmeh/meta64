@@ -15,7 +15,7 @@ var render = function() {
 		var createSubNodeButton = _.makeTag("a", //
 		{
 			"onClick" : "edit.createSubNode();",
-			"class" : "ui-btn ui-btn-inline ui-icon-star ui-btn-icon-left",
+			"class" : "ui-btn ui-btn-inline ui-icon-star ui-btn-icon-left"
 		}, "Create Content");
 
 		return createSubNodeButton;
@@ -39,7 +39,7 @@ var render = function() {
 			}, "[Download Attachment]");
 
 			return _.makeTag("div", {
-				"class" : "binary-link",
+				"class" : "binary-link"
 			}, anchor);
 		}
 	}
@@ -270,7 +270,7 @@ var render = function() {
 						moveNodeUpButton = _.makeTag("a", //
 						{
 							"onClick" : "edit.moveNodeUp('" + uid + "');",
-							"class" : "ui-btn ui-btn-inline ui-icon-arrow-u ui-mini ui-btn-icon-left",
+							"class" : "ui-btn ui-btn-inline ui-icon-arrow-u ui-mini ui-btn-icon-left"
 						}, "Up");
 					}
 
@@ -279,7 +279,7 @@ var render = function() {
 						moveNodeDownButton = _.makeTag("a", //
 						{
 							"onClick" : "edit.moveNodeDown('" + uid + "');",
-							"class" : "ui-btn ui-btn-inline ui-icon-arrow-d ui-mini ui-btn-icon-left",
+							"class" : "ui-btn ui-btn-inline ui-icon-arrow-d ui-mini ui-btn-icon-left"
 						}, "Dn");
 					}
 				}

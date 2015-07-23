@@ -590,11 +590,11 @@ var meta64 = function() {
 
 		/* Don't need this method yet, and haven't tested to see if works */
 		orientationHandler : function(event) {
-			if (event.orientation) {
-				if (event.orientation == 'portrait') {
-				} else if (event.orientation == 'landscape') {
-				}
-			}
+//			if (event.orientation) {
+//				if (event.orientation === 'portrait') {
+//				} else if (event.orientation === 'landscape') {
+//				}
+//			}
 		},
 
 		loadAnonPageHome : function(ignoreUrl) {
@@ -626,20 +626,20 @@ var meta64 = function() {
 			}
 		}
 
-		else if (typeof toPage == "object") {
-			// console.log("OBJECT: page change ****************** toPage[" +
-			// toPage + "] absUrl[" + absUrl + "]");
-			/*
-			 * if user wants to access pageX but he is logged off move to pageY
-			 * with transition "flip" and don't update hash in URL
-			 */
-			// data.toPage[0] = $("#pageY")[0];
-			//
-			// $.extend(data.options, {
-			// transition : "flip",
-			// changeHash : false
-			// });
-		}
+//		else if (typeof toPage == "object") {
+//			// console.log("OBJECT: page change ****************** toPage[" +
+//			// toPage + "] absUrl[" + absUrl + "]");
+//			/*
+//			 * if user wants to access pageX but he is logged off move to pageY
+//			 * with transition "flip" and don't update hash in URL
+//			 */
+//			// data.toPage[0] = $("#pageY")[0];
+//			//
+//			// $.extend(data.options, {
+//			// transition : "flip",
+//			// changeHash : false
+//			// });
+//		}
 	});
 
 	// $(document).on("pagebeforechange", function(e, data) {
