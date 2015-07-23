@@ -11,7 +11,7 @@ var exportPg = function() {
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Export to XML</h2>");
 
-			var formControls = render.makeEditField("Export Target Node Name", "exportTargetNodeName");
+			var formControls = render.makeEditField("Export to File Name", "exportTargetNodeName");
 
 			var exportButton = render.makeButton("Export", "exportNodesButton", "b");
 			var backButton = render.makeBackButton("Close", "cancelExportButton", "a");

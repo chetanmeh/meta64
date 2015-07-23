@@ -132,8 +132,8 @@ public class OakRepository {
 			@Override
 			public void run(Session session) throws Exception {
 
-				ensureNodeExists(session, "/", "jcr:root", "Root of All Users");
-				ensureNodeExists(session, "/", "jcr:userPreferences", "Preferences of All Users");
+				ensureNodeExists(session, "/", "root", "Root of All Users");
+				ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
 			}
 		});
 	}

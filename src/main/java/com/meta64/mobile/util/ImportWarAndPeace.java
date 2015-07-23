@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SpringContextUtil;
 
 @Component
@@ -106,7 +105,7 @@ public class ImportWarAndPeace {
 
 			addParagraph();
 
-			curChapter = curBook.addNode(AppConstant.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
+			curChapter = curBook.addNode(JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
 			curChapter.setProperty("jcr:content", "C" + String.valueOf(globalChapter) + ". " + line);
 			JcrUtil.timestampNewNode(session, curChapter);
 			return true;
@@ -130,7 +129,7 @@ public class ImportWarAndPeace {
 
 		// line = XString.injectForQuotations(line);
 
-		Node paraNode = curChapter.addNode(AppConstant.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
+		Node paraNode = curChapter.addNode(JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
 		paraNode.setProperty("jcr:content", "VS" + globalVerse + ". " + line);
 		JcrUtil.timestampNewNode(session, paraNode);
 		paragraph.setLength(0);
@@ -149,7 +148,7 @@ public class ImportWarAndPeace {
 			globalBook++;
 			addParagraph();
 
-			curBook = root.addNode(AppConstant.NAMESPACE + ":" + JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
+			curBook = root.addNode(JcrUtil.getGUID(), JcrConstants.NT_UNSTRUCTURED);
 			curBook.setProperty("jcr:content", "B" + String.valueOf(globalBook) + ". " + line);
 			JcrUtil.timestampNewNode(session, curBook);
 			return true;

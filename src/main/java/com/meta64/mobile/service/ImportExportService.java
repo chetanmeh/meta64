@@ -322,7 +322,7 @@ public class ImportExportService {
 				zipToJcrNameMap.put(token, guid);
 			}
 
-			String jcrName = AppConstant.NAMESPACE + ":" + guid;
+			String jcrName = guid;
 			curPath += "/" + jcrName;
 			try {
 				// log.debug("Checking for path: " + curPath);

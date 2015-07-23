@@ -57,7 +57,7 @@ var render = function() {
 				 * to ende users or not
 				 */
 				// var path = meta64.isAdminUser ? node.path :
-				// node.path.replaceAll("/jcr:root", "");
+				// node.path.replaceAll("/root", "");
 				var path = node.path;
 
 				/* tail end of path is the name, so we can strip that off */
@@ -346,7 +346,11 @@ var render = function() {
 		},
 
 		formatPath : function(path) {
-			return meta64.isAdminUser ? path : path.replaceAll("/jcr:root", "");
+			/*
+			 * TODO: This will fail now that jcr: is removed because it can match and corrupt
+			 * any path that happens to start with root! BEWARE! FIX!
+			 */
+			return meta64.isAdminUser ? path : path.replaceAll("/root", "");
 		},
 
 		markdown : function(text) {
@@ -522,7 +526,7 @@ var render = function() {
 		},
 
 		getUrlForNodeAttachment : function(node) {
-			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path + "/nt:bin") + "&ver=" + node.binVer;
+			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path + "/bin") + "&ver=" + node.binVer;
 		},
 
 		/* see also: makeImageTag() */

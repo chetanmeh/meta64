@@ -1,4 +1,11 @@
-# Running the Meta64 Server on Linux
+## Default MongoDB Config File
+    /etc/mongod.conf 
+    
+In that config file everything is configured including the db location which defaults to this:
+    
+    dbpath=/var/lib/mongodb
+
+## Running the Meta64 Server on Linux
 
 * Note that the spring.config.location argument (as in the command below) you are required to include the main application.properties file as well as one of the profile ones (ending in -test, -dev, or -production)
 

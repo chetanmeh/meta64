@@ -55,7 +55,7 @@ public class NodeEditService {
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
 		/* NT_UNSTRUCTURED IS ORDERABLE */
-		Node newNode = node.addNode(AppConstant.NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
+		Node newNode = node.addNode(name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty("jcr:content", "");
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
@@ -74,7 +74,7 @@ public class NodeEditService {
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
 		/* NT_UNSTRUCTURED IS ORDERABLE */
-		Node newNode = parentNode.addNode(AppConstant.NAMESPACE + ":" + name, JcrConstants.NT_UNSTRUCTURED);
+		Node newNode = parentNode.addNode(name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty("jcr:content", "");
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();

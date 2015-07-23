@@ -146,8 +146,8 @@ public class UserManagerService {
 	 * Get node that contains all preferences for this user, as properties on it.
 	 */
 	public Node getPrefsNodeForSessionUser(Session session, String userName) throws Exception {
-		return oak.ensureNodeExists(session, "/jcr:userPreferences/", "jcr:" + userName, //
-				"Preferences fo User: " + userName);
+		return oak.ensureNodeExists(session, "/userPreferences/", userName, //
+				"User: " + userName);
 	}
 
 	public void saveUserPreferences(Session session, final SaveUserPreferencesRequest req, final SaveUserPreferencesResponse res) throws Exception {
@@ -162,7 +162,7 @@ public class UserManagerService {
 				/*
 				 * Assign preferences as properties on this node,
 				 */
-				prefsNode.setProperty("jcr:advMode", req.getUserPreferences().isAdvancedMode());
+				prefsNode.setProperty("advMode", req.getUserPreferences().isAdvancedMode());
 				session.save();
 			}
 		});
@@ -180,7 +180,7 @@ public class UserManagerService {
 			@Override
 			public void run(Session session) throws Exception {
 				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
-				Property prop = prefsNode.getProperty("jcr:advMode");
+				Property prop = prefsNode.getProperty("advMode");
 				userPrefs.setAdvancedMode(prop != null ? prop.getBoolean() : false);
 				log.debug("advMode=" + userPrefs.isAdvancedMode());
 			}
@@ -192,17 +192,17 @@ public class UserManagerService {
 	public Node getUserPrefsNode(Session session) throws Exception {
 
 		String userName = sessionContext.getUserName();
-		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/jcr:root");
+		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/root");
 		if (allUsersRoot == null) {
 			throw new Exception("/jcr:root not found!");
 		}
 
-		log.debug("Creating jcr:root node, which didn't exist.");
+		log.debug("Creating root node, which didn't exist.");
 
-		Node newNode = allUsersRoot.addNode("jcr:" + userName, JcrConstants.NT_UNSTRUCTURED);
+		Node newNode = allUsersRoot.addNode(userName, JcrConstants.NT_UNSTRUCTURED);
 		JcrUtil.timestampNewNode(session, newNode);
 		if (newNode == null) {
-			throw new Exception("unable to create jcr:root");
+			throw new Exception("unable to create root");
 		}
 
 		if (AccessControlUtil.grantFullAccess(session, newNode, userName)) {

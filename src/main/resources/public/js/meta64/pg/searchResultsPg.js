@@ -9,10 +9,8 @@ var searchResultsPg = function() {
 			{
 				"data-role" : "header" //
 			}, //
+			render.makeButton("Back to Content", "cancelSearchResultsButton", "b") + //
 			"<h2>" + BRANDING_TITLE + " - Search Results</h2>");
-
-			var backToContentButton = render.makeBackButton("Back to Content", "cancelSearchResultsButton", "b");
-			var buttonBar = render.makeHorzControlGroup(backToContentButton);
 
 			var internalMainContent = "<div id='searchResultsView'></div>";
 			var mainContent = render.makeTag("div", //
@@ -20,12 +18,17 @@ var searchResultsPg = function() {
 				"role" : "main", //
 				"class" : "ui-content"
 			}, //
-			buttonBar + internalMainContent);
+			internalMainContent);
 
 			var content = header + mainContent;
 			util.setHtmlEnhanced($("#searchResultsPg"), content);
+
+			$("#cancelSearchResultsButton").on("click", function() {
+				$.mobile.changePage("#mainPage");
+				view.scrollToSelectedNode();
+			});
 		},
-		
+
 		init : function() {
 			srch.populateSearchResultsPage();
 		}

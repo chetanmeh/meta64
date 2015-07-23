@@ -10,7 +10,7 @@
 * need 'refresh' menu item that reloads current page.
 * last mod times etc should show up at least in advanced editing mode
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.
-* SEO (Search Engine Optimization): Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows WebCrawling of **one** page per user, and have a standard of like **/nt:user/nt:home** being the folder that users can create that will be 'searchable' on google.
+* SEO (Search Engine Optimization): Need to make home page detect Google web crawler, and expose urls that include mainly the home page of meta64 content but also allows WebCrawling of **one** page per user, and have a standard of like **/user/home** being the folder that users can create that will be 'searchable' on google.
 * Admin console that shows free memory statistics, connection info, number of logged in users, disk space consumption specifically in the DB storage folder, etc.
 * Usage of email address for verification of new accounts and notifications of sharing, etc..
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
@@ -24,6 +24,6 @@
 * after uploading attachment image, viewing it, then deleting it, and uploading another, browser caching us using the
 same version number as the original. Solution: need to use random generated number for binary version rather than, a
 sequential one. Will still work fine, but no risk of reusing the same URL again.
-* nt:bin nodes (nodes that are there as a binary or image attachment) should not show up unless you are in 'advanced' mode, and they are showing up.
+* **bin** nodes (nodes that are there as a binary or image attachment) should not show up unless you are in 'advanced' mode, and they are showing up.
 * password cookie key will be encrypted using AES from http://point-at-infinity.org/jsaes/, probably and probably the
 https://panopticlick.eff.org/ methodology of generating a string to use for the encryption key which will be rather unique to the machine. This means if a hacker gets your cookie, it will still be difficult to decrypt, unless they can also run javascript on your machine and sent the output to their servers. Of course a hacker can lure you to their server, where they can run JS on a page and get your panopticlick info, but that is one additional challenge for them.

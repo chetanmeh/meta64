@@ -46,7 +46,7 @@ public class UserManagerUtil {
 			rootNode = session.getRootNode();
 		}
 		else {
-			rootNode = session.getNode("/jcr:root/jcr:" + userName);
+			rootNode = session.getNode("/root/" + userName);
 		}
 		return new RefInfo(rootNode.getIdentifier(), rootNode.getPath());
 	}
@@ -58,17 +58,17 @@ public class UserManagerUtil {
 	 */
 	public static boolean createUserRootNode(Session session, String userName) throws Exception {
 
-		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/jcr:root");
+		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/root");
 		if (allUsersRoot == null) {
-			throw new Exception("/jcr:root not found!");
+			throw new Exception("/root not found!");
 		}
 
-		log.debug("Creating jcr:root node, which didn't exist.");
+		log.debug("Creating root node, which didn't exist.");
 
-		Node newNode = allUsersRoot.addNode("jcr:" + userName, JcrConstants.NT_UNSTRUCTURED);
+		Node newNode = allUsersRoot.addNode(userName, JcrConstants.NT_UNSTRUCTURED);
 		JcrUtil.timestampNewNode(session, newNode);
 		if (newNode == null) {
-			throw new Exception("unable to create jcr:root");
+			throw new Exception("unable to create root");
 		}
 
 		if (AccessControlUtil.grantFullAccess(session, newNode, userName)) {
