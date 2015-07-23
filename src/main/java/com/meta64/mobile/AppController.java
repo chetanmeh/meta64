@@ -134,6 +134,9 @@ public class AppController {
 
 	@Autowired
 	private BrandingUtil brandingUtil;
+	
+	@Autowired
+	private SpringMvcUtil springMvcUtil;
 
 	/*
 	 * Each time the server restarts we have a new version number here and will cause clients to
@@ -171,9 +174,10 @@ public class AppController {
 
 		brandingUtil.addBrandingAttributes(model);
 
-		SpringMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), "scriptLoader");
-		SpringMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), "meta64");
-
+		springMvcUtil.addJsFileNameProps(model, String.valueOf(jsVersion), "scriptLoader");
+		springMvcUtil.addCssFileNameProps(model, String.valueOf(cssVersion), "meta64");
+		springMvcUtil.addThirdPartyLibs(model);
+		
 		sessionContext.setUrlId(id);
 		return "index";
 	}

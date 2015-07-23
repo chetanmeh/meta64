@@ -8,7 +8,7 @@
 <!--  Required for JQuery Large Rendering -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" th:href="@{${jqueryMobileCss}}" />
 <link rel="stylesheet" th:href="@{${meta64Css}}" />
 
 <script th:inline="javascript">
@@ -24,7 +24,7 @@
 	/*]]>*/
 </script>
 
-<script type="text/javascript" th:src="@{/jquery/jquery-2.1.3.js}"></script>
+<script type="text/javascript" th:src="@{${jqueryJs}}"></script>
 
 <script>
 	// WARNING: do not move. Must be after jquery.js but before jquery.mobile.js
@@ -36,8 +36,7 @@
 	});
 </script>
 
-<script type="text/javascript"
-	th:src="@{/jquery/jquery.mobile-1.4.5.js}"></script>
+<script type="text/javascript" th:src="@{${jqueryMobileJs}}"></script>
 
 <script type="text/javascript"
 	th:src="@{/js/md/Markdown.Converter.js?ver.md=1}"></script>
