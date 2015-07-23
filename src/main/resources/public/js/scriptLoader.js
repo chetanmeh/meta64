@@ -20,18 +20,13 @@ var loader = function() {
 				},
 				error : function(xhr, status, error) {
 					/*
-					 * If script fails because of a syntax error you will get an
-					 * error message below, but no line number. I spent several
-					 * hours trying to google and find out how to get line
-					 * number for a syntax error and it appears to be absolutely
-					 * impossible, even though it seems easy. If you think i'm
-					 * wrong just go ahead and try it! :) I'd love to be proven
-					 * wrong.
-					 * 
-					 * Will have to find some fancy LINTER to help out with line
-					 * numbers.
+					 * If there is a syntax error in the script this will not be
+					 * able to show the line number, however we are using Google
+					 * Closure Compiler to detect script problems, so if this
+					 * happens during development, simply running the builder
+					 * will list any JS errors on the console.
 					 */
-					console.log("ERROR: url=" + url + " status[" + status + "] error[" + error);
+					console.log("ERROR: url=" + url + " status[" + status + "] error: " + error);
 				}
 			});
 		},
