@@ -65,26 +65,37 @@ public class NodeSearchService {
 
 		QueryManager qm = session.getWorkspace().getQueryManager();
 		String absPath = searchRoot.getPath();
-		String queryString = "SELECT * from [nt:base] AS t WHERE ISDESCENDANTNODE([" + absPath + "])";
+
+		StringBuilder queryStr = new StringBuilder();
+		queryStr.append("SELECT * from [nt:base] AS t WHERE ISDESCENDANTNODE([");
+		queryStr.append(absPath);
+		queryStr.append("])");
 
 		if (req.getSearchText().length() > 0) {
-			queryString += " AND contains(t.*, '" + req.getSearchText() + "')";
+			queryStr.append(" AND contains(t.*, '");
+			queryStr.append(escapeQueryString(req.getSearchText()));
+			queryStr.append("')");
 		}
 
 		if (req.isModSortDesc()) {
-			queryString += " ORDER BY [jcr:lastModified] DESC";
+			queryStr.append(" ORDER BY [jcr:lastModified] DESC");
 		}
 
-		Query q = qm.createQuery(queryString, Query.JCR_SQL2);
+		Query q = qm.createQuery(queryStr.toString(), Query.JCR_SQL2);
 		QueryResult r = q.execute();
 		NodeIterator nodes = r.getNodes();
 		int counter = 0;
 		List<NodeInfo> searchResults = new LinkedList<NodeInfo>();
 		res.setSearchResults(searchResults);
-		while (nodes.hasNext() && counter++ < MAX_NODES) {
+
+		while (counter++ < MAX_NODES && nodes.hasNext()) {
 			searchResults.add(Convert.convertToNodeInfo(session, nodes.nextNode()));
 		}
 		res.setSuccess(true);
-		log.debug("count: " + counter);
+		// log.debug("count: " + counter);
+	}
+
+	private String escapeQueryString(String query) {
+		return query.replaceAll("'", "''");
 	}
 }

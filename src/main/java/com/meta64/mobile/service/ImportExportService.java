@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -50,8 +49,8 @@ import com.meta64.mobile.util.JcrUtil;
 public class ImportExportService {
 	private static final Logger log = LoggerFactory.getLogger(ImportExportService.class);
 
-	public static final int STANDARD_BUF_SIZE = 1024 * 4;
-	private byte[] byteBuf = new byte[STANDARD_BUF_SIZE];
+	public static final int BUF_SIZE = 1024 * 4;
+	private byte[] byteBuf = new byte[BUF_SIZE];
 
 	@Autowired
 	private OakRepositoryBean oak;
@@ -190,7 +189,6 @@ public class ImportExportService {
 		}
 
 		ZipInputStream zis = null;
-
 		try {
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fullFileName));
 			ZipEntry entry;
@@ -202,7 +200,6 @@ public class ImportExportService {
 			}
 		}
 		finally {
-
 			if (zis != null) {
 				zis.close();
 			}

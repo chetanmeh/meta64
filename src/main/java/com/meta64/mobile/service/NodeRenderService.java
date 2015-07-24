@@ -91,9 +91,18 @@ public class NodeRenderService {
 
 		NodeIterator nodeIter = node.getNodes();
 		try {
+			int nodeCount = 0;
 			while (true) {
 				Node n = nodeIter.nextNode();
 				children.add(Convert.convertToNodeInfo(session, n));
+
+				/*
+				 * Instead of crashing browser with too much load, just fail a bit more gracefully
+				 * when the limits of this application are exceeded.
+				 */
+				if (++nodeCount > 1000) {
+					throw new Exception("Node has too many children (> 1000)");
+				}
 			}
 		}
 		catch (NoSuchElementException ex) {

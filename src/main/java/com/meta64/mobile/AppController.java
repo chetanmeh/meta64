@@ -133,7 +133,7 @@ public class AppController {
 
 	@Autowired
 	private BrandingUtil brandingUtil;
-	
+
 	@Autowired
 	private SpringMvcUtil springMvcUtil;
 
@@ -158,7 +158,7 @@ public class AppController {
 		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
 		springMvcUtil.addCssFileNameProp(model, "meta64Css", "../css/meta64");
 		springMvcUtil.addThirdPartyLibs(model);
-		
+
 		sessionContext.setUrlId(id);
 		return "index";
 	}

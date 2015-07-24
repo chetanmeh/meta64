@@ -44,27 +44,30 @@ public class NodeMoveService {
 	public void deleteNodes(Session session, DeleteNodesRequest req, DeleteNodesResponse res) throws Exception {
 
 		for (String nodeId : req.getNodeIds()) {
-			log.debug("Deleting ID: " + nodeId);
-			try {
-				Node node = JcrUtil.findNode(session, nodeId);
-				node.remove();
-			}
-			catch (Exception e) {
-				// silently ignore if node cannot be found.
-			}
+			deleteNode(session, nodeId);
 		}
 		session.save();
 		res.setSuccess(true);
 	}
 
+	public void deleteNode(Session session, String nodeId) {
+		// log.debug("Deleting ID: " + nodeId);
+		try {
+			Node node = JcrUtil.findNode(session, nodeId);
+			node.remove();
+		}
+		catch (Exception e) {
+			// silently ignore if node cannot be found.
+		}
+	}
+
 	public void moveNodes(Session session, MoveNodesRequest req, MoveNodesResponse res) throws Exception {
 		String targetId = req.getTargetNodeId();
 		Node targetNode = JcrUtil.findNode(session, targetId);
-		String targetPath = targetNode.getPath();
-		// String targetChildId = req.getTargetChildId();
+		String targetPath = targetNode.getPath() + "/";
 
 		for (String nodeId : req.getNodeIds()) {
-			log.debug("Moving ID: " + nodeId);
+			// log.debug("Moving ID: " + nodeId);
 			try {
 				Node node = JcrUtil.findNode(session, nodeId);
 
@@ -74,10 +77,9 @@ public class NodeMoveService {
 				 */
 
 				String srcPath = node.getPath();
-				String dstPath = targetPath + "/" + node.getName();
+				String dstPath = targetPath + node.getName();
 				// log.debug("MOVE: srcPath[" + srcPath + "] targetPath[" + dstPath + "]");
 				session.move(srcPath, dstPath);
-				// session.save();
 
 				/*
 				 * This code did not work as expected (or at all). This is supposed to move the new

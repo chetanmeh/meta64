@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.config.AppConstant;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.PropertyInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -59,7 +58,6 @@ public class NodeEditService {
 		newNode.setProperty("jcr:content", "");
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
-		// res.setNewChildNodeId(newNode.getIdentifier());
 
 		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
 		res.setSuccess(true);
@@ -115,10 +113,10 @@ public class NodeEditService {
 
 	public void saveNode(Session session, SaveNodeRequest req, SaveNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
-		log.debug("saveNode. nodeId=" + nodeId);
+		// log.debug("saveNode. nodeId=" + nodeId);
 		Node node = JcrUtil.findNode(session, nodeId);
 
-		if (req.getProperties() != null && req.getProperties().size() > 0) {
+		if (req.getProperties() != null) {
 			for (PropertyInfo property : req.getProperties()) {
 
 				/*

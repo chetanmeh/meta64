@@ -30,7 +30,6 @@ public class RunAsJcrAdmin {
 		finally {
 			if (session != null) {
 				session.logout();
-				session = null;
 			}
 		}
 	}

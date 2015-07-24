@@ -81,7 +81,6 @@ public class UserManagerUtil {
 
 	public static void changePassword(Session session, String userId, String newPassword) throws Exception {
 		UserManager userManager = ((JackrabbitSession) session).getUserManager();
-		//String userId = session.getUserID();
 		Authorizable authorizable = userManager.getAuthorizable(userId);
 		((User) authorizable).changePassword(newPassword);
 	}
@@ -112,7 +111,6 @@ public class UserManagerUtil {
 		finally {
 			if (session != null) {
 				session.logout();
-				session = null;
 			}
 		}
 	}

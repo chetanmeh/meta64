@@ -9,10 +9,16 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.jackrabbit.JcrConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Assorted general utility functions related to JCR nodes.
  */
 public class JcrUtil {
+
+	private static final Logger log = LoggerFactory.getLogger(JcrUtil.class);
 
 	/*
 	 * These are properties we should never allow the client to send back as part of a save
@@ -53,6 +59,30 @@ public class JcrUtil {
 		if (!node.hasProperty("jcr:lastModified")) {
 			node.addMixin("mix:lastModified");
 		}
+	}
+
+	public static Node ensureNodeExists(Session session, String parentPath, String name, String defaultContent) throws Exception {
+
+		Node parent = session.getNode(parentPath);
+		if (parent == null) {
+			throw new Exception("Expected parent not found: " + parentPath);
+		}
+
+		log.debug("ensuring node exists: parentPath=" + parentPath + " name=" + name);
+		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
+
+		if (node == null) {
+			log.debug("Creating " + name + " node, which didn't exist.");
+
+			node = parent.addNode(name, JcrConstants.NT_UNSTRUCTURED);
+			if (node == null) {
+				throw new Exception("unable to create " + name);
+			}
+			node.setProperty("jcr:content", defaultContent);
+			session.save();
+		}
+		log.debug("node found: " + node.getPath());
+		return node;
 	}
 
 	public static Node getNodeByPath(Session session, String path) {

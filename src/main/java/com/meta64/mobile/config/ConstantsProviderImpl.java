@@ -29,7 +29,7 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 
 	@Value("${brandingTitle}")
 	private String brandingTitle;
-	
+
 	@Value("${profileName}")
 	private String profileName;
 
@@ -54,7 +54,7 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 	public String getCacheVersion() {
 		return cacheVersion;
 	}
-	
+
 	@Override
 	public String getProfileName() {
 		return profileName;

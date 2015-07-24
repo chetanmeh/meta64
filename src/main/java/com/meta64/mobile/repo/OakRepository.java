@@ -3,12 +3,10 @@ package com.meta64.mobile.repo;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jcr.Node;
 import javax.jcr.Repository;
 import javax.jcr.Session;
 import javax.sql.DataSource;
 
-import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.Oak;
 import org.apache.jackrabbit.oak.jcr.Jcr;
 import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
@@ -132,35 +130,10 @@ public class OakRepository {
 			@Override
 			public void run(Session session) throws Exception {
 
-				ensureNodeExists(session, "/", "root", "Root of All Users");
-				ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
+				JcrUtil.ensureNodeExists(session, "/", "root", "Root of All Users");
+				JcrUtil.ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
 			}
 		});
-	}
-
-	public Node ensureNodeExists(Session session, String parentPath, String name, String defaultContent) throws Exception {
-
-		Node parent = session.getNode(parentPath);
-		if (parent == null) {
-			throw new Exception("Expected parent not found: " + parentPath);
-		}
-
-		log.debug("ensuring node exists: parentPath=" + parentPath + " name=" + name);
-		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
-
-		if (node == null) {
-			log.debug("Creating " + name + " node, which didn't exist.");
-
-			node = parent.addNode(name, JcrConstants.NT_UNSTRUCTURED);
-			if (node == null) {
-				throw new Exception("unable to create " + name);
-			}
-			node.setProperty("jcr:content", defaultContent);
-			session.save();
-		}
-		log.debug("node found: " + node.getPath());
-
-		return node;
 	}
 
 	public void close() {

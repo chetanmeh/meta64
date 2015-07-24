@@ -100,7 +100,7 @@ public class UserManagerService {
 	public void signup(SignupRequest req, SignupResponse res) throws Exception {
 
 		final String userName = req.getUserName();
-		if (userName.toLowerCase().startsWith("admin")) {
+		if (userName.equalsIgnoreCase("admin") || userName.equalsIgnoreCase("administrator")) {
 			throw new Exception("Sorry, you can't be the new admin.");
 		}
 
@@ -146,7 +146,7 @@ public class UserManagerService {
 	 * Get node that contains all preferences for this user, as properties on it.
 	 */
 	public Node getPrefsNodeForSessionUser(Session session, String userName) throws Exception {
-		return oak.ensureNodeExists(session, "/userPreferences/", userName, //
+		return JcrUtil.ensureNodeExists(session, "/userPreferences/", userName, //
 				"User: " + userName);
 	}
 
@@ -215,7 +215,7 @@ public class UserManagerService {
 
 	public void changePassword(Session session, final ChangePasswordRequest req, ChangePasswordResponse res) throws Exception {
 		final String userName = sessionContext.getUserName();
-		
+
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
@@ -223,9 +223,9 @@ public class UserManagerService {
 				session.save();
 			}
 		});
-		
-		//UserManagerUtil.changePassword(session, req.getNewPassword());
-		//session.save();
+
+		// UserManagerUtil.changePassword(session, req.getNewPassword());
+		// session.save();
 		sessionContext.setPassword(req.getNewPassword());
 		res.setSuccess(true);
 	}

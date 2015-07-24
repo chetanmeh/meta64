@@ -42,7 +42,7 @@ import com.meta64.mobile.util.LimitedInputStream;
 import com.meta64.mobile.util.ValContainer;
 
 /**
- * Service for editing content of nodes.
+ * Service for editing node attachments
  */
 @Component
 @Scope("session")
@@ -251,7 +251,7 @@ public class AttachmentService {
 
 	// FYI: this never worked:
 	// String mimeType = URLConnection.guessContentTypeFromStream(uis);
-	// ALog.log("guessed mime:" + mimeType);
+	// log.debug("guessed mime:" + mimeType);
 	//
 	// but this below works...
 	//
@@ -271,7 +271,7 @@ public class AttachmentService {
 
 				if (formatName != null) {
 					formatName = formatName.toLowerCase();
-					log.debug("determined format name of image url: " + formatName);
+					// log.debug("determined format name of image url: " + formatName);
 					reader.setInput(is, true, false);
 					BufferedImage bufImg = reader.read(0);
 					String mimeType = "image/" + formatName;
