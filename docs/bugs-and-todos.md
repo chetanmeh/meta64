@@ -3,11 +3,6 @@
 
 
 # TODO
-* Make binary attachments all based on properties of the node it's attached to. Not a subnode. The subnode idea 
-has many disadvantages.
-* Need properties display to sort properties alphabetically, with the exception of always leaving 'content' property
-at the top (and maybe just not put content in the properties table?...but maybe above it)
-* Need to format dates. Still using the silly default string formatter! LOL.
 * Need menu item that will display anonymous home page to a user who is logged in.
 * Need to be able to block simultaneous requests from user, for example, clicking the same button twice in a row, before the first request completes. I haven't checked how JQuery handles simultaneous requests, and spring is definitely not thread-safe on the session yet, until I add that. So app is not ready for production until this work is done.
 * Need some kind of progress indication of any long running processes (like an export) happening on the server.
