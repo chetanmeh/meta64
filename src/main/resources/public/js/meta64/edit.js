@@ -416,7 +416,7 @@ var edit = function() {
 						var clearButton = render.makeTag("a", //
 						{
 							"onClick" : "props.clearProperty('" + fieldId + "');", //
-							"class" : "ui-btn ui-btn-inline ui-icon-carat-l ui-btn-icon-left"
+							"class" : "ui-btn ui-btn-inline ui-icon-back ui-btn-icon-left"
 						}, //
 						"Clear");
 
@@ -576,7 +576,7 @@ var edit = function() {
 				return;
 			}
 
-			util.areYouSure("Confirm Delete", "Delete " + selNodesArray.length + " node(s) ?", "Yes, delete.", function() {
+			confirmPg.areYouSure("Confirm Delete", "Delete " + selNodesArray.length + " node(s) ?", "Yes, delete.", function() {
 
 				util.json("deleteNodes", {
 					"nodeIds" : selNodesArray
@@ -592,7 +592,7 @@ var edit = function() {
 				return;
 			}
 
-			util.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to a new location ?", "Yes, move.", function() {
+			confirmPg.areYouSure("Confirm Move", "Move " + selNodesArray.length + " node(s) to a new location ?", "Yes, move.", function() {
 				_.nodesToMove = selNodesArray;
 				meta64.selectedNodes = {}; // clear selections. No longer need
 				// or want any selections.
@@ -602,7 +602,7 @@ var edit = function() {
 		},
 
 		finishMovingSelNodes : function() {
-			util.areYouSure("Confirm Move", "Move " + _.nodesToMove.length + " node(s) to selected location ?", "Yes, move.", function() {
+			confirmPg.areYouSure("Confirm Move", "Move " + _.nodesToMove.length + " node(s) to selected location ?", "Yes, move.", function() {
 
 				var highlightNode = meta64.getHighlightedNode();
 
@@ -622,7 +622,7 @@ var edit = function() {
 
 		insertBookWarAndPeace : function() {
 
-			util.areYouSure("Confirm", "Insert book War and Peace?", "Yes, insert book.", function() {
+			confirmPg.areYouSure("Confirm", "Insert book War and Peace?", "Yes, insert book.", function() {
 
 				/* inserting under whatever node user has focused */
 				var node = meta64.getHighlightedNode();

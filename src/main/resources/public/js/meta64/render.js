@@ -236,7 +236,7 @@ var render = function() {
 				{
 					"id" : uid + "_sel",//
 					"onClick" : "nav.toggleNodeSel('" + uid + "');",
-					"class" : "ui-btn ui-btn-inline ui-icon-star ui-mini ui-btn-icon-left " + selClass
+					"class" : "ui-btn ui-btn-inline ui-icon-check ui-mini ui-btn-icon-left " + selClass
 				}, "Sel");
 
 				/* Construct Create Subnode Button */
@@ -688,7 +688,7 @@ var render = function() {
 		makeBackButton : function(text, id, theme) {
 			return render.makeTag("a", {
 				"id" : id,
-				"class" : "ui-btn ui-btn-inline ui-btn-" + theme,
+				"class" : "ui-btn ui-icon-carat-l ui-btn-inline ui-btn-" + theme,
 				"data-rel" : "back"
 			}, text);
 		},

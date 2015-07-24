@@ -35,7 +35,7 @@ var attachment = function() {
 		uploadNode : null,
 
 		deleteAttachment : function() {
-			util.areYouSure("Confirm Delete Attachment", "Delete the Attachment on the Node?", "Yes, delete.", function() {
+			confirmPg.areYouSure("Confirm Delete Attachment", "Delete the Attachment on the Node?", "Yes, delete.", function() {
 				util.json("deleteAttachment", {
 					"nodeId" : _.uploadNode.id
 				}, _deleteAttachmentResponse);

@@ -116,16 +116,6 @@ var util = function() {
 			return prevPage;
 		},
 
-		areYouSure : function(title, message, buttonText, callback) {
-			$("#sure .sure-1").text(title);
-			$("#sure .sure-2").text(message);
-			$("#sure .sure-do").text(buttonText).on("click.sure", function() {
-				callback();
-				$(this).off("click.sure");
-			});
-			$.mobile.changePage("#sure");
-		},
-
 		/*
 		 * Gets the RAW DOM element and displays an error message if it's not
 		 * found. Do not prefix with "#"

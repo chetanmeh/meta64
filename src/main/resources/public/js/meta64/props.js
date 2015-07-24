@@ -53,7 +53,7 @@ var props = function() {
 		 */
 		deleteProperty : function(propName) {
 
-			util.areYouSure("Confirm Delete", "Delete the Property", "Yes, delete.", function() {
+			confirmPg.areYouSure("Confirm Delete", "Delete the Property", "Yes, delete.", function() {
 				_.deletePropertyImmediate(propName);
 			});
 		},

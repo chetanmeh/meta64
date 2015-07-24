@@ -88,6 +88,10 @@ var pageMgr = function() {
 				name : "#popupMenuPg",
 				build : popupMenuPg.build,
 				init : popupMenuPg.init
+			},{
+				name : "#confirmPg",
+				build : confirmPg.build,
+				init : confirmPg.init
 			} ];
 		}
 	};

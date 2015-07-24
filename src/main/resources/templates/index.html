@@ -5,7 +5,6 @@
 <title th:text="${brandingTitle}">Branding Title</title>
 
 <meta charset="UTF-8" />
-<!--  Required for JQuery Large Rendering -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <link rel="stylesheet" th:href="@{${jqueryMobileCss}}" />
@@ -76,9 +75,6 @@
 					<li><a id="navHomeButton" data-icon="home">Home</a></li>
 					<li><a id="navUpLevelButton" data-icon="arrow-u-l">Up
 							Level</a></li>
-					<!--  
-					<li><a id="navScrollTopButton" data-icon="arrow-u">Top</a></li>
-					-->
 					<li><a id="propsToggleButton" data-icon="forbidden">Props</a></li>
 					<li><a id="editModeButton" data-icon="forbidden">Edit</a></li>
 				</ul>
@@ -104,17 +100,7 @@
 	</div>
 	<!-- /page -->
 
-	<div data-role="dialog" id="sure" data-title="Are you sure?">
-		<div data-role="content">
-			<h3 class="sure-1"></h3>
-			<p class="sure-2"></p>
-			<a href="#" class="ui-btn ui-btn-inline ui-btn-b sure-do"
-				data-rel="back">Yes</a>
-			<!--  -->
-			<a href="#" class="ui-btn ui-btn-inline" data-rel="back">No</a>
-		</div>
-	</div>
-
+	<div data-role="dialog" id="confirmPg" data-title="Are you sure?"></div>
 	<div data-role="page" id="signupPg"></div>
 	<div data-role="page" id="loginPg"></div>
 	<div data-role="page" id="prefsPg"></div>
@@ -151,6 +137,7 @@
 			"/js/meta64/cnst.js",//
 			"/js/meta64/pageMgr.js",//
 			"/js/meta64/pg/popupMenuPg.js",//
+			"/js/meta64/pg/confirmPg.js",//
 			"/js/meta64/pg/searchResultsPg.js",//
 			"/js/meta64/pg/loginPg.js",//
 			"/js/meta64/pg/signupPg.js",//
