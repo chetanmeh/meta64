@@ -1,11 +1,10 @@
 package com.meta64.mobile.util;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
@@ -36,6 +35,8 @@ public class Convert {
 	static {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 	}
+
+	private static final PropertyInfoComparator propertyInfoComparator = new PropertyInfoComparator();
 
 	private static final Logger log = LoggerFactory.getLogger(Convert.class);
 
@@ -107,7 +108,7 @@ public class Convert {
 		 */
 		boolean hasDisplayableNodes = node.hasNodes(); // hasDisplayableNodes(node);
 
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), hasDisplayableNodes, false, hasBinary,
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), buildPropertyInfoList(node), hasDisplayableNodes, false, hasBinary,
 				binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
 				imageSize != null ? imageSize.getHeight() : 0);
@@ -165,9 +166,10 @@ public class Convert {
 		ImageUtil.isImageMime(mimeTypeProp.getValue().getString()));
 	}
 
-	public static List<PropertyInfo> convertToPropertyInfoList(Node node) throws RepositoryException {
+	public static List<PropertyInfo> buildPropertyInfoList(Node node) throws RepositoryException {
 		List<PropertyInfo> props = null;
 		PropertyIterator iter = node.getProperties();
+		PropertyInfo contentPropInfo = null;
 
 		while (iter.hasNext()) {
 			/* lazy create props */
@@ -179,7 +181,23 @@ public class Convert {
 			if (Log.renderNodeRequest) {
 				log.debug("   PROP Name: " + p.getName());
 			}
-			props.add(propInfo);
+
+			/*
+			 * grab the content property, and don't put it in the return list YET, because we will
+			 * be sorting the list and THEN putting the content at the top of that sorted list.
+			 */
+			if (p.getName().equals("jcr:content")) {
+				contentPropInfo = propInfo;
+			}
+			else {
+				props.add(propInfo);
+			}
+		}
+		Collections.sort(props, propertyInfoComparator);
+
+		/* put content prop always at top of list */
+		if (contentPropInfo != null) {
+			props.add(0, contentPropInfo);
 		}
 		return props;
 	}
