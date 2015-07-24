@@ -412,7 +412,7 @@ var edit = function() {
 
 					var buttonBar = "";
 
-					if (!isReadOnlyProp) {
+					if (!isReadOnlyProp && !isBinaryProp) {
 						var clearButton = render.makeTag("a", //
 						{
 							"onClick" : "props.clearProperty('" + fieldId + "');", //

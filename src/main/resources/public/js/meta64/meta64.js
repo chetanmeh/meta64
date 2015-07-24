@@ -112,7 +112,11 @@ var meta64 = function() {
 			"jcr:created" : true,
 			"jcr:createdBy" : true,
 			"jcr:lastModified" : true,
-			"jcr:lastModifiedBy" : true
+			"jcr:lastModifiedBy" : true,
+			"imgWidth" : true,
+			"imgHeight" : true,
+			"binVer" : true,
+			"jcr:mimeType" : true
 		},
 
 		binaryPropertyList : {
