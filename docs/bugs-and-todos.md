@@ -1,8 +1,13 @@
 # Technical Debt
 * We have serval places in the code where we do something like delete nodes, etc, and we are going back to the server to refresh the page, when really the client-side has enough information to refresh the page without going back to server, but it takes additional work. Waiting for the feature set to become more stable before attacking these kinds of performance optimizations.
-* Need to put all DOM IDs in the Const.js file, and also all other strings that are dupliate throughout the JS. Put them all in const.js file so that at least there's only one place for a typo.
+
 
 # TODO
+* Make binary attachments all based on properties of the node it's attached to. Not a subnode. The subnode idea 
+has many disadvantages.
+* Need properties display to sort properties alphabetically, with the exception of always leaving 'content' property
+at the top (and maybe just not put content in the properties table?...but maybe above it)
+* Need to format dates. Still using the silly default string formatter! LOL.
 * Need menu item that will display anonymous home page to a user who is logged in.
 * Need to be able to block simultaneous requests from user, for example, clicking the same button twice in a row, before the first request completes. I haven't checked how JQuery handles simultaneous requests, and spring is definitely not thread-safe on the session yet, until I add that. So app is not ready for production until this work is done.
 * Need some kind of progress indication of any long running processes (like an export) happening on the server.
@@ -21,7 +26,7 @@
 * More JUnit unit tests.
 
 # List of Known Bugs
-* after uploading attachment image, viewing it, then deleting it, and uploading another, browser caching us using the
+* after uploading attachment image, viewing it, then deleting it, and uploading another, browser caching is using the
 same version number as the original. Solution: need to use random generated number for binary version rather than, a
 sequential one. Will still work fine, but no risk of reusing the same URL again.
 * **bin** nodes (nodes that are there as a binary or image attachment) should not show up unless you are in 'advanced' mode, and they are showing up.
