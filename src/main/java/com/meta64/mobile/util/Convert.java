@@ -1,13 +1,8 @@
 package com.meta64.mobile.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -44,15 +39,6 @@ public class Convert {
 	}
 
 	public static final PropertyInfoComparator propertyInfoComparator = new PropertyInfoComparator();
-
-	/** Used to format date values */
-	// public static final String ECMA_DATE_FORMAT = "EEE MMM dd yyyy HH:mm:ss 'GMT'Z";
-	public static final String ECMA_DATE_FORMAT = "yyyy/MM/dd hh:mm:ss a z";
-
-	/** Used to format date values */
-	public static final Locale DATE_FORMAT_LOCALE = Locale.US;
-
-	private static DateFormat calendarFormat;
 
 	private static final Logger log = LoggerFactory.getLogger(Convert.class);
 
@@ -124,8 +110,8 @@ public class Convert {
 		 */
 		boolean hasDisplayableNodes = node.hasNodes(); // hasDisplayableNodes(node);
 
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), buildPropertyInfoList(sessionContext, node), hasDisplayableNodes, false, hasBinary,
-				binaryIsImage, binVer, //
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), buildPropertyInfoList(sessionContext, node), hasDisplayableNodes, false,
+				hasBinary, binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
 				imageSize != null ? imageSize.getHeight() : 0);
 		return nodeInfo;
@@ -240,12 +226,7 @@ public class Convert {
 	public static String formatValue(SessionContext sessionContext, Value value) {
 		try {
 			if (value.getType() == PropertyType.DATE) {
-				Calendar cal = value.getDate();
-				if (calendarFormat == null) {
-					calendarFormat = new SimpleDateFormat(ECMA_DATE_FORMAT, DATE_FORMAT_LOCALE);
-					calendarFormat.setTimeZone(TimeZone.getTimeZone(sessionContext.getTimezone()));
-				}
-				return calendarFormat.format(cal.getTime());
+				return sessionContext.formatTime(value.getDate().getTime());
 			}
 			else {
 				return value.getString();

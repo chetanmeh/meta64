@@ -1,5 +1,9 @@
 package com.meta64.mobile.config;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.util.DateUtil;
 
 /**
  * Wrapper for holding variables that we need to maintain server state of for a specific session.
@@ -19,6 +24,15 @@ public class SessionContext {
 	private String password;
 	private String captcha;
 	private String timezone;
+	private String timeZoneAbbrev;
+
+	/*
+	 * For extreme scalability we 'could' hold a formatter in a blobal map where there is basically
+	 * one fomratter per timezone/DST combination, but until we have hundreds of concurrent users
+	 * this won't be an issue. Having one date format per session should really never be a
+	 * scalability issue but there nonetheless *is* very slight wasted memory here.
+	 */
+	private SimpleDateFormat dateFormat;
 
 	/* Initial id param parsed from first URL request */
 	private String urlId;
@@ -35,6 +49,26 @@ public class SessionContext {
 
 	public boolean isAdmin() {
 		return "admin".equalsIgnoreCase(userName);
+	}
+
+	public String formatTime(Date date) {
+
+		/* If we have a short timezone abbreviation display timezone with it */
+		if (getTimeZoneAbbrev() != null) {
+			if (dateFormat == null) {
+				dateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT_NO_TIMEZONE, DateUtil.DATE_FORMAT_LOCALE);
+				dateFormat.setTimeZone(TimeZone.getTimeZone(getTimezone()));
+			}
+			return dateFormat.format(date) + " " + getTimeZoneAbbrev();
+		}
+		/* else display timezone in standard GMT fomrat */
+		else {
+			if (dateFormat == null) {
+				dateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT_WITH_TIMEZONE, DateUtil.DATE_FORMAT_LOCALE);
+				dateFormat.setTimeZone(TimeZone.getTimeZone(getTimezone()));
+			}
+			return dateFormat.format(date);
+		}
 	}
 
 	/*
@@ -79,5 +113,13 @@ public class SessionContext {
 
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
+	}
+
+	public String getTimeZoneAbbrev() {
+		return timeZoneAbbrev;
+	}
+
+	public void setTimeZoneAbbrev(String timeZoneAbbrev) {
+		this.timeZoneAbbrev = timeZoneAbbrev;
 	}
 }

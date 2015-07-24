@@ -198,7 +198,8 @@ var user = function() {
 				"userName" : callUsr,
 				"password" : callPwd,
 				"usingCookies" : usingCookies,
-				"tzOffset" : new Date().getTimezoneOffset()
+				"tzOffset" : new Date().getTimezoneOffset(),
+				"dst" : util.daylightSavingsTime
 			}, usingCookies ? _loginResponse : _refreshLoginResponse, {
 				usr : callUsr,
 				pwd : callPwd,
@@ -219,7 +220,8 @@ var user = function() {
 			util.json("login", {
 				"userName" : usr,
 				"password" : pwd,
-				"tzOffset" : new Date().getTimezoneOffset()
+				"tzOffset" : new Date().getTimezoneOffset(),
+				"dst" : util.daylightSavingsTime
 			}, _loginResponse, {
 				"usr" : usr,
 				"pwd" : pwd

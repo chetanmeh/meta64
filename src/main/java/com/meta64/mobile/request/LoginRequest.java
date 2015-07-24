@@ -4,7 +4,12 @@ public class LoginRequest {
 	private String userName;
 	private String password;
 	private boolean usingCookies;
+
+	/* timezone offset */
 	private int tzOffset;
+
+	/* daylight savings time */
+	private boolean dst;
 
 	public String getUserName() {
 		return userName;
@@ -36,5 +41,13 @@ public class LoginRequest {
 
 	public void setTzOffset(int tzOffset) {
 		this.tzOffset = tzOffset;
+	}
+
+	public boolean isDst() {
+		return dst;
+	}
+
+	public void setDst(boolean dst) {
+		this.dst = dst;
 	}
 }

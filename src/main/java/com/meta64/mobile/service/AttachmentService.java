@@ -17,7 +17,6 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
 
-import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,6 @@ import com.meta64.mobile.response.DeleteAttachmentResponse;
 import com.meta64.mobile.response.UploadFromUrlResponse;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.LimitedInputStream;
-import com.meta64.mobile.util.ValContainer;
 
 /**
  * Service for editing node attachments
@@ -121,7 +119,7 @@ public class AttachmentService {
 		session.save();
 		res.setSuccess(true);
 	}
-	
+
 	public void deleteAllBinaryProperties(Node node) {
 		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_IMG_WIDTH);
 		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_IMG_HEIGHT);

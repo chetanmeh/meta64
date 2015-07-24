@@ -13,8 +13,6 @@ import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.meta64.mobile.config.AppConstant;
-
 /**
  * Assorted general utility functions related to JCR nodes.
  */
@@ -105,10 +103,10 @@ public class JcrUtil {
 			prop.remove();
 		}
 		catch (Exception e) {
-			//do nothing. property wasn't found.
+			// do nothing. property wasn't found.
 		}
 	}
-	
+
 	/* Gets property or returns null of no propery by that name can be retrieved */
 	public static Property getProperty(Node node, String propName) {
 		try {

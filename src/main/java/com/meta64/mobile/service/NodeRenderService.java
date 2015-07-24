@@ -67,7 +67,7 @@ public class NodeRenderService {
 			return;
 		}
 
-		if (req.isRenderParentIfLeaf() && ! node.hasNodes() /*Convert.hasDisplayableNodes(node)*/) {
+		if (req.isRenderParentIfLeaf() && !node.hasNodes() /* Convert.hasDisplayableNodes(node) */) {
 			res.setDisplayedParent(true);
 			req.setUpLevel(1);
 		}

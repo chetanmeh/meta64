@@ -1,7 +1,5 @@
 package com.meta64.mobile.service;
 
-import java.util.TimeZone;
-
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
@@ -28,6 +26,7 @@ import com.meta64.mobile.response.SignupResponse;
 import com.meta64.mobile.user.AccessControlUtil;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
+import com.meta64.mobile.util.DateUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.ValContainer;
@@ -54,24 +53,12 @@ public class UserManagerService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
-	/* This is not the most elegant solution but appears to work */
-	public static String getTimezoneFromOffset(int offsetMinutes) {
-
-		int hours = offsetMinutes / 60;
-		int mins = offsetMinutes - hours * 60;
-		String minStr = String.valueOf(mins);
-		if (minStr.length() < 2) {
-			minStr = "0" + minStr;
-		}
-
-		return "GMT-" + hours + ":" + minStr;
-	}
-
 	public void login(Session session, LoginRequest req, LoginResponse res) throws Exception {
 		String userName = req.getUserName();
 		String password = req.getPassword();
 
-		sessionContext.setTimezone(getTimezoneFromOffset(req.getTzOffset()));
+		sessionContext.setTimezone(DateUtil.getTimezoneFromOffset(req.getTzOffset()));
+		sessionContext.setTimeZoneAbbrev(DateUtil.getUSTimezone(-req.getTzOffset() / 60, req.isDst()));
 
 		if (userName.equals("{session}")) {
 			userName = sessionContext.getUserName();

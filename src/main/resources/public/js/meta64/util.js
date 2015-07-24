@@ -4,15 +4,23 @@ var util = function() {
 
 	var logAjax = false;
 
+	Date.prototype.stdTimezoneOffset = function() {
+		var jan = new Date(this.getFullYear(), 0, 1);
+		var jul = new Date(this.getFullYear(), 6, 1);
+		return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+	}
+
+	Date.prototype.dst = function() {
+		return this.getTimezoneOffset() < this.stdTimezoneOffset();
+	}
+
 	if (typeof String.prototype.startsWith != 'function') {
-		// see below for better implementation!
 		String.prototype.startsWith = function(str) {
 			return this.indexOf(str) === 0;
 		};
 	}
 
 	if (typeof String.prototype.contains != 'function') {
-		// see below for better implementation!
 		String.prototype.contains = function(str) {
 			return this.indexOf(str) != -1;
 		};
@@ -36,6 +44,8 @@ var util = function() {
 
 	var _ = {
 
+		daylightSavingsTime : (new Date().dst()) ? true : false,
+ 			
 		/*
 		 * We use the convention that all calls to server are POSTs with a
 		 * 'postName' (like an RPC method name)
