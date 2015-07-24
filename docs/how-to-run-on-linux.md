@@ -33,16 +33,21 @@ To stop a process by PID (NNNN=PID you got from jps command):
     
 Looks up the process(es) that contain 'com.meta64.mobile' and kills them. This should safely target and kill the meta64 app. See also 'pgrep' which lists them without killing.
 
-----
 
 # Running the Meta64 Server (Proper way for Production)
 
 Linux service init script are stored into /etc/init.d. You can copy and customize /etc/init.d/skeleton file, and then call
 
-    # service [yourservice] start|stop|restart
+    # sudo service mongod start
+    # sudo service mongod stop
     
 see: http://www.ralfebert.de/archive/java/debian_daemon/
 (cf: I have not tired this yet)    
+   
+# To start MongoDb if not setup as a Service
+    mongod --dbpath /usr/local/mongodb-data --port 27017
+    
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/   
    
    
 # Backing up a Live Running MongoDb Instance

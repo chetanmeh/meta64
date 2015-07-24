@@ -51,15 +51,12 @@ The default configurtion in the spring config files is to specify the CDN (Conte
 
 ## Starting MongoDB
 
-Commands to run MongoDb
+Commands to run MongoDb (on Windows)
 
 	 Windows: 
 	 mongod --dbpath c:\mongodb-data\db --port 27017
 	 
-    Linux:
-    mongod --dbpath /usr/local/mongodb-data --port 27017
-    
-http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+Use CTRL-C to terminate the app gracefully.
 
 ## Running the Meta64 Server (on Windows)
 
@@ -70,7 +67,7 @@ http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
     set PATH=%JAVA_HOME%\bin;%PATH%
     java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
     
-* Note, the above is not the "best" way to start an app on linux, but is the simplest.
+
 
 
 

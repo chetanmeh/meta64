@@ -47,9 +47,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 ## Current Features
 
 * Basic JCR Browsing capability 
-	- Tree browsing with ability to navigate around on the tree
-* Soft "Brandable" 
-	- Rebrand the entire portal by entering brand name in the properties file.
+* Soft "Branding. Can rebrand portal by a properties properties file entry.
 * Login/Logout
 * Auto-login using Cookies
 * Signup new users (including captcha, and password)
@@ -65,7 +63,8 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Removing individual Share privileges from nodes
 * Short URL GUID for any node, so it can be referenced by URL
 * Uploading attachments (attached files) onto a node
-* Can upload from local machine --or-- directly from any internet URL.
+* Upload from local machine
+* Uupload directly from any internet URL.
 * Deleting node attachments
 * Renders image attachments on the page (on the node)
 * Shows JCR properties for nodes.
@@ -77,13 +76,14 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Import/Export to XML (admin only)
 * Admin feature to insert entire book "War and Peace", for quickly
   creating test data for exploring all the features, and especially 'search'.
-* Smart dynamic image sizing. Images are sized to look best on your device regardless of screen size or orientation,.
-* For future planned features see file: /docs/bugs-and-todos.md
+* Smart dynamic image sizing. Images are sized to look best on your device regardless of screen size or orientation.
+* For future planned features see file: **/docs/bugs-and-todos.md**
 
 ## Technology Stack and APIs
 * App is "Mobile First", meaning a primary objective is to run well on mobile
 * Single Page Application (SPA)
 * JavaScript+HTML+CSS Client
+* Using Google Closure Compiler for JS Minification
 * Pure Java on Server
 * JQuery + JQuery Mobile
 * MongoDB Storage currently in use.
