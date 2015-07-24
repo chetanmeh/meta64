@@ -79,8 +79,12 @@ public class AttachmentService {
 			mimeType = URLConnection.guessContentTypeFromName(fileName);
 		}
 
-		ValContainer<Long> version = new ValContainer<Long>();
-		Node binaryNode = findOrCreateBinaryNode(session, node, version);
+		long version = System.currentTimeMillis();
+		Property binVerProp = JcrUtil.getProperty(node, AppConstant.JCR_PROP_BIN_VER);
+		if (binVerProp != null) {
+			version = binVerProp.getValue().getLong();
+		}
+
 		Binary binary = session.getValueFactory().createBinary(is);
 
 		/*
@@ -94,13 +98,13 @@ public class AttachmentService {
 				height = image.getHeight();
 			}
 
-			binaryNode.setProperty(AppConstant.JCR_PROP_IMG_WIDTH, String.valueOf(width));
-			binaryNode.setProperty(AppConstant.JCR_PROP_IMG_HEIGHT, String.valueOf(height));
+			node.setProperty(AppConstant.JCR_PROP_IMG_WIDTH, String.valueOf(width));
+			node.setProperty(AppConstant.JCR_PROP_IMG_HEIGHT, String.valueOf(height));
 		}
 
-		binaryNode.setProperty(AppConstant.JCR_PROP_BIN_DATA, binary);
-		binaryNode.setProperty(AppConstant.JCR_PROP_BIN_MIME, mimeType);
-		binaryNode.setProperty(AppConstant.JCR_PROP_BIN_VER, version.getVal().longValue() + 1);
+		node.setProperty(AppConstant.JCR_PROP_BIN_DATA, binary);
+		node.setProperty(AppConstant.JCR_PROP_BIN_MIME, mimeType);
+		node.setProperty(AppConstant.JCR_PROP_BIN_VER, version + 1);
 
 		/*
 		 * DO NOT DELETE (this code can be used to test uploading) String directory =
@@ -110,41 +114,20 @@ public class AttachmentService {
 		 */
 	}
 
-	public Node findOrCreateBinaryNode(Session session, Node parent, ValContainer<Long> version) throws Exception {
-		String name = AppConstant.JCR_PROP_BIN;
-		Node binaryNode = null;
-		version.setVal(0L);
-		try {
-			binaryNode = session.getNode(parent.getPath() + "/" + name);
-
-			/*
-			 * Based on my reading of the JCR docs, I don't need to remove old properties, because
-			 * new property will overwrite. TODO: testing pending
-			 */
-			Property versionProperty = binaryNode.getProperty(AppConstant.JCR_PROP_BIN_VER);
-			if (versionProperty != null) {
-				version.setVal(versionProperty.getValue().getLong());
-			}
-		}
-		catch (Exception e) {
-			// not an error. Indicates this node didn't already have an attachment node.
-		}
-
-		/* if no existing node existed we need to create */
-		if (binaryNode == null) {
-			binaryNode = parent.addNode(name, JcrConstants.NT_UNSTRUCTURED);
-			JcrUtil.timestampNewNode(session, binaryNode);
-		}
-		return binaryNode;
-	}
-
 	public void deleteAttachment(Session session, DeleteAttachmentRequest req, DeleteAttachmentResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-		Node nodeToRemove = session.getNode(node.getPath() + "/" + AppConstant.JCR_PROP_BIN);
-		nodeToRemove.remove();
+		deleteAllBinaryProperties(node);
 		session.save();
 		res.setSuccess(true);
+	}
+	
+	public void deleteAllBinaryProperties(Node node) {
+		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_IMG_WIDTH);
+		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_IMG_HEIGHT);
+		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_BIN_DATA);
+		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_BIN_MIME);
+		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_BIN_VER);
 	}
 
 	/*

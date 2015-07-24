@@ -83,17 +83,19 @@ public class Convert {
 		ImageSize imageSize = null;
 		try {
 			// TODO: is there some better performing way of checking for the existence of a node ?
-			Node binNode = session.getNode(node.getPath() + "/" + AppConstant.JCR_PROP_BIN);
+			// Node binNode = session.getNode(node.getPath() + "/" + AppConstant.JCR_PROP_BIN);
 
-			/* if we didn't get an exception, we know we have a binary */
-			hasBinary = true;
+			binVer = getBinaryVersion(node);
+			if (binVer > 0) {
 
-			binaryIsImage = isImageAttached(binNode);
+				/* if we didn't get an exception, we know we have a binary */
+				hasBinary = true;
+				binaryIsImage = isImageAttached(node);
 
-			if (binaryIsImage) {
-				imageSize = getImageSize(binNode);
+				if (binaryIsImage) {
+					imageSize = getImageSize(node);
+				}
 			}
-			binVer = getBinaryVersion(binNode);
 		}
 		catch (Exception e) {
 			// not an error. means node has no binary subnode.
@@ -103,7 +105,7 @@ public class Convert {
 		 * node.hasNodes() won't work here, because the gui doesn't display nt:bin nodes as actual
 		 * nodes
 		 */
-		boolean hasDisplayableNodes = hasDisplayableNodes(node);
+		boolean hasDisplayableNodes = node.hasNodes(); // hasDisplayableNodes(node);
 
 		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), convertToPropertyInfoList(node), hasDisplayableNodes, false, hasBinary,
 				binaryIsImage, binVer, //
@@ -117,28 +119,28 @@ public class Convert {
 	 * there are any non-binary nodes, so this returns true if there are some nodes that aren't
 	 * binaries.
 	 */
-	public static boolean hasDisplayableNodes(Node node) throws Exception {
-		NodeIterator nodeIter = node.getNodes();
-		try {
-			while (true) {
-				Node n = nodeIter.nextNode();
-				if (!n.getName().equals(AppConstant.JCR_PROP_BIN)) {
-					return true;
-				}
-			}
-		}
-		catch (NoSuchElementException ex) {
-			// not an error. Normal iterator end condition.
-		}
-		return false;
-	}
+	// public static boolean hasDisplayableNodes(Node node) throws Exception {
+	// NodeIterator nodeIter = node.getNodes();
+	// try {
+	// while (true) {
+	// Node n = nodeIter.nextNode();
+	// if (!n.getName().equals(AppConstant.JCR_PROP_BIN)) {
+	// return true;
+	// }
+	// }
+	// }
+	// catch (NoSuchElementException ex) {
+	// // not an error. Normal iterator end condition.
+	// }
+	// return false;
+	// }
 
 	public static long getBinaryVersion(Node node) throws Exception {
 		Property versionProperty = node.getProperty(AppConstant.JCR_PROP_BIN_VER);
 		if (versionProperty != null) {
 			return versionProperty.getValue().getLong();
 		}
-		return -1;
+		return 0;
 	}
 
 	public static ImageSize getImageSize(Node node) throws Exception {

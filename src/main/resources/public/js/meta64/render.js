@@ -526,7 +526,7 @@ var render = function() {
 		},
 
 		getUrlForNodeAttachment : function(node) {
-			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path + "/bin") + "&ver=" + node.binVer;
+			return postTargetUrl + "bin?nodeId=" + encodeURIComponent(node.path) + "&ver=" + node.binVer;
 		},
 
 		/* see also: makeImageTag() */
