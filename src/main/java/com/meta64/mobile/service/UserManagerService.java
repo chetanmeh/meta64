@@ -54,16 +54,17 @@ public class UserManagerService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	/* This is not the most elegant solution but appears to work */
 	public static String getTimezoneFromOffset(int offsetMinutes) {
-		
-		/* TODO: More research is required here */
-		// String[] timezones = TimeZone.getAvailableIDs(offset);
-//		String[] timezones = TimeZone.getAvailableIDs(-offsetMinutes*1000*60);
-//		log.debug("====================================");
-//		for (String id : timezones) {
-//			log.debug("TIMEZONE: " + id);
-//		}
-		return "CST";
+
+		int hours = offsetMinutes / 60;
+		int mins = offsetMinutes - hours * 60;
+		String minStr = String.valueOf(mins);
+		if (minStr.length() < 2) {
+			minStr = "0" + minStr;
+		}
+
+		return "GMT-" + hours + ":" + minStr;
 	}
 
 	public void login(Session session, LoginRequest req, LoginResponse res) throws Exception {
