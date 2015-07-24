@@ -4,6 +4,7 @@ public class LoginRequest {
 	private String userName;
 	private String password;
 	private boolean usingCookies;
+	private int tzOffset;
 
 	public String getUserName() {
 		return userName;
@@ -27,5 +28,13 @@ public class LoginRequest {
 
 	public void setUsingCookies(boolean usingCookies) {
 		this.usingCookies = usingCookies;
+	}
+
+	public int getTzOffset() {
+		return tzOffset;
+	}
+
+	public void setTzOffset(int tzOffset) {
+		this.tzOffset = tzOffset;
 	}
 }

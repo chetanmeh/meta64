@@ -59,7 +59,7 @@ public class NodeEditService {
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
 
-		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
+		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
 		res.setSuccess(true);
 	}
 
@@ -82,7 +82,7 @@ public class NodeEditService {
 		}
 
 		session.save();
-		res.setNewNode(Convert.convertToNodeInfo(session, newNode));
+		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
 		res.setSuccess(true);
 	}
 

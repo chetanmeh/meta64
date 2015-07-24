@@ -1,5 +1,7 @@
 package com.meta64.mobile.service;
 
+import java.util.TimeZone;
+
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
@@ -52,9 +54,23 @@ public class UserManagerService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	public static String getTimezoneFromOffset(int offsetMinutes) {
+		
+		/* TODO: More research is required here */
+		// String[] timezones = TimeZone.getAvailableIDs(offset);
+//		String[] timezones = TimeZone.getAvailableIDs(-offsetMinutes*1000*60);
+//		log.debug("====================================");
+//		for (String id : timezones) {
+//			log.debug("TIMEZONE: " + id);
+//		}
+		return "CST";
+	}
+
 	public void login(Session session, LoginRequest req, LoginResponse res) throws Exception {
 		String userName = req.getUserName();
 		String password = req.getPassword();
+
+		sessionContext.setTimezone(getTimezoneFromOffset(req.getTzOffset()));
 
 		if (userName.equals("{session}")) {
 			userName = sessionContext.getUserName();

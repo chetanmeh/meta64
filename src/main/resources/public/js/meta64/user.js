@@ -191,10 +191,14 @@ var user = function() {
 
 			// console.log("refreshLogin with name: " + callUsr);
 
+			//var hrs = -(new Date().getTimezoneOffset() / 60);
+			//alert("TimeZoneOffset: "+hrs);
+			
 			util.json("login", {
 				"userName" : callUsr,
 				"password" : callPwd,
-				"usingCookies" : usingCookies
+				"usingCookies" : usingCookies,
+				"tzOffset" : new Date().getTimezoneOffset()
 			}, usingCookies ? _loginResponse : _refreshLoginResponse, {
 				usr : callUsr,
 				pwd : callPwd,
@@ -214,7 +218,8 @@ var user = function() {
 			 */
 			util.json("login", {
 				"userName" : usr,
-				"password" : pwd
+				"password" : pwd,
+				"tzOffset" : new Date().getTimezoneOffset()
 			}, _loginResponse, {
 				"usr" : usr,
 				"pwd" : pwd

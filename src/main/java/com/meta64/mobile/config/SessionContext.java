@@ -18,6 +18,7 @@ public class SessionContext {
 	private String userName;
 	private String password;
 	private String captcha;
+	private String timezone;
 
 	/* Initial id param parsed from first URL request */
 	private String urlId;
@@ -70,5 +71,13 @@ public class SessionContext {
 
 	public void setUrlId(String urlId) {
 		this.urlId = urlId;
+	}
+
+	public String getTimezone() {
+		return timezone;
+	}
+
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
 	}
 }

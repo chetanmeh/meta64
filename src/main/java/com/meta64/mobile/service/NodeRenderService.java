@@ -81,7 +81,7 @@ public class NodeRenderService {
 			levelsUpRemaining--;
 		}
 
-		NodeInfo nodeInfo = Convert.convertToNodeInfo(session, node);
+		NodeInfo nodeInfo = Convert.convertToNodeInfo(sessionContext, session, node);
 		NodeType type = node.getPrimaryNodeType();
 		boolean ordered = type.hasOrderableChildNodes();
 		nodeInfo.setChildrenOrdered(ordered);
@@ -94,7 +94,7 @@ public class NodeRenderService {
 			int nodeCount = 0;
 			while (true) {
 				Node n = nodeIter.nextNode();
-				children.add(Convert.convertToNodeInfo(session, n));
+				children.add(Convert.convertToNodeInfo(sessionContext, session, n));
 
 				/*
 				 * Instead of crashing browser with too much load, just fail a bit more gracefully

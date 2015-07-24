@@ -1,12 +1,18 @@
 package com.meta64.mobile.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
@@ -19,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.meta64.mobile.config.AppConstant;
+import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.ImageSize;
 import com.meta64.mobile.image.ImageUtil;
 import com.meta64.mobile.model.AccessControlEntryInfo;
@@ -36,7 +43,16 @@ public class Convert {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 	}
 
-	private static final PropertyInfoComparator propertyInfoComparator = new PropertyInfoComparator();
+	public static final PropertyInfoComparator propertyInfoComparator = new PropertyInfoComparator();
+
+	/** Used to format date values */
+	// public static final String ECMA_DATE_FORMAT = "EEE MMM dd yyyy HH:mm:ss 'GMT'Z";
+	public static final String ECMA_DATE_FORMAT = "yyyy/MM/dd hh:mm:ss a z";
+
+	/** Used to format date values */
+	public static final Locale DATE_FORMAT_LOCALE = Locale.US;
+
+	private static DateFormat calendarFormat;
 
 	private static final Logger log = LoggerFactory.getLogger(Convert.class);
 
@@ -77,7 +93,7 @@ public class Convert {
 	}
 
 	/* WARNING: skips the check for ordered children and just assigns false for performance reasons */
-	public static NodeInfo convertToNodeInfo(Session session, Node node) throws Exception {
+	public static NodeInfo convertToNodeInfo(SessionContext sessionContext, Session session, Node node) throws Exception {
 		boolean hasBinary = false;
 		boolean binaryIsImage = false;
 		long binVer = 0;
@@ -108,7 +124,7 @@ public class Convert {
 		 */
 		boolean hasDisplayableNodes = node.hasNodes(); // hasDisplayableNodes(node);
 
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), buildPropertyInfoList(node), hasDisplayableNodes, false, hasBinary,
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), buildPropertyInfoList(sessionContext, node), hasDisplayableNodes, false, hasBinary,
 				binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
 				imageSize != null ? imageSize.getHeight() : 0);
@@ -166,7 +182,7 @@ public class Convert {
 		ImageUtil.isImageMime(mimeTypeProp.getValue().getString()));
 	}
 
-	public static List<PropertyInfo> buildPropertyInfoList(Node node) throws RepositoryException {
+	public static List<PropertyInfo> buildPropertyInfoList(SessionContext sessionContext, Node node) throws RepositoryException {
 		List<PropertyInfo> props = null;
 		PropertyIterator iter = node.getProperties();
 		PropertyInfo contentPropInfo = null;
@@ -177,10 +193,10 @@ public class Convert {
 				props = new LinkedList<PropertyInfo>();
 			}
 			Property p = iter.nextProperty();
-			PropertyInfo propInfo = convertToPropertyInfo(p);
-			if (Log.renderNodeRequest) {
-				log.debug("   PROP Name: " + p.getName());
-			}
+			PropertyInfo propInfo = convertToPropertyInfo(sessionContext, p);
+			// if (Log.renderNodeRequest) {
+			// log.debug("   PROP Name: " + p.getName());
+			// }
 
 			/*
 			 * grab the content property, and don't put it in the return list YET, because we will
@@ -202,7 +218,7 @@ public class Convert {
 		return props;
 	}
 
-	public static PropertyInfo convertToPropertyInfo(Property prop) throws RepositoryException {
+	public static PropertyInfo convertToPropertyInfo(SessionContext sessionContext, Property prop) throws RepositoryException {
 		String value = null;
 		List<String> values = null;
 
@@ -210,14 +226,33 @@ public class Convert {
 		if (prop.isMultiple()) {
 			values = new LinkedList<String>();
 			for (Value v : prop.getValues()) {
-				values.add(v.getString());
+				values.add(formatValue(sessionContext, v));
 			}
 		}
 		/* else single value */
 		else {
-			value = prop.getString();
+			value = formatValue(sessionContext, prop.getValue());
 		}
 		PropertyInfo propInfo = new PropertyInfo(prop.getType(), prop.getName(), value, values);
 		return propInfo;
+	}
+
+	public static String formatValue(SessionContext sessionContext, Value value) {
+		try {
+			if (value.getType() == PropertyType.DATE) {
+				Calendar cal = value.getDate();
+				if (calendarFormat == null) {
+					calendarFormat = new SimpleDateFormat(ECMA_DATE_FORMAT, DATE_FORMAT_LOCALE);
+					calendarFormat.setTimeZone(TimeZone.getTimeZone(sessionContext.getTimezone()));
+				}
+				return calendarFormat.format(cal.getTime());
+			}
+			else {
+				return value.getString();
+			}
+		}
+		catch (Exception e) {
+			return "[date??]";
+		}
 	}
 }
