@@ -10,7 +10,7 @@ var confirmPg = function() {
 			_message = message;
 			_buttonText = buttonText;
 			_callback = callback;
-			$.mobile.changePage("#confirmPg");
+			meta64.changePage("#confirmPg");
 		},
 
 		build : function() {

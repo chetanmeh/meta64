@@ -67,7 +67,7 @@ var popupMenuPg = function() {
 			var searchMenu = _makeTopLevelMenu("Search", searchMenuItems);
 			
 			var content = render.makeTag("div", {
-				"style" : "margin: 0; min-width: 300px;",
+				"style" : "margin: 0; min-width: 300px; position: fixed; top: 2em; left: 2em;",
 				"data-role" : "collapsible-set"
 			}, myAccountMenu + editMenu + searchMenu);
 

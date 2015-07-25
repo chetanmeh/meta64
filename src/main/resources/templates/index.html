@@ -58,14 +58,14 @@
 			data-tap-toggle="false">
 			<h1 id="headerUserName" th:text="${brandingTitle}">Branding
 				Title</h1>
-			<a href="#popupMenuPg" data-rel="popup" data-icon="bars"
+			<a onclick="meta64.popup('#popupMenuPg');" data-rel="popup" data-icon="bars"
 				id="menuButton"
 				class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-bars">Menu</a>
 
 			<div data-type="horizontal" data-role="controlgroup"
 				class="ui-btn-right">
 				<!--  -->
-				<a href="#signupPg" class="ui-btn ui-btn-inline ui-btn-a">Signup</a>
+				<a onclick="meta64.changePage('#signupPg');" class="ui-btn ui-btn-inline ui-btn-a">Signup</a>
 				<!--  -->
 				<a data-icon="user" id="openLoginPgButton"
 					class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-user">Login</a>

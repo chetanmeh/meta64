@@ -38,9 +38,7 @@ var user = function() {
 				_.writeCookie(cnst.COOKIE_LOGIN_PWD, info.pwd);
 			}
 
-			// TODO; Do I want "pop" here? This is very old code. may not be
-			// best.
-			$.mobile.changePage($('#mainPage'), 'pop', false, true);
+			meta64.changePage("#mainPage");
 
 			_setStateVarsUsingLoginResponse(res);
 			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId, false);
@@ -70,7 +68,7 @@ var user = function() {
 	}
 
 	var _logoutResponse = function(res) {
-		$.mobile.changePage("#mainPage");
+		meta64.changePage("#mainPage");
 		location.reload();
 	}
 
@@ -83,7 +81,7 @@ var user = function() {
 	var _signupResponse = function(res) {
 		if (util.checkSuccess("Signup new user", res)) {
 			user.populateLoginPgFromCookies();
-			$.mobile.changePage("#loginPg");
+			meta64.changePage("#loginPg");
 			alert("Signup successful.");
 		}
 	}
@@ -122,7 +120,7 @@ var user = function() {
 				/* make credentials visible only if not logged in */
 				util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
 
-				$.mobile.changePage("#loginPg");
+				meta64.changePage("#loginPg");
 			}
 			/* or log out immediately */
 			else {
@@ -256,7 +254,7 @@ var user = function() {
 		},
 
 		changePasswordPg : function() {
-			$.mobile.changePage("#changePasswordPg");
+			meta64.changePage("#changePasswordPg");
 		}
 	};
 

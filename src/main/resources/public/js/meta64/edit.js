@@ -11,14 +11,14 @@ var edit = function() {
 		util.checkSuccess("Save node", res);
 
 		view.refreshTree(null, false);
-		$.mobile.changePage("#mainPage");
+		meta64.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
 	var _exportResponse = function(res) {
 		if (util.checkSuccess("Export", res)) {
 			alert("Export Successful.");
-			$.mobile.changePage("#mainPage");
+			meta64.changePage("#mainPage");
 			view.scrollToSelectedNode();
 		}
 	}
@@ -27,7 +27,7 @@ var edit = function() {
 		if (util.checkSuccess("Import", res)) {
 			alert("Import Successful.");
 			view.refreshTree(null, false);
-			$.mobile.changePage("#mainPage");
+			meta64.changePage("#mainPage");
 			view.scrollToSelectedNode();
 		}
 	}
@@ -37,7 +37,7 @@ var edit = function() {
 
 		util.checkSuccess("Insert Book", res);
 		view.refreshTree(null, false);
-		$.mobile.changePage("#mainPage");
+		meta64.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
@@ -59,7 +59,7 @@ var edit = function() {
 		util.checkSuccess("Change node position", res);
 
 		view.refreshTree(null, false);
-		$.mobile.changePage("#mainPage");
+		meta64.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
@@ -139,7 +139,7 @@ var edit = function() {
 		startEditingNewNode : function() {
 			_.editingUnsavedNode = true;
 			_.editNode = null;
-			$.mobile.changePage("#editNodePg");
+			meta64.changePage("#editNodePg");
 		},
 
 		editMode : function() {
@@ -183,7 +183,7 @@ var edit = function() {
 				 */
 				// renderPageFromData(currentNodeData);
 			}
-			$.mobile.changePage("#mainPage");
+			meta64.changePage("#mainPage");
 			view.scrollToSelectedNode();
 		},
 
@@ -312,7 +312,7 @@ var edit = function() {
 		},
 
 		openExportPg : function() {
-			$.mobile.changePage("#exportPg");
+			meta64.changePage("#exportPg");
 		},
 
 		exportNodes : function() {
@@ -333,7 +333,7 @@ var edit = function() {
 		},
 
 		openImportPg : function() {
-			$.mobile.changePage("#importPg");
+			meta64.changePage("#importPg");
 		},
 
 		importNodes : function() {
@@ -363,7 +363,7 @@ var edit = function() {
 			_.editingUnsavedNode = false;
 			_.editNode = node;
 			//_.populateEditNodePg();
-			$.mobile.changePage("#editNodePg");
+			meta64.changePage("#editNodePg");
 		},
 
 		/*

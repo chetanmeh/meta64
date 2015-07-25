@@ -154,6 +154,16 @@ var meta64 = function() {
 			return _.editModeOption === _.MODE_SIMPLE;
 		},
 
+		changePage : function(pageId) {
+			pageMgr.buildPage(pageId);
+			$.mobile.pageContainer.pagecontainer("change", pageId); 
+		},
+
+		popup : function(pageId) {
+			pageMgr.buildPage(pageId);
+			$(pageId).popup("open");
+		},
+
 		isNodeBlackListed : function(node) {
 			if (!_.inSimpleMode())
 				return false;
@@ -304,7 +314,7 @@ var meta64 = function() {
 		},
 
 		openDonatePg : function() {
-			$.mobile.changePage("#donatePg");
+			meta64.changePage("#donatePg");
 		},
 
 		getHighlightedNode : function() {
@@ -361,7 +371,7 @@ var meta64 = function() {
 			}
 		},
 
-		refreshAllGuiEnablement : function() {		
+		refreshAllGuiEnablement : function() {
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 			var highlightNode = _.getHighlightedNode();
@@ -387,7 +397,7 @@ var meta64 = function() {
 			 */
 			util.setEnablementByName("editMode", editMode);
 
-			util.setVisibility("#menuButton", !_.isAnonUser);			
+			util.setVisibility("#menuButton", !_.isAnonUser);
 		},
 
 		/*
@@ -547,20 +557,6 @@ var meta64 = function() {
 			pageMgr.initializePageBuilders();
 
 			/*
-			 * This was part of an experiment related to figuring out how JQuery
-			 * alters anchor tags and basically breaks all external anchor tags,
-			 * and I was using this to determine certain aspects of how JQM
-			 * pageloading works.
-			 */
-			// setInterval(function() {
-			// if (curUrlPath != window.location.pathname +
-			// window.location.search) {
-			// curUrlPath = window.location.pathname + window.location.search;
-			// alert('location changed!');
-			// _.loadAnonPageHome(false, window.location.search);
-			// }
-			// }, 1000);
-			/*
 			 * Check for screen size in a timer. We don't want to monitor actual
 			 * screen resize events because if a user is expanding a window we
 			 * basically want to limit the CPU and chaos that would ensue if we
@@ -594,11 +590,11 @@ var meta64 = function() {
 
 		/* Don't need this method yet, and haven't tested to see if works */
 		orientationHandler : function(event) {
-//			if (event.orientation) {
-//				if (event.orientation === 'portrait') {
-//				} else if (event.orientation === 'landscape') {
-//				}
-//			}
+			// if (event.orientation) {
+			// if (event.orientation === 'portrait') {
+			// } else if (event.orientation === 'landscape') {
+			// }
+			// }
 		},
 
 		loadAnonPageHome : function(ignoreUrl) {
@@ -608,59 +604,16 @@ var meta64 = function() {
 		}
 	};
 
-	$(document).on("pagecontainerbeforechange", function(event, data) {
-
-		/* all properties shouldn't return "undefined" */
-		var toPage = data.toPage, //
-		prevPage = data.prevPage ? data.prevPage : "", //
-		options = data.options, //
-		/* to determine which page (hash) the user is navigating to */
-		absUrl = data.absUrl ? $.mobile.path.parseUrl(data.absUrl).hash.split("#")[1] : "",
-		/* assuming the user is logged off */
-		userLogged = false;
-
-		if (typeof data.toPage == "string") {
-
-			pageMgr.buildPage(data.toPage);
-
-			// console.log("STRING: page change ****************** toPage[" +
-			// toPage + "] absUrl[" + absUrl + "]");
-			if (data.toPage.contains("#signupPg")) {
-				user.pageInitSignupPg();
-			}
-		}
-
-//		else if (typeof toPage == "object") {
-//			// console.log("OBJECT: page change ****************** toPage[" +
-//			// toPage + "] absUrl[" + absUrl + "]");
-//			/*
-//			 * if user wants to access pageX but he is logged off move to pageY
-//			 * with transition "flip" and don't update hash in URL
-//			 */
-//			// data.toPage[0] = $("#pageY")[0];
-//			//
-//			// $.extend(data.options, {
-//			// transition : "flip",
-//			// changeHash : false
-//			// });
-//		}
-	});
-
-	// $(document).on("pagebeforechange", function(e, data) {
-	// var toPage = data.toPage[0].id;
-	// console.log("Nav to page: " + toPage);
+	// $(document).on("pagecontainerbeforechange", function(event, data) {
 	//
-	// if (toPage == "signupPg") {
-	// user.pageInitSignupPg();
-	// // $.mobile.pageContainer.pagecontainer("change", "#pageZ");
+	// if (typeof data.toPage == "string") {
+	// console.log("pageContainerBeforeChange: "+data.toPage);
+	// //if (data.toPage.startsWith("#")) {
+	// pageMgr.buildPage(data.toPage);
+	// //}
 	// }
 	//
-	// // this doesn't execute ???? so I'm just updating enablement
-	// // very time a
-	// // selection changes.
-	// // else if (toPage == "popupMenu") {
-	// // console.log("popup showing now.");
-	// // refreshAllGuiEnablement();
+	// // else if (typeof toPage == "object") {
 	// // }
 	// });
 

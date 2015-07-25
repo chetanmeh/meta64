@@ -57,7 +57,6 @@ var uploadPg = function() {
 			util.setHtmlEnhanced($("#uploadPg"), header + mainContent);
 
 			$("#uploadButton").on("click", attachment.uploadFileNow);
-			$("#closeUploadButton").on("click", attachment.closeUploadPg);
 			$("#deleteAttachmentButton").on("click", attachment.deleteAttachment);
 		},
 		

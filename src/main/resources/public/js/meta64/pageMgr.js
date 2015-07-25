@@ -12,14 +12,16 @@ var pageMgr = function() {
 	var _ = {
 
 		buildPage : function(pageName) {
+			console.log("buildPage: "+pageName);
+			
 			for (var i = 0; i < pageBuilders.length; i++) {
 				var builder = pageBuilders[i];
-				// console.log("Checking page builder: "+builderObj.name);
-				if (pageName.contains(builder.name)) {
-					// console.log("found page builder.");
+				//console.log("Checking page builder: " + builder.name);
+				if (pageName===builder.name) {
+					console.log("found page builder: " + builder.name);
 
 					if (!builder.built) {
-						// console.log("building page.");
+						//console.log("building page.");
 						builder.build();
 						builder.built = true;
 					}
@@ -40,7 +42,8 @@ var pageMgr = function() {
 
 			pageBuilders = [ {
 				name : "#signupPg",
-				build : signupPg.build
+				build : signupPg.build,
+				init : signupPg.init
 			}, {
 				name : "#loginPg",
 				build : loginPg.build,
@@ -88,7 +91,7 @@ var pageMgr = function() {
 				name : "#popupMenuPg",
 				build : popupMenuPg.build,
 				init : popupMenuPg.init
-			},{
+			}, {
 				name : "#confirmPg",
 				build : confirmPg.build,
 				init : confirmPg.init

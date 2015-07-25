@@ -6,13 +6,7 @@ var props = function() {
 		util.checkSuccess("Save properties", res);
 
 		edit.editNode.properties.push(res.propertySaved)
-
-		//edit.populateEditNodePg();
-		$.mobile.changePage("#editNodePg");
-
-		// $("#editPropertyDialogCloseButton").trigger('click');
-		// $.mobile.changePage(getPreviousPage()); //"#editNodeDialog");
-
+		meta64.changePage("#editNodePg");
 		meta64.treeDirty = true;
 	}
 
@@ -27,7 +21,7 @@ var props = function() {
 			props.deletePropertyFromLocalData(info.propertyToDelete);
 
 			/* now just re-render screen from local variables */
-			$.mobile.changePage("#editNodePg");
+			meta64.changePage("#editNodePg");
 			meta64.treeDirty = true;
 		}
 	}
@@ -69,7 +63,7 @@ var props = function() {
 		},
 
 		addProperty : function() {
-			$.mobile.changePage("#editPropertyPg");
+			meta64.changePage("#editPropertyPg");
 		},
 
 		populatePropertyEdit : function() {

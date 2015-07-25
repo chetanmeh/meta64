@@ -18,7 +18,7 @@ var nav = function() {
 		},
 
 		showSearchPage : function() {
-			$.mobile.changePage("#searchResultsPg");
+			meta64.changePage("#searchResultsPg");
 		},
 
 		upLevelResponse : function(res, info) {

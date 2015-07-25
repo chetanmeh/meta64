@@ -24,7 +24,7 @@ var searchResultsPg = function() {
 			util.setHtmlEnhanced($("#searchResultsPg"), content);
 
 			$("#cancelSearchResultsButton").on("click", function() {
-				$.mobile.changePage("#mainPage");
+				meta64.changePage("#mainPage");
 				view.scrollToSelectedNode();
 			});
 		},

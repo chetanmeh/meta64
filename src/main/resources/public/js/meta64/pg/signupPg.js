@@ -3,58 +3,62 @@ console.log("running module: signupPg.js");
 var signupPg = function() {
 
 	var _ = {
-			build : function() {
+		build : function() {
 
-				var header = render.makeTag("div", //
-				{
-					"data-role" : "header" //
-				}, //
-				"<h2>" + BRANDING_TITLE + " - Signup</h2>");
+			var header = render.makeTag("div", //
+			{
+				"data-role" : "header" //
+			}, //
+			"<h2>" + BRANDING_TITLE + " - Signup</h2>");
 
-				var formControls = render.makeEditField("User", "signupUserName") + //
-				render.makePasswordField("Password", "signupPassword") + //
-				render.makeEditField("Captcha", "signupCaptcha");
+			var formControls = render.makeEditField("User", "signupUserName") + //
+			render.makePasswordField("Password", "signupPassword") + //
+			render.makeEditField("Captcha", "signupCaptcha");
 
-				var captchaImage = render.makeTag("div", //
-				{
-					"class" : "captcha-image" //
-				}, //
-				render.makeTag("img", //
-				{
-					"id" : "captchaImage",
-					"class" : "captcha",
-					"src" : ""//
-				}, //
-				"", false));
+			var captchaImage = render.makeTag("div", //
+			{
+				"class" : "captcha-image" //
+			}, //
+			render.makeTag("img", //
+			{
+				"id" : "captchaImage",
+				"class" : "captcha",
+				"src" : ""//
+			}, //
+			"", false));
 
-				var signupButton = render.makeButton("Signup", "signupButton", "b", "ui-btn-icon-left ui-icon-check");
-				var newCaptchaButton = render.makeButton("Try Different Image", "tryAnotherCaptchaButton", "a");
-				var backButton = render.makeBackButton("Close", "cancelSignupButton", "a");
+			var signupButton = render.makeButton("Signup", "signupButton", "b", "ui-btn-icon-left ui-icon-check");
+			var newCaptchaButton = render.makeButton("Try Different Image", "tryAnotherCaptchaButton", "a");
+			var backButton = render.makeBackButton("Close", "cancelSignupButton", "a");
 
-				var buttonBar = render.makeHorzControlGroup(signupButton + newCaptchaButton + backButton);
+			var buttonBar = render.makeHorzControlGroup(signupButton + newCaptchaButton + backButton);
 
-				var form = render.makeTag("div", //
-				{
-					"class" : "ui-field-contain" //
-				}, //
-				formControls + captchaImage + buttonBar);
+			var form = render.makeTag("div", //
+			{
+				"class" : "ui-field-contain" //
+			}, //
+			formControls + captchaImage + buttonBar);
 
-				var internalMainContent = "Note: No email address is required currently, because this app is an alpha site that doesn't yet have email support.";
+			var internalMainContent = "Note: No email address is required currently, because this app is an alpha site that doesn't yet have email support.";
 
-				var mainContent = render.makeTag("div", //
-				{
-					"role" : "main", //
-					"class" : "ui-content"
-				}, //
-				internalMainContent + form);
+			var mainContent = render.makeTag("div", //
+			{
+				"role" : "main", //
+				"class" : "ui-content"
+			}, //
+			internalMainContent + form);
 
-				var content = header + mainContent;
+			var content = header + mainContent;
 
-				util.setHtmlEnhanced($("#signupPg"), content);
+			util.setHtmlEnhanced($("#signupPg"), content);
 
-				$("#tryAnotherCaptchaButton").on("click", user.tryAnotherCaptcha);
-				$("#signupButton").on("click", user.signup);
-			}
+			$("#tryAnotherCaptchaButton").on("click", user.tryAnotherCaptcha);
+			$("#signupButton").on("click", user.signup);
+		},
+	
+		init : function() {
+			user.pageInitSignupPg();
+		}
 	};
 
 	console.log("Module ready: signupPg.js");
