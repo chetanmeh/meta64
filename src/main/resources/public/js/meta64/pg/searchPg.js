@@ -13,7 +13,7 @@ var searchPg = function() {
 
 			var formControls = render.makeEditField("Search", "searchText");
 
-			var searchButton = render.makeButton("Search", "searchNodesButton", "b");
+			var searchButton = render.makeButton("Search", "searchNodesButton", "b", "ui-btn-icon-left ui-icon-check");
 			var backButton = render.makeBackButton("Close", "cancelSearchButton", "a");
 			var buttonBar = render.makeHorzControlGroup(searchButton + backButton);
 

@@ -14,7 +14,7 @@ var loginPg = function() {
 			var formControls = render.makeEditField("User", "userName") + //
 			render.makePasswordField("Password", "password");
 
-			var loginButton = render.makeButton("Login", "loginButton", "b");
+			var loginButton = render.makeButton("Login", "loginButton", "b", "ui-btn-icon-left ui-icon-check");
 			var backButton = render.makeBackButton("Close", "cancelLoginButton", "a");
 			var buttonBar = render.makeHorzControlGroup(loginButton + backButton);
 

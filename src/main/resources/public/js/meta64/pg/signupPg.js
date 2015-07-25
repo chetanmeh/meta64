@@ -27,7 +27,7 @@ var signupPg = function() {
 				}, //
 				"", false));
 
-				var signupButton = render.makeButton("Signup", "signupButton", "b");
+				var signupButton = render.makeButton("Signup", "signupButton", "b", "ui-btn-icon-left ui-icon-check");
 				var newCaptchaButton = render.makeButton("Try Different Image", "tryAnotherCaptchaButton", "a");
 				var backButton = render.makeBackButton("Close", "cancelSignupButton", "a");
 

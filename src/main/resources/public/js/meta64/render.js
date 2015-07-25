@@ -236,6 +236,7 @@ var render = function() {
 				{
 					"id" : uid + "_sel",//
 					"onClick" : "nav.toggleNodeSel('" + uid + "');",
+					//I tried ui-btn-icon-notext (and the button rendering is bad) ???
 					"class" : "ui-btn ui-btn-inline ui-icon-check ui-mini ui-btn-icon-left " + selClass
 				}, "Sel");
 
@@ -678,10 +679,14 @@ var render = function() {
 			}, "", true);
 		},
 
-		makeButton : function(text, id, theme) {
+		makeButton : function(text, id, theme, classes) {
+			var clazz = "ui-btn ui-btn-inline ui-btn-" + theme;
+			if (classes) {
+				clazz += " "+classes;
+			}	
 			return render.makeTag("a", {
 				"id" : id,
-				"class" : "ui-btn ui-btn-inline ui-btn-" + theme
+				"class" : clazz
 			}, text);
 		},
 

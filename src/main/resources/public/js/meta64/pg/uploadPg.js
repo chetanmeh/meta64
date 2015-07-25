@@ -42,7 +42,7 @@ var uploadPg = function() {
 			var uploadFromUrlDiv = render.makeTag("div", {//
 			}, uploadFromUrlField);
 
-			var uploadButton = render.makeButton("Upload", "uploadButton", "b");
+			var uploadButton = render.makeButton("Upload", "uploadButton", "b", "ui-btn-icon-left ui-icon-check");
 			var deleteButton = render.makeButton("Delete", "deleteAttachmentButton", "a");
 			var backButton = render.makeBackButton("Close", "closeUploadButton", "a");
 			var buttonBar = render.makeHorzControlGroup(uploadButton + deleteButton + backButton);

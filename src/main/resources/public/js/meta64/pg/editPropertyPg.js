@@ -11,7 +11,7 @@ var editPropertyPg = function() {
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Edit Node Property</h2>");
 
-			var savePropertyButton = render.makeButton("Save", "savePropertyButton", "b");
+			var savePropertyButton = render.makeButton("Save", "savePropertyButton", "b", "ui-btn-icon-left ui-icon-check");
 			var cancelEditButton = render.makeBackButton("Cancel", "editPropertyPgCloseButton", "a");
 			var buttonBar = render.makeHorzControlGroup(savePropertyButton + cancelEditButton);
 

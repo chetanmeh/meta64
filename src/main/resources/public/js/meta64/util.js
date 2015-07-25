@@ -206,9 +206,9 @@ var util = function() {
 
 		setEnablement : function(elm, enable) {
 			if (enable)
-				elm.removeClass('ui-disabled');
+				elm.removeClass('ui-state-disabled');
 			if (!enable)
-				elm.addClass('ui-disabled');
+				elm.addClass('ui-state-disabled');
 		},
 
 		hookSliderChanges : function() {

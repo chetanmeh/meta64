@@ -16,7 +16,7 @@ var prefsPg = function() {
 			var legend = "<legend>Edit Mode:</legend>";
 			var radioBar = render.makeHorzControlGroup(legend+formControls);
 			
-			var saveButton = render.makeButton("Save", "savePreferencesButton", "b");
+			var saveButton = render.makeButton("Save", "savePreferencesButton", "b", "ui-btn-icon-left ui-icon-check");
 			var backButton = render.makeBackButton("Cancel", "cancelPreferencesPgButton", "a");
 			var buttonBar = render.makeHorzControlGroup(saveButton + backButton);
 

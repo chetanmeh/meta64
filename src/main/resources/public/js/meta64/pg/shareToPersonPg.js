@@ -13,7 +13,7 @@ var shareToPersonPg = function() {
 
 			var formControls = render.makeEditField("User to Share With", "shareToUserName");
 
-			var shareButton = render.makeButton("Share", "shareNodeToPersonButton", "b");
+			var shareButton = render.makeButton("Share", "shareNodeToPersonButton", "b", "ui-btn-icon-left ui-icon-check");
 			var backButton = render.makeBackButton("Close", "cancelShareNodeToPersonButton", "a");
 			var buttonBar = render.makeHorzControlGroup(shareButton + backButton);
 

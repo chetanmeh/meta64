@@ -14,7 +14,7 @@ var changePasswordPg = function() {
 			var formControls = render.makePasswordField("Password", "changePassword1") + //
 			render.makePasswordField("Repeat Password", "changePassword2");
 
-			var changePasswordButton = render.makeButton("Change Password", "changePasswordActionButton", "b");
+			var changePasswordButton = render.makeButton("Change Password", "changePasswordActionButton", "b", "ui-btn-icon-left ui-icon-check");
 			var backButton = render.makeBackButton("Close", "cancelChangePasswordButton", "a");
 			var buttonBar = render.makeHorzControlGroup(changePasswordButton + backButton);
 
