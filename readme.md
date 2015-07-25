@@ -64,7 +64,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Short URL GUID for any node, so it can be referenced by URL
 * Uploading attachments (attached files) onto a node
 * Upload from local machine
-* Uupload directly from any internet URL.
+* Upload directly from any internet URL.
 * Deleting node attachments
 * Renders image attachments on the page (on the node)
 * Shows JCR properties for nodes.
