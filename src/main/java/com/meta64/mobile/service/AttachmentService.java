@@ -71,7 +71,8 @@ public class AttachmentService {
 
 	public void attachBinaryFromStream(Session session, String nodeId, String fileName, InputStream is, String mimeType, int width, int height) throws Exception {
 		Node node = JcrUtil.findNode(session, nodeId);
-
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		
 		/* mimeType can be passed as null if it's not yet determined */
 		if (mimeType == null) {
 			mimeType = URLConnection.guessContentTypeFromName(fileName);
@@ -115,6 +116,7 @@ public class AttachmentService {
 	public void deleteAttachment(Session session, DeleteAttachmentRequest req, DeleteAttachmentResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 		deleteAllBinaryProperties(node);
 		session.save();
 		res.setSuccess(true);

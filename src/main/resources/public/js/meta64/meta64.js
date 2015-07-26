@@ -231,16 +231,19 @@ var meta64 = function() {
 
 		updateNodeInfoResponse : function(res, info) {
 			var ownerBuf = '';
+			//console.log("res: "+ JSON.stringify(res));
+			
 			$.each(res.owners, function(index, owner) {
 				if (ownerBuf.length > 0) {
 					ownerBuf += ",";
 				}
 				ownerBuf += owner;
+				//console.log("ownerbuf: "+ownerBuf);
 			});
 
 			if (ownerBuf.length > 0) {
 				info.node.owner = ownerBuf;
-				$("#ownerDisplay" + info.node.uid).html("Owner: " + ownerBuf);
+				$("#ownerDisplay" + info.node.uid).html(" (Manager: " + ownerBuf+")");
 			}
 		},
 

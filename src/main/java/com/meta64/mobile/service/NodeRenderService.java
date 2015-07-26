@@ -76,7 +76,7 @@ public class NodeRenderService {
 		while (node != null && levelsUpRemaining > 0) {
 			node = node.getParent();
 			if (Log.renderNodeRequest) {
-				// System.out.println("   upLevel to nodeid: "+item.getPath());
+				//log.debug("   upLevel to nodeid: "+item.getPath());
 			}
 			levelsUpRemaining--;
 		}
@@ -85,7 +85,7 @@ public class NodeRenderService {
 		NodeType type = node.getPrimaryNodeType();
 		boolean ordered = type.hasOrderableChildNodes();
 		nodeInfo.setChildrenOrdered(ordered);
-		// System.out.println("Primary type: " + type.getName() + " childrenOrdered=" +
+		// log.debug("Primary type: " + type.getName() + " childrenOrdered=" +
 		// ordered);
 		res.setNode(nodeInfo);
 

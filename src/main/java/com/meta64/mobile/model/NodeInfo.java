@@ -11,6 +11,11 @@ public class NodeInfo {
 	private String id;
 	private String path;
 	private String name;
+	
+	//TODO: There is a slight waste of space here, because createdBy is also in 'properties' but so the client can
+	//have super fast access to it, i'm making it a direct property also.
+	private String createdBy;
+	
 	private List<PropertyInfo> properties;
 	private boolean hasChildren;
 	private boolean hasBinary;
@@ -26,7 +31,7 @@ public class NodeInfo {
 	}
 
 	public NodeInfo(String id, String path, String name, List<PropertyInfo> properties, boolean hasChildren, boolean childrenOrdered, boolean hasBinary,
-			boolean binaryIsImage, long binVer, int width, int height) {
+			boolean binaryIsImage, long binVer, int width, int height, String createdBy) {
 		this.id = id;
 		this.path = path;
 		this.name = name;
@@ -38,6 +43,7 @@ public class NodeInfo {
 		this.binVer = binVer;
 		this.width = width;
 		this.height = height;
+		this.createdBy = createdBy;
 	}
 
 	public boolean isChildrenOrdered() {
@@ -126,5 +132,13 @@ public class NodeInfo {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 }

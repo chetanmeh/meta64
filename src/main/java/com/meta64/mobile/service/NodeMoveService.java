@@ -36,6 +36,7 @@ public class NodeMoveService {
 	public void setNodePosition(Session session, SetNodePositionRequest req, SetNodePositionResponse res) throws Exception {
 		String parentNodeId = req.getParentNodeId();
 		Node parentNode = JcrUtil.findNode(session, parentNodeId);
+		JcrUtil.checkNodeCreatedBy(parentNode, session.getUserID());
 		parentNode.orderBefore(req.getNodeId(), req.getSiblingId());
 		session.save();
 		res.setSuccess(true);
@@ -54,6 +55,7 @@ public class NodeMoveService {
 		// log.debug("Deleting ID: " + nodeId);
 		try {
 			Node node = JcrUtil.findNode(session, nodeId);
+			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 			node.remove();
 		}
 		catch (Exception e) {
@@ -70,7 +72,7 @@ public class NodeMoveService {
 			// log.debug("Moving ID: " + nodeId);
 			try {
 				Node node = JcrUtil.findNode(session, nodeId);
-
+				JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 				/*
 				 * This code moves the copied nodes to the bottom of child list underneath the
 				 * target node (i.e. targetNode being the parent) for the new node locations.

@@ -18,6 +18,7 @@ import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.mail.JcrOutboxMgr;
+import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.ChangePasswordRequest;
@@ -101,7 +102,9 @@ public class UserManagerService {
 			res.setSuccess(false);
 		}
 		else {
-			res.setRootNode(UserManagerUtil.getRootNodeRefInfoForUser(session, userName));
+			RefInfo rootRefInfo = UserManagerUtil.getRootNodeRefInfoForUser(session, userName);
+			sessionContext.setRootRefInfo(rootRefInfo);
+			res.setRootNode(rootRefInfo);
 			res.setUserName(userName);
 
 			try {
@@ -143,9 +146,11 @@ public class UserManagerService {
 
 						if (UserManagerUtil.createUser(session, userName, password)) {
 							UserManagerUtil.createUserRootNode(session, userName);
+							
 							Node prefsNode = getPrefsNodeForSessionUser(session, userName);
 							prefsNode.setProperty(JcrProp.EMAIL, email);
-
+							setDefaultUserPreferences(prefsNode);
+							
 							/*
 							 * allow JavaScript to detect all it needs to detect which is to display
 							 * a message to user saying the signup is complete.
@@ -267,6 +272,10 @@ public class UserManagerService {
 				"User: " + userName);
 	}
 
+	public void setDefaultUserPreferences(Node prefsNode) throws Exception {
+		prefsNode.setProperty("advMode", false);
+	}
+	
 	public void saveUserPreferences(Session session, final SaveUserPreferencesRequest req, final SaveUserPreferencesResponse res) throws Exception {
 
 		final String userName = sessionContext.getUserName();

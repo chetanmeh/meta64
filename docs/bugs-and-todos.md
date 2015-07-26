@@ -3,6 +3,9 @@
 
 
 # TODO
+* Need row headers with metadata like (lastUpdateTime, owner, etc)
+* For nodes that are shared, they should be indicated in some obvious way to the user, without having to go to sharing page to check.
+* Need edit email address feature.
 * Need to implement "forgot my password" feature to send user password.
 * If user is logged in we should hide the "signup" button.
 * Need menu item that will display anonymous home page to a user who is logged in.
@@ -22,9 +25,6 @@
 * More JUnit unit tests.
 
 # List of Known Bugs
-* after uploading attachment image, viewing it, then deleting it, and uploading another, browser caching is using the
-same version number as the original. Solution: need to use random generated number for binary version rather than, a
-sequential one. Will still work fine, but no risk of reusing the same URL again.
-* **bin** nodes (nodes that are there as a binary or image attachment) should not show up unless you are in 'advanced' mode, and they are showing up.
+* sometimes when I click on the top node (page parent node) it is unable to select the node (no red indicator shows on left). Saw this happen when I accessed a node via url that was shared from another user.
 * password cookie key will be encrypted using AES from http://point-at-infinity.org/jsaes/, probably and probably the
 https://panopticlick.eff.org/ methodology of generating a string to use for the encryption key which will be rather unique to the machine. This means if a hacker gets your cookie, it will still be difficult to decrypt, unless they can also run javascript on your machine and sent the output to their servers. Of course a hacker can lure you to their server, where they can run JS on a page and get your panopticlick info, but that is one additional challenge for them.

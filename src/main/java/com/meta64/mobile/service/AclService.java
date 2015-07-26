@@ -78,6 +78,7 @@ public class AclService {
 
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 
 		String principal = req.getPrincipal();
 		List<String> privileges = req.getPrivileges();
@@ -110,7 +111,8 @@ public class AclService {
 	public void removePrivilege(Session session, RemovePrivilegeRequest req, RemovePrivilegeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		
 		String principal = req.getPrincipal();
 		String privilege = req.getPrivilege();
 

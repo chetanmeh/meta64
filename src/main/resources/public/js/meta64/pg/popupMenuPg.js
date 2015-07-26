@@ -76,22 +76,24 @@ var popupMenuPg = function() {
 
 		init : function() {
 
+			//console.log("**************** init menu.");
+			
 			var selNodeCount = util.getPropertyCount(meta64.selectedNodes);
 			var highlightNode = meta64.getHighlightedNode();
 			var propsToggle = meta64.currentNode && !meta64.isAnonUser;
 			var editMode = meta64.currentNode && !meta64.isAnonUser;
 			var canFinishMoving = !util.nullOrUndef(edit.nodesToMove) && !_.isAnonUser;
-
+			
 			util.setEnablement($("#changePasswordPgButton"), !meta64.isAnonUser);
 			util.setEnablement($("#accountPreferencesPgButton"), !meta64.isAnonUser);
-			util.setEnablement($("#insertBookWarAndPeaceButton"), meta64.isAdminUser && highlightNode != null);
+			util.setEnablement($("#insertBookWarAndPeaceButton"), meta64.isAdminUser && highlightNode != null, meta64.isAdminUser);
 			util.setEnablement($("#donatePgButton"), true);
 			util.setEnablement($("#manageAttachmentsButton"), highlightNode != null);
 			util.setEnablement($("#editNodeSharingButton"), highlightNode != null);
 			util.setEnablement($("#moveSelNodesButton"), highlightNode != null);
 			util.setEnablement($("#finishMovingSelNodesButton"), canFinishMoving);
-			util.setEnablement($("#openExportPgButton"), meta64.isAdminUser);
-			util.setEnablement($("#openImportPgButton"), meta64.isAdminUser);
+			util.setEnablement($("#openExportPgButton"), meta64.isAdminUser, meta64.isAdminUser);
+			util.setEnablement($("#openImportPgButton"), meta64.isAdminUser, meta64.isAdminUser);
 			util.setEnablement($("#deleteSelNodesButton"), selNodeCount);
 			util.setEnablement($("#searchPgButton"), highlightNode != null);
 			util.setEnablement($("#timelineButton"), highlightNode != null);

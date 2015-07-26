@@ -204,7 +204,17 @@ var util = function() {
 			}
 		},
 
-		setEnablement : function(elm, enable) {
+		setEnablement : function(elm, enable, visibility) {
+			/*
+			 * optional parameter, undefined means it wasn't passed which
+			 * means 'true' in this case
+			 */
+			if (typeof (visibility) === 'undefined' || visibility) {
+				_.setVisibility(elm, true)
+			} else {
+				_.setVisibility(elm, false);
+			}
+			
 			if (enable)
 				elm.removeClass('ui-state-disabled');
 			if (!enable)

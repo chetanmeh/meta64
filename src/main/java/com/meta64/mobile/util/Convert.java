@@ -110,10 +110,13 @@ public class Convert {
 		 */
 		boolean hasDisplayableNodes = node.hasNodes(); // hasDisplayableNodes(node);
 
-		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), buildPropertyInfoList(sessionContext, node), hasDisplayableNodes, false,
-				hasBinary, binaryIsImage, binVer, //
+		ValContainer<String> createdBy = new ValContainer<String>();
+		List<PropertyInfo> propList = buildPropertyInfoList(sessionContext, node, createdBy);
+
+		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), propList, hasDisplayableNodes, false, hasBinary, binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
-				imageSize != null ? imageSize.getHeight() : 0);
+				imageSize != null ? imageSize.getHeight() : 0, //
+				createdBy.getVal() != null ? createdBy.getVal() : "");
 		return nodeInfo;
 	}
 
@@ -168,7 +171,7 @@ public class Convert {
 		ImageUtil.isImageMime(mimeTypeProp.getValue().getString()));
 	}
 
-	public static List<PropertyInfo> buildPropertyInfoList(SessionContext sessionContext, Node node) throws RepositoryException {
+	public static List<PropertyInfo> buildPropertyInfoList(SessionContext sessionContext, Node node, ValContainer<String> createdBy) throws RepositoryException {
 		List<PropertyInfo> props = null;
 		PropertyIterator iter = node.getProperties();
 		PropertyInfo contentPropInfo = null;
@@ -179,6 +182,16 @@ public class Convert {
 				props = new LinkedList<PropertyInfo>();
 			}
 			Property p = iter.nextProperty();
+
+			/*
+			 * This method can extract out the createdBy just as a performance enhancer, because we
+			 * are doing to need that anywah, and this saves us from making an api request
+			 * specifically for this.
+			 */
+			if (createdBy != null && "jcr:createdBy".equals(p.getName())) {
+				createdBy.setVal(p.getValue().getString());
+			}
+
 			PropertyInfo propInfo = convertToPropertyInfo(sessionContext, p);
 			// if (Log.renderNodeRequest) {
 			// log.debug("   PROP Name: " + p.getName());
@@ -217,7 +230,12 @@ public class Convert {
 		}
 		/* else single value */
 		else {
-			value = formatValue(sessionContext, prop.getValue());
+			if (prop.getName().equals(JcrProp.BIN_DATA)) {
+				value = "[binary data]";
+			}
+			else {
+				value = formatValue(sessionContext, prop.getValue());
+			}
 		}
 		PropertyInfo propInfo = new PropertyInfo(prop.getType(), prop.getName(), value, values);
 		return propInfo;

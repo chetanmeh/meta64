@@ -8,6 +8,12 @@ tr td div p {
 	padding: 1px 1px 1px 1px;
 }
 
+.ui-field-contain > label ~ [class*="ui-"],
+.ui-field-contain .ui-controlgroup-controls {
+	margin: 0;
+	margin-bottom: 10px;
+}
+
 .captcha-image {
 	text-align:center;
 }

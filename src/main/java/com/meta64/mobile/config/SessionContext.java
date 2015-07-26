@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.util.DateUtil;
 
@@ -20,6 +21,9 @@ import com.meta64.mobile.util.DateUtil;
 @Component
 @Scope("session")
 public class SessionContext {
+	/* Identification of user's account root node */
+	private RefInfo rootRefInfo;
+	
 	private String userName;
 	private String password;
 	private String captcha;
@@ -121,5 +125,13 @@ public class SessionContext {
 
 	public void setTimeZoneAbbrev(String timeZoneAbbrev) {
 		this.timeZoneAbbrev = timeZoneAbbrev;
+	}
+
+	public RefInfo getRootRefInfo() {
+		return rootRefInfo;
+	}
+
+	public void setRootRefInfo(RefInfo rootRefInfo) {
+		this.rootRefInfo = rootRefInfo;
 	}
 }

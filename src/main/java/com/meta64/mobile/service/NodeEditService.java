@@ -49,6 +49,10 @@ public class NodeEditService {
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
+		
+		if (!JcrUtil.isUserAccountRoot(sessionContext, node)) {
+			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		}
 		// session.checkPermission(absPath, actions);
 
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
@@ -66,8 +70,12 @@ public class NodeEditService {
 	public void insertNode(Session session, InsertNodeRequest req, InsertNodeResponse res) throws Exception {
 
 		String parentNodeId = req.getParentId();
-		// System.out.println("Inserting under parent: " + parentNodeId);
+		log.debug("Inserting under parent: " + parentNodeId);
 		Node parentNode = JcrUtil.findNode(session, parentNodeId);
+
+		if (!JcrUtil.isUserAccountRoot(sessionContext, parentNode)) {
+			JcrUtil.checkNodeCreatedBy(parentNode, session.getUserID());
+		}
 
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
@@ -89,6 +97,7 @@ public class NodeEditService {
 	public void saveProperty(Session session, SavePropertyRequest req, SavePropertyResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 		node.setProperty(req.getPropertyName(), req.getPropertyValue());
 		session.save();
 
@@ -100,7 +109,7 @@ public class NodeEditService {
 	public void makeNodeReferencable(Session session, MakeNodeReferencableRequest req, MakeNodeReferencableResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 		if (node != null) {
 			/* if node already has uuid then we can do nothing here, we just silently return success */
 			if (!node.hasProperty("jcr:uuid")) {
@@ -115,6 +124,7 @@ public class NodeEditService {
 		String nodeId = req.getNodeId();
 		// log.debug("saveNode. nodeId=" + nodeId);
 		Node node = JcrUtil.findNode(session, nodeId);
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 
 		if (req.getProperties() != null) {
 			for (PropertyInfo property : req.getProperties()) {
@@ -145,7 +155,7 @@ public class NodeEditService {
 	public void deleteProperty(Session session, DeletePropertyRequest req, DeletePropertyResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 		String propertyName = req.getPropName();
 		try {
 			Property prop = node.getProperty(propertyName);

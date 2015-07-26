@@ -62,7 +62,15 @@ var render = function() {
 
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
-				headerText += "Path: " + _.formatPath(path) + "<div id='ownerDisplay" + node.uid + "'></div>";
+				headerText += "Path: " + _.formatPath(path);
+
+				headerText += "<div>";
+
+				if (node.createdBy) {
+					headerText += "Created By: " + node.createdBy;
+				}
+
+				headerText += "<span id='ownerDisplay" + node.uid + "'></span></div>";
 			}
 
 			if (showIdentifier && meta64.editMode) {
@@ -236,7 +244,8 @@ var render = function() {
 				{
 					"id" : uid + "_sel",//
 					"onClick" : "nav.toggleNodeSel('" + uid + "');",
-					//I tried ui-btn-icon-notext (and the button rendering is bad) ???
+					// I tried ui-btn-icon-notext (and the button rendering is
+					// bad) ???
 					"class" : "ui-btn ui-btn-inline ui-icon-check ui-mini ui-btn-icon-left " + selClass
 				}, "Sel");
 
@@ -348,8 +357,9 @@ var render = function() {
 
 		formatPath : function(path) {
 			/*
-			 * TODO: This will fail now that jcr: is removed because it can match and corrupt
-			 * any path that happens to start with root! BEWARE! FIX!
+			 * TODO: This will fail now that jcr: is removed because it can
+			 * match and corrupt any path that happens to start with root!
+			 * BEWARE! FIX!
 			 */
 			return meta64.isAdminUser ? path : path.replaceAll("/root", "");
 		},
@@ -661,7 +671,6 @@ var render = function() {
 			return _.makeTag("label", {
 				"for" : fieldId
 			}, fieldName) +
-
 			_.makeTag("input", {
 				"type" : "text",
 				"name" : fieldId,
@@ -682,8 +691,8 @@ var render = function() {
 		makeButton : function(text, id, theme, classes) {
 			var clazz = "ui-btn ui-btn-inline ui-btn-" + theme;
 			if (classes) {
-				clazz += " "+classes;
-			}	
+				clazz += " " + classes;
+			}
 			return render.makeTag("a", {
 				"id" : id,
 				"class" : clazz

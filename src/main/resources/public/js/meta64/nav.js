@@ -75,9 +75,6 @@ var nav = function() {
 
 		clickOnNodeRow : function(rowElm, uid) {
 
-			//moving this logic inside meta64.highlightNode
-			//_.unhighlightRow();
-
 			var node = meta64.uidToNodeMap[uid];
 			if (!node) {
 				console.log("clickOnNodeRow recieved uid that doesn't map to any node. uid=" + uid);
@@ -98,6 +95,7 @@ var nav = function() {
 				 * already displaying and we do nothing.
 				 */
 				if (!node.owner) {
+					console.log("calling updateNodeInfo");
 					meta64.updateNodeInfo(node);
 				}
 			}

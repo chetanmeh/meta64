@@ -13,6 +13,9 @@ import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.model.RefInfo;
+
 /**
  * Assorted general utility functions related to JCR nodes.
  */
@@ -33,6 +36,16 @@ public class JcrUtil {
 		nonSavableProperties.add("jcr:createdBy");
 		nonSavableProperties.add("jcr:lastModified");
 		nonSavableProperties.add("jcr:lastModifiedBy");
+	}
+
+	public static void checkNodeCreatedBy(Node node, String userName) throws Exception {
+		if ("admin".equals(userName)) return;
+		if (userName == null || !userName.equals(getRequiredStringProp(node, "jcr:createdBy"))) throw new Exception("Access failed.");
+	}
+	
+	public static boolean isUserAccountRoot(SessionContext sessionContext, Node node) throws Exception {
+		RefInfo refInfo = sessionContext.getRootRefInfo();
+		return node.getPath().equals(refInfo.getPath()) || node.getPath().equals(refInfo.getId());
 	}
 
 	public static Node findNode(Session session, String id) throws Exception {
