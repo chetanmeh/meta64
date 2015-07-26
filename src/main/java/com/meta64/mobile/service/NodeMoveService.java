@@ -51,16 +51,12 @@ public class NodeMoveService {
 		res.setSuccess(true);
 	}
 
-	public void deleteNode(Session session, String nodeId) {
+	public void deleteNode(Session session, String nodeId) throws Exception {
 		// log.debug("Deleting ID: " + nodeId);
-		try {
-			Node node = JcrUtil.findNode(session, nodeId);
-			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
-			node.remove();
-		}
-		catch (Exception e) {
-			// silently ignore if node cannot be found.
-		}
+
+		Node node = JcrUtil.findNode(session, nodeId);
+		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		node.remove();
 	}
 
 	public void moveNodes(Session session, MoveNodesRequest req, MoveNodesResponse res) throws Exception {

@@ -7,6 +7,7 @@ var meta64 = function() {
 
 	var _ = {
 
+		userName : "anonymous",
 		deviceWidth : 0,
 		deviceHeight : 0,
 
@@ -231,19 +232,30 @@ var meta64 = function() {
 
 		updateNodeInfoResponse : function(res, info) {
 			var ownerBuf = '';
-			//console.log("res: "+ JSON.stringify(res));
-			
+			// console.log("res: "+ JSON.stringify(res));
+			var mine = false;
 			$.each(res.owners, function(index, owner) {
 				if (ownerBuf.length > 0) {
 					ownerBuf += ",";
 				}
+
+				if (owner === meta64.userName) {
+					mine = true;
+				}
+
 				ownerBuf += owner;
-				//console.log("ownerbuf: "+ownerBuf);
+				// console.log("ownerbuf: "+ownerBuf);
 			});
 
 			if (ownerBuf.length > 0) {
 				info.node.owner = ownerBuf;
-				$("#ownerDisplay" + info.node.uid).html(" (Manager: " + ownerBuf+")");
+				var elm = $("#ownerDisplay" + info.node.uid);
+				elm.html(" (Manager: " + ownerBuf + ")");
+				if (mine) {
+					util.changeOrAddClass(elm, "created-by-other", "created-by-me");
+				} else {
+					util.changeOrAddClass(elm, "created-by-me", "created-by-other");
+				}
 			}
 		},
 

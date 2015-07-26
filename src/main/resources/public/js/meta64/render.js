@@ -67,7 +67,8 @@ var render = function() {
 				headerText += "<div>";
 
 				if (node.createdBy) {
-					headerText += "Created By: " + node.createdBy;
+					var clazz = (node.createdBy === meta64.userName) ? "created-by-me" : "created-by-other";
+					headerText += "<span class='" + clazz + "'>Created By: " + node.createdBy + "</span>";
 				}
 
 				headerText += "<span id='ownerDisplay" + node.uid + "'></span></div>";
@@ -670,8 +671,7 @@ var render = function() {
 		makeEditField : function(fieldName, fieldId) {
 			return _.makeTag("label", {
 				"for" : fieldId
-			}, fieldName) +
-			_.makeTag("input", {
+			}, fieldName) + _.makeTag("input", {
 				"type" : "text",
 				"name" : fieldId,
 				"id" : fieldId
