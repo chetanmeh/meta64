@@ -47,7 +47,6 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 ## Current Features
 
 * Basic JCR Browsing capability 
-* Soft "Branding. Can rebrand portal by a properties properties file entry.
 * Login/Logout
 * Auto-login using Cookies
 * Signup new users (including captcha, and password)
@@ -78,6 +77,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Admin feature to insert entire book "War and Peace", for quickly
   creating test data for exploring all the features, and especially 'search'.
 * Smart dynamic image sizing. Images are sized to look best on your device regardless of screen size or orientation.
+* Soft "Branding". Can rebrand portal by a properties properties file entry.
 * For future planned features see file: **/docs/bugs-and-todos.md**
 
 ## Technology Stack and APIs
