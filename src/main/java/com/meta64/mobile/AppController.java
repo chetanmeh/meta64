@@ -148,13 +148,19 @@ public class AppController {
 	 * repository by uuid.
 	 */
 	@RequestMapping("/")
-	public String mobile(@RequestParam(value = "id", required = false) String id, Model model) throws Exception {
+	public String mobile(@RequestParam(value = "id", required = false) String id, //
+			@RequestParam(value = "signupCode", required = false) String signupCode, Model model) throws Exception {
 		logRequest("mobile", null);
+
+		if (signupCode != null) {
+			userManagerService.processSignupCode(signupCode, model);
+		}
 
 		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
 		brandingUtil.addBrandingAttributes(model);
 
+		// TODO, so which should I use / or .. ? Both work. (need to be consistent here)
 		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
 		springMvcUtil.addCssFileNameProp(model, "meta64Css", "../css/meta64");
 		springMvcUtil.addThirdPartyLibs(model);

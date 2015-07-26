@@ -30,6 +30,11 @@ public class XString {
 		if (len < 5 || len > 40) throw new Exception("Password must be between 5 and 40 characters long.");
 	}
 
+	public static void checkEmail(String text) throws Exception {
+		int len = text.length();
+		if (len < 7 || len > 100) throw new Exception("Invalid email address");
+	}
+
 	public static boolean isEmpty(String text) {
 		return text == null || text.trim().length() == 0;
 	}

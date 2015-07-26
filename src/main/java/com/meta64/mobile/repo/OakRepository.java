@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
@@ -132,6 +133,8 @@ public class OakRepository {
 
 				JcrUtil.ensureNodeExists(session, "/", "root", "Root of All Users");
 				JcrUtil.ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
+				JcrUtil.ensureNodeExists(session, "/", JcrName.OUTBOX, "System Email Outbox");
+				JcrUtil.ensureNodeExists(session, "/", JcrName.SIGNUP, "Pending Signups");
 			}
 		});
 	}

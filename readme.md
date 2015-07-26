@@ -51,6 +51,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Login/Logout
 * Auto-login using Cookies
 * Signup new users (including captcha, and password)
+* Signup process includes email receipt verification
 * Node editing (plain text/markdown)
 * Orderable child nodes ("move up" and "move down" supported)
 * Creating Subnodes or Inline nodes

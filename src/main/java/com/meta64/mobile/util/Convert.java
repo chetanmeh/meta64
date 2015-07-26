@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.meta64.mobile.config.AppConstant;
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.ImageSize;
 import com.meta64.mobile.image.ImageUtil;
@@ -139,7 +139,7 @@ public class Convert {
 	// }
 
 	public static long getBinaryVersion(Node node) throws Exception {
-		Property versionProperty = node.getProperty(AppConstant.JCR_PROP_BIN_VER);
+		Property versionProperty = node.getProperty(JcrProp.BIN_VER);
 		if (versionProperty != null) {
 			return versionProperty.getValue().getLong();
 		}
@@ -149,12 +149,12 @@ public class Convert {
 	public static ImageSize getImageSize(Node node) throws Exception {
 		ImageSize imageSize = new ImageSize();
 
-		Property widthProperty = node.getProperty(AppConstant.JCR_PROP_IMG_WIDTH);
+		Property widthProperty = node.getProperty(JcrProp.IMG_WIDTH);
 		if (widthProperty != null) {
 			imageSize.setWidth((int) widthProperty.getValue().getLong());
 		}
 
-		Property heightProperty = node.getProperty(AppConstant.JCR_PROP_IMG_HEIGHT);
+		Property heightProperty = node.getProperty(JcrProp.IMG_HEIGHT);
 		if (heightProperty != null) {
 			imageSize.setHeight((int) heightProperty.getValue().getLong());
 		}
@@ -162,7 +162,7 @@ public class Convert {
 	}
 
 	public static boolean isImageAttached(Node node) throws Exception {
-		Property mimeTypeProp = node.getProperty(AppConstant.JCR_PROP_BIN_MIME);
+		Property mimeTypeProp = node.getProperty(JcrProp.BIN_MIME);
 		return (mimeTypeProp != null && //
 				mimeTypeProp.getValue() != null && //
 		ImageUtil.isImageMime(mimeTypeProp.getValue().getString()));

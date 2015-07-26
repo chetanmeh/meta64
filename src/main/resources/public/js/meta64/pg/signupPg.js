@@ -13,6 +13,7 @@ var signupPg = function() {
 
 			var formControls = render.makeEditField("User", "signupUserName") + //
 			render.makePasswordField("Password", "signupPassword") + //
+			render.makeEditField("Email", "signupEmail") + //
 			render.makeEditField("Captcha", "signupCaptcha");
 
 			var captchaImage = render.makeTag("div", //

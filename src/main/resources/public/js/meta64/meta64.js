@@ -156,7 +156,7 @@ var meta64 = function() {
 
 		changePage : function(pageId) {
 			pageMgr.buildPage(pageId);
-			$.mobile.pageContainer.pagecontainer("change", pageId); 
+			$.mobile.pageContainer.pagecontainer("change", pageId);
 		},
 
 		popup : function(pageId) {
@@ -538,6 +538,8 @@ var meta64 = function() {
 			if (appInitialized)
 				return;
 			appInitialized = true;
+
+			_.displaySignupMessage();
 			// alert('app initializing');
 
 			console.log("initApp running.");
@@ -578,6 +580,13 @@ var meta64 = function() {
 			}, 1500);
 		},
 
+		displaySignupMessage : function() {
+			var signupResponse = $("#signupCodeResponse").text();
+			if (signupResponse === "ok") {
+				alert("Signup complete. You may now login.");
+			}
+		},
+
 		screenSizeChange : function() {
 			if (_.currentNodeData) {
 				$.each(_.currentNodeData.children, function(i, node) {
@@ -604,11 +613,13 @@ var meta64 = function() {
 		}
 	};
 
+	// I decided no to use this technique to generate page content. I'm using
+	// meta64.showPage
+	// to ensure pages get created. Leaving this commented out in case it's
+	// needed for something in the future.
 	// $(document).on("pagecontainerbeforechange", function(event, data) {
 	//
 	// if (typeof data.toPage == "string") {
-	// console.log("pageContainerBeforeChange: "+data.toPage);
-	// //if (data.toPage.startsWith("#")) {
 	// pageMgr.buildPage(data.toPage);
 	// //}
 	// }

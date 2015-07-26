@@ -14,4 +14,6 @@ public interface ConstantsProvider {
 	public String getCacheVersion();
 
 	public String getProfileName();
+
+	public String getHostAndPort();
 }

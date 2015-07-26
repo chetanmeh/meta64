@@ -82,7 +82,7 @@ var user = function() {
 		if (util.checkSuccess("Signup new user", res)) {
 			user.populateLoginPgFromCookies();
 			meta64.changePage("#loginPg");
-			alert("Signup successful.");
+			alert("User Information Accepted. \n\nCheck your email for signup confirmation. (Can take up to 1 minute)");
 		}
 	}
 
@@ -131,7 +131,7 @@ var user = function() {
 		signup : function() {
 			var userName = util.getRequiredElement("#signupUserName").val();
 			var password = util.getRequiredElement("#signupPassword").val();
-			var email = "noemail@nothing.com"; // util.getRequiredElement("#signupEmail").val();
+			var email = util.getRequiredElement("#signupEmail").val();
 			var captcha = util.getRequiredElement("#signupCaptcha").val();
 
 			/* no real validation yet, other than non-empty */

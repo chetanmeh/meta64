@@ -37,7 +37,12 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 
 	@Override
 	public String getRestUrl() {
-		return "http://" + metaHost + ":" + serverPort + metaRestPath;
+		return getHostAndPort() + metaRestPath;
+	}
+
+	@Override
+	public String getHostAndPort() {
+		return "http://" + metaHost + ":" + serverPort;
 	}
 
 	@Override

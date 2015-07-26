@@ -28,7 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.meta64.mobile.config.AppConstant;
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.ImageUtil;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -78,7 +78,7 @@ public class AttachmentService {
 		}
 
 		long version = System.currentTimeMillis();
-		Property binVerProp = JcrUtil.getProperty(node, AppConstant.JCR_PROP_BIN_VER);
+		Property binVerProp = JcrUtil.getProperty(node, JcrProp.BIN_VER);
 		if (binVerProp != null) {
 			version = binVerProp.getValue().getLong();
 		}
@@ -96,13 +96,13 @@ public class AttachmentService {
 				height = image.getHeight();
 			}
 
-			node.setProperty(AppConstant.JCR_PROP_IMG_WIDTH, String.valueOf(width));
-			node.setProperty(AppConstant.JCR_PROP_IMG_HEIGHT, String.valueOf(height));
+			node.setProperty(JcrProp.IMG_WIDTH, String.valueOf(width));
+			node.setProperty(JcrProp.IMG_HEIGHT, String.valueOf(height));
 		}
 
-		node.setProperty(AppConstant.JCR_PROP_BIN_DATA, binary);
-		node.setProperty(AppConstant.JCR_PROP_BIN_MIME, mimeType);
-		node.setProperty(AppConstant.JCR_PROP_BIN_VER, version + 1);
+		node.setProperty(JcrProp.BIN_DATA, binary);
+		node.setProperty(JcrProp.BIN_MIME, mimeType);
+		node.setProperty(JcrProp.BIN_VER, version + 1);
 
 		/*
 		 * DO NOT DELETE (this code can be used to test uploading) String directory =
@@ -121,11 +121,11 @@ public class AttachmentService {
 	}
 
 	public void deleteAllBinaryProperties(Node node) {
-		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_IMG_WIDTH);
-		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_IMG_HEIGHT);
-		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_BIN_DATA);
-		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_BIN_MIME);
-		JcrUtil.safeDeleteProperty(node, AppConstant.JCR_PROP_BIN_VER);
+		JcrUtil.safeDeleteProperty(node, JcrProp.IMG_WIDTH);
+		JcrUtil.safeDeleteProperty(node, JcrProp.IMG_HEIGHT);
+		JcrUtil.safeDeleteProperty(node, JcrProp.BIN_DATA);
+		JcrUtil.safeDeleteProperty(node, JcrProp.BIN_MIME);
+		JcrUtil.safeDeleteProperty(node, JcrProp.BIN_VER);
 	}
 
 	/*
@@ -137,13 +137,13 @@ public class AttachmentService {
 			// System.out.println("Retrieving binary nodeId: " + nodeId);
 			Node node = JcrUtil.findNode(session, nodeId);
 
-			Property mimeTypeProp = node.getProperty(AppConstant.JCR_PROP_BIN_MIME);
+			Property mimeTypeProp = node.getProperty(JcrProp.BIN_MIME);
 			if (mimeTypeProp == null) {
 				throw new Exception("unable to find mimeType property");
 			}
 			// log.debug("Retrieving mime: " + mimeTypeProp.getValue().getString());
 
-			Property dataProp = node.getProperty(AppConstant.JCR_PROP_BIN_DATA);
+			Property dataProp = node.getProperty(JcrProp.BIN_DATA);
 			if (dataProp == null) {
 				throw new Exception("unable to find data property");
 			}

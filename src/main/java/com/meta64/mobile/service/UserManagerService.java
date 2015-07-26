@@ -11,8 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 
+import com.meta64.mobile.config.ConstantsProvider;
+import com.meta64.mobile.config.JcrName;
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.mail.JcrOutboxMgr;
 import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.ChangePasswordRequest;
@@ -29,7 +34,6 @@ import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.DateUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
-import com.meta64.mobile.util.ValContainer;
 import com.meta64.mobile.util.XString;
 
 /**
@@ -44,6 +48,13 @@ public class UserManagerService {
 	@Value("${anonUserLandingPageNode}")
 	private String anonUserLandingPageNode;
 
+	/*
+	 * We only use mailHost in this class to detect if email is configured and if not we fail all
+	 * signups. Currently this system does require email to be in the process for signing up users.
+	 */
+	@Value("${mail.host}")
+	public String mailHost;
+
 	@Autowired
 	private OakRepositoryBean oak;
 
@@ -51,8 +62,20 @@ public class UserManagerService {
 	private SessionContext sessionContext;
 
 	@Autowired
+	private JcrOutboxMgr outboxMgr;
+
+	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	@Autowired
+	private NodeSearchService nodeSearchService;
+
+	@Autowired
+	private ConstantsProvider constProvider;
+
+	/*
+	 * Logs in the user using credentials held in 'req'
+	 */
 	public void login(Session session, LoginRequest req, LoginResponse res) throws Exception {
 		String userName = req.getUserName();
 		String password = req.getPassword();
@@ -101,7 +124,58 @@ public class UserManagerService {
 		}
 	}
 
+	/*
+	 * Processes last set of signup. Validation of registration code. This means user has clicked
+	 * the link they were sent during the signup email verification, and they are sending in a
+	 * signupCode that will turn on their account and actually create their account.
+	 */
+	public void processSignupCode(final String signupCode, final Model model) throws Exception {
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				try {
+					Node node = nodeSearchService.findNodeByProperty(session, "/" + JcrName.SIGNUP, //
+							JcrProp.CODE, signupCode);
+					if (node != null) {
+						String userName = JcrUtil.getRequiredStringProp(node, JcrProp.USER);
+						String password = JcrUtil.getRequiredStringProp(node, JcrProp.PWD);
+						String email = JcrUtil.getRequiredStringProp(node, JcrProp.EMAIL);
+
+						if (UserManagerUtil.createUser(session, userName, password)) {
+							UserManagerUtil.createUserRootNode(session, userName);
+							Node prefsNode = getPrefsNodeForSessionUser(session, userName);
+							prefsNode.setProperty(JcrProp.EMAIL, email);
+
+							/*
+							 * allow JavaScript to detect all it needs to detect which is to display
+							 * a message to user saying the signup is complete.
+							 */
+							model.addAttribute("signupCode", "ok");
+
+							log.debug("Removing signup node.");
+							node.remove();
+							session.save();
+							log.debug("Successful signup complete.");
+						}
+					}
+				}
+				catch (Exception e) {
+					// need to message back to user signup failed.
+				}
+			}
+		});
+	}
+
+	/*
+	 * Processes a signup request from a user. The user doesn't immediately get an account, but an
+	 * email goes out to them that when they click on the link in the email the signupCode comes
+	 * back and actually creates their account at that time.
+	 */
 	public void signup(SignupRequest req, SignupResponse res) throws Exception {
+
+		if (XString.isEmpty(mailHost)) {
+			throw new Exception("Sorry, the host has not configured an email server, and so no signups are currently allowed.");
+		}
 
 		final String userName = req.getUserName();
 		if (userName.equalsIgnoreCase("admin") || userName.equalsIgnoreCase("administrator")) {
@@ -121,8 +195,7 @@ public class UserManagerService {
 		/* throw exceptions of the username or password are not valid */
 		XString.checkUserName(userName);
 		XString.checkPassword(password);
-
-		final ValContainer<Boolean> success = new ValContainer<Boolean>(false);
+		XString.checkEmail(email);
 
 		/* test cases will simply pass null, for captcha, and we let that pass */
 		if (captcha != null && !captcha.equals(sessionContext.getCaptcha())) {
@@ -130,26 +203,66 @@ public class UserManagerService {
 			throw new Exception("Wrong captcha text.");
 		}
 
+		initiateSignup(userName, password, email);
+
+		res.setMessage("success: " + String.valueOf(++sessionContext.counter));
+		res.setSuccess(true);
+	}
+
+	/*
+	 * Adds user to the JCR list of pending accounts and they will stay in pending status until
+	 * their signupCode has been used to validate their email address
+	 */
+	public void initiateSignup(String userName, String password, String email) throws Exception {
+
+		// TODO: remove hard coded domain from here and put in properties file
+		String signupCode = JcrUtil.getGUID();
+		String signupLink = constProvider.getHostAndPort() + "?signupCode=" + signupCode;
+		String content = "Confirmation for new meta64 account: " + userName + //
+				"<p>\nGo to this page to complete signup: <br>\n" + signupLink;
+
+		addPendingSignupNode(userName, password, email, signupCode);
+
+		outboxMgr.queueEmail(email, "Meta64 Account Signup Confirmation", content);
+	}
+
+	/*
+	 * Creates the node on the tree that holds the user info pending email validation.
+	 */
+	public void addPendingSignupNode(final String userName, final String password, final String email, final String signupCode) throws Exception {
+
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
-				if (UserManagerUtil.createUser(session, userName, password)) {
-					UserManagerUtil.createUserRootNode(session, userName);
-					success.setVal(true);
+
+				try {
+					Node checkNode = session.getNode("/" + JcrName.SIGNUP + "/" + userName);
+					throw new Exception("User name is already pending signup.");
 				}
+				catch (Exception e) {
+					// normal flow. Not an error here.
+				}
+
+				Node signupNode = session.getNode("/" + JcrName.SIGNUP);
+				if (signupNode == null) {
+					throw new Exception("Signup node not found.");
+				}
+
+				Node newNode = signupNode.addNode(userName, JcrConstants.NT_UNSTRUCTURED);
+				newNode.setProperty(JcrProp.USER, userName);
+				newNode.setProperty(JcrProp.PWD, password);
+				newNode.setProperty(JcrProp.EMAIL, email);
+				newNode.setProperty(JcrProp.CODE, signupCode);
+				JcrUtil.timestampNewNode(session, newNode);
+				session.save();
 			}
 		});
-
-		if (success.getVal()) {
-			res.setMessage("success: " + String.valueOf(++sessionContext.counter));
-			res.setSuccess(true);
-		}
 	}
 
 	/*
 	 * Get node that contains all preferences for this user, as properties on it.
 	 */
-	public Node getPrefsNodeForSessionUser(Session session, String userName) throws Exception {
+	public static Node getPrefsNodeForSessionUser(Session session, String userName) throws Exception {
 		return JcrUtil.ensureNodeExists(session, "/userPreferences/", userName, //
 				"User: " + userName);
 	}
@@ -228,8 +341,6 @@ public class UserManagerService {
 			}
 		});
 
-		// UserManagerUtil.changePassword(session, req.getNewPassword());
-		// session.save();
 		sessionContext.setPassword(req.getNewPassword());
 		res.setSuccess(true);
 	}

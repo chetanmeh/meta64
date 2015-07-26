@@ -43,15 +43,34 @@ public class NodeSearchService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	public Node findNodeByProperty(Session session, String parentPath, String propName, String propVal) throws Exception {
+		QueryManager qm = session.getWorkspace().getQueryManager();
+
+		StringBuilder queryStr = new StringBuilder();
+		queryStr.append("SELECT * from [nt:base] AS t WHERE ISDESCENDANTNODE([");
+		queryStr.append(parentPath);
+		// TODO: figure out how to do equals instead of contains here!
+		queryStr.append("]) AND contains(t." + propName + ", '");
+		queryStr.append(propVal);
+		queryStr.append("')");
+
+		// if (req.isModSortDesc()) {
+		// queryStr.append(" ORDER BY [jcr:lastModified] DESC");
+		// }
+
+		Query q = qm.createQuery(queryStr.toString(), Query.JCR_SQL2);
+		QueryResult r = q.execute();
+		NodeIterator nodes = r.getNodes();
+		Node ret = null;
+		if (nodes.hasNext()) {
+			ret = nodes.nextNode();
+		}
+		return ret;
+	}
+
 	/*
 	 * see also: http://docs.jboss.org/jbossdna/0.7/manuals/reference/html/jcr-query-and-search.html
 	 * https://wiki.magnolia-cms.com/display/WIKI/JCR+Query+Cheat+Sheet
-	 * 
-	 * Ordering example:
-	 * 
-	 * final String statement = String.format(
-	 * "SELECT * FROM [%s] WHERE ISDESCENDANTNODE('/%s') ORDER BY [jcr:content/jcr:lastModified]",
-	 * context.getMap().get(ScalabilityBlobSearchSuite.CTX_FILE_NODE_TYPE_PROP), path);
 	 */
 
 	// see DescendantSearchTest
