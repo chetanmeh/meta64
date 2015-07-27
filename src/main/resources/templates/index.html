@@ -59,11 +59,25 @@
 	<div id="mainPage" data-role="page">
 		<div id="mainPageHeader" data-role="header" data-position="fixed"
 			data-tap-toggle="false">
+
+			<div data-type="horizontal" data-role="controlgroup"
+				class="ui-btn-left">
+
+				<a onclick="meta64.popup('#popupMenuPg');" data-rel="popup"
+					id="menuButton"
+					class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-bars">Menu</a>
+
+				<a onclick="srch.searchPg();" 
+					id="mainMenuSearchButton"
+					class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-search">Search</a>
+
+				<a onclick="srch.timeline();"
+					id="mainMenuTimelineButton"
+					class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-clock">Timeline</a>
+			</div>
+
 			<h1 id="headerUserName" th:text="${brandingTitle}">Branding
 				Title</h1>
-			<a onclick="meta64.popup('#popupMenuPg');" data-rel="popup"
-				data-icon="bars" id="menuButton"
-				class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-bars">Menu</a>
 
 			<div data-type="horizontal" data-role="controlgroup"
 				class="ui-btn-right">

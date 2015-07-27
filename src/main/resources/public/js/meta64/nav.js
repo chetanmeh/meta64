@@ -99,6 +99,7 @@ var nav = function() {
 					meta64.updateNodeInfo(node);
 				}
 			}
+			meta64.refreshAllGuiEnablement();
 		},
 
 		openNode : function(uid) {

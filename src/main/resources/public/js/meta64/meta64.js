@@ -413,6 +413,8 @@ var meta64 = function() {
 			util.setEnablementByName("editMode", editMode);
 
 			util.setVisibility("#menuButton", !_.isAnonUser);
+			util.setVisibility("#mainMenuSearchButton", !_.isAnonUser && highlightNode != null);
+			util.setVisibility("#mainMenuTimelineButton", !_.isAnonUser && highlightNode != null);
 		},
 
 		/*

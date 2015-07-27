@@ -61,15 +61,15 @@ var popupMenuPg = function() {
 			_menuItem("Delete", "deleteSelNodesButton", "edit.deleteSelNodes();");// 
 			var editMenu = _makeTopLevelMenu("Edit", editMenuItems);
 
-			var searchMenuItems = //
-			_menuItem("Text Search", "searchPgButton", "srch.searchPg();") + // 
-			_menuItem("Timeline", "timelineButton", "srch.timeline();");// 
-			var searchMenu = _makeTopLevelMenu("Search", searchMenuItems);
+//			var searchMenuItems = //
+//			_menuItem("Text Search", "searchPgButton", "srch.searchPg();") + // 
+//			_menuItem("Timeline", "timelineButton", "srch.timeline();");// 
+//			var searchMenu = _makeTopLevelMenu("Search", searchMenuItems);
 			
 			var content = render.makeTag("div", {
 				"style" : "margin: 0; min-width: 300px; position: fixed; top: 2em; left: 2em;",
 				"data-role" : "collapsible-set"
-			}, myAccountMenu + editMenu + searchMenu);
+			}, myAccountMenu + editMenu /*+ searchMenu*/);
 
 			util.setHtmlEnhanced($("#popupMenuPg"), content);
 		},
@@ -95,8 +95,8 @@ var popupMenuPg = function() {
 			util.setEnablement($("#openExportPgButton"), meta64.isAdminUser, meta64.isAdminUser);
 			util.setEnablement($("#openImportPgButton"), meta64.isAdminUser, meta64.isAdminUser);
 			util.setEnablement($("#deleteSelNodesButton"), selNodeCount);
-			util.setEnablement($("#searchPgButton"), highlightNode != null);
-			util.setEnablement($("#timelineButton"), highlightNode != null);
+			//util.setEnablement($("#searchPgButton"), highlightNode != null);
+			//util.setEnablement($("#timelineButton"), highlightNode != null);
 		}
 	};
 
