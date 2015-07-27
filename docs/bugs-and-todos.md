@@ -3,6 +3,7 @@
 
 
 # TODO
+* need 'delete account' capability where user can leave meta64, and have all their data deleted from the server.
 * currently searching only searches the 'jcr:content' property, for faster performance than searching all properties, but more advanced and configurable search options can be added in the future.
 * search results that have no results should show a message instead of just blank page!
 * search results header bar can scroll off screen. make it fixed at top just like main page header.
@@ -28,7 +29,6 @@
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
 * Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
-* Email notification engine to support collaboration. Should send an email when someone creates a node under one of my nodes.
 * Need "Move to Top" and "Move to Bottom" in addition to "up"/"down"
 * More JUnit unit tests.
 

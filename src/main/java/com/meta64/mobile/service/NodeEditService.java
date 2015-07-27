@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.ConstantsProvider;
 import com.meta64.mobile.config.SessionContext;
+import com.meta64.mobile.mail.JcrOutboxMgr;
 import com.meta64.mobile.model.PropertyInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.CreateSubNodeRequest;
@@ -28,6 +30,7 @@ import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.MakeNodeReferencableResponse;
 import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
+import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.XString;
@@ -46,6 +49,15 @@ public class NodeEditService {
 	@Autowired
 	private SessionContext sessionContext;
 
+	@Autowired
+	private UserManagerService userManagerService;
+
+	@Autowired
+	private JcrOutboxMgr outboxMgr;
+	
+	@Autowired
+	private RunAsJcrAdmin adminRunner;
+	
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -140,7 +152,7 @@ public class NodeEditService {
 		String nodeId = req.getNodeId();
 
 		// log.debug("saveNode. nodeId=" + nodeId);
-		Node node = JcrUtil.findNode(session, nodeId);
+		final Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 
 		if (req.getProperties() != null) {
@@ -165,10 +177,7 @@ public class NodeEditService {
 			node.setProperty("jcr:lastModifiedBy", session.getUserID());
 
 			if (req.isSendNotification()) {
-				// TODO: lookup creator of parent node of node we just saved, and double check it's
-				// not
-				// this currenet user, and then send a notification to that email address that new
-				// content is created.
+				outboxMgr.sendNotificationForChildNodeCreate(node, sessionContext.getUserName());
 			}
 
 			session.save();

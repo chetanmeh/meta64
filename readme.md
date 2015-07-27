@@ -54,7 +54,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Node editing (plain text/markdown)
 * Orderable child nodes ("move up" and "move down" supported)
 * Creating Subnodes or Inline nodes
-* Full text search (by Lucene)
+* Full Text Search (by Lucene)
 * Timeline feature: Reverse Chronological list of any tree branch.
 * Deleting Nodes
 * Moving nodes to new locations (supports multi-select)
@@ -62,6 +62,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Sharing a node to a specific User
 * Removing individual Share privileges from nodes
 * Short URL GUID for any node, so it can be referenced by URL
+* Sends email notification when someone creates a new node under a node you own.
 * Uploading attachments (attached files) onto a node
 * Upload from local machine
 * Upload directly from any internet URL.

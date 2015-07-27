@@ -9,13 +9,18 @@ import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.ConstantsProvider;
 import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.service.NodeEditService;
+import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
@@ -24,27 +29,71 @@ import com.meta64.mobile.util.JcrUtil;
 @Scope("singleton")
 public class JcrOutboxMgr {
 
+	private static final Logger log = LoggerFactory.getLogger(JcrOutboxMgr.class);
+
 	@Autowired
 	private OakRepositoryBean oak;
 
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
-	
+
+	@Autowired
+	private ConstantsProvider constProvider;
+
+	/*
+	 * node=Node that was created. userName = username of person who just created node.
+	 */
+	public void sendNotificationForChildNodeCreate(final Node node, final String userName) throws Exception {
+		/*
+		 * put in a catch block, because nothing going wrong in here should be allowed to blow up
+		 * the save operation
+		 */
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				try {
+					Node parentNode = node.getParent();
+					if (parentNode != null) {
+						String parentCreator = JcrUtil.getRequiredStringProp(parentNode, "jcr:createdBy");
+						if (!parentCreator.equals(userName)) { // sessionContext.getUserName())) {
+							Node prefsNode = UserManagerService.getPrefsNodeForSessionUser(session, parentCreator);
+							String email = JcrUtil.getRequiredStringProp(prefsNode, JcrProp.EMAIL);
+							log.debug("TODO: send email to: " + email + " because his node was appended under.");
+							
+							String content = String.format("User '%s' has created a new subnode under one of your nodes.<br>\n\n"+//
+									"Here is a link to the new node: %s?id=%s", //
+									userName, constProvider.getHostAndPort(), node.getPath());
+							
+							queueMailUsingAdminSession(session, email, "Meta64 New Content Nofification", content);
+						}
+					}
+				}
+				catch (Exception e) {
+					log.debug("failed sending notification", e);
+				}
+			}
+		});
+	}
+
 	public void queueEmail(final String recipients, final String subject, final String content) throws Exception {
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
-				Node outboxNode = getSystemOutbox(session);
-
-				String name = JcrUtil.getGUID();
-				Node newNode = outboxNode.addNode(name, JcrConstants.NT_UNSTRUCTURED);
-				newNode.setProperty(JcrProp.EMAIL_CONTENT, content);
-				newNode.setProperty(JcrProp.EMAIL_SUBJECT, subject);
-				newNode.setProperty(JcrProp.EMAIL_RECIP, recipients);
-				JcrUtil.timestampNewNode(session, newNode);
-				session.save();
+				queueMailUsingAdminSession(session, recipients, subject, content);
 			}
 		});
+	}
+
+	public void queueMailUsingAdminSession(Session session, final String recipients, final String subject, final String content) throws Exception {
+		Node outboxNode = getSystemOutbox(session);
+
+		String name = JcrUtil.getGUID();
+		Node newNode = outboxNode.addNode(name, JcrConstants.NT_UNSTRUCTURED);
+		newNode.setProperty(JcrProp.EMAIL_CONTENT, content);
+		newNode.setProperty(JcrProp.EMAIL_SUBJECT, subject);
+		newNode.setProperty(JcrProp.EMAIL_RECIP, recipients);
+		JcrUtil.timestampNewNode(session, newNode);
+		session.save();
 	}
 
 	/*
