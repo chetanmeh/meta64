@@ -10,7 +10,7 @@ var user = function() {
 		$("#headerUserName").html(title);
 
 		var loginEnable = meta64.isAnonUser;
-		//console.log("loginEnable: "+loginEnable);
+		// console.log("loginEnable: "+loginEnable);
 		$("#openLoginPgButton").text(loginEnable ? "Login" : "Logout");
 	}
 
@@ -23,7 +23,7 @@ var user = function() {
 		meta64.userName = res.userName;
 		meta64.isAdminUser = res.userName === "admin";
 		meta64.isAnonUser = res.userName === "anonymous";
-		//console.log("***** isAnonUser = "+meta64.isAnonUser);
+		// console.log("***** isAnonUser = "+meta64.isAnonUser);
 		meta64.anonUserLandingPageNode = res.anonUserLandingPageNode;
 		meta64.editModeOption = res.userPreferences.advancedMode ? meta64.MODE_ADVANCED : meta64.MODE_SIMPLE;
 	}
@@ -108,12 +108,12 @@ var user = function() {
 		},
 
 		/*
-		 * This method is ugly. It is the button that can be login *or* logout. 
+		 * This method is ugly. It is the button that can be login *or* logout.
 		 */
 		openLoginPg : function() {
-			
+
 			var loginEnable = meta64.isAnonUser;
-			
+
 			/* Open login dialog */
 			if (loginEnable) {
 				_.populateLoginPgFromCookies();
@@ -190,9 +190,9 @@ var user = function() {
 
 			// console.log("refreshLogin with name: " + callUsr);
 
-			//var hrs = -(new Date().getTimezoneOffset() / 60);
-			//alert("TimeZoneOffset: "+hrs);
-			
+			// var hrs = -(new Date().getTimezoneOffset() / 60);
+			// alert("TimeZoneOffset: "+hrs);
+
 			util.json("login", {
 				"userName" : callUsr,
 				"password" : callPwd,
@@ -205,7 +205,7 @@ var user = function() {
 				"usingCookies" : usingCookies
 			});
 		},
-		
+
 		login : function() {
 
 			var usr = $.trim($("#userName").val());

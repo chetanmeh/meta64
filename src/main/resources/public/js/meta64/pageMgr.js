@@ -53,7 +53,8 @@ var pageMgr = function() {
 				build : prefsPg.build
 			}, {
 				name : "#changePasswordPg",
-				build : changePasswordPg.build
+				build : changePasswordPg.build,
+				init : changePasswordPg.init
 			}, {
 				name : "#exportPg",
 				build : exportPg.build
@@ -62,7 +63,8 @@ var pageMgr = function() {
 				build : importPg.build
 			}, {
 				name : "#searchPg",
-				build : searchPg.build
+				build : searchPg.build,
+				init : searchPg.init
 			}, {
 				name : "#uploadPg",
 				build : uploadPg.build,

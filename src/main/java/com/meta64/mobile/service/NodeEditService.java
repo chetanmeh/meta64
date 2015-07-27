@@ -49,11 +49,11 @@ public class NodeEditService {
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
-		
-//		//Wrong! Only editing actual content requires a "createdBy" check
-//		if (!JcrUtil.isUserAccountRoot(sessionContext, node)) {
-//			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
-//		}
+
+		// //Wrong! Only editing actual content requires a "createdBy" check
+		// if (!JcrUtil.isUserAccountRoot(sessionContext, node)) {
+		// JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		// }
 
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
@@ -64,6 +64,21 @@ public class NodeEditService {
 		session.save();
 
 		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
+
+		// /*
+		// * If we are creating a node under a node that we don't own, send an email notification to
+		// * the owner of that node.
+		// * ACTUALLY the client can determine this and also not trigger an email until the
+		// node SAVE is actually done. Right now there is only empty content!
+		// */
+		// try {
+		// String parentNodeCreator = JcrUtil.getRequiredStringProp(node, "jcr:createdBy");
+		// if (sessionContext.getUserName().equals();
+		// }
+		// catch (Exception e) {
+		//
+		// }
+
 		res.setSuccess(true);
 	}
 
@@ -73,10 +88,10 @@ public class NodeEditService {
 		log.debug("Inserting under parent: " + parentNodeId);
 		Node parentNode = JcrUtil.findNode(session, parentNodeId);
 
-		//Wrong! Only editing actual content requires a "createdBy" check
-		//if (!JcrUtil.isUserAccountRoot(sessionContext, parentNode)) {
-		//	JcrUtil.checkNodeCreatedBy(parentNode, session.getUserID());
-		//}
+		// Wrong! Only editing actual content requires a "createdBy" check
+		// if (!JcrUtil.isUserAccountRoot(sessionContext, parentNode)) {
+		// JcrUtil.checkNodeCreatedBy(parentNode, session.getUserID());
+		// }
 
 		String name = XString.isEmpty(req.getNewNodeName()) ? JcrUtil.getGUID() : req.getNewNodeName();
 
@@ -123,6 +138,7 @@ public class NodeEditService {
 
 	public void saveNode(Session session, SaveNodeRequest req, SaveNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
+
 		// log.debug("saveNode. nodeId=" + nodeId);
 		Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
@@ -147,6 +163,13 @@ public class NodeEditService {
 			Calendar lastModified = Calendar.getInstance();
 			node.setProperty("jcr:lastModified", lastModified);
 			node.setProperty("jcr:lastModifiedBy", session.getUserID());
+
+			if (req.isSendNotification()) {
+				// TODO: lookup creator of parent node of node we just saved, and double check it's
+				// not
+				// this currenet user, and then send a notification to that email address that new
+				// content is created.
+			}
 
 			session.save();
 		}

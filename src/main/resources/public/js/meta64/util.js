@@ -45,7 +45,7 @@ var util = function() {
 	var _ = {
 
 		daylightSavingsTime : (new Date().dst()) ? true : false,
- 			
+
 		/*
 		 * We use the convention that all calls to server are POSTs with a
 		 * 'postName' (like an RPC method name)
@@ -83,6 +83,13 @@ var util = function() {
 					// //JSON.parse(xhr.responseText));
 				}
 			});
+		},
+
+		/* set focus to element by id (id must start with #) */
+		delayedFocus : function(id) {
+			setTimeout(function() {
+				$(id).focus();
+			}, 500);
 		},
 
 		/*
@@ -206,15 +213,15 @@ var util = function() {
 
 		setEnablement : function(elm, enable, visibility) {
 			/*
-			 * optional parameter, undefined means it wasn't passed which
-			 * means 'true' in this case
+			 * optional parameter, undefined means it wasn't passed which means
+			 * 'true' in this case
 			 */
 			if (typeof (visibility) === 'undefined' || visibility) {
 				_.setVisibility(elm, true)
 			} else {
 				_.setVisibility(elm, false);
 			}
-			
+
 			if (enable)
 				elm.removeClass('ui-state-disabled');
 			if (!enable)
@@ -262,6 +269,19 @@ var util = function() {
 			return true;
 		},
 
+		bindEnterKey : function(id, func) {
+			_.bindKey(id, func, 13);
+		},
+		
+		bindKey : function(id, func, keyCode) {
+			$(id).keypress(function(e) {
+				if (e.which == keyCode) { //13==enter key code
+					func();
+					return false;
+				}
+			});
+		},
+		
 		anyEmpty : function() {
 			for (var i = 0; i < arguments.length; i++) {
 				var val = arguments[i];

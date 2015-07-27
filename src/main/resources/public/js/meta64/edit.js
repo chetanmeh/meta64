@@ -6,6 +6,7 @@ var edit = function() {
 	 * node (NodeInfo.java) that is being created under when new node is created
 	 */
 	var _parentOfNewNode;
+	var _sendNotificationPendingSave;
 
 	var _saveNodeResponse = function(res) {
 		util.checkSuccess("Save node", res);
@@ -214,7 +215,13 @@ var edit = function() {
 		saveNewNode : function() {
 			var newNodeName = util.getRequiredElement("#newNodeNameId").val();
 
-			console.log("Sending up first node name: " + newNodeName);
+			/* If we didn't create the node we are inserting under, and neither did "admin", then we 
+			 * need to send notification email upon saving this new node.
+			 */
+			if (meta64.userName != _parentOfNewNode.createdBy && //
+					_parentOfNewNode.createdBy != "admin") {
+				_sendNotificationPendingSave = true;
+			}
 
 			meta64.treeDirty = true;
 			if (_.nodeInsertTarget) {
@@ -264,10 +271,12 @@ var edit = function() {
 			if (changeCount > 0) {
 				var postData = {
 					nodeId : _.editNode.id,
-					properties : propertiesList
+					properties : propertiesList,
+					sendNotification : _sendNotificationPendingSave
 				};
 				// alert(JSON.stringify(postData));
 				util.json("saveNode", postData, _saveNodeResponse);
+				_sendNotificationPendingSave = false;
 			} else {
 				alert("You didn't change any information!");
 			}
@@ -362,7 +371,7 @@ var edit = function() {
 			}
 			_.editingUnsavedNode = false;
 			_.editNode = node;
-			//_.populateEditNodePg();
+			// _.populateEditNodePg();
 			meta64.changePage("#editNodePg");
 		},
 
@@ -602,22 +611,23 @@ var edit = function() {
 		},
 
 		finishMovingSelNodes : function() {
-			confirmPg.areYouSure("Confirm Move", "Move " + _.nodesToMove.length + " node(s) to selected location ?", "Yes, move.", function() {
+			confirmPg.areYouSure("Confirm Move", "Move " + _.nodesToMove.length + " node(s) to selected location ?", "Yes, move.",
+					function() {
 
-				var highlightNode = meta64.getHighlightedNode();
+						var highlightNode = meta64.getHighlightedNode();
 
-				/*
-				 * For now, we will just cram the nodes onto the end of the
-				 * children of the currently selected page. Later on we can get
-				 * more specific about allowing precise destination location for
-				 * moved nodes.
-				 */
-				util.json("moveNodes", {
-					"targetNodeId" : highlightNode.id,
-					"targetChildId" : highlightNode != null ? highlightNode.id : null,
-					"nodeIds" : _.nodesToMove
-				}, _moveNodesResponse);
-			});
+						/*
+						 * For now, we will just cram the nodes onto the end of
+						 * the children of the currently selected page. Later on
+						 * we can get more specific about allowing precise
+						 * destination location for moved nodes.
+						 */
+						util.json("moveNodes", {
+							"targetNodeId" : highlightNode.id,
+							"targetChildId" : highlightNode != null ? highlightNode.id : null,
+							"nodeIds" : _.nodesToMove
+						}, _moveNodesResponse);
+					});
 		},
 
 		insertBookWarAndPeace : function() {
@@ -643,4 +653,4 @@ var edit = function() {
 	return _;
 }();
 
-//# sourceURL=edit.js
+// # sourceURL=edit.js

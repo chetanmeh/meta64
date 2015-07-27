@@ -91,7 +91,10 @@ public class NodeSearchService {
 		queryStr.append("])");
 
 		if (req.getSearchText().length() > 0) {
-			queryStr.append(" AND contains(t.*, '");
+			/*
+			 * To search ALL properties you can put 't.*' instead of 't.[jcr:content]' below.
+			 */
+			queryStr.append(" AND contains(t.[jcr:content], '");
 			queryStr.append(escapeQueryString(req.getSearchText()));
 			queryStr.append("')");
 		}

@@ -39,6 +39,10 @@ var changePasswordPg = function() {
 			util.setHtmlEnhanced($("#changePasswordPg"), content);
 
 			$("#changePasswordActionButton").on("click", user.changePassword);
+		},
+		
+		init : function() {
+			util.delayedFocus("#changePassword1");
 		}
 	};
 

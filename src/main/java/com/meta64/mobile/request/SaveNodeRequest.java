@@ -12,6 +12,8 @@ public class SaveNodeRequest {
 	 * the ones we will persist
 	 */
 	private List<PropertyInfo> properties;
+	
+	private boolean sendNotification;
 
 	public String getNodeId() {
 		return nodeId;
@@ -27,5 +29,13 @@ public class SaveNodeRequest {
 
 	public void setProperties(List<PropertyInfo> properties) {
 		this.properties = properties;
+	}
+
+	public boolean isSendNotification() {
+		return sendNotification;
+	}
+
+	public void setSendNotification(boolean sendNotification) {
+		this.sendNotification = sendNotification;
 	}
 }

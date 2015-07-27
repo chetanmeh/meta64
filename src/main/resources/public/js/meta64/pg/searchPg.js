@@ -38,6 +38,12 @@ var searchPg = function() {
 			util.setHtmlEnhanced($("#searchPg"), content);
 
 			$("#searchNodesButton").on("click", srch.searchNodes);
+			
+			util.bindEnterKey("#searchText", srch.searchNodes)
+		},
+		
+		init : function() {
+			util.delayedFocus("#searchText");
 		}
 	};
 

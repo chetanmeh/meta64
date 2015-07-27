@@ -26,8 +26,13 @@ public class JcrProp {
 
 	public static final String BIN_VER = "binVer";
 
-	/* I want to use jcr namespace for these since they exist and are known */
-	public static final String BIN_DATA = "jcr:data";
+	/* I want to use jcr namespace for these since they exist and are known 
+	 * 
+	 * I stopped using jcr:data, when I read docs online saying JCR does try to index content in binaries, and 
+	 * until I can be sure it's not trying to index images I will just turn off jcr:data, and use a proprietary
+	 * property not recognized by jcr
+	 * */
+	public static final String BIN_DATA = "jcrData";
 	public static final String BIN_MIME = "jcr:mimeType";
 
 	public static final String IMG_WIDTH = "imgWidth";

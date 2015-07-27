@@ -29,7 +29,7 @@ public class JcrOutboxMgr {
 
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
-
+	
 	public void queueEmail(final String recipients, final String subject, final String content) throws Exception {
 		adminRunner.run(new JcrRunnable() {
 			@Override

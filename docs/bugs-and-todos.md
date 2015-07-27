@@ -3,10 +3,11 @@
 
 
 # TODO
+* currently searching only searches the 'jcr:content' property, for faster performance than searching all properties, but more advanced and configurable search options can be added in the future.
 * search results that have no results should show a message instead of just blank page!
 * search results header bar can scroll off screen. make it fixed at top just like main page header.
+  (attempting this caused problems, so the code is backed out, for now, by being commented out)
 * after changing edit mode (simple/advanced) need to refresh entire page from server
-* on search results screen need link for "home" 
 * on search results screen, need a button to directly edit a node from there.
 * Search and Timeline features are so important they deserve buttons at top left just beside the menu button.
 * Edit button is not showing on page parent node (by design) but I need to show it I think.
@@ -27,7 +28,7 @@
 * Embed legacy meta64.com news engine, as some sort of plugin, to populate news information.
 * Timelining of Nodes: Defined as reverse-chronological view of all nodes recursively under a specific node.
 * Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a larger screen device
-* Email notification engine to support collaboration
+* Email notification engine to support collaboration. Should send an email when someone creates a node under one of my nodes.
 * Need "Move to Top" and "Move to Bottom" in addition to "up"/"down"
 * More JUnit unit tests.
 

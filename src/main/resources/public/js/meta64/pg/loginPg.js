@@ -39,9 +39,12 @@ var loginPg = function() {
 			util.setHtmlEnhanced($("#loginPg"), content);
 
 			$("#loginButton").on("click", user.login);
+			util.bindEnterKey("#userName", user.login);
+			util.bindEnterKey("#password", user.login);
 		},
 
 		init : function() {
+			util.delayedFocus("#userName");
 		}
 	};
 

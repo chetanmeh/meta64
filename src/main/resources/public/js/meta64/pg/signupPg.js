@@ -7,9 +7,9 @@ var signupPg = function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header"//,
-				//"data-position" : "fixed",
-				//"data-tap-toggle" : "false"
+				"data-role" : "header"// ,
+			// "data-position" : "fixed",
+			// "data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Signup</h2>");
 
@@ -58,9 +58,10 @@ var signupPg = function() {
 			$("#tryAnotherCaptchaButton").on("click", user.tryAnotherCaptcha);
 			$("#signupButton").on("click", user.signup);
 		},
-	
+
 		init : function() {
 			user.pageInitSignupPg();
+			util.delayedFocus("#signupUserName");
 		}
 	};
 

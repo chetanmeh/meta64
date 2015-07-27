@@ -160,9 +160,8 @@ public class AppController {
 
 		brandingUtil.addBrandingAttributes(model);
 
-		// TODO, so which should I use / or .. ? Both work. (need to be consistent here)
 		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
-		springMvcUtil.addCssFileNameProp(model, "meta64Css", "../css/meta64");
+		springMvcUtil.addCssFileNameProp(model, "meta64Css", "/css/meta64");
 		springMvcUtil.addThirdPartyLibs(model);
 
 		sessionContext.setUrlId(id);
