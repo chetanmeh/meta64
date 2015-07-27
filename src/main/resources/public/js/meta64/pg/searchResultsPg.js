@@ -7,7 +7,9 @@ var searchResultsPg = function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header" //
+				"data-role" : "header"//,
+				//"data-position" : "fixed",
+				//"data-tap-toggle" : "false"
 			}, //
 			render.makeButton("Back to Content", "cancelSearchResultsButton", "b") + //
 			"<h2>" + BRANDING_TITLE + " - Search Results</h2>");

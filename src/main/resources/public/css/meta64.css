@@ -8,6 +8,10 @@ tr td div p {
 	padding: 1px 1px 1px 1px;
 }
 
+.compact-field-contain {
+	margin-bottom: 0;
+}
+
 .ui-field-contain > label ~ [class*="ui-"],
 .ui-field-contain .ui-controlgroup-controls {
 	margin: 0;

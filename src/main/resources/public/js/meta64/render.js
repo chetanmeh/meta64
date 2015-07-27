@@ -190,7 +190,7 @@ var render = function() {
 				selected = true;
 			}
 
-			var buttonBarHtml = _.makeButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed);
+			var buttonBarHtml = _.makeRowButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed);
 
 			var cssId = uid + "_row";
 			// console.log("Rendering Node Row[" + index + "] with id: " +cssId)
@@ -212,7 +212,7 @@ var render = function() {
 		 * operate on selected nodes when this happens (like rows > 100) rather
 		 * than having buttons on all rows.
 		 */
-		makeButtonBarHtml : function(uid, canMoveUp, canMoveDown, editingAllowed) {
+		makeRowButtonBarHtml : function(uid, canMoveUp, canMoveDown, editingAllowed) {
 
 			/* TODO: make this a user option, each user can choose button sizes */
 			var mini = "true";
@@ -300,13 +300,13 @@ var render = function() {
 					+ moveNodeDownButton;
 
 			if (allButtons.length > 0) {
-				return _.makeHorizontalFieldSet(allButtons);
+				return _.makeHorizontalFieldSet(allButtons, "compact-field-contain");
 			} else {
 				return "";
 			}
 		},
 
-		makeHorizontalFieldSet : function(content) {
+		makeHorizontalFieldSet : function(content, extraClasses) {
 			/* Now build entire control bar */
 			var buttonBar = _.makeTag("fieldset", //
 			{
@@ -315,7 +315,7 @@ var render = function() {
 			}, content);
 
 			return _.makeTag("div", {
-				"class" : "ui-field-contain"
+				"class" : "ui-field-contain" + (extraClasses ? (" "+extraClasses) : "")
 			}, buttonBar);
 		},
 

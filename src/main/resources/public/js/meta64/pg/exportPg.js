@@ -7,7 +7,9 @@ var exportPg = function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header" //
+				"data-role" : "header"//,
+				//"data-position" : "fixed",
+				//"data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Export to XML</h2>");
 

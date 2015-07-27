@@ -7,7 +7,9 @@ var shareToPersonPg = function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header" //
+				"data-role" : "header"//,
+				//"data-position" : "fixed",
+				//"data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Share Node to Person</h2>");
 

@@ -114,5 +114,3 @@ Meta64 is currently owned and maintained by Clay Ferguson. I am a 47 yr old Java
 **GitHub:** https://github.com/Clay-Ferguson
 
 **email:** wclayf@gmail.com
-
-**twitter:** @ClayFerguson

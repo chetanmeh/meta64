@@ -7,7 +7,9 @@ var sharingPg = function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header" //
+				"data-role" : "header"//,
+				//"data-position" : "fixed"
+				//"data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Node Sharing</h2>");
 
