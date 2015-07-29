@@ -13,6 +13,7 @@ import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.RefInfo;
 
@@ -36,6 +37,13 @@ public class JcrUtil {
 		nonSavableProperties.add("jcr:createdBy");
 		nonSavableProperties.add("jcr:lastModified");
 		nonSavableProperties.add("jcr:lastModifiedBy");
+		
+		//HOW WAS THIS WORKING without jcr:data. Never had "jcr:data" here??? evern before converting to jcrData?
+		nonSavableProperties.add(JcrProp.BIN_DATA);
+		nonSavableProperties.add(JcrProp.BIN_VER);
+		nonSavableProperties.add(JcrProp.BIN_MIME);
+		nonSavableProperties.add(JcrProp.IMG_HEIGHT);
+		nonSavableProperties.add(JcrProp.IMG_WIDTH);
 	}
 
 	public static void checkNodeCreatedBy(Node node, String userName) throws Exception {

@@ -31,6 +31,10 @@ tr td div p {
 	margin-top: 2px;
 }
 
+.path-display {
+	margin-bottom: 4px;
+}
+
 .captcha-image {
 	text-align:center;
 }

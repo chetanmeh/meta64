@@ -60,18 +60,19 @@ var render = function() {
 				// node.path.replaceAll("/root", "");
 				var path = node.path;
 
-				/* tail end of path is the name, so we can strip that off */
-				// path = path.replace(node.name, "");
-				headerText += "Path: " + _.formatPath(path);
-
 				headerText += "<div>";
 
+				/* tail end of path is the name, so we can strip that off */
+				// path = path.replace(node.name, "");
+				headerText += "<span class='path-display'>Path: " + _.formatPath(path)+"</span>";
+				
 				if (node.createdBy) {
 					var clazz = (node.createdBy === meta64.userName) ? "created-by-me" : "created-by-other";
 					headerText += "<span class='" + clazz + "'>Created By: " + node.createdBy + "</span>";
 				}
 
-				headerText += "<span id='ownerDisplay" + node.uid + "'></span></div>";
+				headerText += "<span id='ownerDisplay" + node.uid + "'></span>";
+				headerText += "</div>";
 			}
 
 			if (showIdentifier && meta64.editMode) {

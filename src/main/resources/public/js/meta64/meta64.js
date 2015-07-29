@@ -117,11 +117,12 @@ var meta64 = function() {
 			"imgWidth" : true,
 			"imgHeight" : true,
 			"binVer" : true,
+			"jcrData" : true,
 			"jcr:mimeType" : true
 		},
 
 		binaryPropertyList : {
-			"jcr:data" : true
+			"jcrData" : true
 		},
 
 		/*
