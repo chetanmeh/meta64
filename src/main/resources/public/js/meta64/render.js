@@ -60,12 +60,11 @@ var render = function() {
 				// node.path.replaceAll("/root", "");
 				var path = node.path;
 
-				headerText += "<div>";
-
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
-				headerText += "<span class='path-display'>Path: " + _.formatPath(path)+"</span>";
+				headerText += "<div class='path-display'>Path: " + _.formatPath(path)+"</div>";
 				
+				headerText += "<div>";
 				if (node.createdBy) {
 					var clazz = (node.createdBy === meta64.userName) ? "created-by-me" : "created-by-other";
 					headerText += "<span class='" + clazz + "'>Created By: " + node.createdBy + "</span>";
