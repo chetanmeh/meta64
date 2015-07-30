@@ -95,6 +95,9 @@ import com.meta64.mobile.util.ThreadLocals;
  * regarding how the OAK transations are managed and how logging in is done.
  */
 @Controller
+
+//TODO: I have this session scope because I needed to use 'sessionContext' in here, but I need to move 
+//sessionContext back out of here, and change this back to singleton scope.
 @Scope("session")
 public class AppController {
 	private static final Logger log = LoggerFactory.getLogger(AppController.class);

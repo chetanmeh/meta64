@@ -54,7 +54,7 @@ var render = function() {
 			if (showPath && meta64.editMode) {
 				/*
 				 * todo: come up with a solid plan for wether to show jcr:root
-				 * to ende users or not
+				 * to end users or not
 				 */
 				// var path = meta64.isAdminUser ? node.path :
 				// node.path.replaceAll("/root", "");
@@ -71,6 +71,9 @@ var render = function() {
 				}
 
 				headerText += "<span id='ownerDisplay" + node.uid + "'></span>";
+				if (node.lastModified) {
+					headerText += "  Modified: " + node.lastModified;
+				}
 				headerText += "</div>";
 			}
 

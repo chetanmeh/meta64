@@ -42,6 +42,13 @@ var util = function() {
 		}
 	}
 
+	/*
+	 * We use this variable to determine if we are waiting for an ajax call, but
+	 * the server also enforces that each session is only allowed one concurrent
+	 * call and simultaneous calls would just "queue up".
+	 */
+	var _ajaxWaiting = false;
+
 	var _ = {
 
 		daylightSavingsTime : (new Date().dst()) ? true : false,
@@ -59,6 +66,7 @@ var util = function() {
 				console.log("JSON-POST: " + JSON.stringify(postData));
 			}
 
+			_ajaxWaiting = true;
 			$.ajax({
 				url : postTargetUrl + postName,
 				contentType : "application/json",
@@ -67,6 +75,7 @@ var util = function() {
 				cache : false,
 				data : JSON.stringify(postData),
 				success : function(jqXHR, textStatus) {
+					_ajaxWaiting = false;
 					if (logAjax) {
 						console.log("JSON-RESULT: " + postName + " -> " + textStatus + //
 						"\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
@@ -79,10 +88,23 @@ var util = function() {
 					}
 				},
 				error : function(xhr, status, error) {
+					_ajaxWaiting = false;
 					alert("Server request failed."); // xhr.responseText);
 					// //JSON.parse(xhr.responseText));
 				}
 			});
+		},
+
+		ajaxReady : function(requestName) {
+			if (_ajaxWaiting) {
+				console.log("Ignoring requests: "+requestName+". Ajax currently in progress.");
+				return false;
+			}
+			return true;
+		},
+		
+		isAjaxWaiting : function() {
+			return _ajaxWaiting;
 		},
 
 		/* set focus to element by id (id must start with #) */
@@ -272,16 +294,16 @@ var util = function() {
 		bindEnterKey : function(id, func) {
 			_.bindKey(id, func, 13);
 		},
-		
+
 		bindKey : function(id, func, keyCode) {
 			$(id).keypress(function(e) {
-				if (e.which == keyCode) { //13==enter key code
+				if (e.which == keyCode) { // 13==enter key code
 					func();
 					return false;
 				}
 			});
 		},
-		
+
 		anyEmpty : function() {
 			for (var i = 0; i < arguments.length; i++) {
 				var val = arguments[i];

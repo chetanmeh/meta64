@@ -58,6 +58,10 @@ var srch = function() {
 		},
 
 		searchNodes : function() {
+			if (!util.ajaxReady("searchNodes")) {
+				return;
+			}
+			
 			var node = meta64.getHighlightedNode();
 			if (!node) {
 				alert("No node is selected to search under.");

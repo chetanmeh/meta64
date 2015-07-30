@@ -3,6 +3,7 @@ package com.meta64.mobile.config;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PreDestroy;
 
@@ -21,6 +22,8 @@ import com.meta64.mobile.util.DateUtil;
 @Component
 @Scope("session")
 public class SessionContext {
+	private ReentrantLock lock = new ReentrantLock();
+	
 	/* Identification of user's account root node */
 	private RefInfo rootRefInfo;
 	
@@ -54,7 +57,7 @@ public class SessionContext {
 	public boolean isAdmin() {
 		return "admin".equalsIgnoreCase(userName);
 	}
-
+	
 	public String formatTime(Date date) {
 
 		/* If we have a short timezone abbreviation display timezone with it */
@@ -133,5 +136,13 @@ public class SessionContext {
 
 	public void setRootRefInfo(RefInfo rootRefInfo) {
 		this.rootRefInfo = rootRefInfo;
+	}
+
+	public ReentrantLock getLock() {
+		return lock;
+	}
+
+	public void setLock(ReentrantLock lock) {
+		this.lock = lock;
 	}
 }

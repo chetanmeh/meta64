@@ -44,8 +44,12 @@ public class OakSessionAspect {
 
 		Object ret = null;
 		Session session = null;
+		SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
 		try {
-			session = loginFromJoinPoint(joinPoint);
+			if (sessionContext != null) {
+				sessionContext.getLock().lock();
+			}
+			session = loginFromJoinPoint(joinPoint, sessionContext);
 
 			ThreadLocals.setJcrSession(session);
 			ret = joinPoint.proceed();
@@ -85,16 +89,20 @@ public class OakSessionAspect {
 			/* cleanup this thread, servers reuse threads */
 			ThreadLocals.setJcrSession(null);
 			ThreadLocals.setResponse(null);
+			
+			if (sessionContext != null) {
+				sessionContext.getLock().unlock();
+			}
 		}
 		return ret;
 	}
 
 	/* Creates a logged in session for any method call for this join point */
-	private Session loginFromJoinPoint(final ProceedingJoinPoint joinPoint) throws Exception {
+	private Session loginFromJoinPoint(final ProceedingJoinPoint joinPoint, SessionContext sessionContext) throws Exception {
 		Object[] args = joinPoint.getArgs();
 		String userName = "anonymous";
 		String password = "anonymous";
-		boolean usingCookies = false;
+		//boolean usingCookies = false;
 
 		Object req = (args != null && args.length > 0) ? args[0] : null;
 
@@ -107,10 +115,10 @@ public class OakSessionAspect {
 			LoginRequest loginRequest = (LoginRequest) args[0];
 			userName = loginRequest.getUserName();
 			password = loginRequest.getPassword();
-			usingCookies = loginRequest.isUsingCookies();
+			//usingCookies = loginRequest.isUsingCookies();
 
 			if (userName.equals("{session}")) {
-				SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
+				//SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
 				userName = sessionContext.getUserName();
 				password = sessionContext.getPassword();
 			}
@@ -125,7 +133,7 @@ public class OakSessionAspect {
 			return null;
 		}
 		else {
-			SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
+			//SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
 
 			userName = sessionContext.getUserName();
 			password = sessionContext.getPassword();
