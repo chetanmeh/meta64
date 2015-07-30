@@ -195,7 +195,7 @@ public class Convert {
 				createdBy.setVal(p.getValue().getString());
 			}
 
-			if (lastModified != null  && "jcr:lastModified".equals(p.getName())) {
+			if (lastModified != null && "jcr:lastModified".equals(p.getName())) {
 				String lastModifiedVal = formatValue(sessionContext, p.getValue());
 				lastModified.setVal(lastModifiedVal);
 			}

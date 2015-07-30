@@ -19,7 +19,6 @@ import com.meta64.mobile.config.ConstantsProvider;
 import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.repo.OakRepositoryBean;
-import com.meta64.mobile.service.NodeEditService;
 import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.JcrRunnable;
@@ -59,11 +58,11 @@ public class JcrOutboxMgr {
 							Node prefsNode = UserManagerService.getPrefsNodeForSessionUser(session, parentCreator);
 							String email = JcrUtil.getRequiredStringProp(prefsNode, JcrProp.EMAIL);
 							log.debug("TODO: send email to: " + email + " because his node was appended under.");
-							
-							String content = String.format("User '%s' has created a new subnode under one of your nodes.<br>\n\n"+//
+
+							String content = String.format("User '%s' has created a new subnode under one of your nodes.<br>\n\n" + //
 									"Here is a link to the new node: %s?id=%s", //
 									userName, constProvider.getHostAndPort(), node.getPath());
-							
+
 							queueMailUsingAdminSession(session, email, "Meta64 New Content Nofification", content);
 						}
 					}

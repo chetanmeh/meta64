@@ -12,7 +12,7 @@ public class SaveNodeRequest {
 	 * the ones we will persist
 	 */
 	private List<PropertyInfo> properties;
-	
+
 	private boolean sendNotification;
 
 	public String getNodeId() {

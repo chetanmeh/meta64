@@ -9,6 +9,7 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.model.RefInfo;
@@ -20,13 +21,14 @@ import com.meta64.mobile.util.DateUtil;
  * Basic session state storage is all collected here.
  */
 @Component
-@Scope("session")
+// @Scope("session")
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SessionContext {
 	private ReentrantLock lock = new ReentrantLock();
-	
+
 	/* Identification of user's account root node */
 	private RefInfo rootRefInfo;
-	
+
 	private String userName;
 	private String password;
 	private String captcha;
@@ -57,7 +59,7 @@ public class SessionContext {
 	public boolean isAdmin() {
 		return "admin".equalsIgnoreCase(userName);
 	}
-	
+
 	public String formatTime(Date date) {
 
 		/* If we have a short timezone abbreviation display timezone with it */

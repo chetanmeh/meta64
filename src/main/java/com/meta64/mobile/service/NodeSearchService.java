@@ -30,7 +30,7 @@ import com.meta64.mobile.util.JcrUtil;
  * first 100 results and returns.
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class NodeSearchService {
 	private static final Logger log = LoggerFactory.getLogger(NodeSearchService.class);
 
@@ -74,11 +74,8 @@ public class NodeSearchService {
 	 */
 
 	// see DescendantSearchTest
-	/*
-	 * TODO: need to escape the search text, and protect against any type of SQL-injection attack.
-	 */
 	public void search(Session session, NodeSearchRequest req, NodeSearchResponse res) throws Exception {
-		
+
 		int MAX_NODES = 100;
 		Node searchRoot = JcrUtil.findNode(session, req.getNodeId());
 

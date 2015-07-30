@@ -45,7 +45,7 @@ import com.meta64.mobile.util.JcrUtil;
  * 
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class ImportExportService {
 	private static final Logger log = LoggerFactory.getLogger(ImportExportService.class);
 

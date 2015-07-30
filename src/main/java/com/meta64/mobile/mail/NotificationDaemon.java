@@ -43,7 +43,7 @@ public class NotificationDaemon {
 
 	@Value("${mail.host}")
 	public String mailHost;
-	
+
 	private int runCounter = 0;
 
 	/*
@@ -56,12 +56,12 @@ public class NotificationDaemon {
 	 */
 	@Scheduled(fixedDelay = 60 * 1000)
 	public void run() {
-	
+
 		/* spring always calls immediately upon startup and we will ignore the first call */
 		if (runCounter++ == 0) {
 			return;
 		}
-		
+
 		/* fail fast if no mail host is configured. */
 		if (XString.isEmpty(mailHost)) {
 			if (runCounter < 3) {

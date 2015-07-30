@@ -43,7 +43,7 @@ import com.meta64.mobile.util.LimitedInputStream;
  * Service for editing node attachments
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class AttachmentService {
 	private static final Logger log = LoggerFactory.getLogger(AttachmentService.class);
 
@@ -72,7 +72,7 @@ public class AttachmentService {
 	public void attachBinaryFromStream(Session session, String nodeId, String fileName, InputStream is, String mimeType, int width, int height) throws Exception {
 		Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
-		
+
 		/* mimeType can be passed as null if it's not yet determined */
 		if (mimeType == null) {
 			mimeType = URLConnection.guessContentTypeFromName(fileName);

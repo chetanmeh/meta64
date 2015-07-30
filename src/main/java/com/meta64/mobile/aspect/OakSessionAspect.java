@@ -89,7 +89,7 @@ public class OakSessionAspect {
 			/* cleanup this thread, servers reuse threads */
 			ThreadLocals.setJcrSession(null);
 			ThreadLocals.setResponse(null);
-			
+
 			if (sessionContext != null) {
 				sessionContext.getLock().unlock();
 			}
@@ -102,7 +102,7 @@ public class OakSessionAspect {
 		Object[] args = joinPoint.getArgs();
 		String userName = "anonymous";
 		String password = "anonymous";
-		//boolean usingCookies = false;
+		// boolean usingCookies = false;
 
 		Object req = (args != null && args.length > 0) ? args[0] : null;
 
@@ -115,10 +115,11 @@ public class OakSessionAspect {
 			LoginRequest loginRequest = (LoginRequest) args[0];
 			userName = loginRequest.getUserName();
 			password = loginRequest.getPassword();
-			//usingCookies = loginRequest.isUsingCookies();
+			// usingCookies = loginRequest.isUsingCookies();
 
 			if (userName.equals("{session}")) {
-				//SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
+				// SessionContext sessionContext = (SessionContext)
+				// SpringContextUtil.getBean(SessionContext.class);
 				userName = sessionContext.getUserName();
 				password = sessionContext.getPassword();
 			}
@@ -133,7 +134,8 @@ public class OakSessionAspect {
 			return null;
 		}
 		else {
-			//SessionContext sessionContext = (SessionContext) SpringContextUtil.getBean(SessionContext.class);
+			// SessionContext sessionContext = (SessionContext)
+			// SpringContextUtil.getBean(SessionContext.class);
 
 			userName = sessionContext.getUserName();
 			password = sessionContext.getPassword();

@@ -37,8 +37,9 @@ public class JcrUtil {
 		nonSavableProperties.add("jcr:createdBy");
 		nonSavableProperties.add("jcr:lastModified");
 		nonSavableProperties.add("jcr:lastModifiedBy");
-		
-		//HOW WAS THIS WORKING without jcr:data. Never had "jcr:data" here??? evern before converting to jcrData?
+
+		// HOW WAS THIS WORKING without jcr:data. Never had "jcr:data" here??? evern before
+		// converting to jcrData?
 		nonSavableProperties.add(JcrProp.BIN_DATA);
 		nonSavableProperties.add(JcrProp.BIN_VER);
 		nonSavableProperties.add(JcrProp.BIN_MIME);
@@ -50,7 +51,7 @@ public class JcrUtil {
 		if ("admin".equals(userName)) return;
 		if (userName == null || !userName.equals(getRequiredStringProp(node, "jcr:createdBy"))) throw new Exception("Access failed.");
 	}
-	
+
 	public static boolean isUserAccountRoot(SessionContext sessionContext, Node node) throws Exception {
 		RefInfo refInfo = sessionContext.getRootRefInfo();
 		return node.getPath().equals(refInfo.getPath()) || node.getPath().equals(refInfo.getId());

@@ -11,12 +11,13 @@ public class NodeInfo {
 	private String id;
 	private String path;
 	private String name;
-	
-	//TODO: There is a slight waste of space here, because createdBy is also in 'properties' but so the client can
-	//have super fast access to it, i'm making it a direct property also.
+
+	// TODO: There is a slight waste of space here, because createdBy is also in 'properties' but so
+	// the client can
+	// have super fast access to it, i'm making it a direct property also.
 	private String createdBy;
 	private String lastModified;
-	
+
 	private List<PropertyInfo> properties;
 	private boolean hasChildren;
 	private boolean hasBinary;

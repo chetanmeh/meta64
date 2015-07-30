@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.config.ConstantsProvider;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.mail.JcrOutboxMgr;
 import com.meta64.mobile.model.PropertyInfo;
@@ -39,7 +38,7 @@ import com.meta64.mobile.util.XString;
  * Service for editing content of nodes.
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class NodeEditService {
 	private static final Logger log = LoggerFactory.getLogger(NodeEditService.class);
 
@@ -54,10 +53,10 @@ public class NodeEditService {
 
 	@Autowired
 	private JcrOutboxMgr outboxMgr;
-	
+
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
-	
+
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);

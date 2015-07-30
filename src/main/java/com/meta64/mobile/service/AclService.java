@@ -35,7 +35,7 @@ import com.meta64.mobile.util.JcrUtil;
  * 
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class AclService {
 	private static final Logger log = LoggerFactory.getLogger(AclService.class);
 
@@ -112,7 +112,7 @@ public class AclService {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
-		
+
 		String principal = req.getPrincipal();
 		String privilege = req.getPrivilege();
 

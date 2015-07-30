@@ -42,7 +42,7 @@ import com.meta64.mobile.util.XString;
  * 
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class UserManagerService {
 	private static final Logger log = LoggerFactory.getLogger(UserManagerService.class);
 
@@ -146,11 +146,11 @@ public class UserManagerService {
 
 						if (UserManagerUtil.createUser(session, userName, password)) {
 							UserManagerUtil.createUserRootNode(session, userName);
-							
+
 							Node prefsNode = getPrefsNodeForSessionUser(session, userName);
 							prefsNode.setProperty(JcrProp.EMAIL, email);
 							setDefaultUserPreferences(prefsNode);
-							
+
 							/*
 							 * allow JavaScript to detect all it needs to detect which is to display
 							 * a message to user saying the signup is complete.
@@ -275,7 +275,7 @@ public class UserManagerService {
 	public void setDefaultUserPreferences(Node prefsNode) throws Exception {
 		prefsNode.setProperty("advMode", false);
 	}
-	
+
 	public void saveUserPreferences(Session session, final SaveUserPreferencesRequest req, final SaveUserPreferencesResponse res) throws Exception {
 
 		final String userName = sessionContext.getUserName();

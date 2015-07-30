@@ -19,7 +19,6 @@
 * For nodes that are shared, they should be indicated in some obvious way to the user, without having to go to sharing page to check.
 * Need edit email address feature.
 * Need menu item that will display anonymous home page to a user who is logged in.
-* Need to be able to block simultaneous requests from user, for example, clicking the same button twice in a row, before the first request completes. I haven't checked how JQuery handles simultaneous requests, and spring is definitely not thread-safe on the session yet, until I add that. So app is not ready for production until this work is done.
 * Need some kind of progress indication of any long running processes (like an export) happening on the server.
 * last mod times etc should show up at least in advanced editing mode
 * Add user documentation as actual content, and create a button that links to that in a separate browser window/tab.

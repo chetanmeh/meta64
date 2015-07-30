@@ -33,7 +33,7 @@ import com.meta64.mobile.util.XString;
  * Service for rendering the content of a page.
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class NodeRenderService {
 	private static final Logger log = LoggerFactory.getLogger(NodeRenderService.class);
 
@@ -76,7 +76,7 @@ public class NodeRenderService {
 		while (node != null && levelsUpRemaining > 0) {
 			node = node.getParent();
 			if (Log.renderNodeRequest) {
-				//log.debug("   upLevel to nodeid: "+item.getPath());
+				// log.debug("   upLevel to nodeid: "+item.getPath());
 			}
 			levelsUpRemaining--;
 		}

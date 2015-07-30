@@ -23,7 +23,7 @@ import com.meta64.mobile.util.JcrUtil;
  * Service for editing content of nodes.
  */
 @Component
-@Scope("session")
+@Scope("singleton")
 public class NodeMoveService {
 	private static final Logger log = LoggerFactory.getLogger(NodeMoveService.class);
 
