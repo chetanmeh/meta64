@@ -5,7 +5,6 @@
 .classpath
 .project
 .settings
-build
 target
 git-tools
 run-root
