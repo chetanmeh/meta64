@@ -53,20 +53,17 @@ public class AclService {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
 
-		boolean includeAcl = "y".equals(req.getIncludeAcl());
-		boolean includeOwners = "y".equals(req.getIncludeOwners());
-
-		if (!includeAcl && !includeOwners) {
+		if (!req.isIncludeAcl() && !req.isIncludeOwners()) {
 			throw new Exception("no specific information requested for getNodePrivileges");
 		}
 
-		if (includeAcl) {
+		if (req.isIncludeAcl()) {
 			AccessControlEntry[] aclEntries = AccessControlUtil.getAccessControlEntries(session, node);
 			List<AccessControlEntryInfo> aclEntriesInfo = Convert.convertToAclListInfo(aclEntries);
 			res.setAclEntries(aclEntriesInfo);
 		}
 
-		if (includeOwners) {
+		if (req.isIncludeAcl()) {
 			List<String> owners = AccessControlUtil.getOwnerNames(session, node);
 			res.setOwners(owners);
 		}

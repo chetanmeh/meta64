@@ -263,8 +263,8 @@ var meta64 = function() {
 		updateNodeInfo : function(node) {
 			util.json("getNodePrivileges", {
 				"nodeId" : node.id,
-				"includeAcl" : "n",
-				"includeOwners" : "y"
+				"includeAcl" : false,
+				"includeOwners" : true
 			}, _.updateNodeInfoResponse, {
 				"node" : node
 			});
