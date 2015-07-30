@@ -161,13 +161,9 @@ var user = function() {
 			 * embed a time parameter just to thwart browser caching, and ensure
 			 * server and browser will never return the same image twice.
 			 */
-			var src = "/mobile/rest/captcha?t=" + n
+			var src = postTargetUrl + "captcha?t=" + n;
 			// console.log("Setting captcha image src: "+src);
 
-			/*
-			 * we use a semi-guaranteed unique (timecodebased) integer to force
-			 * a new captcha to be returned
-			 */
 			$("#captchaImage").attr("src", src);
 		},
 

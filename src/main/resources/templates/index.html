@@ -20,7 +20,9 @@
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var cacheVersion = /*[[${@constantsProvider.getCacheVersion()}]]*/"";
 	var profileName = /*[[${@constantsProvider.getProfileName()}]]*/"";
-	var postTargetUrl = window.location.origin + "/mobile/rest/";
+	
+	var postTargetUrl = /*[[${@constantsProvider.getApiUrl()}]]*/"";
+	//var postTargetUrl = window.location.origin + "/mobile/api/";
 	/*]]>*/
 </script>
 

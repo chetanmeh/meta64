@@ -99,7 +99,7 @@ import com.meta64.mobile.util.ThreadLocals;
 public class AppController {
 	private static final Logger log = LoggerFactory.getLogger(AppController.class);
 
-	private static final String REST_PATH = "/mobile/rest";
+	private static final String API_PATH = "/mobile/api";
 
 	@Autowired
 	private SessionContext sessionContext;
@@ -168,7 +168,7 @@ public class AppController {
 		return "index";
 	}
 
-	@RequestMapping(value = REST_PATH + "/captcha", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+	@RequestMapping(value = API_PATH + "/captcha", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
 	public @ResponseBody byte[] captcha() throws Exception {
 		logRequest("captcha", null);
 		String captcha = CaptchaMaker.createCaptchaString();
@@ -176,7 +176,7 @@ public class AppController {
 		return CaptchaMaker.makeCaptcha(captcha);
 	}
 
-	@RequestMapping(value = REST_PATH + "/signup", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/signup", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody SignupResponse signup(@RequestBody SignupRequest req) throws Exception {
 		logRequest("signup", req);
@@ -203,7 +203,7 @@ public class AppController {
 	 * 
 	 * @see OakSessionAspect.loginFromJoinPoint()
 	 */
-	@RequestMapping(value = REST_PATH + "/login", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/login", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody LoginResponse login(@RequestBody LoginRequest req) throws Exception {
 		logRequest("login", req);
@@ -215,7 +215,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/logout", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/logout", method = RequestMethod.POST)
 	// @OakSession // commenting since we currently don't touch the DB during a logout.
 	public @ResponseBody LogoutResponse logout(@RequestBody LogoutRequest req, HttpSession session) throws Exception {
 		logRequest("logout", req);
@@ -238,7 +238,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/renderNode", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/renderNode", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody RenderNodeResponse renderNode(@RequestBody RenderNodeRequest req) throws Exception {
 		logRequest("renderNode", req);
@@ -249,7 +249,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/getNodePrivileges", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/getNodePrivileges", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody GetNodePrivilegesResponse getNodePrivileges(@RequestBody GetNodePrivilegesRequest req) throws Exception {
 		logRequest("getNodePrivileges", req);
@@ -260,7 +260,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/addPrivilege", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/addPrivilege", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody AddPrivilegeResponse addPrivilege(@RequestBody AddPrivilegeRequest req) throws Exception {
 		logRequest("addPrivilege", req);
@@ -271,7 +271,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/removePrivilege", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/removePrivilege", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody RemovePrivilegeResponse removePrivilege(@RequestBody RemovePrivilegeRequest req) throws Exception {
 		logRequest("removePrivilege", req);
@@ -282,7 +282,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/exportToXml", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/exportToXml", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody ExportResponse exportToXml(@RequestBody ExportRequest req) throws Exception {
 		logRequest("exportToXml", req);
@@ -293,7 +293,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/import", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/import", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody ImportResponse importFromFile(@RequestBody ImportRequest req) throws Exception {
 		logRequest("import", req);
@@ -318,7 +318,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/setNodePosition", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/setNodePosition", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody SetNodePositionResponse setNodePosition(@RequestBody SetNodePositionRequest req) throws Exception {
 		logRequest("setNodePosition", req);
@@ -332,7 +332,7 @@ public class AppController {
 	/*
 	 * http://stackoverflow.com/questions/5567905/jackrabbit-jcr-organisation-of-text-content-data
 	 */
-	@RequestMapping(value = REST_PATH + "/createSubNode", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/createSubNode", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody CreateSubNodeResponse createSubNode(@RequestBody CreateSubNodeRequest req) throws Exception {
 		logRequest("createSubNode", req);
@@ -344,7 +344,7 @@ public class AppController {
 	}
 
 	/* Inserts node 'inline' at the position specified in the InsertNodeRequest.targetName */
-	@RequestMapping(value = REST_PATH + "/insertNode", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/insertNode", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody InsertNodeResponse insertNode(@RequestBody InsertNodeRequest req) throws Exception {
 		logRequest("insertNode", req);
@@ -355,7 +355,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/insertBook", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/insertBook", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody InsertBookResponse insertBook(@RequestBody InsertBookRequest req) throws Exception {
 		logRequest("insertBook", req);
@@ -366,7 +366,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/deleteNodes", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/deleteNodes", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody DeleteNodesResponse deleteNodes(@RequestBody DeleteNodesRequest req) throws Exception {
 		logRequest("deleteNodes", req);
@@ -377,7 +377,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/moveNodes", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/moveNodes", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody MoveNodesResponse moveNodes(@RequestBody MoveNodesRequest req) throws Exception {
 		logRequest("moveNodes", req);
@@ -388,7 +388,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/deleteAttachment", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/deleteAttachment", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody DeleteAttachmentResponse deleteAttachment(@RequestBody DeleteAttachmentRequest req) throws Exception {
 		logRequest("deleteAttachment", req);
@@ -399,7 +399,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/deleteProperty", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/deleteProperty", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody DeletePropertyResponse deleteProperty(@RequestBody DeletePropertyRequest req) throws Exception {
 		logRequest("deleteProperty", req);
@@ -410,7 +410,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/saveNode", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/saveNode", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody SaveNodeResponse saveNode(@RequestBody SaveNodeRequest req) throws Exception {
 		logRequest("saveNode", req);
@@ -421,7 +421,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/makeNodeReferencable", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/makeNodeReferencable", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody MakeNodeReferencableResponse makeNodeReferencable(@RequestBody MakeNodeReferencableRequest req) throws Exception {
 		logRequest("makeNodeReferencable", req);
@@ -432,7 +432,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/saveProperty", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/saveProperty", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody SavePropertyResponse saveProperty(@RequestBody SavePropertyRequest req) throws Exception {
 		logRequest("saveProperty", req);
@@ -443,7 +443,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/changePassword", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/changePassword", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody ChangePasswordResponse changePassword(@RequestBody ChangePasswordRequest req) throws Exception {
 		logRequest("changePassword", req);
@@ -454,7 +454,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/bin", method = RequestMethod.GET)
+	@RequestMapping(value = API_PATH + "/bin", method = RequestMethod.GET)
 	@OakSession
 	public @ResponseBody ResponseEntity<InputStreamResource> getBinary(@RequestParam("nodeId") String nodeId) throws Exception {
 		logRequest("bin", null);
@@ -463,7 +463,7 @@ public class AppController {
 	}
 
 	// http://blog.netgloo.com/2015/02/08/spring-boot-file-upload-with-ajax/
-	@RequestMapping(value = REST_PATH + "/upload", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/upload", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody ResponseEntity<?> upload(@RequestParam("nodeId") String nodeId, @RequestParam("file") MultipartFile uploadFile) throws Exception {
 		logRequest("upload", null);
@@ -471,7 +471,7 @@ public class AppController {
 		return attachmentService.upload(session, nodeId, uploadFile);
 	}
 
-	@RequestMapping(value = REST_PATH + "/uploadFromUrl", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/uploadFromUrl", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody UploadFromUrlResponse uploadFromUrl(@RequestBody UploadFromUrlRequest req) throws Exception {
 		logRequest("uploadFromUrl", req);
@@ -481,7 +481,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/anonPageLoad", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/anonPageLoad", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody AnonPageLoadResponse anonPageLoad(@RequestBody AnonPageLoadRequest req) throws Exception {
 		logRequest("anonPageLoad", req);
@@ -491,7 +491,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/nodeSearch", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/nodeSearch", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody NodeSearchResponse nodeSearch(@RequestBody NodeSearchRequest req) throws Exception {
 		logRequest("nodeSearch", req);
@@ -502,7 +502,7 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = REST_PATH + "/saveUserPreferences", method = RequestMethod.POST)
+	@RequestMapping(value = API_PATH + "/saveUserPreferences", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody SaveUserPreferencesResponse saveUserPreferences(@RequestBody SaveUserPreferencesRequest req) throws Exception {
 		logRequest("saveUserPreferences", req);

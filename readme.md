@@ -2,8 +2,8 @@
 Meta64 is an Open Source "Mobile First" Wiki-type content repository (or CMS) built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, and the development of the platform; but the technology itself is a platform for building portals. This "Portal Platform" allows users to signup and create accounts where they can host content. The content can be any kind of text, data, images, and/or binaries, and can be shared to other users, who can then browse and/or edit the content collaboratively. The goal is to create a portal that is somewhat similar to Wikipedia (collaborative editing and sharing of markdown), but having many Social Media-types of capabilities. Another goal, from a technology standpoint, was to use only content repository open-standards for data, open source APIs, highly scalable data storage, and a very modern Mobile front end.
 
 ## Technology Stack
-* Client: JavaScript, JQueryMobile, HTML+CSS, RESTful JSON-based Ajax
-* Server: Java, SpringBoot + Spring Framework, Thymeleaf, Apache Oak JCR (Lucene embedded), MongoDb and/or MySQL, Tomcat Embedded 
+* Client: JavaScript, JQueryMobile, HTML+CSS, JSON-based Ajax
+* Server: Java, SpringBoot + Spring Framework, Apache Oak JCR (Lucene embedded), MongoDb, Tomcat Embedded 
 
 ## Links
 * GitHub Main Page
