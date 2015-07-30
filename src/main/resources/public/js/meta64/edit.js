@@ -432,7 +432,7 @@ var edit = function() {
 						var addMultiButton = "";
 						var deleteButton = "";
 
-						if (prop.name !== "jcr:content") {
+						if (prop.name !== jcrCnst.CONTENT) {
 							/*
 							 * For now we just go with the design where the
 							 * actual content property cannot be deleted. User

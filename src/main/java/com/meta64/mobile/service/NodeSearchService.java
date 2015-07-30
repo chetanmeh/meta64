@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -91,13 +92,17 @@ public class NodeSearchService {
 			/*
 			 * To search ALL properties you can put 't.*' instead of 't.[jcr:content]' below.
 			 */
-			queryStr.append(" AND contains(t.[jcr:content], '");
+			queryStr.append(" AND contains(t.[");
+			queryStr.append(JcrProp.CONTENT);
+			queryStr.append("], '");
 			queryStr.append(escapeQueryString(req.getSearchText()));
 			queryStr.append("')");
 		}
 
 		if (req.isModSortDesc()) {
-			queryStr.append(" ORDER BY [jcr:lastModified] DESC");
+			queryStr.append(" ORDER BY [");
+			queryStr.append(JcrProp.LAST_MODIFIED);
+			queryStr.append("] DESC");
 		}
 
 		Query q = qm.createQuery(queryStr.toString(), Query.JCR_SQL2);

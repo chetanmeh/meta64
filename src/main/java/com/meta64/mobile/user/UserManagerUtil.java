@@ -12,6 +12,7 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.util.JcrUtil;
@@ -72,7 +73,7 @@ public class UserManagerUtil {
 		}
 
 		if (AccessControlUtil.grantFullAccess(session, newNode, userName)) {
-			newNode.setProperty("jcr:content", "Root for User: " + userName);
+			newNode.setProperty(JcrProp.CONTENT, "Root for User: " + userName);
 			session.save();
 		}
 

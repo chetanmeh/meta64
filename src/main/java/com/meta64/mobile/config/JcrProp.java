@@ -5,6 +5,8 @@ package com.meta64.mobile.config;
  */
 public class JcrProp {
 
+	public static final String MIXIN_TYPES = "jcr:mixinTypes";
+	
 	/*
 	 * Goes on node: Paths defined by: JcrUtil.getSystemOutbox(session) + GUID (guid is unique per
 	 * outbound email)
@@ -12,6 +14,13 @@ public class JcrProp {
 	public static final String EMAIL_CONTENT = "jcr:content";
 	public static final String EMAIL_RECIP = "recip";
 	public static final String EMAIL_SUBJECT = "subject";
+	
+	public static final String CREATED = "jcr:created";
+	public static final String CREATED_BY = "jcr:createdBy";
+	public static final String CONTENT = "jcr:content";
+	public static final String UUID = "jcr:uuid";
+	public static final String LAST_MODIFIED = "jcr:lastModified";
+	public static final String LAST_MODIFIED_BY = "jcr:lastModifiedBy";
 
 	/*
 	 * Sub Properties of Signup node

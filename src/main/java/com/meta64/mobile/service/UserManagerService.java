@@ -318,9 +318,9 @@ public class UserManagerService {
 	public Node getUserPrefsNode(Session session) throws Exception {
 
 		String userName = sessionContext.getUserName();
-		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/root");
+		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/" + JcrName.ROOT);
 		if (allUsersRoot == null) {
-			throw new Exception("/jcr:root not found!");
+			throw new Exception("/root not found!");
 		}
 
 		log.debug("Creating root node, which didn't exist.");
@@ -332,7 +332,7 @@ public class UserManagerService {
 		}
 
 		if (AccessControlUtil.grantFullAccess(session, newNode, userName)) {
-			newNode.setProperty("jcr:content", "Root for User: " + userName);
+			newNode.setProperty(JcrProp.CONTENT, "Root for User: " + userName);
 			session.save();
 		}
 

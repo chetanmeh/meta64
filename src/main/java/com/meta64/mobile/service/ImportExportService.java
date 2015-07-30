@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -265,7 +266,7 @@ public class ImportExportService {
 		// val = val.replace("<p>", "\n\n");
 		// val = val.replace("<br>", "\n");
 		// val = ripTags(val);
-		newNode.setProperty("jcr:content", val.trim());
+		newNode.setProperty(JcrProp.CONTENT, val.trim());
 		// }
 	}
 

@@ -53,7 +53,7 @@ public class JcrOutboxMgr {
 				try {
 					Node parentNode = node.getParent();
 					if (parentNode != null) {
-						String parentCreator = JcrUtil.getRequiredStringProp(parentNode, "jcr:createdBy");
+						String parentCreator = JcrUtil.getRequiredStringProp(parentNode, JcrProp.CREATED_BY);
 						if (!parentCreator.equals(userName)) { // sessionContext.getUserName())) {
 							Node prefsNode = UserManagerService.getPrefsNodeForSessionUser(session, parentCreator);
 							String email = JcrUtil.getRequiredStringProp(prefsNode, JcrProp.EMAIL);

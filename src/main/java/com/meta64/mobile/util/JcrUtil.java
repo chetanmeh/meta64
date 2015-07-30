@@ -30,16 +30,14 @@ public class JcrUtil {
 	 */
 	private static HashSet<String> nonSavableProperties = new HashSet<String>();
 	static {
-		nonSavableProperties.add("jcr:mixinTypes");
-		nonSavableProperties.add("jcr:uuid");
+		nonSavableProperties.add(JcrProp.MIXIN_TYPES);
+		nonSavableProperties.add(JcrProp.UUID);
 
-		nonSavableProperties.add("jcr:created");
-		nonSavableProperties.add("jcr:createdBy");
-		nonSavableProperties.add("jcr:lastModified");
-		nonSavableProperties.add("jcr:lastModifiedBy");
+		nonSavableProperties.add(JcrProp.CREATED);
+		nonSavableProperties.add(JcrProp.CREATED_BY);
+		nonSavableProperties.add(JcrProp.LAST_MODIFIED);
+		nonSavableProperties.add(JcrProp.LAST_MODIFIED_BY);
 
-		// HOW WAS THIS WORKING without jcr:data. Never had "jcr:data" here??? evern before
-		// converting to jcrData?
 		nonSavableProperties.add(JcrProp.BIN_DATA);
 		nonSavableProperties.add(JcrProp.BIN_VER);
 		nonSavableProperties.add(JcrProp.BIN_MIME);
@@ -49,7 +47,7 @@ public class JcrUtil {
 
 	public static void checkNodeCreatedBy(Node node, String userName) throws Exception {
 		if ("admin".equals(userName)) return;
-		if (userName == null || !userName.equals(getRequiredStringProp(node, "jcr:createdBy"))) throw new Exception("Access failed.");
+		if (userName == null || !userName.equals(getRequiredStringProp(node, JcrProp.CREATED_BY))) throw new Exception("Access failed.");
 	}
 
 	public static boolean isUserAccountRoot(SessionContext sessionContext, Node node) throws Exception {
@@ -73,12 +71,12 @@ public class JcrUtil {
 	public static void timestampNewNode(Session session, Node node) throws Exception {
 
 		// mix:created -> jcr:created + jcr:createdBy
-		if (!node.hasProperty("jcr:created")) {
+		if (!node.hasProperty(JcrProp.CREATED)) {
 			node.addMixin("mix:created");
 		}
 
 		// mix:lastModified -> jcr:lastModified + jcr:lastModifiedBy
-		if (!node.hasProperty("jcr:lastModified")) {
+		if (!node.hasProperty(JcrProp.LAST_MODIFIED)) {
 			node.addMixin("mix:lastModified");
 		}
 	}
@@ -100,7 +98,7 @@ public class JcrUtil {
 			if (node == null) {
 				throw new Exception("unable to create " + name);
 			}
-			node.setProperty("jcr:content", defaultContent);
+			node.setProperty(JcrProp.CONTENT, defaultContent);
 			session.save();
 		}
 		log.debug("node found: " + node.getPath());

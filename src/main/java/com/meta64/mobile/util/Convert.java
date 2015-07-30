@@ -191,11 +191,11 @@ public class Convert {
 			 * are doing to need that anyway, and this saves us from making a call specifically for
 			 * this.
 			 */
-			if (createdBy != null && "jcr:createdBy".equals(p.getName())) {
+			if (createdBy != null && JcrProp.CREATED_BY.equals(p.getName())) {
 				createdBy.setVal(p.getValue().getString());
 			}
 
-			if (lastModified != null && "jcr:lastModified".equals(p.getName())) {
+			if (lastModified != null && JcrProp.LAST_MODIFIED.equals(p.getName())) {
 				String lastModifiedVal = formatValue(sessionContext, p.getValue());
 				lastModified.setVal(lastModifiedVal);
 			}
@@ -209,7 +209,7 @@ public class Convert {
 			 * grab the content property, and don't put it in the return list YET, because we will
 			 * be sorting the list and THEN putting the content at the top of that sorted list.
 			 */
-			if (p.getName().equals("jcr:content")) {
+			if (p.getName().equals(JcrProp.CONTENT)) {
 				contentPropInfo = propInfo;
 			}
 			else {

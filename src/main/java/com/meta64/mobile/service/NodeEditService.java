@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.mail.JcrOutboxMgr;
 import com.meta64.mobile.model.PropertyInfo;
@@ -70,7 +71,7 @@ public class NodeEditService {
 
 		/* NT_UNSTRUCTURED IS ORDERABLE */
 		Node newNode = node.addNode(name, JcrConstants.NT_UNSTRUCTURED);
-		newNode.setProperty("jcr:content", "");
+		newNode.setProperty(JcrProp.CONTENT, "");
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
 
@@ -139,7 +140,7 @@ public class NodeEditService {
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 		if (node != null) {
 			/* if node already has uuid then we can do nothing here, we just silently return success */
-			if (!node.hasProperty("jcr:uuid")) {
+			if (!node.hasProperty(JcrProp.UUID)) {
 				node.addMixin(JcrConstants.MIX_REFERENCEABLE);
 				session.save();
 			}
@@ -172,8 +173,8 @@ public class NodeEditService {
 			}
 
 			Calendar lastModified = Calendar.getInstance();
-			node.setProperty("jcr:lastModified", lastModified);
-			node.setProperty("jcr:lastModifiedBy", session.getUserID());
+			node.setProperty(JcrProp.LAST_MODIFIED, lastModified);
+			node.setProperty(JcrProp.LAST_MODIFIED_BY, session.getUserID());
 
 			if (req.isSendNotification()) {
 				outboxMgr.sendNotificationForChildNodeCreate(node, sessionContext.getUserName());

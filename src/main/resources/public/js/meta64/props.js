@@ -219,7 +219,7 @@ var props = function() {
 
 			var newList = [];
 			$.each(properties, function(i, property) {
-				if (property.name === "jcr:content") {
+				if (property.name === jcrCnst.CONTENT) {
 					/*
 					 * unshift is how javascript adds an element to the head of
 					 * an array shifting to the right any existing elements

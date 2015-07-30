@@ -724,7 +724,7 @@ var render = function() {
 
 		sanitizePropertyName : function(propName) {
 			if (meta64.editModeOption === "simple") {
-				return propName === "jcr:content" ? "Content" : propName;
+				return propName === jcrCnst.CONTENT ? "Content" : propName;
 			} else {
 				return propName;
 			}
