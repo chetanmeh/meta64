@@ -128,7 +128,7 @@ var render = function() {
 					ret += /* "<br>" + */properties;
 				}
 			} else {
-				var contentProp = props.getNodeProperty("jcr:content", node);
+				var contentProp = props.getNodeProperty(jcrCnst.CONTENT, node);
 				// console.log("contentProp: " + contentProp);
 				if (contentProp) {
 					var jcrContent = props.renderProperty(contentProp);

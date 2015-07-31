@@ -97,12 +97,12 @@ var util = function() {
 
 		ajaxReady : function(requestName) {
 			if (_ajaxWaiting) {
-				console.log("Ignoring requests: "+requestName+". Ajax currently in progress.");
+				console.log("Ignoring requests: " + requestName + ". Ajax currently in progress.");
 				return false;
 			}
 			return true;
 		},
-		
+
 		isAjaxWaiting : function() {
 			return _ajaxWaiting;
 		},
@@ -126,6 +126,17 @@ var util = function() {
 				alert(opFriendlyName + " failed: " + res.message);
 			}
 			return res.success;
+		},
+
+		/* adds all array objects to obj as a set */
+		addAll : function(obj, a) {
+			for (var i = 0; i < a.length; i++) {
+				if (!a[i]) {
+					console.error("null element in addAll at idx=" + i);
+				} else {
+					obj[a[i]] = true;
+				}
+			}
 		},
 
 		nullOrUndef : function(obj) {

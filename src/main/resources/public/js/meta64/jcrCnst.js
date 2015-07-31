@@ -3,6 +3,9 @@ console.log("running module: jcrCnst.js");
 var jcrCnst = function() {
 
 	var _ = {
+		PRIMARY_TYPE : "jcr:primaryType",
+		POLICY : "rep:policy",
+		
 		MIXIN_TYPES : "jcr:mixinTypes",
 
 		EMAIL_CONTENT : "jcr:content",

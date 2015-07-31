@@ -11,6 +11,15 @@
 <link rel="stylesheet" th:href="@{${meta64Css}}" />
 
 <script th:inline="javascript">
+	if (!window.console) {
+		console = {
+			log : function() {
+			},
+			error : function() {
+			}
+		};
+	}
+
 	window.onerror = function(message, url, line) {
 		console.log("ERROR: " + message + " [url:" + url + "] line " + line);
 	};
@@ -20,9 +29,9 @@
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var cacheVersion = /*[[${@constantsProvider.getCacheVersion()}]]*/"";
 	var profileName = /*[[${@constantsProvider.getProfileName()}]]*/"";
-	
+
 	var postTargetUrl = /*[[${@constantsProvider.getApiUrl()}]]*/"";
-	
+
 	/* This would be another way to build the postTargetUrl, just put here for clarity */
 	//var postTargetUrl = window.location.origin + "/mobile/api/";
 	/*]]>*/
@@ -71,12 +80,10 @@
 					id="menuButton"
 					class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-bars">Menu</a>
 
-				<a onclick="srch.searchPg();" 
-					id="mainMenuSearchButton"
+				<a onclick="srch.searchPg();" id="mainMenuSearchButton"
 					class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-search">Search</a>
 
-				<a onclick="srch.timeline();"
-					id="mainMenuTimelineButton"
+				<a onclick="srch.timeline();" id="mainMenuTimelineButton"
 					class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-clock">Timeline</a>
 			</div>
 
@@ -145,6 +152,8 @@
 
 			var scripts = (profileName === 'prod') ? [ "/js/meta64.min.js" ] : //
 			[ //
+			"/js/meta64/cnst.js",//
+			"/js/meta64/jcrCnst.js",//
 			"/js/meta64/attachment.js", //
 			"/js/meta64/edit.js", //
 			"/js/meta64/meta64.js", //
@@ -157,8 +166,6 @@
 			"/js/meta64/user.js", //
 			"/js/meta64/util.js", //
 			"/js/meta64/view.js", //
-			"/js/meta64/cnst.js",//
-			"/js/meta64/jcrCnst.js",//
 			"/js/meta64/pageMgr.js",//
 			"/js/meta64/pg/popupMenuPg.js",//
 			"/js/meta64/pg/confirmPg.js",//

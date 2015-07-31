@@ -102,28 +102,11 @@ var meta64 = function() {
 			"rep:" : true
 		},
 
-		simpleModePropertyBlackList : {
-			"jcr:primaryType" : true,
-			"rep:policy" : true
-		},
+		simpleModePropertyBlackList : {},
 
-		readOnlyPropertyList : {
-			"jcr:uuid" : true,
-			"jcr:mixinTypes" : true,
-			"jcr:created" : true,
-			"jcr:createdBy" : true,
-			"jcr:lastModified" : true,
-			"jcr:lastModifiedBy" : true,
-			"imgWidth" : true,
-			"imgHeight" : true,
-			"binVer" : true,
-			"jcrData" : true,
-			"jcr:mimeType" : true
-		},
+		readOnlyPropertyList : {},
 
-		binaryPropertyList : {
-			"jcrData" : true
-		},
+		binaryPropertyList : {},
 
 		/*
 		 * Property fields are generated dynamically and this maps the DOM IDs
@@ -552,10 +535,31 @@ var meta64 = function() {
 			_.idToNodeMap[node.id] = node;
 		},
 
+		initConstants : function() {
+			util.addAll(_.simpleModePropertyBlackList, [jcrCnst.PRIMARY_TYPE, jcrCnst.POLICY]);
+			
+			util.addAll(_.readOnlyPropertyList, 
+				[jcrCnst.UUID,
+				jcrCnst.MIXIN_TYPES,
+				jcrCnst.CREATED,
+				jcrCnst.CREATED_BY,
+				jcrCnst.LAST_MODIFIED,
+				jcrCnst.LAST_MODIFIED_BY,
+				jcrCnst.IMG_WIDTH,
+				jcrCnst.IMG_HEIGHT,
+				jcrCnst.BIN_VER,
+				jcrCnst.BIN_DATA,
+				jcrCnst.BIN_MIME]);
+
+			util.addAll(_.binaryPropertyList, [jcrCnst.BIN_DATA]);
+		},
+		
 		initApp : function() {
 			if (appInitialized)
 				return;
 			appInitialized = true;
+			
+			_.initConstants();
 
 			_.displaySignupMessage();
 			// alert('app initializing');
