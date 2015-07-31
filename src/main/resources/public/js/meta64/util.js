@@ -47,56 +47,83 @@ var util = function() {
 	 * the server also enforces that each session is only allowed one concurrent
 	 * call and simultaneous calls would just "queue up".
 	 */
-	var _ajaxWaiting = false;
+	var _ajaxCounter = 0;
 
 	var _ = {
 
 		daylightSavingsTime : (new Date().dst()) ? true : false,
 
-		/*
+		/**
 		 * We use the convention that all calls to server are POSTs with a
 		 * 'postName' (like an RPC method name)
+		 * <p>
+		 * Note: 'callback' can be null, if you want to use the returned
+		 * 'promise' rather than passing in a function.
+		 * 
 		 */
-		json : function(postName, postData, callback, info) {
-			if (typeof callback !== "function") {
-				console.log("callback not valid function for postName " + postName);
-			}
+		json : function(postName, postData, callback) {
 
 			if (logAjax) {
 				console.log("JSON-POST: " + JSON.stringify(postData));
 			}
 
-			_ajaxWaiting = true;
-			$.ajax({
+			_ajaxCounter++;
+			var prms = $.ajax({
 				url : postTargetUrl + postName,
 				contentType : "application/json",
 				type : "post",
 				dataType : "json",
 				cache : false,
-				data : JSON.stringify(postData),
-				success : function(jqXHR, textStatus) {
-					_ajaxWaiting = false;
-					if (logAjax) {
-						console.log("JSON-RESULT: " + postName + " -> " + textStatus + //
-						"\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
-					}
+				data : JSON.stringify(postData)
+			});
 
-					if (textStatus === "success") {
-						callback(jqXHR, info);
-					} else {
-						console.log("JSON: " + postName + " -> " + textStatus);
-					}
-				},
-				error : function(xhr, status, error) {
-					_ajaxWaiting = false;
-					alert("Server request failed."); // xhr.responseText);
-					// //JSON.parse(xhr.responseText));
+			/**
+			 * Notes
+			 * <p>
+			 * If using then function: promise.then(successFunction,
+			 * failFunction);
+			 * <p>
+			 * I think the way these parameters get passed into done/fail
+			 * functions, is because there are resolve/reject methods getting
+			 * called with the parameters. Basically the parameters passed to
+			 * 'resolve' get distributed to all the waiting methods just like as
+			 * if they were subscribing in a pub/sub model. So the 'promose'
+			 * pattern is sort of a pub/sub model in a way
+			 * <p>
+			 * The reason to return a 'promise.promise()' method is so no other
+			 * code can call resolve/reject but can only react to a
+			 * done/fail/complete.
+			 * <p>
+			 * deferred.when(promise1, promise2) creates a new promise that
+			 * becomes 'resolved' only when all promises are resolved. It's a
+			 * big "and condition" of resolvement, and if any of the promises
+			 * passed to it end up failing, it fails this "ANDed" one also.
+			 */
+			prms.done(function(jqXHR) {
+				if (logAjax) {
+					console.log("JSON-RESULT: " + postName + 
+					"\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
+				}
+
+				if (typeof callback == "function") {
+					callback(jqXHR, info);
 				}
 			});
+
+			prms.fail(function(xhr, status) {
+				alert("Server request failed."); // xhr.responseText);
+				// //JSON.parse(xhr.responseText));
+			});
+
+			prms.complete(function() {
+				_ajaxCounter--;
+			});
+
+			return prms;
 		},
 
 		ajaxReady : function(requestName) {
-			if (_ajaxWaiting) {
+			if (_ajaxCounter > 0) {
 				console.log("Ignoring requests: " + requestName + ". Ajax currently in progress.");
 				return false;
 			}
@@ -104,7 +131,7 @@ var util = function() {
 		},
 
 		isAjaxWaiting : function() {
-			return _ajaxWaiting;
+			return _ajaxCounter > 0;
 		},
 
 		/* set focus to element by id (id must start with #) */
@@ -475,6 +502,10 @@ var util = function() {
 		 * values
 		 */
 		printProperties : function(obj) {
+			if (!obj) {
+				console.error("printProperties recieved null.");
+				return;
+			}
 			var val = '';
 			$.each(obj, function(k, v) {
 				val += k + "\n";

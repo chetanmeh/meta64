@@ -63,7 +63,7 @@ public class AclService {
 			res.setAclEntries(aclEntriesInfo);
 		}
 
-		if (req.isIncludeAcl()) {
+		if (req.isIncludeOwners()) {
 			List<String> owners = AccessControlUtil.getOwnerNames(session, node);
 			res.setOwners(owners);
 		}

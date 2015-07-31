@@ -21,13 +21,13 @@ var nav = function() {
 			meta64.changePage("#searchResultsPg");
 		},
 
-		upLevelResponse : function(res, info) {
+		upLevelResponse : function(res, id) {
 			if (!res || !res.node) {
 				alert("No data is visible to you above this node.");
 				util.setEnablementByName("navUpLevel", false);
 			} else {
 				render.renderPageFromData(res);
-				meta64.highlightRowById(info.id, true);
+				meta64.highlightRowById(id, true);
 				meta64.refreshAllGuiEnablement();
 			}
 		},
@@ -39,11 +39,13 @@ var nav = function() {
 				return;
 			}
 
-			util.json("renderNode", {
+			var prms = util.json("renderNode", {
 				"nodeId" : meta64.currentNodeId,
 				"upLevel" : 1
-			}, _.upLevelResponse, {
-				"id" : meta64.currentNodeId
+			});
+
+			prms.done(function(res) {
+				_.upLevelResponse(res, meta64.currentNodeId);
 			});
 		},
 
@@ -105,7 +107,7 @@ var nav = function() {
 		openNode : function(uid) {
 
 			var node = meta64.uidToNodeMap[uid];
-			
+
 			meta64.highlightNode(node, true);
 
 			if (!node) {
@@ -118,26 +120,25 @@ var nav = function() {
 		toggleNodeSel : function(uid) {
 			var btn = util.getRequiredElement();
 			if (!btn) {
-				console.log("Unable to find Sel button for uid: "+uid);
+				console.log("Unable to find Sel button for uid: " + uid);
 				return;
 			}
-			
+
 			var elm = $('#' + uid + "_sel");
 			var classes = elm.attr("class");
-			
+
 			var checked = classes.contains("ui-btn-b");
-			
+
 			if (checked) {
 				util.changeOrAddClass(elm, "ui-btn-b", "ui-btn-a");
 				checked = false;
-			}
-			else {
+			} else {
 				util.changeOrAddClass(elm, "ui-btn-a", "ui-btn-b");
 				checked = true;
 			}
-			
-			console.log("Classes: "+classes);
-			
+
+			console.log("Classes: " + classes);
+
 			if (checked) {
 				meta64.selectedNodes[uid] = true;
 			} else {
@@ -172,4 +173,4 @@ var nav = function() {
 	return _;
 }();
 
-//# sourceURL=nav.js
+// # sourceURL=nav.js

@@ -214,26 +214,29 @@ var meta64 = function() {
 			_.selectedNodes = {};
 		},
 
-		updateNodeInfoResponse : function(res, info) {
+		updateNodeInfoResponse : function(res, node) {
 			var ownerBuf = '';
-			// console.log("res: "+ JSON.stringify(res));
+			//console.log("****** updateNodeInfoResponse: " + JSON.stringify(res));
 			var mine = false;
-			$.each(res.owners, function(index, owner) {
-				if (ownerBuf.length > 0) {
-					ownerBuf += ",";
-				}
+			
+			if (res.owners) {
+				$.each(res.owners, function(index, owner) {
+					if (ownerBuf.length > 0) {
+						ownerBuf += ",";
+					}
 
-				if (owner === meta64.userName) {
-					mine = true;
-				}
+					if (owner === meta64.userName) {
+						mine = true;
+					}
 
-				ownerBuf += owner;
-				// console.log("ownerbuf: "+ownerBuf);
-			});
+					ownerBuf += owner;
+					// console.log("ownerbuf: "+ownerBuf);
+				});
+			}
 
 			if (ownerBuf.length > 0) {
-				info.node.owner = ownerBuf;
-				var elm = $("#ownerDisplay" + info.node.uid);
+				node.owner = ownerBuf;
+				var elm = $("#ownerDisplay" + node.uid);
 				elm.html(" (Manager: " + ownerBuf + ")");
 				if (mine) {
 					util.changeOrAddClass(elm, "created-by-other", "created-by-me");
@@ -244,12 +247,14 @@ var meta64 = function() {
 		},
 
 		updateNodeInfo : function(node) {
-			util.json("getNodePrivileges", {
+			var prms = util.json("getNodePrivileges", {
 				"nodeId" : node.id,
 				"includeAcl" : false,
 				"includeOwners" : true
-			}, _.updateNodeInfoResponse, {
-				"node" : node
+			});
+
+			prms.done(function(res) {
+				_.updateNodeInfoResponse(res, node);
 			});
 		},
 
@@ -536,29 +541,20 @@ var meta64 = function() {
 		},
 
 		initConstants : function() {
-			util.addAll(_.simpleModePropertyBlackList, [jcrCnst.PRIMARY_TYPE, jcrCnst.POLICY]);
-			
-			util.addAll(_.readOnlyPropertyList, 
-				[jcrCnst.UUID,
-				jcrCnst.MIXIN_TYPES,
-				jcrCnst.CREATED,
-				jcrCnst.CREATED_BY,
-				jcrCnst.LAST_MODIFIED,
-				jcrCnst.LAST_MODIFIED_BY,
-				jcrCnst.IMG_WIDTH,
-				jcrCnst.IMG_HEIGHT,
-				jcrCnst.BIN_VER,
-				jcrCnst.BIN_DATA,
-				jcrCnst.BIN_MIME]);
+			util.addAll(_.simpleModePropertyBlackList, [ jcrCnst.PRIMARY_TYPE, jcrCnst.POLICY ]);
 
-			util.addAll(_.binaryPropertyList, [jcrCnst.BIN_DATA]);
+			util.addAll(_.readOnlyPropertyList, [ jcrCnst.UUID, jcrCnst.MIXIN_TYPES, jcrCnst.CREATED, jcrCnst.CREATED_BY,
+					jcrCnst.LAST_MODIFIED, jcrCnst.LAST_MODIFIED_BY, jcrCnst.IMG_WIDTH, jcrCnst.IMG_HEIGHT, jcrCnst.BIN_VER,
+					jcrCnst.BIN_DATA, jcrCnst.BIN_MIME ]);
+
+			util.addAll(_.binaryPropertyList, [ jcrCnst.BIN_DATA ]);
 		},
-		
+
 		initApp : function() {
 			if (appInitialized)
 				return;
 			appInitialized = true;
-			
+
 			_.initConstants();
 
 			_.displaySignupMessage();

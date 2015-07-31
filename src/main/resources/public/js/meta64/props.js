@@ -10,7 +10,7 @@ var props = function() {
 		meta64.treeDirty = true;
 	}
 
-	var _deletePropertyResponse = function(res, info) {
+	var _deletePropertyResponse = function(res, propertyToDelete) {
 		// alert("info: "+JSON.stringify(info));
 		if (util.checkSuccess("Delete property", res)) {
 
@@ -18,7 +18,7 @@ var props = function() {
 			 * remove deleted property from client side storage, so we can
 			 * re-render screen without making another call to server
 			 */
-			props.deletePropertyFromLocalData(info.propertyToDelete);
+			props.deletePropertyFromLocalData(propertyToDelete);
 
 			/* now just re-render screen from local variables */
 			meta64.changePage("#editNodePg");
@@ -54,11 +54,13 @@ var props = function() {
 
 		deletePropertyImmediate : function(propName) {
 
-			util.json("deleteProperty", {
+			var prms = util.json("deleteProperty", {
 				"nodeId" : edit.editNode.id,
 				"propName" : propName
-			}, _deletePropertyResponse, {
-				"propertyToDelete" : propName
+			});
+
+			prms.done(function() {
+				_deletePropertyResponse(res, propName);
 			});
 		},
 
@@ -104,7 +106,7 @@ var props = function() {
 
 			util.setHtmlEnhanced($("#addPropertyFieldContainer"), field);
 		},
-		
+
 		saveProperty : function() {
 			var propertyNameData = $("#addPropertyNameTextContent").val();
 			var propertyValueData = $("#addPropertyValueTextContent").val();
@@ -330,4 +332,4 @@ var props = function() {
 	return _;
 }();
 
-//# sourceURL=props.js
+// # sourceURL=props.js

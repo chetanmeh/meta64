@@ -29,14 +29,14 @@ var user = function() {
 	}
 
 	/* ret is LoginResponse.java */
-	var _loginResponse = function(res, info) {
+	var _loginResponse = function(res, usr, pwd, usingCookies) {
 		if (util.checkSuccess("Login", res)) {
 			// console.log("info.usr=" + info.usr + " homeNodeOverride: " +
 			// res.homeNodeOverride);
 
-			if (info.usr != "anonymous") {
-				_.writeCookie(cnst.COOKIE_LOGIN_USR, info.usr);
-				_.writeCookie(cnst.COOKIE_LOGIN_PWD, info.pwd);
+			if (usr != "anonymous") {
+				_.writeCookie(cnst.COOKIE_LOGIN_USR, usr);
+				_.writeCookie(cnst.COOKIE_LOGIN_PWD, pwd);
 			}
 
 			meta64.changePage("#mainPage");
@@ -45,7 +45,7 @@ var user = function() {
 			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId, false);
 			_setTitleUsingLoginResponse(res);
 		} else {
-			if (info.usingCookies) {
+			if (usingCookies) {
 				alert("Cookie login failed.");
 
 				/*
@@ -189,17 +189,23 @@ var user = function() {
 			// var hrs = -(new Date().getTimezoneOffset() / 60);
 			// alert("TimeZoneOffset: "+hrs);
 
-			util.json("login", {
+			var prms = util.json("login", {
 				"userName" : callUsr,
 				"password" : callPwd,
 				"usingCookies" : usingCookies,
 				"tzOffset" : new Date().getTimezoneOffset(),
 				"dst" : util.daylightSavingsTime
-			}, usingCookies ? _loginResponse : _refreshLoginResponse, {
-				usr : callUsr,
-				pwd : callPwd,
-				"usingCookies" : usingCookies
 			});
+
+			if (usingCookies) {
+				prms.done(function(res) {
+					_loginResponse(res, callUsr, callPwd, usingCookies);
+				});
+			} else {
+				prms.done(function(res) {
+					_refreshLoginResponse(res);
+				});
+			}
 		},
 
 		login : function() {
@@ -212,14 +218,15 @@ var user = function() {
 			 * same INFO to the _loginResponse method. I'll just cod it this way
 			 * instead of creating a var to hold it.
 			 */
-			util.json("login", {
+			var prms = util.json("login", {
 				"userName" : usr,
 				"password" : pwd,
 				"tzOffset" : new Date().getTimezoneOffset(),
 				"dst" : util.daylightSavingsTime
-			}, _loginResponse, {
-				"usr" : usr,
-				"pwd" : pwd
+			});
+
+			prms.done(function() {
+				_loginResponse(usr, pwd);
 			});
 		},
 

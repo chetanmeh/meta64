@@ -24,10 +24,10 @@ var view = function() {
 			}
 		},
 
-		refreshTreeResponse : function(res, info) {
+		refreshTreeResponse : function(res, targetId, renderParentIfLeaf) {
 			render.renderPageFromData(res);
-			if (info && info.targetId && info.renderParentIfLeaf && res.displayedParent) {
-				meta64.highlightRowById(info.targetId, true);
+			if (targetId && renderParentIfLeaf && res.displayedParent) {
+				meta64.highlightRowById(targetId, true);
 			} else {
 				_.scrollToSelectedNode();
 			}
@@ -39,12 +39,13 @@ var view = function() {
 				nodeId = meta64.currentNodeId;
 			}
 
-			util.json("renderNode", {
+			var prms = util.json("renderNode", {
 				"nodeId" : nodeId,
 				"renderParentIfLeaf" : renderParentIfLeaf ? true : false
-			}, _.refreshTreeResponse, {
-				"targetId" : nodeId,
-				"renderParentIfLeaf" : renderParentIfLeaf
+			});
+
+			prms.done(function(res) {
+				_.refreshTreeResponse(res, nodeId, renderParentIfLeaf);
 			});
 		},
 
@@ -60,8 +61,8 @@ var view = function() {
 					 * first (top) child node, or else scroll exactly to it
 					 */
 					var scrollPos = (ordinal == 0 ? 0 : $('#' + elm.id).offset().top - $('#mainPageHeader').height());
-					//console.log("scrollPos: "+scrollPos);
-					
+					// console.log("scrollPos: "+scrollPos);
+
 					// console.log("Scrolling to dom element id: " +elm.id);
 					$('html, body').animate({
 						scrollTop : scrollPos
@@ -86,4 +87,4 @@ var view = function() {
 	return _;
 }();
 
-//# sourceURL=view.js
+// # sourceURL=view.js
