@@ -11,6 +11,9 @@
 <link rel="stylesheet" th:href="@{${meta64Css}}" />
 
 <script th:inline="javascript">
+	/*
+	Very old browsers may not have the console.log/console.error functions.
+	 */
 	if (!window.console) {
 		console = {
 			log : function() {
@@ -29,7 +32,6 @@
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var cacheVersion = /*[[${@constantsProvider.getCacheVersion()}]]*/"";
 	var profileName = /*[[${@constantsProvider.getProfileName()}]]*/"";
-
 	var postTargetUrl = /*[[${@constantsProvider.getApiUrl()}]]*/"";
 
 	/* This would be another way to build the postTargetUrl, just put here for clarity */
@@ -65,7 +67,7 @@
 
 </head>
 
-<body>
+<body id="bodyId">
 	<div id="signupCodeResponse" style="display: none;"
 		th:text="@{${signupCode}}"></div>
 
@@ -182,7 +184,6 @@
 			"/js/meta64/pg/editPropertyPg.js",//
 			"/js/meta64/pg/shareToPersonPg.js",//,
 			"/js/meta64/pg/sharingPg.js" ];
-
 			/*
 			Loads all JS files, and then calls initApp once they are all completely loaded
 			 */

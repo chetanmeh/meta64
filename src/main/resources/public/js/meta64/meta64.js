@@ -216,9 +216,10 @@ var meta64 = function() {
 
 		updateNodeInfoResponse : function(res, node) {
 			var ownerBuf = '';
-			//console.log("****** updateNodeInfoResponse: " + JSON.stringify(res));
+			// console.log("****** updateNodeInfoResponse: " +
+			// JSON.stringify(res));
 			var mine = false;
-			
+
 			if (res.owners) {
 				$.each(res.owners, function(index, owner) {
 					if (ownerBuf.length > 0) {
@@ -553,14 +554,12 @@ var meta64 = function() {
 		initApp : function() {
 			if (appInitialized)
 				return;
+			console.log("initApp running.");
 			appInitialized = true;
 
 			_.initConstants();
-
 			_.displaySignupMessage();
-			// alert('app initializing');
 
-			console.log("initApp running.");
 			$(window).on('orientationchange', _.orientationHandler);
 			_.defineAllActions();
 
@@ -582,7 +581,9 @@ var meta64 = function() {
 			 * basically want to limit the CPU and chaos that would ensue if we
 			 * tried to adjust things every time it changes. So we throttle back
 			 * to only reorganizing the screen once per second. This timer is a
-			 * throttle sort of.
+			 * throttle sort of. Yes I know how to listen for events. No I'm not
+			 * doing it wrong here. This timer is correct in this case and
+			 * behaves superior to events.
 			 */
 			setInterval(function() {
 				var width = $(window).width();

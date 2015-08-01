@@ -21,7 +21,7 @@ var attachment = function() {
 			_.closeUploadPg();
 		}
 	}
-	
+
 	function _uploadFromUrlResponse(res) {
 		if (util.checkSuccess("Upload from URL", res)) {
 			view.refreshTree(null, false);
@@ -65,21 +65,23 @@ var attachment = function() {
 				 * highly specialized here for form uploading, and is different
 				 * from normal ajax calls.
 				 */
-				$.ajax({
+				var prms = $.ajax({
 					url : postTargetUrl + "upload",
 					type : "POST",
 					data : new FormData($("#uploadForm")[0]),
 					enctype : 'multipart/form-data',
 					processData : false,
 					contentType : false,
-					cache : false,
-					success : function() {
-						view.refreshTree(null, false);
-						_.closeUploadPg();
-					},
-					error : function() {
-						alert("Upload failed.");
-					}
+					cache : false
+				});
+
+				prms.done(function() {
+					view.refreshTree(null, false);
+					_.closeUploadPg();
+				});
+
+				prms.fail(function() {
+					alert("Upload failed.");
 				});
 			}
 		},
@@ -107,4 +109,4 @@ var attachment = function() {
 	return _;
 }();
 
-//# sourceURL=attachment.js
+// # sourceURL=attachment.js

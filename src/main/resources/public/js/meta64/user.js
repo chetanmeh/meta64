@@ -1,7 +1,7 @@
 console.log("running module: user.js");
 
 var user = function() {
-
+	
 	var _setTitleUsingLoginResponse = function(res) {
 		var title = BRANDING_TITLE;
 		if (!meta64.isAnonUser) {
