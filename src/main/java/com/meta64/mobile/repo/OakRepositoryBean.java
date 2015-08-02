@@ -43,6 +43,9 @@ public class OakRepositoryBean extends OakRepository {
 	@Value("${jcrAdminPassword}")
 	private String jcrAdminPassword;
 	
+	@Value("${anonUserLandingPageNode}")
+	private String userLandingPageNode;
+	
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
@@ -60,7 +63,7 @@ public class OakRepositoryBean extends OakRepository {
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
-
+				JcrUtil.ensureNodeExists(session, "/", userLandingPageNode, null);
 				JcrUtil.ensureNodeExists(session, "/", "root", "Root of All Users");
 				JcrUtil.ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
 				JcrUtil.ensureNodeExists(session, "/", JcrName.OUTBOX, "System Email Outbox");

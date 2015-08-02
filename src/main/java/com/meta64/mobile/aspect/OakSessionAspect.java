@@ -28,7 +28,6 @@ import com.meta64.mobile.util.ThreadLocals;
  * of a REST call and handles all the boilerplate for performing a REST call on the server which
  * comes from the JQuery ajax calls from the client. Primarily we use the cross cutting concerns of
  * user login, and JCR session lifecycle.
- *
  */
 @Aspect
 @Component

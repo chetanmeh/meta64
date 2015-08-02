@@ -1,6 +1,7 @@
 package com.meta64.mobile.util;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 import javax.jcr.Node;
@@ -85,6 +86,10 @@ public class JcrUtil {
 		return ensureNodeExists(session, parentPath, name, defaultContent, JcrConstants.NT_UNSTRUCTURED, true);
 	}
 
+	/*
+	 * If name contains '/' then it's split and this method ends up creating all the subnodes
+	 * required to make the path exist,
+	 */
 	public static Node ensureNodeExists(Session session, String parentPath, String name, String defaultContent, String primaryTypeName, boolean saveImmediate)
 			throws Exception {
 
@@ -92,31 +97,50 @@ public class JcrUtil {
 			parentPath += "/";
 		}
 
+		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
+		if (node != null) {
+			return node;
+		}
+
+		List<String> nameTokens = XString.tokenize(name, "/", true);
+		if (nameTokens == null) {
+			return null;
+		}
+
 		Node parent = session.getNode(parentPath);
 		if (parent == null) {
 			throw new Exception("Expected parent not found: " + parentPath);
 		}
 
-		log.debug("ensuring node exists: parentPath=" + parentPath + " name=" + name);
-		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
+		boolean nodesCreated = false;
+		for (String nameToken : nameTokens) {
 
-		if (node == null) {
-			log.debug("Creating " + name + " node, which didn't exist.");
+			log.debug("ensuring node exists: parentPath=" + parentPath + " name=" + nameToken);
+			node = JcrUtil.getNodeByPath(session, parentPath + nameToken);
 
-			node = parent.addNode(name, primaryTypeName);
-			if (node == null) {
-				throw new Exception("unable to create " + name);
+			/* if this node is found continue on, using it as current parent to build on */
+			if (node != null) {
+				parent = node;
 			}
-			if (defaultContent != null) {
-				node.setProperty(JcrProp.CONTENT, defaultContent);
+			else {
+				log.debug("Creating " + nameToken + " node, which didn't exist.");
+
+				parent = parent.addNode(nameToken, primaryTypeName);
+				if (parent == null) {
+					throw new Exception("unable to create " + nameToken);
+				}
+				nodesCreated = true;
+				if (defaultContent != null) {
+					parent.setProperty(JcrProp.CONTENT, defaultContent);
+				}
 			}
-			
-			if (saveImmediate) {
-				session.save();
-			}
+			parentPath += nameToken + "/";
 		}
-		log.debug("node found: " + node.getPath());
-		return node;
+
+		if (saveImmediate && nodesCreated) {
+			session.save();
+		}
+		return parent;
 	}
 
 	public static Node getNodeByPath(Session session, String path) {
