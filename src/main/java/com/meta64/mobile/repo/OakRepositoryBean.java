@@ -4,15 +4,16 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jcr.Session;
 
-import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.JcrRunnable;
+import com.meta64.mobile.util.JcrUtil;
 
 /**
  * Instance of a Repository
@@ -60,16 +61,24 @@ public class OakRepositoryBean extends OakRepository {
 	@PostConstruct
 	public void postConstruct() throws Exception {
 
-		/*
-		 * NOTE: All that's required to initialize for either mongodb or rdb, is to uncomment only
-		 * one of these initializers (rdbInit or mongoInit). You should never call them both. Only
-		 * call one.
-		 */
-		// rdbInit(rdbConnectionString, rdbUserName, rdbPassword);
 		mongoInit(mongoDbHost, mongoDbPort, mongoDbName);
 
 		UserManagerUtil.verifyAdminAccountReady(this);
 		initRequiredNodes();
+	}
+	
+	public void initRequiredNodes() throws Exception {
+
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+
+				JcrUtil.ensureNodeExists(session, "/", "root", "Root of All Users");
+				JcrUtil.ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
+				JcrUtil.ensureNodeExists(session, "/", JcrName.OUTBOX, "System Email Outbox");
+				JcrUtil.ensureNodeExists(session, "/", JcrName.SIGNUP, "Pending Signups");
+			}
+		});
 	}
 
 	@PreDestroy

@@ -178,10 +178,6 @@ public class UserManagerService {
 	 */
 	public void signup(SignupRequest req, SignupResponse res) throws Exception {
 
-		if (XString.isEmpty(mailHost)) {
-			throw new Exception("Sorry, the host has not configured an email server, and so no signups are currently allowed.");
-		}
-
 		final String userName = req.getUserName();
 		if (userName.equalsIgnoreCase("admin") || userName.equalsIgnoreCase("administrator")) {
 			throw new Exception("Sorry, you can't be the new admin.");
@@ -228,7 +224,9 @@ public class UserManagerService {
 
 		addPendingSignupNode(userName, password, email, signupCode);
 
-		outboxMgr.queueEmail(email, "Meta64 Account Signup Confirmation", content);
+		if (!XString.isEmpty(mailHost)) {
+			outboxMgr.queueEmail(email, "Meta64 Account Signup Confirmation", content);
+		}
 	}
 
 	/*
