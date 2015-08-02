@@ -36,10 +36,6 @@ import com.mongodb.MongoTimeoutException;
 
 /**
  * Wrapper and abstraction around a JCR Repository instance
- * 
- * This class can initialize either a mongoDb or an RDB backing store for the repository. One could
- * argue that mongo stuff should not be mixed with rdb stuff, but this will be refactored later if
- * it becomes ugly.
  */
 public class OakRepository {
 

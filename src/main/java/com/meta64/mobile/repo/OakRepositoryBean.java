@@ -23,18 +23,6 @@ import com.meta64.mobile.util.JcrUtil;
 public class OakRepositoryBean extends OakRepository {
 
 	/*
-	 * Relational Database Connection Info
-	 */
-	@Value("${rdb.connection}")
-	private String rdbConnection;
-
-	@Value("${rdb.user}")
-	private String rdbUserName;
-
-	@Value("${rdb.password}")
-	private String rdbPassword;
-
-	/*
 	 * MongoDb Server Connection Info
 	 */
 	@Value("${mongodb.host}")
