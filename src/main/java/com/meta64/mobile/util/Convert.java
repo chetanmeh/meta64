@@ -11,6 +11,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.security.AccessControlEntry;
 import javax.jcr.security.Privilege;
 
@@ -114,11 +115,15 @@ public class Convert {
 		ValContainer<String> lastModified = new ValContainer<String>();
 		List<PropertyInfo> propList = buildPropertyInfoList(sessionContext, node, createdBy, lastModified);
 
+		NodeType nodeType = node.getPrimaryNodeType();
+		String primaryTypeName = nodeType.getName();
+		//log.debug("Node: "+node.getPath()+node.getName()+" type: "+primaryTypeName);
+
 		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), propList, hasDisplayableNodes, false, hasBinary, binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //
 				imageSize != null ? imageSize.getHeight() : 0, //
 				createdBy.getVal() != null ? createdBy.getVal() : "", //
-				lastModified.getVal() != null ? lastModified.getVal() : "");
+				lastModified.getVal() != null ? lastModified.getVal() : "", primaryTypeName);
 		return nodeInfo;
 	}
 

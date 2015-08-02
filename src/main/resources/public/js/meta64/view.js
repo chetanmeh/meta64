@@ -77,7 +77,7 @@ var view = function() {
 			if (edit.editingUnsavedNode) {
 				e.hide();
 			} else {
-				e.html("Path: " + render.formatPath(node.path))
+				e.html("Path: " + render.formatPath(node))
 				e.show();
 			}
 		}

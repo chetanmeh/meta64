@@ -23,8 +23,8 @@
 		};
 	}
 
-	window.onerror = function(message, url, line) {
-		console.log("ERROR: " + message + " [url:" + url + "] line " + line);
+	window.onerror = function(message, url, line, col, err) {
+		console.log("ERROR: " + message + " [url:" + url + "] line " + line + " col: " + col + " err: " + err.stack);
 	};
 
 	/*<![CDATA[*/

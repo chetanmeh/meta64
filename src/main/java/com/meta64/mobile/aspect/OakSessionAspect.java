@@ -118,8 +118,6 @@ public class OakSessionAspect {
 			// usingCookies = loginRequest.isUsingCookies();
 
 			if (userName.equals("{session}")) {
-				// SessionContext sessionContext = (SessionContext)
-				// SpringContextUtil.getBean(SessionContext.class);
 				userName = sessionContext.getUserName();
 				password = sessionContext.getPassword();
 			}
@@ -134,9 +132,6 @@ public class OakSessionAspect {
 			return null;
 		}
 		else {
-			// SessionContext sessionContext = (SessionContext)
-			// SpringContextUtil.getBean(SessionContext.class);
-
 			userName = sessionContext.getUserName();
 			password = sessionContext.getPassword();
 

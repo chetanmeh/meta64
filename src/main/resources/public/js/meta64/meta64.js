@@ -59,12 +59,6 @@ var meta64 = function() {
 		identToUidMap : {},
 
 		/*
-		 * maps action name values to the action objects. Action objects have
-		 * properties: "name", "enable", etc...
-		 */
-		actionNameToObjMap : {},
-
-		/*
 		 * Under any given node, there can be one active 'selected' node that
 		 * has the highlighting, and will be scrolled to whenever the page with
 		 * that child is visited, and this object holds the map of parent uid to
@@ -277,45 +271,14 @@ var meta64 = function() {
 		 * All action function names must end with 'Action', and are prefixed by
 		 * the action name.
 		 */
-		defineAllActions : function() {
-			var displayingNode = !util.emptyString(_.currentNode);
-
-			/*
-			 * Define all actions and enablement for them.
-			 * 
-			 * IMPORTANT: Each one of the 'name' values below must have a DOM id
-			 * associated with it that is like [name]Button (i.e. suffixed with
-			 * 'Button'). Example: id='loginButton'
-			 */
-			_.defineActions({
-				"name" : "openLoginPg",
-				"enable" : true,
-				"function" : user.openLoginPg
-			}, {
-				"name" : "navHome",
-				"enable" : displayingNode && !nav.displayingHome(),
-				"function" : nav.navHome
-			}, {
-				"name" : "navUpLevel",
-				"enable" : displayingNode && nav.parentVisibleToUser(),
-				"function" : nav.navUpLevel
-			}, {
-				"name" : "propsToggle",
-				"enable" : displayingNode,
-				"function" : props.propsToggle
-			}, {
-				"name" : "deleteProperty",
-				"enable" : false,
-				"function" : props.deleteProperty
-			}, {
-				"name" : "editMode",
-				"enable" : displayingNode,
-				"function" : edit.editMode
-			}, {
-				"name" : "makeNodeReferencable",
-				"enable" : true,
-				"function" : edit.makeNodeReferencable
-			});
+		addClickListeners : function() {
+			$("#openLoginPgButton").on("click", user.openLoginPg);
+			$("#navHomeButton").on("click", nav.navHome);
+			$("#navUpLevelButton").on("click", nav.navUpLevel);
+			$("#propsToggleButton").on("click", props.propsToggle);
+			$("#deletePropertyButton").on("click", props.deleteProperty);
+			$("#editModeButton").on("click", edit.editMode);
+			$("#makeNodeReferencableButton").on("click", edit.makeNodeReferencable);
 		},
 
 		openDonatePg : function() {
@@ -377,21 +340,22 @@ var meta64 = function() {
 		},
 
 		refreshAllGuiEnablement : function() {
+			
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 			var highlightNode = _.getHighlightedNode();
 
-			util.setEnablementByName("navHome", _.currentNode && !nav.displayingHome());
-			util.setEnablementByName("navUpLevel", _.currentNode && nav.parentVisibleToUser());
+			util.setEnablement($("#navHomeButton"), _.currentNode && !nav.displayingHome());
+			util.setEnablement($("#navUpLevelButton"), _.currentNode && nav.parentVisibleToUser());
 
 			var propsToggle = _.currentNode && !_.isAnonUser;
 			/*
 			 * this leaves a hole in the toolbar if you hide it. Need to change
 			 * that
 			 */
-			util.setEnablementByName("propsToggle", propsToggle);
+			util.setEnablement($("#propsToggleButton"), propsToggle);
 
-			util.setEnablementByName("deleteProperty", !_.isAnonUser);
+			util.setEnablement($("#deletePropertyButton"), !_.isAnonUser);
 
 			var editMode = _.currentNode && !_.isAnonUser;
 			// console.log(">>>>>>>>>>>>>>> currentNode=" + _.currentNode + "
@@ -400,47 +364,11 @@ var meta64 = function() {
 			 * this leaves a hole in the toolbar if you hide it. Need to change
 			 * that
 			 */
-			util.setEnablementByName("editMode", editMode);
+			util.setEnablement($("#editModeButton"), editMode);
 
 			util.setVisibility("#menuButton", !_.isAnonUser);
 			util.setVisibility("#mainMenuSearchButton", !_.isAnonUser && highlightNode != null);
 			util.setVisibility("#mainMenuTimelineButton", !_.isAnonUser && highlightNode != null);
-		},
-
-		/*
-		 * Naming convention, example "doSomething"
-		 * 
-		 * Action Name: doSomething Button Element ID: doSomethingButton
-		 * Function handling it: doSomethingAction
-		 * 
-		 * And hooks a click function to each id.
-		 */
-		defineActions : function(actions) {
-			for (var i = 0; i < arguments.length; i++) {
-				var action = arguments[i];
-				var actionName = action["name"];
-				var func = action["function"];
-
-				_.actionNameToObjMap[actionName] = action;
-
-				if (typeof func !== "function") {
-					console.log("Function not found for action " + actionName);
-					continue;
-				}
-
-				var id = "#" + actionName + "Button";
-				if (!util.hookClick(id, func)) {
-					console.log("Failed to hook button: " + actionName);
-					return;
-				}
-
-				var elm = $(id);
-				if (elm) {
-					util.setEnablement(elm, action["enable"]);
-				} else {
-					console.log("Unable to set enablement. ID not found: " + id);
-				}
-			}
 		},
 
 		getSingleSelectedNode : function() {
@@ -561,7 +489,7 @@ var meta64 = function() {
 			_.displaySignupMessage();
 
 			$(window).on('orientationchange', _.orientationHandler);
-			_.defineAllActions();
+			_.addClickListeners();
 
 			_.deviceWidth = $(window).width();
 			_.deviceHeight = $(window).height();
@@ -597,6 +525,8 @@ var meta64 = function() {
 					_.screenSizeChange();
 				}
 			}, 1500);
+			
+			_.refreshAllGuiEnablement();
 		},
 
 		displaySignupMessage : function() {

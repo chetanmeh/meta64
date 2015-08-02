@@ -58,12 +58,11 @@ var render = function() {
 				 */
 				// var path = meta64.isAdminUser ? node.path :
 				// node.path.replaceAll("/root", "");
-				var path = node.path;
-
+				// var path = node.path;
 				/* tail end of path is the name, so we can strip that off */
 				// path = path.replace(node.name, "");
-				headerText += "<div class='path-display'>Path: " + _.formatPath(path)+"</div>";
-				
+				headerText += "<div class='path-display'>Path: " + _.formatPath(node) + "</div>";
+
 				headerText += "<div>";
 				if (node.createdBy) {
 					var clazz = (node.createdBy === meta64.userName) ? "created-by-me" : "created-by-other";
@@ -318,7 +317,7 @@ var render = function() {
 			}, content);
 
 			return _.makeTag("div", {
-				"class" : "ui-field-contain" + (extraClasses ? (" "+extraClasses) : "")
+				"class" : "ui-field-contain" + (extraClasses ? (" " + extraClasses) : "")
 			}, buttonBar);
 		},
 
@@ -359,13 +358,16 @@ var render = function() {
 			}
 		},
 
-		formatPath : function(path) {
+		formatPath : function(node) {
+			var path = node.path;
 			/*
 			 * TODO: This will fail now that jcr: is removed because it can
 			 * match and corrupt any path that happens to start with root!
 			 * BEWARE! FIX!
 			 */
-			return meta64.isAdminUser ? path : path.replaceAll("/root", "");
+			var ret = meta64.isAdminUser ? path : path.replaceAll("/root", "");
+			ret += " [" + node.primaryTypeName + "]";
+			return ret;
 		},
 
 		markdown : function(text) {

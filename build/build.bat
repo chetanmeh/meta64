@@ -5,8 +5,8 @@ pause
 
 cd ..
 
-@rem call mvn dependency:sources
-@rem call mvn dependency:resolve -Dclassifier=javadoc
+call mvn dependency:sources
+call mvn dependency:resolve -Dclassifier=javadoc
 
 call mvn clean package -DskipTests=true
 

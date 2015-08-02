@@ -59,7 +59,7 @@ var props = function() {
 				"propName" : propName
 			});
 
-			prms.done(function() {
+			prms.done(function(res) {
 				_deletePropertyResponse(res, propName);
 			});
 		},

@@ -82,6 +82,15 @@ public class JcrUtil {
 	}
 
 	public static Node ensureNodeExists(Session session, String parentPath, String name, String defaultContent) throws Exception {
+		return ensureNodeExists(session, parentPath, name, defaultContent, JcrConstants.NT_UNSTRUCTURED, true);
+	}
+
+	public static Node ensureNodeExists(Session session, String parentPath, String name, String defaultContent, String primaryTypeName, boolean saveImmediate)
+			throws Exception {
+
+		if (!parentPath.endsWith("/")) {
+			parentPath += "/";
+		}
 
 		Node parent = session.getNode(parentPath);
 		if (parent == null) {
@@ -94,12 +103,17 @@ public class JcrUtil {
 		if (node == null) {
 			log.debug("Creating " + name + " node, which didn't exist.");
 
-			node = parent.addNode(name, JcrConstants.NT_UNSTRUCTURED);
+			node = parent.addNode(name, primaryTypeName);
 			if (node == null) {
 				throw new Exception("unable to create " + name);
 			}
-			node.setProperty(JcrProp.CONTENT, defaultContent);
-			session.save();
+			if (defaultContent != null) {
+				node.setProperty(JcrProp.CONTENT, defaultContent);
+			}
+			
+			if (saveImmediate) {
+				session.save();
+			}
 		}
 		log.debug("node found: " + node.getPath());
 		return node;

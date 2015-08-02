@@ -52,8 +52,8 @@ var popupMenuPg = function() {
 			var myAccountMenu = _makeTopLevelMenu("My Account", myAccountItems);
 
 			var editMenuItems = //
-			_menuItem("Attachments", "manageAttachmentsButton", "attachment.openUploadPgMenuClick();") + // 
-			_menuItem("Sharing", "editNodeSharingButton", "share.editNodeSharingMenuClick();") + // 
+			_menuItem("Attachments", "manageAttachmentsButton", "attachment.openUploadPg();") + // 
+			_menuItem("Sharing", "editNodeSharingButton", "share.editNodeSharing();") + // 
 			_menuItem("Move", "moveSelNodesButton", "edit.moveSelNodes();") + // 
 			_menuItem("Finish Moving", "finishMovingSelNodesButton", "edit.finishMovingSelNodes();") + // 
 			_menuItem("Export", "openExportPgButton", "edit.openExportPg();") + // 

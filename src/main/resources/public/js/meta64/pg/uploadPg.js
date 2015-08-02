@@ -67,7 +67,7 @@ var uploadPg = function() {
 			$("#uploadFromUrl").val("");
 			
 			/* display the node path at the top of the edit page */
-			$("#uploadPathDisplay").html("Path: " + render.formatPath(attachment.uploadNode.path));
+			$("#uploadPathDisplay").html("Path: " + render.formatPath(attachment.uploadNode));
 		}
 	};
 
@@ -75,4 +75,4 @@ var uploadPg = function() {
 	return _;
 }();
 
-// # sourceURL=uploadPg.js
+//# sourceUrl=uploadPg.js

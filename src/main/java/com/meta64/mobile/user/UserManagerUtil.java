@@ -24,6 +24,12 @@ import com.meta64.mobile.util.JcrUtil;
 public class UserManagerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserManagerUtil.class);
 
+	public static Authorizable getUser(Session session, String userName) throws Exception {
+		UserManager userManager = ((JackrabbitSession) session).getUserManager();
+		Authorizable authorizable = userManager.getAuthorizable(userName);
+		return authorizable;
+	}
+	
 	public static boolean createUser(Session session, String userName, String password) throws Exception {
 		boolean ret = false;
 		UserManager userManager = ((JackrabbitSession) session).getUserManager();

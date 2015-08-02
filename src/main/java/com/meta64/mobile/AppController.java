@@ -94,14 +94,12 @@ import com.meta64.mobile.util.ThreadLocals;
  * regarding how the OAK transations are managed and how logging in is done.
  */
 @Controller
-// @Scope("singleton")
 public class AppController {
 	private static final Logger log = LoggerFactory.getLogger(AppController.class);
 
 	private static final String API_PATH = "/mobile/api";
 
 	@Autowired
-	// @Scope(value="session",proxyMode= ScopedProxyMode.TARGET_CLASS)
 	private SessionContext sessionContext;
 
 	@Autowired
@@ -156,8 +154,6 @@ public class AppController {
 			userManagerService.processSignupCode(signupCode, model);
 		}
 
-		// SessionContext sessionContext = (SessionContext)
-		// SpringContextUtil.getBean(SessionContext.class);
 		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
 		brandingUtil.addBrandingAttributes(model);
@@ -213,8 +209,6 @@ public class AppController {
 		logRequest("login", req);
 		LoginResponse res = new LoginResponse();
 		ThreadLocals.setResponse(res);
-		// SessionContext sessionContext = (SessionContext)
-		// SpringContextUtil.getBean(SessionContext.class);
 		res.setMessage("success: " + String.valueOf(++sessionContext.counter));
 		Session session = ThreadLocals.getJcrSession();
 		userManagerService.login(session, req, res);

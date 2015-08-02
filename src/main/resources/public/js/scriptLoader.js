@@ -55,17 +55,14 @@ var loader = function() {
 
 				prms.done(function() {
 					scriptsRemaining--;
-					console.log("Script Loaded Ok. [" + script + "] remaining=" + scriptsRemaining); //+ " status: " + textStatus);
+					console.log("Script Loaded Ok. [" + script + "] remaining=" + scriptsRemaining);
 					if (scriptsRemaining == 0) {
 						console.log("All scripts loaded!");
-
 						/*
-						 * We could trigger allScriptsLoaded but then too many
-						 * people would gripe that we should be using the
-						 * promise way of waiting for a set of deferreds the
-						 * proper jquery way. So we use the "when.apply" below
-						 * to stop people from thinking they have found
-						 * something that could be done better.
+						 * It would be perfectly acceptable to call the
+						 * allScriptsLoaded here but we will go ahead and use
+						 * the deferreds approach instead. So the "when.apply"
+						 * below handles this.
 						 */
 						// allScriptsLoaded();
 					}
@@ -82,4 +79,4 @@ var loader = function() {
 	return _;
 }();
 
-// # sourceURL=scriptLoader.js
+//# sourceURL=scriptLoader.js

@@ -101,12 +101,11 @@ var util = function() {
 			 */
 			prms.done(function(jqXHR) {
 				if (logAjax) {
-					console.log("JSON-RESULT: " + postName + 
-					"\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
+					console.log("JSON-RESULT: " + postName + "\nJSON-RESULT-DATA: " + JSON.stringify(jqXHR));
 				}
 
 				if (typeof callback == "function") {
-					callback(jqXHR, info);
+					callback(jqXHR);
 				}
 			});
 
@@ -213,7 +212,6 @@ var util = function() {
 		 * Gets the element and displays an error message if it's not found
 		 */
 		getRequiredElement : function(id) {
-			// var e = document.getElementById(id);
 			var e = $(id);
 			if (e == null) {
 				console.log("getRequiredElement. Required element id not found: " + id);
@@ -231,44 +229,6 @@ var util = function() {
 
 		emptyString : function(val) {
 			return !val || val.length == 0;
-		},
-
-		isActionEnabled : function(actionName) {
-			var action = meta64.actionNameToObjMap[actionName];
-			if (!action) {
-				alert("Unrecognized actionName: " + actionName);
-				return;
-			}
-			return action["enable"];
-		},
-
-		setEnablementByName : function(actionName, enablement, visibility) {
-			/* first find action object, and update enablement */
-			var action = meta64.actionNameToObjMap[actionName];
-			if (!action) {
-				alert("Unrecognized actionName: " + actionName);
-				return;
-			}
-			action["enable"] = enablement;
-
-			/* now update the DOM to reflect the enablement */
-			var id = "#" + actionName + "Button";
-			var elm = $(id);
-			if (elm) {
-				// console.log("setting enablement of " + id + " to " +
-				// enablement);
-				_.setEnablement(elm, enablement);
-
-				/*
-				 * optional parameter, undefined means it wasn't passed which
-				 * means 'true' in this case
-				 */
-				if (typeof (visibility) === 'undefined' || visibility) {
-					_.setVisibility(elm, true)
-				} else {
-					_.setVisibility(elm, false);
-				}
-			}
 		},
 
 		setEnablement : function(elm, enable, visibility) {
@@ -310,22 +270,6 @@ var util = function() {
 			// var slider_value = $("#slider-1").val();
 			// // do something..
 			// });
-			return true;
-		},
-
-		/*
-		 * hooks click to element id making it call function 'func' when clicked
-		 */
-		hookClick : function(id, func) {
-			// console.log("hookClick for domID: "+id);
-
-			// Saw this also online:
-			// $('a').bind('click', function () {
-			// $('input').val(randomString[Math.floor(Math.random() * 3)]);
-			// });
-
-			// _.getRequiredElement(id).click(func);
-			$(id).on("click", func);
 			return true;
 		},
 
@@ -552,4 +496,5 @@ var util = function() {
 	return _;
 }();
 
-// # sourceURL=util.js
+//# sourceURL=util.js
+

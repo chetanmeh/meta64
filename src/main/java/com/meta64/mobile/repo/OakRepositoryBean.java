@@ -2,12 +2,17 @@ package com.meta64.mobile.repo;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.jcr.Session;
 
+import org.apache.jackrabbit.api.security.user.Authorizable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
+import com.meta64.mobile.util.JcrRunnable;
 
 /**
  * Instance of a Repository
@@ -48,6 +53,9 @@ public class OakRepositoryBean extends OakRepository {
 
 	@Value("${jcrAdminPassword}")
 	private String jcrAdminPassword;
+	
+	@Autowired
+	private RunAsJcrAdmin adminRunner;
 
 	@PostConstruct
 	public void postConstruct() throws Exception {

@@ -10,10 +10,10 @@ import javax.sql.DataSource;
 import org.apache.jackrabbit.oak.Oak;
 import org.apache.jackrabbit.oak.jcr.Jcr;
 import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
+import org.apache.jackrabbit.oak.plugins.document.DocumentNodeState;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
 import org.apache.jackrabbit.oak.plugins.document.rdb.RDBDataSourceFactory;
 import org.apache.jackrabbit.oak.plugins.document.rdb.RDBOptions;
-import org.apache.jackrabbit.oak.query.QueryEngineSettings;
 import org.apache.jackrabbit.oak.security.SecurityProviderImpl;
 import org.apache.jackrabbit.oak.spi.security.ConfigurationParameters;
 import org.apache.jackrabbit.oak.spi.security.SecurityProvider;
@@ -23,8 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.ImmutableMap;
 import com.meta64.mobile.config.JcrName;
+import com.meta64.mobile.service.NodeSearchService;
 import com.meta64.mobile.user.RunAsJcrAdmin;
+import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
 import com.mongodb.DB;
@@ -48,6 +51,7 @@ public class OakRepository {
 	private RDBOptions options;
 	private DataSource dataSource;
 	private DocumentNodeStore nodeStore;
+	private DocumentNodeState root;
 	private Repository repository;
 	protected ConfigurationParameters securityParams;
 	private SecurityProvider securityProvider;
@@ -56,6 +60,9 @@ public class OakRepository {
 
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
+	
+	@Autowired
+	private NodeSearchService nodeSearchService;
 
 	public OakRepository() {
 	}
@@ -74,7 +81,25 @@ public class OakRepository {
 			DB db = new MongoClient(mongoDbHost, mongoDbPort).getDB(mongoDbName);
 			DocumentNodeStore ns = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
 
-			repository = new Jcr(new Oak(ns)).with(getQueryEngineSettings()).with(getSecurityProvider()).createRepository();
+			root = ns.getRoot();
+			
+			// /////////////
+			//LuceneIndexProvider provider = new LuceneIndexProvider();
+			// oakRepository = new Jcr(oak)
+			// .with(new LocalInitialContent())
+			// .with((QueryIndexProvider) provider)
+			// .with((Observer) provider)
+			// .with(new LuceneIndexEditorProvider())
+			// .with(new LuceneInitializerHelper("lucene",(Set<String>) null))
+			// .withAsyncIndexing()
+			// .createRepository();
+			// ///////////////
+
+			repository = new Jcr(new Oak(ns))//
+					//.with(getQueryEngineSettings())//
+					.with(getSecurityProvider())//
+					.createRepository();
+		
 			log.debug("MongoDb connection ok.");
 		}
 		catch (MongoTimeoutException e) {
@@ -105,25 +130,26 @@ public class OakRepository {
 				.setRDBConnection(dataSource, options);
 
 		nodeStore = builder.getNodeStore();
-		repository = new Jcr(nodeStore).with(getQueryEngineSettings()).with(getSecurityProvider()).createRepository();
+		repository = new Jcr(nodeStore)/*.with(getQueryEngineSettings())*/.with(getSecurityProvider()).createRepository();
 	}
 
 	private SecurityProvider getSecurityProvider() {
 		Map<String, Object> userParams = new HashMap();
 		userParams.put(UserConstants.PARAM_ADMIN_ID, "admin");
 		userParams.put(UserConstants.PARAM_OMIT_ADMIN_PW, false);
-		userParams.put(UserConstants.NT_REP_PASSWORD, "admin");
-
-		securityParams = ConfigurationParameters.of(UserConfiguration.NAME, ConfigurationParameters.of(userParams));
+		//userParams.put(UserConstants.NT_REP_PASSWORD, "admin");
+		
+		securityParams = ConfigurationParameters.of(ImmutableMap.of(UserConfiguration.NAME, ConfigurationParameters.of(userParams)));
 		securityProvider = new SecurityProviderImpl(securityParams);
 		return securityProvider;
 	}
 
-	private QueryEngineSettings getQueryEngineSettings() {
-		QueryEngineSettings qs = new QueryEngineSettings();
-		qs.setFullTextComparisonWithoutIndex(true);
-		return qs;
-	}
+
+//	private QueryEngineSettings getQueryEngineSettings() {
+//		QueryEngineSettings qs = new QueryEngineSettings();
+//		qs.setFullTextComparisonWithoutIndex(false);
+//		return qs;
+//	}
 
 	public void initRequiredNodes() throws Exception {
 
@@ -135,6 +161,8 @@ public class OakRepository {
 				JcrUtil.ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
 				JcrUtil.ensureNodeExists(session, "/", JcrName.OUTBOX, "System Email Outbox");
 				JcrUtil.ensureNodeExists(session, "/", JcrName.SIGNUP, "Pending Signups");
+
+				nodeSearchService.initLuceneRepoNodes(session);
 			}
 		});
 	}
@@ -148,5 +176,9 @@ public class OakRepository {
 		repository = null;
 		dataSource = null;
 		options = null;
+	}
+
+	public DocumentNodeState getRoot() {
+		return root;
 	}
 }

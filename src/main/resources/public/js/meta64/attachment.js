@@ -86,7 +86,7 @@ var attachment = function() {
 			}
 		},
 
-		openUploadPgMenuClick : function() {
+		openUploadPg : function() {
 			var node = meta64.getHighlightedNode();
 
 			if (!node) {

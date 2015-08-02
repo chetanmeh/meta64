@@ -225,8 +225,8 @@ var user = function() {
 				"dst" : util.daylightSavingsTime
 			});
 
-			prms.done(function() {
-				_loginResponse(usr, pwd);
+			prms.done(function(res) {
+				_loginResponse(res, usr, pwd);
 			});
 		},
 

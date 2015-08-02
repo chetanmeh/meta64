@@ -11,6 +11,7 @@ public class NodeInfo {
 	private String id;
 	private String path;
 	private String name;
+	private String primaryTypeName;
 
 	// TODO: There is a slight waste of space here, because createdBy is also in 'properties' but so
 	// the client can
@@ -33,7 +34,7 @@ public class NodeInfo {
 	}
 
 	public NodeInfo(String id, String path, String name, List<PropertyInfo> properties, boolean hasChildren, boolean childrenOrdered, boolean hasBinary,
-			boolean binaryIsImage, long binVer, int width, int height, String createdBy, String lastModified) {
+			boolean binaryIsImage, long binVer, int width, int height, String createdBy, String lastModified, String primaryTypeName) {
 		this.id = id;
 		this.path = path;
 		this.name = name;
@@ -47,6 +48,7 @@ public class NodeInfo {
 		this.height = height;
 		this.createdBy = createdBy;
 		this.lastModified = lastModified;
+		this.primaryTypeName = primaryTypeName;
 	}
 
 	public boolean isChildrenOrdered() {
@@ -151,5 +153,13 @@ public class NodeInfo {
 
 	public void setLastModified(String lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	public String getPrimaryTypeName() {
+		return primaryTypeName;
+	}
+
+	public void setPrimaryTypeName(String primaryTypeName) {
+		this.primaryTypeName = primaryTypeName;
 	}
 }
