@@ -58,12 +58,12 @@ public class NodeSearchService {
 	private RunAsJcrAdmin adminRunner;
 
 	/*
-	 * Finds an exact property match under the specified node 
+	 * Finds an exact property match under the specified node
 	 */
 	public Node findNodeByProperty(Session session, String parentPath, String propName, String propVal) throws Exception {
 		QueryManager qm = session.getWorkspace().getQueryManager();
 
-		/* 
+		/*
 		 * Note: This is a bad way to lookup a value that's expected to be an exact match!
 		 */
 		StringBuilder queryStr = new StringBuilder();
@@ -80,8 +80,8 @@ public class NodeSearchService {
 		if (nodes.hasNext()) {
 			ret = nodes.nextNode();
 		}
-		
-		log.debug(ret==null ? "Node not found." : "node found.");
+
+		log.debug(ret == null ? "Node not found." : "node found.");
 		return ret;
 	}
 
@@ -113,7 +113,10 @@ public class NodeSearchService {
 			queryStr.append("])");
 		}
 
-		if (req.getSearchText().length() > 0) {
+		String searchText = req.getSearchText();
+		if (searchText != null && searchText.length() > 0) {
+			searchText = searchText.toLowerCase();
+			
 			if (whereCount == 0) {
 				queryStr.append(" WHERE ");
 			}
@@ -130,6 +133,9 @@ public class NodeSearchService {
 				throw new Exception("oops. Like + Contains.");
 			}
 
+			/*
+			 * WARNING: BREAKS LUCENE. DOESN'T WORK. Only LIKE works in lucene.
+			 */
 			if (useContains) {
 				queryStr.append("contains(t.[");
 				queryStr.append(JcrProp.CONTENT);
@@ -157,8 +163,8 @@ public class NodeSearchService {
 		}
 
 		/*
-		 * TODO: Currently if there is no WHERE clause then lucene fails to see any restrictions and 
-		 * resorts to a full scan, which is slow. Need to add the ability to use lucene index for 
+		 * TODO: Currently if there is no WHERE clause then lucene fails to see any restrictions and
+		 * resorts to a full scan, which is slow. Need to add the ability to use lucene index for
 		 * sorting on the lastModified field.
 		 */
 		if (req.isModSortDesc()) {
