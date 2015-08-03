@@ -32,10 +32,12 @@
 	var BRANDING_TITLE = /*[[${@constantsProvider.getBrandingTitle()}]]*/"";
 	var cacheVersion = /*[[${@constantsProvider.getCacheVersion()}]]*/"";
 	var profileName = /*[[${@constantsProvider.getProfileName()}]]*/"";
-	var postTargetUrl = /*[[${@constantsProvider.getApiUrl()}]]*/"";
 
-	/* This would be another way to build the postTargetUrl, just put here for clarity */
-	//var postTargetUrl = window.location.origin + "/mobile/api/";
+	/**
+	 * IMPORTANT: "Same Origin Policy" is very very strict on the precise text of the name even if
+	 * it maps in DNS to same thing it must be a text match and may different to browser.
+	 */
+	var postTargetUrl = window.location.origin + "/mobile/api/";
 	/*]]>*/
 </script>
 

@@ -21,9 +21,6 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 	@Value("${server.port}")
 	private String serverPort;
 
-	@Value("${apiPath}")
-	private String apiPath;
-
 	@Value("${cookiePrefix}")
 	private String cookiePrefix;
 
@@ -34,11 +31,6 @@ public class ConstantsProviderImpl implements ConstantsProvider {
 	private String profileName;
 
 	public static String cacheVersion;
-
-	@Override
-	public String getApiUrl() {
-		return getHostAndPort() + apiPath;
-	}
 
 	@Override
 	public String getHostAndPort() {

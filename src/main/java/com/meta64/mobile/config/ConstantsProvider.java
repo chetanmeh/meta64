@@ -5,7 +5,6 @@ package com.meta64.mobile.config;
  * HTML
  */
 public interface ConstantsProvider {
-	public String getApiUrl();
 
 	public String getCookiePrefix();
 
