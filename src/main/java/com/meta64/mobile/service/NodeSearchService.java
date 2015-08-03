@@ -27,15 +27,6 @@ import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
- * A lot of docs online had tricked me into believing that Oak is using indexes for all content by
- * default but this is not the case:
- * <p>
- * http://docs.adobe.com/docs/en/aem/6-0/deploy/upgrade/queries-and-indexing.html
- * http://jackrabbit.apache.org/oak/docs/query/lucene.html
- * http://users.jackrabbit.apache.narkive.com/6sQZPTKZ/no-results-from-full-text-index-oak-1-1-6
- * https://gist.github.com/chetanmeh/c1ccc4fa588ed1af467b
- * http://jackrabbit.510166.n4.nabble.com/Oak-Creating-Indexes-td4661890.html
- * <p>
  * Service for searching the repository. This searching is currently very basic, and just grabs the
  * first 100 results and returns.
  */
