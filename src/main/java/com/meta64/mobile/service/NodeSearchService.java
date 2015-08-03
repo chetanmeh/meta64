@@ -140,7 +140,7 @@ public class NodeSearchService {
 				queryStr.append("contains(t.[");
 				queryStr.append(JcrProp.CONTENT);
 				queryStr.append("], '");
-				queryStr.append(escapeQueryString(req.getSearchText()));
+				queryStr.append(escapeQueryString(searchText));
 				queryStr.append("')");
 			}
 
@@ -157,7 +157,7 @@ public class NodeSearchService {
 				}
 
 				queryStr.append(") like '%");
-				queryStr.append(escapeQueryString(req.getSearchText()));
+				queryStr.append(escapeQueryString(searchText));
 				queryStr.append("%'");
 			}
 		}
