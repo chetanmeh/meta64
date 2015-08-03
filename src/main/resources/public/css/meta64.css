@@ -132,15 +132,28 @@ tr td div p {
 }
 
 .main-node-content {
-	padding-top: 5px;
+	margin-top: 5px;
 	/* padding-left: 5px; */
 	background: #D8D8D8;
 	border: 3px solid gray;
 }
 
 .node-table-row {
+	position: relative;
 	border-bottom: 6px solid #d6d6d6;
 	padding-left: 5px;
+}
+
+.node-table-row .top-right-image {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.main-node-content .top-right-image {
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 
 .active-row {

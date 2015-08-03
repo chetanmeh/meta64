@@ -302,6 +302,11 @@ var props = function() {
 			}
 			return null;
 		},
+		
+		getNodePropertyVal : function(propertyName, node) {
+			var prop = _.getNodeProperty(propertyName, node);
+			return prop ? prop.value : null;
+		},
 
 		/*
 		 * Returns string representation of property value, even if multiple

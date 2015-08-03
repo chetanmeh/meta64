@@ -49,7 +49,10 @@ var render = function() {
 		 * node: JSON of NodeInfo.java
 		 */
 		renderNodeContent : function(node, showIdentifier, showPath, showName, renderBinary) {
-			var headerText = '';
+			var headerText = "";
+			var ret = "";
+			
+			ret += _.getTopRightImageTag(node);
 
 			if (showPath && meta64.editMode) {
 				/*
@@ -110,8 +113,6 @@ var render = function() {
 			if (showName && !showPath && node.name) {
 				headerText += "Name: " + node.name + " [uid=" + node.uid + "]";
 			}
-
-			var ret = '';
 
 			if (headerText) {
 				ret += _.makeTag("div", {
@@ -174,7 +175,7 @@ var render = function() {
 			var canMoveDown = index < count - 1;
 
 			/*
-			 * this checking of "rep:" is just a hack for now to stop from
+			 * TODO: this checking of "rep:" is just a hack for now to stop from
 			 * deleting things I won't want to allow to delete, but I will
 			 * design this better later.
 			 */
@@ -208,6 +209,18 @@ var render = function() {
 			}, _.renderNodeContent(node, true, true, true, true)));
 		},
 
+		getTopRightImageTag : function(node) {
+			var topRightImg = props.getNodePropertyVal('img.top.right', node);
+			var topRightImgTag = "";
+			if (topRightImg) {
+				topRightImgTag = _.makeTag("img", {
+					"src" : topRightImg,
+					"class" : "top-right-image"
+				}, "", false);
+			}
+			return topRightImgTag;
+		},
+		
 		/*
 		 * TODO: This approach is going to be too heavy weight with large
 		 * numbers of rows, so I will need to make the main menu dropdown
@@ -739,4 +752,4 @@ var render = function() {
 	return _;
 }();
 
-// # sourceURL=render.js
+//# sourceUrl=render.js
