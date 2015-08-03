@@ -133,6 +133,7 @@ public class UserManagerService {
 	 * signupCode that will turn on their account and actually create their account.
 	 */
 	public void processSignupCode(final String signupCode, final Model model) throws Exception {
+		log.debug("User is trying signupCode: "+signupCode);
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
@@ -162,6 +163,9 @@ public class UserManagerService {
 							session.save();
 							log.debug("Successful signup complete.");
 						}
+					}
+					else {
+						throw new Exception("Signup Code is invalid.");
 					}
 				}
 				catch (Exception e) {

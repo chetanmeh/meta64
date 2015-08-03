@@ -57,20 +57,21 @@ public class NodeSearchService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	/*
+	 * Finds an exact property match under the specified node 
+	 */
 	public Node findNodeByProperty(Session session, String parentPath, String propName, String propVal) throws Exception {
 		QueryManager qm = session.getWorkspace().getQueryManager();
 
+		/* 
+		 * Note: This is a bad way to lookup a value that's expected to be an exact match!
+		 */
 		StringBuilder queryStr = new StringBuilder();
 		queryStr.append("SELECT * from [nt:base] AS t WHERE ISDESCENDANTNODE([");
 		queryStr.append(parentPath);
-		// TODO: figure out how to do equals instead of contains here!
-		queryStr.append("]) AND contains(t." + propName + ", '");
+		queryStr.append("]) AND t.[" + propName + "]='");
 		queryStr.append(propVal);
-		queryStr.append("')");
-
-		// if (req.isModSortDesc()) {
-		// queryStr.append(" ORDER BY [jcr:lastModified] DESC");
-		// }
+		queryStr.append("'");
 
 		Query q = qm.createQuery(queryStr.toString(), Query.JCR_SQL2);
 		QueryResult r = q.execute();
@@ -79,6 +80,8 @@ public class NodeSearchService {
 		if (nodes.hasNext()) {
 			ret = nodes.nextNode();
 		}
+		
+		log.debug(ret==null ? "Node not found." : "node found.");
 		return ret;
 	}
 

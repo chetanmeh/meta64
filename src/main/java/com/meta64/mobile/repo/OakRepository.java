@@ -71,13 +71,17 @@ public class OakRepository {
 			 * This code appears to successfully initialize a new repository, but just be aware when
 			 * you change this code you have to blow away your repository and let a new one be
 			 * created.
+			 * 
+			 * WARNING: Not all valid SQL will work with these lucene queries. Namely the contains()
+			 * method fails so always use '=' operator for exact string matches or LIKE %something%,
+			 * instead of using the contains method.
 			 */
 			LuceneIndexProvider provider = new LuceneIndexProvider().with(getNodeAggregator());
 			repository = new Jcr(new Oak(ns))//
 					.with(getSecurityProvider())//
 					.with(new LuceneFullTextInitializer("contentIndex", "jcr:content", (Set<String>) null))//
 					.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified", (Set<String>) null))//
-					.with((QueryIndexProvider) provider)//
+					.with(new LuceneSortInitializer("codeIndex", "code", (Set<String>) null)).with((QueryIndexProvider) provider)//
 					.with((Observer) provider)//
 					.with(new LuceneIndexEditorProvider())//
 					.createRepository();
