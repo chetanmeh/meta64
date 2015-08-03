@@ -676,7 +676,8 @@ var render = function() {
 		makeEditField : function(fieldName, fieldId) {
 			return _.makeTag("label", {
 				"for" : fieldId
-			}, fieldName) + _.makeTag("input", {
+			}, fieldName) + //
+			_.makeTag("input", {
 				"type" : "text",
 				"name" : fieldId,
 				"id" : fieldId
@@ -686,7 +687,8 @@ var render = function() {
 		makePasswordField : function(fieldName, fieldId) {
 			return _.makeTag("label", {
 				"for" : fieldId
-			}, fieldName) + _.makeTag("input", {
+			}, fieldName) + //
+			_.makeTag("input", {
 				"type" : "password",
 				"name" : fieldId,
 				"id" : fieldId

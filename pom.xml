@@ -22,6 +22,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>com.meta64.mobile.AppServer</start-class>
 		<java.version>1.7</java.version>
+		<oakVersion>1.2.3</oakVersion>
+		<h2.version>1.4.185</h2.version>
 	</properties>
 
 	<dependencies>
@@ -66,41 +68,40 @@
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>oak-core</artifactId>
-			<version>1.0.18</version>
+			<version>${oakVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>oak-jcr</artifactId>
-			<version>1.0.18</version>
+			<version>${oakVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>oak-commons</artifactId>
-			<version>1.0.18</version>
+			<version>${oakVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>oak-lucene</artifactId>
-			<version>1.0.18</version>
+			<version>${oakVersion}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
-			<artifactId>h2-mvstore</artifactId>
-			<version>1.4.185</version>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<optional>true</optional>
 		</dependency>
+
+		<!-- <dependency> <groupId>com.h2database</groupId> <artifactId>h2-mvstore</artifactId> 
+			<version>1.4.185</version> </dependency> -->
 
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
 		<!-- Use Log4J for logging -->
