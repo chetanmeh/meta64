@@ -33,6 +33,7 @@ import com.meta64.mobile.user.AccessControlUtil;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.DateUtil;
+import com.meta64.mobile.util.Encryptor;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.XString;
@@ -73,6 +74,9 @@ public class UserManagerService {
 
 	@Autowired
 	private ConstantsProvider constProvider;
+	
+	@Autowired
+	private Encryptor encryptor;
 
 	/*
 	 * Logs in the user using credentials held in 'req'
@@ -143,6 +147,7 @@ public class UserManagerService {
 					if (node != null) {
 						String userName = JcrUtil.getRequiredStringProp(node, JcrProp.USER);
 						String password = JcrUtil.getRequiredStringProp(node, JcrProp.PWD);
+						password = encryptor.decrypt(password);
 						String email = JcrUtil.getRequiredStringProp(node, JcrProp.EMAIL);
 
 						if (UserManagerUtil.createUser(session, userName, password)) {
@@ -257,7 +262,7 @@ public class UserManagerService {
 
 				Node newNode = signupNode.addNode(userName, JcrConstants.NT_UNSTRUCTURED);
 				newNode.setProperty(JcrProp.USER, userName);
-				newNode.setProperty(JcrProp.PWD, password);
+				newNode.setProperty(JcrProp.PWD, encryptor.encrypt(password));
 				newNode.setProperty(JcrProp.EMAIL, email);
 				newNode.setProperty(JcrProp.CODE, signupCode);
 				JcrUtil.timestampNewNode(session, newNode);
