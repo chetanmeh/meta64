@@ -98,6 +98,15 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Built using Maven
 * Launches from a single "uber jar" containing Tomcat embedded and pre-configured
 
+## Apache Jackrabbit Oak
+
+Other than SpringBoot, the main dependency needed for running/building meta64 is JackrabbitOak. This project is currently being hosted here:
+
+https://github.com/apache/jackrabbit-oak
+https://jackrabbit.apache.org/oak/docs/index.html
+
+The latest stable release that is recommended by the project owners is 1.2.3, and this is the version that meta64 is using.
+
 ## Technical Notes
 * To build the app use maven.
 * You need to understand 'spring boot'
