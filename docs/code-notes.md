@@ -2,9 +2,9 @@
 
 The app is a SPA and the main loading page is 'index.html', which is technically rendered by Spring+Thymeleaf, but it contains JQuery Mobile code in it, which is what does most of the magic. Once the initial page is loaded, REST/AJAX calls do the rest of the work of updating the page content HTML as the user navigates around the app. The same DIVs are simply reloaded with new content as new information is queried from the server and gotten back as JSON.
 
-## RESTfulness
+## JSON/Ajax Server Calls
 
-The AJAX calls to the server are all done using JSON POSTs that get JSON back in the response also. This means that when we are retrieving data to display on the page, we are also getting back the minimal raw data objects from the server (like POJOS), and then rendering them into HTML on the browser side. This is not 100% true because we do have certain scaffolding that is in pure HTML (with some Thymeleaf assisting its creation) and is sent back from the server as HTML, but this is mainly (or only) ever done during the initial page load when JQuery Mobile pages and Dialogs are first constructed and wired up. 
+The AJAX calls to the server are all done using JSON POSTs that get JSON back in the response also. This means that when we retrieve data to display on the page, we are getting back the minimal raw data objects from the server (like POJOS), and then rendering them into HTML on the browser side mostly. The only time the server returns HTML is during the initial page load of the index.html file. From then on it's pure dynamic javascript on complete control of the page. The application is not using a REST interface, because the URL itself does not always refer to a resource on the server, but instead is a 'command name'. So the JSON/Ajax is a "Command Pattern" rather than a "Resource Naming" convention as dictated by REST.
 
 ## Modularity Pattern and Variable Scope
 
@@ -65,8 +65,24 @@ Use CTRL-C to terminate the app gracefully.
     Example Windows BAT file to run Server:
     set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_55
     set PATH=%JAVA_HOME%\bin;%PATH%
-    java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar --jcrAdminPassword=yourPasswordHere --spring.config.location=classpath:/application.properties,classpath:/application-test.properties
+    java -jar com.meta64.mobile-0.0.1-SNAPSHOT.jar 
+    	 --jcrAdminPassword=yourPasswordHere
+       --spring.config.location=classpath:/application.properties, 
+    	   classpath:/application-test.properties
+       --mail.user=name@someserver.com 
+       --mail.password=youremailserverpassword 
+       --mail.host=somehost.someserver.net
+       --aeskey=9999999999999999
     
+## Encryption Key Config
+
+For temporarily storing passwords before the user is created in the repository the following key needs to be supplied:
+
+    --aeskey=9999999999999999
+
+This key must be exactly 16 characters long. It's used in an AES algorithm. (See Encryptor.java)
+
+
 
 
 
