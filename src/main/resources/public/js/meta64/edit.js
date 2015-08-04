@@ -15,7 +15,7 @@ var edit = function() {
 		meta64.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
-	
+
 	var _renameNodeResponse = function(res) {
 		util.checkSuccess("Rename node", res);
 
@@ -75,10 +75,6 @@ var edit = function() {
 	var _insertNodeResponse = function(res) {
 		util.checkSuccess("Insert node", res);
 
-		/*
-		 * set newChildNodeId and also map it to the currently selected node
-		 * under the current page parent
-		 */
 		/*
 		 * TODO: verify this value gets used now that we aren't going
 		 * IMMEDIATELY to the treeview after creates
@@ -140,12 +136,29 @@ var edit = function() {
 		 */
 		nodeInsertTarget : null,
 
+		startEditingNewNode : function() {
+			_.editingUnsavedNode = false;
+			_.editNode = null;
+			_.saveNewNode("");
+		},
+
 		/*
 		 * called to display editor that will come up BEFORE any node is saved
 		 * onto the server, so that the first time any save is performed we will
 		 * have the correct node name, at least.
+		 * 
+		 * This version is no longer being used, and currently this means
+		 * 'editingUnsavedNode' is not currently ever triggered. The new
+		 * approach now that we have the ability to 'rename' nodes is to just
+		 * create one with a random name an let user start editing right away
+		 * and then rename the node IF a custom node name is needed.
+		 * 
+		 * What this means is if we call this function
+		 * (startEditingNewNodeWithName) instead of 'startEditingNewNode()' that
+		 * will cause the GUI to always prompt for the node name before creting
+		 * the node. This was the original functionality and still works.
 		 */
-		startEditingNewNode : function() {
+		startEditingNewNodeWithName : function() {
 			_.editingUnsavedNode = true;
 			_.editNode = null;
 			meta64.changePage("#editNodePg");
@@ -220,8 +233,10 @@ var edit = function() {
 			}
 		},
 
-		saveNewNode : function() {
-			var newNodeName = util.getRequiredElement("#newNodeNameId").val();
+		saveNewNode : function(newNodeName) {
+			if (!newNodeName) {
+				newNodeName = util.getRequiredElement("#newNodeNameId").val();
+			}
 
 			/*
 			 * If we didn't create the node we are inserting under, and neither
@@ -291,7 +306,7 @@ var edit = function() {
 				alert("You didn't change any information!");
 			}
 		},
-		
+
 		moveNodeUp : function(uid) {
 			var node = meta64.uidToNodeMap[uid];
 			if (node) {
@@ -333,25 +348,25 @@ var edit = function() {
 		openExportPg : function() {
 			meta64.changePage("#exportPg");
 		},
-		
+
 		openRenameNodePg : function() {
 			meta64.changePage("#renameNodePg");
 		},
-		
+
 		renameNode : function() {
-			var newName = $("#newNodeNameEditField").val(); 
-			
+			var newName = $("#newNodeNameEditField").val();
+
 			if (util.emptyString(newName)) {
 				alert("Please enter a new node name.");
 				return;
 			}
-			
+
 			var highlightNode = meta64.getHighlightedNode();
 			if (!highlightNode) {
 				alert("Select a node to rename.");
 				return;
 			}
-			
+
 			util.json("renameNode", {
 				"nodeId" : highlightNode.id,
 				"newName" : newName
@@ -596,8 +611,8 @@ var edit = function() {
 		},
 
 		createSubNodeUnderHighlight : function() {
-			
-			_parentOfNewNode =  meta64.getHighlightedNode();
+
+			_parentOfNewNode = meta64.getHighlightedNode();
 			if (!_parentOfNewNode) {
 				alert("Tap a node to insert under.");
 				return;
@@ -610,7 +625,7 @@ var edit = function() {
 			_.nodeInsertTarget = null;
 			_.startEditingNewNode();
 		},
-		
+
 		createSubNode : function(uid) {
 			/*
 			 * If no uid provided we deafult to creating a node under the
