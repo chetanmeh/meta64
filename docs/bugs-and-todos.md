@@ -4,11 +4,9 @@
 
 # TODO
 * need menu item for 'clear selections' (remove selected nodes)
-* need 'refresh' menu item that reloads current page.
-* Need to implement "forgot my password" feature to send user password.
-* If user is logged in we should hide the "signup" button.
+* Need to implement "forgot my password", and reset password without sending actual password to user, but instead
+a limited duration random code that can be used to login and change password.
 * need 'delete account' capability where user can leave meta64, and have all their data deleted from the server.
-* currently searching only searches the 'jcr:content' property, for faster performance than searching all properties, but more advanced and configurable search options can be added in the future.
 * search results that have no results should show a message instead of just blank page!
 * search results header bar can scroll off screen. make it fixed at top just like main page header.
   (attempting this caused problems, so the code is backed out, for now, by being commented out)

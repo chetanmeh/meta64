@@ -15,12 +15,12 @@ var view = function() {
 			if (meta64.editMode) {
 				statusLine += " Selections: " + util.getPropertyCount(meta64.selectedNodes);
 			}
-
+			
 			var visible = statusLine.length > 0;
 			util.setVisibility("#mainNodeStatusBar", visible);
-
+			
 			if (visible) {
-				util.getRequiredElement("#mainNodeStatusBar").html(statusLine);
+				util.setHtmlEnhanced($("#mainNodeStatusBar"), statusLine);
 			}
 		},
 
@@ -49,6 +49,11 @@ var view = function() {
 			});
 		},
 
+		refreshPage : function() {
+			meta64.changePage("#mainPage");
+			view.refreshTree(null, false);
+		},
+		
 		scrollToSelectedNode : function() {
 			setTimeout(function() {
 				var elm = nav.getSelectedDomElement();

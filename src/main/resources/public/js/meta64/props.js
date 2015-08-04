@@ -34,11 +34,17 @@ var props = function() {
 			meta64.showProperties = meta64.showProperties ? false : true;
 			// setDataIconUsingId("#editModeButton", editMode ? "edit" :
 			// "forbidden");
+			
+			/*
+			 * TODO: this button icon needs to change now that the properties is on the main manu 
+			 * instead of navbar button. Currently not functional.
+			 */
 			var elm = $("#propsToggleButton");
 			elm.toggleClass("ui-icon-grid", meta64.showProperties);
 			elm.toggleClass("ui-icon-forbidden", !meta64.showProperties);
 			render.renderPageFromData();
 			view.scrollToSelectedNode();
+			meta64.changePage("#mainPage");
 		},
 
 		/*

@@ -215,11 +215,13 @@ var edit = function() {
 		saveNewNode : function() {
 			var newNodeName = util.getRequiredElement("#newNodeNameId").val();
 
-			/* If we didn't create the node we are inserting under, and neither did "admin", then we 
-			 * need to send notification email upon saving this new node.
+			/*
+			 * If we didn't create the node we are inserting under, and neither
+			 * did "admin", then we need to send notification email upon saving
+			 * this new node.
 			 */
 			if (meta64.userName != _parentOfNewNode.createdBy && //
-					_parentOfNewNode.createdBy != "admin") {
+			_parentOfNewNode.createdBy != "admin") {
 				_sendNotificationPendingSave = true;
 			}
 
@@ -536,19 +538,47 @@ var edit = function() {
 		},
 
 		insertNode : function(uid) {
+
 			_parentOfNewNode = meta64.currentNode;
 			if (!_parentOfNewNode) {
-				console.log("Unknown nodeId in insertNodeClick: " + uid);
+				console.log("Unknown parent");
 				return;
 			}
 
-			var node = meta64.uidToNodeMap[uid];
+			/*
+			 * We get the node selected for the insert position by using the uid
+			 * if one was passed in or using the currently highlighted node if
+			 * no uid was passed.
+			 */
+			var node = null;
+			if (!uid) {
+				node = meta64.getHighlightedNode();
+			} else {
+				node = meta64.uidToNodeMap[uid];
+			}
+
 			if (node) {
 				_.nodeInsertTarget = node;
 				_.startEditingNewNode();
 			}
 		},
 
+		createSubNodeUnderHighlight : function() {
+			
+			_parentOfNewNode =  meta64.getHighlightedNode();
+			if (!_parentOfNewNode) {
+				alert("Tap a node to insert under.");
+				return;
+			}
+
+			/*
+			 * this indicates we are NOT inserting inline. An inline insert
+			 * would always have a target.
+			 */
+			_.nodeInsertTarget = null;
+			_.startEditingNewNode();
+		},
+		
 		createSubNode : function(uid) {
 			/*
 			 * If no uid provided we deafult to creating a node under the

@@ -275,7 +275,7 @@ var meta64 = function() {
 			$("#openLoginPgButton").on("click", user.openLoginPg);
 			$("#navHomeButton").on("click", nav.navHome);
 			$("#navUpLevelButton").on("click", nav.navUpLevel);
-			$("#propsToggleButton").on("click", props.propsToggle);
+			//$("#propsToggleButton").on("click", props.propsToggle);
 			$("#deletePropertyButton").on("click", props.deleteProperty);
 			$("#editModeButton").on("click", edit.editMode);
 			$("#makeNodeReferencableButton").on("click", edit.makeNodeReferencable);
@@ -365,8 +365,11 @@ var meta64 = function() {
 			 * that
 			 */
 			util.setEnablement($("#editModeButton"), editMode);
+			util.setEnablement($("#insNodeButton"),  !_.isAnonUser && highlightNode != null);
+			util.setEnablement($("#createNodeButton"),  !_.isAnonUser && highlightNode != null);
 
 			util.setVisibility("#menuButton", !_.isAnonUser);
+			util.setVisibility("#openSignupPgButton", _.isAnonUser);
 			util.setVisibility("#mainMenuSearchButton", !_.isAnonUser && highlightNode != null);
 			util.setVisibility("#mainMenuTimelineButton", !_.isAnonUser && highlightNode != null);
 		},

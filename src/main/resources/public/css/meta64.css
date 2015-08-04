@@ -132,22 +132,33 @@ tr td div p {
 }
 
 .main-node-content {
-	margin-top: 5px;
+	position: relative;
+	margin-top: 0;
+	padding-top: 0;
+	
+	margin-top: 6px;
+	padding-right: 1.5em;
+	
 	/* padding-left: 5px; */
-	background: #D8D8D8;
+	background: #cfcfcf;
 	border: 3px solid gray;
 }
 
 .node-table-row {
 	position: relative;
 	border-bottom: 6px solid #d6d6d6;
-	padding-left: 5px;
+	/* padding-left: 1.5em; */
+	padding-right: 1.5em;
 }
 
 .node-table-row .top-right-image {
     position: absolute;
     top: 0px;
     right: 0px;
+}
+
+.main-node-content {
+	position: relative;
 }
 
 .main-node-content .top-right-image {

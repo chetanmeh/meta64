@@ -51,7 +51,7 @@ var render = function() {
 		renderNodeContent : function(node, showIdentifier, showPath, showName, renderBinary) {
 			var headerText = "";
 			var ret = "";
-			
+
 			ret += _.getTopRightImageTag(node);
 
 			if (showPath && meta64.editMode) {
@@ -209,6 +209,11 @@ var render = function() {
 			}, _.renderNodeContent(node, true, true, true, true)));
 		},
 
+		/*
+		 * meta64.com doesn't currently set this property, because the
+		 * positioning (in css styling) is not yet perfected. Padding and Margin
+		 * hell has ensued.
+		 */
 		getTopRightImageTag : function(node) {
 			var topRightImg = props.getNodePropertyVal('img.top.right', node);
 			var topRightImgTag = "";
@@ -220,7 +225,7 @@ var render = function() {
 			}
 			return topRightImgTag;
 		},
-		
+
 		/*
 		 * TODO: This approach is going to be too heavy weight with large
 		 * numbers of rows, so I will need to make the main menu dropdown
@@ -233,7 +238,7 @@ var render = function() {
 			var mini = "true";
 
 			var openButton = selButton = createSubNodeButton = editNodeButton = //
-			moveNodeUpButton = moveNodeDownButton = insertNodeButton = '';
+			moveNodeUpButton = moveNodeDownButton = insertNodeButton = "";
 
 			/* Construct Open Button */
 			if (_.nodeHasChildren(uid)) {
@@ -265,19 +270,23 @@ var render = function() {
 					"class" : "ui-btn ui-btn-inline ui-icon-check ui-mini ui-btn-icon-left " + selClass
 				}, "Sel");
 
-				/* Construct Create Subnode Button */
-				createSubNodeButton = _.makeTag("a", //
-				{
-					"onClick" : "edit.createSubNode('" + uid + "');",
-					"class" : "ui-btn ui-btn-inline ui-icon-star ui-mini ui-btn-icon-left"
-				}, "New");
+				if (cnst.NEW_ON_TOOLBAR) {
+					/* Construct Create Subnode Button */
+					createSubNodeButton = _.makeTag("a", //
+					{
+						"onClick" : "edit.createSubNode('" + uid + "');",
+						"class" : "ui-btn ui-btn-inline ui-icon-star ui-mini ui-btn-icon-left"
+					}, "New");
+				}
 
-				/* Construct Create Subnode Button */
-				insertNodeButton = _.makeTag("a", //
-				{
-					"onClick" : "edit.insertNode('" + uid + "');",
-					"class" : "ui-btn ui-btn-inline ui-icon-bars ui-mini ui-btn-icon-left"
-				}, "Ins");
+				if (cnst.INS_ON_TOOLBAR) {
+					/* Construct Create Subnode Button */
+					insertNodeButton = _.makeTag("a", //
+					{
+						"onClick" : "edit.insertNode('" + uid + "');",
+						"class" : "ui-btn ui-btn-inline ui-icon-bars ui-mini ui-btn-icon-left"
+					}, "Ins");
+				}
 			}
 
 			if (meta64.editMode && editingAllowed) {
@@ -752,4 +761,4 @@ var render = function() {
 	return _;
 }();
 
-//# sourceUrl=render.js
+// # sourceUrl=render.js

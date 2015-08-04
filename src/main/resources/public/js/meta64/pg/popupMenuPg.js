@@ -66,10 +66,15 @@ var popupMenuPg = function() {
 //			_menuItem("Timeline", "timelineButton", "srch.timeline();");// 
 //			var searchMenu = _makeTopLevelMenu("Search", searchMenuItems);
 			
+			var viewOptionsMenuItems = //
+			_menuItem("Toggle Properties", "propsToggleButton", "props.propsToggle();")+ // 
+			_menuItem("Refresh", "refreshPageButton", "view.refreshPage();"); // 
+			var viewOptionsMenu = _makeTopLevelMenu("View Options", viewOptionsMenuItems);
+			
 			var content = render.makeTag("div", {
 				"style" : "margin: 0; min-width: 300px; position: fixed; top: 2em; left: 2em;",
 				"data-role" : "collapsible-set"
-			}, myAccountMenu + editMenu /*+ searchMenu*/);
+			}, myAccountMenu + editMenu + viewOptionsMenu/*+ searchMenu*/);
 
 			util.setHtmlEnhanced($("#popupMenuPg"), content);
 		},
