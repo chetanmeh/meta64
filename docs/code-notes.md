@@ -82,10 +82,19 @@ For temporarily storing passwords before the user is created in the repository t
 
 This key must be exactly 16 characters long. It's used in an AES algorithm. (See Encryptor.java)
 
+## Warning about Eclipse Code Formatter
 
+The Eclipse code formatter will break the 'sourceURL' file name desgination in the javascript files by always putting a space between '//' and '#' as shown here:
 
+This works:
 
+    //# sourceURL=renameNodePg.js
 
+This is broken (by eclipse)
+
+    // # sourceURL=renameNodePg.js
+
+I have no yet found a way to configure the eclipse to stop doing this, and it is a very serious problem. Only thing I know to do is eventually use ant text file replace feature to be able to fix it as part of the build process. Without having the sourceURL the stack traces for javascript errors are even more unhelpful than normal!
 
 
 

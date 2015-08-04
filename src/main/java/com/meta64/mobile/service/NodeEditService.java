@@ -22,12 +22,14 @@ import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.DeletePropertyRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.MakeNodeReferencableRequest;
+import com.meta64.mobile.request.RenameNodeRequest;
 import com.meta64.mobile.request.SaveNodeRequest;
 import com.meta64.mobile.request.SavePropertyRequest;
 import com.meta64.mobile.response.CreateSubNodeResponse;
 import com.meta64.mobile.response.DeletePropertyResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.MakeNodeReferencableResponse;
+import com.meta64.mobile.response.RenameNodeResponse;
 import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
 import com.meta64.mobile.user.RunAsJcrAdmin;
@@ -119,6 +121,26 @@ public class NodeEditService {
 
 		session.save();
 		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
+		res.setSuccess(true);
+	}
+
+	public void renameNode(Session session, RenameNodeRequest req, RenameNodeResponse res) throws Exception {
+
+		String nodeId = req.getNodeId();
+		String newName = req.getNewName().trim();
+		if (newName.length() == 0) {
+			throw new Exception("No node name provided.");
+		}
+
+		log.debug("Renaming node: " + nodeId);
+		Node node = JcrUtil.findNode(session, nodeId);
+
+		if (!JcrUtil.isUserAccountRoot(sessionContext, node)) {
+			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		}
+
+		session.move(node.getPath(), node.getParent().getPath() + "/" + newName);
+		session.save();
 		res.setSuccess(true);
 	}
 

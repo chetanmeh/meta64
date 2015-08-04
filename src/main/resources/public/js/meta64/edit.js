@@ -15,6 +15,14 @@ var edit = function() {
 		meta64.changePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
+	
+	var _renameNodeResponse = function(res) {
+		util.checkSuccess("Rename node", res);
+
+		view.refreshTree(null, false);
+		meta64.changePage("#mainPage");
+		view.scrollToSelectedNode();
+	}
 
 	var _exportResponse = function(res) {
 		if (util.checkSuccess("Export", res)) {
@@ -283,7 +291,7 @@ var edit = function() {
 				alert("You didn't change any information!");
 			}
 		},
-
+		
 		moveNodeUp : function(uid) {
 			var node = meta64.uidToNodeMap[uid];
 			if (node) {
@@ -324,6 +332,30 @@ var edit = function() {
 
 		openExportPg : function() {
 			meta64.changePage("#exportPg");
+		},
+		
+		openRenameNodePg : function() {
+			meta64.changePage("#renameNodePg");
+		},
+		
+		renameNode : function() {
+			var newName = $("#newNodeNameEditField").val(); 
+			
+			if (util.emptyString(newName)) {
+				alert("Please enter a new node name.");
+				return;
+			}
+			
+			var highlightNode = meta64.getHighlightedNode();
+			if (!highlightNode) {
+				alert("Select a node to rename.");
+				return;
+			}
+			
+			util.json("renameNode", {
+				"nodeId" : highlightNode.id,
+				"newName" : newName
+			}, _renameNodeResponse);
 		},
 
 		exportNodes : function() {

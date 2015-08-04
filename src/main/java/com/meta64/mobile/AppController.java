@@ -40,6 +40,7 @@ import com.meta64.mobile.request.MakeNodeReferencableRequest;
 import com.meta64.mobile.request.MoveNodesRequest;
 import com.meta64.mobile.request.NodeSearchRequest;
 import com.meta64.mobile.request.RemovePrivilegeRequest;
+import com.meta64.mobile.request.RenameNodeRequest;
 import com.meta64.mobile.request.RenderNodeRequest;
 import com.meta64.mobile.request.SaveNodeRequest;
 import com.meta64.mobile.request.SavePropertyRequest;
@@ -65,6 +66,7 @@ import com.meta64.mobile.response.MakeNodeReferencableResponse;
 import com.meta64.mobile.response.MoveNodesResponse;
 import com.meta64.mobile.response.NodeSearchResponse;
 import com.meta64.mobile.response.RemovePrivilegeResponse;
+import com.meta64.mobile.response.RenameNodeResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
 import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
@@ -352,6 +354,18 @@ public class AppController {
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 		nodeEditService.insertNode(session, req, res);
+		return res;
+	}
+	
+	/* Renames the node specified in the request to the new node name specified in the request */
+	@RequestMapping(value = API_PATH + "/renameNode", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody RenameNodeResponse renameNode(@RequestBody RenameNodeRequest req) throws Exception {
+		logRequest("renameNode", req);
+		RenameNodeResponse res = new RenameNodeResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+		nodeEditService.renameNode(session, req, res);
 		return res;
 	}
 

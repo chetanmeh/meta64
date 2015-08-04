@@ -58,12 +58,14 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Timeline feature: Reverse Chronological list of any tree branch.
 * Deleting Nodes
 * Moving nodes to new locations (supports multi-select)
+* Renaming Nodes
 * Sharing a node as Public
 * Sharing a node to a specific User
 * Removing individual Share privileges from nodes
 * Short URL GUID for any node, so it can be referenced by URL
 * Sends email notification when someone creates a new node under a node you own.
 * Uploading attachments (attached files) onto a node
+* Image Attachments automatically display in the content, anywhere you specify.
 * Upload from local machine
 * Upload directly from any internet URL.
 * Deleting node attachments

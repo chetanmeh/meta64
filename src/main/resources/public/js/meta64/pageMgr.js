@@ -12,16 +12,16 @@ var pageMgr = function() {
 	var _ = {
 
 		buildPage : function(pageName) {
-			console.log("buildPage: "+pageName);
-			
+			console.log("buildPage: " + pageName);
+
 			for (var i = 0; i < pageBuilders.length; i++) {
 				var builder = pageBuilders[i];
-				//console.log("Checking page builder: " + builder.name);
-				if (pageName===builder.name) {
+				// console.log("Checking page builder: " + builder.name);
+				if (pageName === builder.name) {
 					console.log("found page builder: " + builder.name);
 
 					if (!builder.built) {
-						//console.log("building page.");
+						// console.log("building page.");
 						builder.build();
 						builder.built = true;
 					}
@@ -40,6 +40,10 @@ var pageMgr = function() {
 				return;
 			}
 
+			/* Actually I think I can find a better way where the 'build' and 'init' function names are built
+			 * dynamically, and the called (also without doing an eval()), but for now I am using an array
+			 * to hold configurations.
+			 */
 			pageBuilders = [ {
 				name : "#signupPg",
 				build : signupPg.build,
@@ -97,7 +101,11 @@ var pageMgr = function() {
 				name : "#confirmPg",
 				build : confirmPg.build,
 				init : confirmPg.init
-			} ];
+			}, {
+				name : "#renameNodePg",
+				build : renameNodePg.build,
+				init : renameNodePg.init
+			}, ];
 		}
 	};
 

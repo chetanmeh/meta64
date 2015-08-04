@@ -109,8 +109,10 @@
 					<li><a id="navHomeButton" data-icon="home">Home</a></li>
 					<li><a id="navUpLevelButton" data-icon="arrow-u-l">Up
 							Level</a></li>
-					<li><a id="insNodeButton" onClick="edit.insertNode();" data-icon="bars">Insert</a></li>
-					<li><a id="createNodeButton" onClick="edit.createSubNodeUnderHighlight();" data-icon="star">New</a></li>					
+					<li><a id="insNodeButton" onClick="edit.insertNode();"
+						data-icon="bars">Insert</a></li>
+					<li><a id="createNodeButton"
+						onClick="edit.createSubNodeUnderHighlight();" data-icon="star">New</a></li>
 					<li><a id="editModeButton" data-icon="forbidden">Edit</a></li>
 				</ul>
 			</div>
@@ -149,6 +151,7 @@
 	<div data-role="page" id="shareToPersonPg"></div>
 	<div data-role="page" id="editNodePg"></div>
 	<div data-role="page" id="editPropertyPg"></div>
+	<div data-role="page" id="renameNodePg"></div>
 
 	<div th:replace="fragments/donate">...</div>
 
@@ -186,7 +189,9 @@
 			"/js/meta64/pg/editNodePg.js",//
 			"/js/meta64/pg/editPropertyPg.js",//
 			"/js/meta64/pg/shareToPersonPg.js",//,
-			"/js/meta64/pg/sharingPg.js" ];
+			"/js/meta64/pg/sharingPg.js", //
+			"/js/meta64/pg/renameNodePg.js" //
+			];
 			/*
 			Loads all JS files, and then calls initApp once they are all completely loaded
 			 */
