@@ -3,6 +3,7 @@ console.log("running module: prefsPg.js");
 var prefsPg = function() {
 
 	var _ = {
+			domId : "prefsPg",
 		build : function() {
 
 			var header = render.makeTag("div", //

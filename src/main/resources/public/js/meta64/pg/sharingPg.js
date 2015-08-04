@@ -3,6 +3,8 @@ console.log("running module: sharingPg.js");
 var sharingPg = function() {
 
 	var _ = {
+			domId : "sharingPg",
+			
 		build : function() {
 
 			var header = render.makeTag("div", //

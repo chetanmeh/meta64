@@ -3,6 +3,7 @@ console.log("running module: loginPg.js");
 var loginPg = function() {
 
 	var _ = {
+			domId : "loginPg",
 		build : function() {
 
 			var header = render.makeTag("div", //

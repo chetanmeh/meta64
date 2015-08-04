@@ -45,6 +45,17 @@ var render = function() {
 	}
 
 	var _ = {
+		buildPage : function(pg) {
+			if (!pg.built) {
+				pg.build();
+				pg.built = true;
+			}
+
+			if (pg.init) {
+				pg.init();
+			}
+		},
+
 		/*
 		 * node: JSON of NodeInfo.java
 		 */

@@ -5,7 +5,7 @@ var prefs = function() {
 	var _ = {
 		savePreferencesResponse : function(res) {
 			if (util.checkSuccess("Saving Preferences", res)) {
-				meta64.changePage("#mainPage");
+				meta64.jqueryChangePage("#mainPage");
 				view.scrollToSelectedNode();
 			}
 		},
@@ -27,7 +27,7 @@ var prefs = function() {
 		
 		accountPreferencesPg : function() {
 			
-			meta64.changePage("#prefsPg");
+			meta64.changePage(prefsPg);
 			_.populatePreferencesPg();
 		}
 	};

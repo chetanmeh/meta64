@@ -5,12 +5,14 @@ var confirmPg = function() {
 	var _title, _message, _buttonText, _callback;
 	
 	var _ = {
+			domId : "confirmPg",
+			
 		areYouSure : function(title, message, buttonText, callback) {
 			_title = title;
 			_message = message;
 			_buttonText = buttonText;
 			_callback = callback;
-			meta64.changePage("#confirmPg");
+			meta64.changePage(confirmPg);
 		},
 
 		build : function() {

@@ -12,7 +12,7 @@ var edit = function() {
 		util.checkSuccess("Save node", res);
 
 		view.refreshTree(null, false);
-		meta64.changePage("#mainPage");
+		meta64.jqueryChangePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
@@ -20,14 +20,14 @@ var edit = function() {
 		util.checkSuccess("Rename node", res);
 
 		view.refreshTree(null, false);
-		meta64.changePage("#mainPage");
+		meta64.jqueryChangePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
 	var _exportResponse = function(res) {
 		if (util.checkSuccess("Export", res)) {
 			alert("Export Successful.");
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 			view.scrollToSelectedNode();
 		}
 	}
@@ -36,7 +36,7 @@ var edit = function() {
 		if (util.checkSuccess("Import", res)) {
 			alert("Import Successful.");
 			view.refreshTree(null, false);
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 			view.scrollToSelectedNode();
 		}
 	}
@@ -46,7 +46,7 @@ var edit = function() {
 
 		util.checkSuccess("Insert Book", res);
 		view.refreshTree(null, false);
-		meta64.changePage("#mainPage");
+		meta64.jqueryChangePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
@@ -68,7 +68,7 @@ var edit = function() {
 		util.checkSuccess("Change node position", res);
 
 		view.refreshTree(null, false);
-		meta64.changePage("#mainPage");
+		meta64.jqueryChangePage("#mainPage");
 		view.scrollToSelectedNode();
 	}
 
@@ -161,7 +161,7 @@ var edit = function() {
 		startEditingNewNodeWithName : function() {
 			_.editingUnsavedNode = true;
 			_.editNode = null;
-			meta64.changePage("#editNodePg");
+			meta64.changePage(editNodePg);
 		},
 
 		editMode : function() {
@@ -205,7 +205,7 @@ var edit = function() {
 				 */
 				// renderPageFromData(currentNodeData);
 			}
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 			view.scrollToSelectedNode();
 		},
 
@@ -346,11 +346,11 @@ var edit = function() {
 		},
 
 		openExportPg : function() {
-			meta64.changePage("#exportPg");
+			meta64.changePage(exportPg);
 		},
 
 		openRenameNodePg : function() {
-			meta64.changePage("#renameNodePg");
+			meta64.changePage2(renameNodePg); //"#renameNodePg");
 		},
 
 		renameNode : function() {
@@ -391,7 +391,7 @@ var edit = function() {
 		},
 
 		openImportPg : function() {
-			meta64.changePage("#importPg");
+			meta64.changePage(importPg);
 		},
 
 		importNodes : function() {
@@ -421,7 +421,7 @@ var edit = function() {
 			_.editingUnsavedNode = false;
 			_.editNode = node;
 			// _.populateEditNodePg();
-			meta64.changePage("#editNodePg");
+			meta64.changePage(editNodePg);
 		},
 
 		/*

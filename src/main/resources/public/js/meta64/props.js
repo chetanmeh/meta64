@@ -6,7 +6,7 @@ var props = function() {
 		util.checkSuccess("Save properties", res);
 
 		edit.editNode.properties.push(res.propertySaved)
-		meta64.changePage("#editNodePg");
+		meta64.changePage(editNodePg);
 		meta64.treeDirty = true;
 	}
 
@@ -21,7 +21,7 @@ var props = function() {
 			props.deletePropertyFromLocalData(propertyToDelete);
 
 			/* now just re-render screen from local variables */
-			meta64.changePage("#editNodePg");
+			meta64.changePage(editNodePg);
 			meta64.treeDirty = true;
 		}
 	}
@@ -44,7 +44,7 @@ var props = function() {
 			elm.toggleClass("ui-icon-forbidden", !meta64.showProperties);
 			render.renderPageFromData();
 			view.scrollToSelectedNode();
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 		},
 
 		/*
@@ -71,7 +71,7 @@ var props = function() {
 		},
 
 		addProperty : function() {
-			meta64.changePage("#editPropertyPg");
+			meta64.changePage(editPropertyPg);
 		},
 
 		populatePropertyEdit : function() {

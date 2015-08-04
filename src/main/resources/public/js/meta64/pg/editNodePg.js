@@ -3,13 +3,15 @@ console.log("running module: editNodePg.js");
 var editNodePg = function() {
 
 	var _ = {
+		domId : "editNodePg",
+
 		build : function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header"//,
-				//"data-position" : "fixed",
-				//"data-tap-toggle" : "false"
+				"data-role" : "header"// ,
+			// "data-position" : "fixed",
+			// "data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Edit Node</h2>");
 
@@ -37,7 +39,7 @@ var editNodePg = function() {
 			$("#cancelEditButton").on("click", edit.cancelEdit);
 			$("#addPropertyButton").on("click", props.addProperty);
 		},
-		
+
 		init : function() {
 			edit.populateEditNodePg();
 		}

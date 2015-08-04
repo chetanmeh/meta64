@@ -3,6 +3,7 @@ console.log("running module: searchResultsPg.js");
 var searchResultsPg = function() {
 
 	var _ = {
+			domId : "searchResultsPg",
 		build : function() {
 
 			var header = render.makeTag("div", //
@@ -26,7 +27,7 @@ var searchResultsPg = function() {
 			util.setHtmlEnhanced($("#searchResultsPg"), content);
 
 			$("#cancelSearchResultsButton").on("click", function() {
-				meta64.changePage("#mainPage");
+				meta64.jqueryChangePage("#mainPage");
 				view.scrollToSelectedNode();
 			});
 		},

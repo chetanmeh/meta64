@@ -96,11 +96,11 @@ var attachment = function() {
 			}
 
 			_.uploadNode = node;
-			meta64.changePage("#uploadPg");
+			meta64.changePage(uploadPg);
 		},
 
 		closeUploadPg : function() {
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 			view.scrollToSelectedNode();
 		}
 	};

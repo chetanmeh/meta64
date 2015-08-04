@@ -3,6 +3,8 @@ console.log("running module: signupPg.js");
 var signupPg = function() {
 
 	var _ = {
+		domId : "signupPg",
+
 		build : function() {
 
 			var header = render.makeTag("div", //

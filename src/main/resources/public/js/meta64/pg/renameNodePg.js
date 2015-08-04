@@ -3,13 +3,15 @@ console.log("running module: renameNodePg.js");
 var renameNodePg = function() {
 
 	var _ = {
+		domId : "renameNodePg",
+
 		build : function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header"//,
-				//"data-position" : "fixed",
-				//"data-tap-toggle" : "false"
+				"data-role" : "header"// ,
+			// "data-position" : "fixed",
+			// "data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Rename Node</h2>");
 
@@ -44,4 +46,4 @@ var renameNodePg = function() {
 	return _;
 }();
 
-//# sourceURL=renameNodePg.js
+// # sourceURL=renameNodePg.js

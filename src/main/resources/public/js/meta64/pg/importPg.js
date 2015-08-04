@@ -3,6 +3,8 @@ console.log("running module: importPg.js");
 var importPg = function() {
 
 	var _ = {
+			domId : "importPg",
+			
 		build : function() {
 
 			var header = render.makeTag("div", //

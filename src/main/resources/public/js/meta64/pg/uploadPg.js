@@ -3,6 +3,7 @@ console.log("running module: uploadPg.js");
 var uploadPg = function() {
 
 	var _ = {
+			domId : "uploadPg",
 		build : function() {
 
 			var header = render.makeTag("div", //

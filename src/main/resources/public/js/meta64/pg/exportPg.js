@@ -3,6 +3,8 @@ console.log("running module: exportPg.js");
 var exportPg = function() {
 
 	var _ = {
+			domId : "exportPg",
+			
 		build : function() {
 
 			var header = render.makeTag("div", //

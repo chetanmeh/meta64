@@ -3,6 +3,7 @@ console.log("running module: searchPg.js");
 var searchPg = function() {
 
 	var _ = {
+			domId : "searchPg",
 		build : function() {
 
 			var header = render.makeTag("div", //

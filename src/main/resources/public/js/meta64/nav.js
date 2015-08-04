@@ -18,7 +18,7 @@ var nav = function() {
 		},
 
 		showSearchPage : function() {
-			meta64.changePage("#searchResultsPg");
+			meta64.changePage(searchResultsPg);
 		},
 
 		upLevelResponse : function(res, id) {

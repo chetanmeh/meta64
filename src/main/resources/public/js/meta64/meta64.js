@@ -133,14 +133,18 @@ var meta64 = function() {
 			return _.editModeOption === _.MODE_SIMPLE;
 		},
 
-		changePage : function(pageId) {
-			pageMgr.buildPage(pageId);
-			$.mobile.pageContainer.pagecontainer("change", pageId);
+		jqueryChangePage : function(pageName) {
+			$.mobile.pageContainer.pagecontainer("change", pageName);
 		},
 
-		popup : function(pageId) {
-			pageMgr.buildPage(pageId);
-			$(pageId).popup("open");
+		changePage : function(pg) {
+			render.buildPage(pg);
+			$.mobile.pageContainer.pagecontainer("change", "#" + pg.domId);
+		},
+
+		popup : function() {
+			render.buildPage(popupMenuPg);
+			$("#" + popupMenuPg.domId).popup("open");
 		},
 
 		isNodeBlackListed : function(node) {
@@ -275,14 +279,14 @@ var meta64 = function() {
 			$("#openLoginPgButton").on("click", user.openLoginPg);
 			$("#navHomeButton").on("click", nav.navHome);
 			$("#navUpLevelButton").on("click", nav.navUpLevel);
-			//$("#propsToggleButton").on("click", props.propsToggle);
+			// $("#propsToggleButton").on("click", props.propsToggle);
 			$("#deletePropertyButton").on("click", props.deleteProperty);
 			$("#editModeButton").on("click", edit.editMode);
 			$("#makeNodeReferencableButton").on("click", edit.makeNodeReferencable);
 		},
 
 		openDonatePg : function() {
-			meta64.changePage("#donatePg");
+			meta64.changePage(donatePg);
 		},
 
 		getHighlightedNode : function() {
@@ -340,7 +344,7 @@ var meta64 = function() {
 		},
 
 		refreshAllGuiEnablement : function() {
-			
+
 			/* multiple select nodes */
 			var selNodeCount = util.getPropertyCount(_.selectedNodes);
 			var highlightNode = _.getHighlightedNode();
@@ -365,8 +369,8 @@ var meta64 = function() {
 			 * that
 			 */
 			util.setEnablement($("#editModeButton"), editMode);
-			util.setEnablement($("#insNodeButton"),  !_.isAnonUser && highlightNode != null);
-			util.setEnablement($("#createNodeButton"),  !_.isAnonUser && highlightNode != null);
+			util.setEnablement($("#insNodeButton"), !_.isAnonUser && highlightNode != null);
+			util.setEnablement($("#createNodeButton"), !_.isAnonUser && highlightNode != null);
 
 			util.setVisibility("#menuButton", !_.isAnonUser);
 			util.setVisibility("#openSignupPgButton", _.isAnonUser);
@@ -504,8 +508,6 @@ var meta64 = function() {
 			 */
 			user.refreshLogin();
 
-			pageMgr.initializePageBuilders();
-
 			/*
 			 * Check for screen size in a timer. We don't want to monitor actual
 			 * screen resize events because if a user is expanding a window we
@@ -528,7 +530,7 @@ var meta64 = function() {
 					_.screenSizeChange();
 				}
 			}, 1500);
-			
+
 			_.refreshAllGuiEnablement();
 		},
 

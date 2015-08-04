@@ -76,7 +76,7 @@ var share = function() {
 		},
 
 		shareNodeToPersonPg : function() {
-			meta64.changePage("#shareToPersonPg");
+			meta64.changePage(shareToPersonPg);
 		},
 		
 		shareNodeToPerson : function() {
@@ -124,12 +124,12 @@ var share = function() {
 				return;
 			}
 			_.sharingNode = node;
-			meta64.changePage("#sharingPg");
+			meta64.changePage(sharingPg);
 		},
 
 		reloadFromShareWithPerson : function(res) {
 			if (util.checkSuccess("Share Node with Person", res)) {
-				meta64.changePage("#sharingPg");
+				meta64.changePage(sharingPg);
 			}
 		},
 		

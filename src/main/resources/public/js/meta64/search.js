@@ -16,7 +16,7 @@ var srch = function() {
 
 	var _searchNodesResponse = function(res) {
 		_.searchResults = res;
-		meta64.changePage("#searchResultsPg");
+		meta64.changePage(searchResultsPg);
 	};
 
 	var _ = {
@@ -96,7 +96,7 @@ var srch = function() {
 		},
 
 		searchPg : function() {
-			meta64.changePage("#searchPg");
+			meta64.changePage(searchPg);
 		},
 
 		initSearchNode : function(node) {
@@ -192,7 +192,7 @@ var srch = function() {
 			 */
 			srch.highlightRowNode = srch.uidToNodeMap[uid];
 			view.refreshTree(srch.highlightRowNode.id, true);
-			meta64.changePage("#mainPage");
+			meta64.changePage(mainPage);
 		},
 
 		/*

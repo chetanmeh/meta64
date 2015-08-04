@@ -80,7 +80,7 @@
 			<div data-type="horizontal" data-role="controlgroup"
 				class="ui-btn-left">
 
-				<a onclick="meta64.popup('#popupMenuPg');" data-rel="popup"
+				<a onclick="meta64.popup();"
 					id="menuButton"
 					class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-bars">Menu</a>
 
@@ -97,7 +97,7 @@
 			<div data-type="horizontal" data-role="controlgroup"
 				class="ui-btn-right">
 				<!--  -->
-				<a id="openSignupPgButton" onclick="meta64.changePage('#signupPg');"
+				<a id="openSignupPgButton" onclick="user.openSignupPg();"
 					class="ui-btn ui-btn-inline ui-btn-a">Signup</a>
 				<!--  -->
 				<a data-icon="user" id="openLoginPgButton"
@@ -174,7 +174,6 @@
 			"/js/meta64/user.js", //
 			"/js/meta64/util.js", //
 			"/js/meta64/view.js", //
-			"/js/meta64/pageMgr.js",//
 			"/js/meta64/pg/popupMenuPg.js",//
 			"/js/meta64/pg/confirmPg.js",//
 			"/js/meta64/pg/searchResultsPg.js",//

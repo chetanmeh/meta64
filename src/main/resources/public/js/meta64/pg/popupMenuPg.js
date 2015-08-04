@@ -42,6 +42,8 @@ var popupMenuPg = function() {
 	}
 
 	var _ = {
+			domId : "popupMenuPg",
+			
 		build : function() {
 
 			var myAccountItems = //

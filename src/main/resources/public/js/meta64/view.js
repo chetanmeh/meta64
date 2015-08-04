@@ -50,7 +50,7 @@ var view = function() {
 		},
 
 		refreshPage : function() {
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 			view.refreshTree(null, false);
 		},
 		

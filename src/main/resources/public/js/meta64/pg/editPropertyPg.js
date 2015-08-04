@@ -3,13 +3,15 @@ console.log("running module: editPropertyPg.js");
 var editPropertyPg = function() {
 
 	var _ = {
+		domId : "editPropertyPg",
+
 		build : function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header"//,
-				//"data-position" : "fixed",
-				//"data-tap-toggle" : "false"
+				"data-role" : "header"// ,
+			// "data-position" : "fixed",
+			// "data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Edit Node Property</h2>");
 

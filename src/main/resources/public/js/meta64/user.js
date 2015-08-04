@@ -1,7 +1,7 @@
 console.log("running module: user.js");
 
 var user = function() {
-	
+
 	var _setTitleUsingLoginResponse = function(res) {
 		var title = BRANDING_TITLE;
 		if (!meta64.isAnonUser) {
@@ -39,7 +39,7 @@ var user = function() {
 				_.writeCookie(cnst.COOKIE_LOGIN_PWD, pwd);
 			}
 
-			meta64.changePage("#mainPage");
+			meta64.jqueryChangePage("#mainPage");
 
 			_setStateVarsUsingLoginResponse(res);
 			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId, false);
@@ -69,7 +69,7 @@ var user = function() {
 	}
 
 	var _logoutResponse = function(res) {
-		meta64.changePage("#mainPage");
+		meta64.jqueryChangePage("#mainPage");
 		location.reload();
 	}
 
@@ -82,12 +82,17 @@ var user = function() {
 	var _signupResponse = function(res) {
 		if (util.checkSuccess("Signup new user", res)) {
 			user.populateLoginPgFromCookies();
-			meta64.changePage("#loginPg");
+			meta64.changePage(loginPg);
 			alert("User Information Accepted. \n\nCheck your email for signup confirmation. (Can take up to 1 minute)");
 		}
 	}
 
 	var _ = {
+
+		openSignupPg : function() {
+			meta64.changePage(signupPg);
+		},
+
 		/* Write a cookie that expires in a year for all paths */
 		writeCookie : function(name, val) {
 			$.cookie(name, val, {
@@ -121,7 +126,7 @@ var user = function() {
 				/* make credentials visible only if not logged in */
 				util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
 
-				meta64.changePage("#loginPg");
+				meta64.changePage(loginPg);
 			}
 			/* or log out immediately */
 			else {
@@ -258,7 +263,7 @@ var user = function() {
 		},
 
 		changePasswordPg : function() {
-			meta64.changePage("#changePasswordPg");
+			meta64.changePage(changePasswordPg);
 		}
 	};
 
