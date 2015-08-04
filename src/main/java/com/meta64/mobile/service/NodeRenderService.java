@@ -49,7 +49,7 @@ public class NodeRenderService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
-	public void renderNode(Session session, RenderNodeRequest req, RenderNodeResponse res) throws Exception {
+	public void renderNode(Session session, RenderNodeRequest req, RenderNodeResponse res, boolean allowRootAutoPrefix) throws Exception {
 
 		List<NodeInfo> children = new LinkedList<NodeInfo>();
 		res.setChildren(children);
@@ -57,11 +57,19 @@ public class NodeRenderService {
 		String targetId = req.getNodeId();
 		// log.debug("renderNode targetId:" + targetId);
 
-		Node node;
-		try {
-			node = JcrUtil.findNode(session, targetId);
+		Node node = JcrUtil.safeFindNode(session, targetId);
+
+		/*
+		 * if the node was a path type and was not found then try with the "/root" prefix before
+		 * giving up. We allow ID parameters to omit the leading "/root" part of the path for
+		 * shortening the path just for end user convenience.
+		 */
+		if (node == null && targetId.startsWith("/") && allowRootAutoPrefix) {
+			targetId = "/root" + targetId;
+			node = JcrUtil.safeFindNode(session, targetId);
 		}
-		catch (Exception e) {
+
+		if (node == null) {
 			res.setMessage("Node not found.");
 			res.setSuccess(false);
 			return;
@@ -112,9 +120,16 @@ public class NodeRenderService {
 
 	public void anonPageLoad(Session session, AnonPageLoadRequest req, AnonPageLoadResponse res) throws Exception {
 
+		boolean allowRootAutoPrefix = false;
 		String id = null;
 		if (id == null) {
-			id = !req.isIgnoreUrl() && sessionContext.getUrlId() != null ? sessionContext.getUrlId() : anonUserLandingPageNode;
+			if (!req.isIgnoreUrl() && sessionContext.getUrlId() != null) {
+				id = sessionContext.getUrlId();
+				allowRootAutoPrefix = true;
+			}
+			else {
+				id = anonUserLandingPageNode;
+			}
 		}
 
 		if (!XString.isEmpty(id)) {
@@ -127,7 +142,7 @@ public class NodeRenderService {
 			 * node.
 			 */
 			renderNodeReq.setNodeId(id);
-			renderNode(session, renderNodeReq, renderNodeRes);
+			renderNode(session, renderNodeReq, renderNodeRes, allowRootAutoPrefix);
 			res.setRenderNodeResponse(renderNodeRes);
 		}
 		else {

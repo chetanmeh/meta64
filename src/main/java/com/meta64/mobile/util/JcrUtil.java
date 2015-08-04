@@ -60,6 +60,21 @@ public class JcrUtil {
 		return id.startsWith("/") ? session.getNode(id) : session.getNodeByIdentifier(id);
 	}
 
+	/**
+	 * Wrapper around findNode that will return null if not found instead of throwing exception
+	 * @param session
+	 * @param id
+	 * @return null if not found.
+	 */
+	public static Node safeFindNode(Session session, String id) {
+		try {
+			return findNode(session, id);
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+
 	/*
 	 * Currently there's a bug in the client code where it sends nulls for some nonsavable types, so
 	 * before even fixing the client I decided to just make the server side block those. This is

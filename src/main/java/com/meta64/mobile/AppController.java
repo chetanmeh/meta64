@@ -247,7 +247,7 @@ public class AppController {
 		RenderNodeResponse res = new RenderNodeResponse();
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
-		nodeRenderService.renderNode(session, req, res);
+		nodeRenderService.renderNode(session, req, res, true);
 		return res;
 	}
 
