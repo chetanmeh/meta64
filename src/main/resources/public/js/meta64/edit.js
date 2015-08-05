@@ -350,7 +350,7 @@ var edit = function() {
 		},
 
 		openRenameNodePg : function() {
-			meta64.changePage2(renameNodePg); //"#renameNodePg");
+			meta64.changePage(renameNodePg); 
 		},
 
 		renameNode : function() {
