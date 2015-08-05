@@ -78,6 +78,17 @@ public class AttachmentService {
 			mimeType = URLConnection.guessContentTypeFromName(fileName);
 		}
 
+		/*
+		 * Hack/Fix for ms word. Not sure why the URLConnection fails for this, but it's new. I need
+		 * to grab my old mime type map from legacy meta64 and put in this project. Clearly the
+		 * guessContentTypeFromName implementation provided by URLConnection has a screw loose.
+		 */
+		if (mimeType == null) {
+			if (fileName.toLowerCase().endsWith(".doc")) {
+				mimeType = "application/msword";
+			}
+		}
+
 		long version = System.currentTimeMillis();
 		Property binVerProp = JcrUtil.getProperty(node, JcrProp.BIN_VER);
 		if (binVerProp != null) {

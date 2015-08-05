@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -468,9 +469,14 @@ public class AppController {
 		return res;
 	}
 
-	@RequestMapping(value = API_PATH + "/bin", method = RequestMethod.GET)
+	/*
+	 * TODO: need to persist the real filename when uploaded, and then make the links
+	 * actually reference that filename on this type of path. Will have to add to binary
+	 * info property sent to client in JSON.
+	 */
+	@RequestMapping(value = API_PATH + "/bin/{fileName}", method = RequestMethod.GET)
 	@OakSession
-	public @ResponseBody ResponseEntity<InputStreamResource> getBinary(@RequestParam("nodeId") String nodeId) throws Exception {
+	public @ResponseBody ResponseEntity<InputStreamResource> getBinary(@PathVariable("fileName") String fileName, @RequestParam("nodeId") String nodeId) throws Exception {
 		logRequest("bin", null);
 		Session session = ThreadLocals.getJcrSession();
 		return attachmentService.getBinary(session, nodeId);
