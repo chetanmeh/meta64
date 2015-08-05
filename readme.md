@@ -84,19 +84,17 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * For future planned features see file: **/docs/bugs-and-todos.md**
 
 ## Technology Stack and APIs
-* App is "Mobile First", meaning a primary objective is to run well on mobile
 * Single Page Application (SPA)
 * JavaScript+HTML+CSS Client
+* JQuery Mobile
+* MongoDB
+* Apache Oak JCR
+* Spring MVC (SpringBoot)
+* App is "Mobile First", meaning a primary objective is to run well on mobile
 * Using Google Closure Compiler for JS Minification
 * Pure Java on Server
-* JQuery + JQuery Mobile
-* MongoDB Storage currently in use.
-* MySql configuration also working
-* Apache Oak JCR
-* Spring MVC + Thymeleaf
 * Spring Java-only configuration with Annotations, and no XML configs.
-* Client-Side JavaScript Markdown (using Pagedown API) renders pages
-* Entire app is Spring Boot-based. 
+* Client-Side JavaScript Markdown (using Pagedown API) renders pages 
 * Built using Maven
 * Launches from a single "uber jar" containing Tomcat embedded and pre-configured
 

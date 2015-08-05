@@ -489,6 +489,7 @@ var util = function() {
 				// console.log("hiding element: " + elmId);
 				$(elmId).hide();
 			}
+			$(elmId).trigger("updatelayout");
 		}
 	};
 

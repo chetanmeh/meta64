@@ -85,6 +85,7 @@ var view = function() {
 				e.html("Path: " + render.formatPath(node))
 				e.show();
 			}
+			e.trigger("updatelayout");
 		}
 	};
 

@@ -512,6 +512,7 @@ var render = function() {
 			} else {
 				$("#mainNodeContent").hide();
 			}
+			$("#mainNodeContent").trigger("updatelayout");
 
 			// console.log("update status bar.");
 			view.updateStatusBar();
