@@ -286,7 +286,7 @@ var meta64 = function() {
 		},
 
 		openDonatePg : function() {
-			meta64.changePage(donatePg);
+			meta64.jqueryChangePage("#donatePg");
 		},
 
 		getHighlightedNode : function() {
@@ -376,6 +376,8 @@ var meta64 = function() {
 			util.setVisibility("#openSignupPgButton", _.isAnonUser);
 			util.setVisibility("#mainMenuSearchButton", !_.isAnonUser && highlightNode != null);
 			util.setVisibility("#mainMenuTimelineButton", !_.isAnonUser && highlightNode != null);
+			
+			util.setVisibility("#mainNavBar", !_.isAnonUser);
 		},
 
 		getSingleSelectedNode : function() {

@@ -82,12 +82,15 @@
 
 				<a onclick="meta64.popup();"
 					id="menuButton"
+					style="display:none;"
 					class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-bars">Menu</a>
 
 				<a onclick="srch.searchPg();" id="mainMenuSearchButton"
+					style="display:none;"
 					class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-search">Search</a>
 
 				<a onclick="srch.timeline();" id="mainMenuTimelineButton"
+				 	style="display:none;"
 					class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-clock">Timeline</a>
 			</div>
 
@@ -104,7 +107,7 @@
 					class="ui-btn ui-btn-inline ui-btn-b ui-btn-icon-left ui-icon-user">Login</a>
 			</div>
 
-			<div data-role="navbar">
+			<div id="mainNavBar" data-role="navbar" style="display:none;">
 				<ul>
 					<li><a id="navHomeButton" data-icon="home">Home</a></li>
 					<li><a id="navUpLevelButton" data-icon="arrow-u-l">Up
