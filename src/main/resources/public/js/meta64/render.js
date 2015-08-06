@@ -206,13 +206,16 @@ var render = function() {
 
 			var buttonBarHtml = _.makeRowButtonBarHtml(uid, canMoveUp, canMoveDown, editingAllowed);
 
+			var bkgStyle = _.getNodeBkgImageStyle(node);
+
 			var cssId = uid + "_row";
 			// console.log("Rendering Node Row[" + index + "] with id: " +cssId)
 			return _.makeTag("div", //
 			{
 				"class" : "node-table-row" + (selected ? " active-row" : " inactive-row"),
 				"onClick" : "nav.clickOnNodeRow(this, '" + uid + "');", //
-				"id" : cssId
+				"id" : cssId,
+				"style" : bkgStyle
 			},// 
 			buttonBarHtml + _.makeTag("div", //
 			{
@@ -220,11 +223,6 @@ var render = function() {
 			}, _.renderNodeContent(node, true, true, true, true)));
 		},
 
-		/*
-		 * meta64.com doesn't currently set this property, because the
-		 * positioning (in css styling) is not yet perfected. Padding and Margin
-		 * hell has ensued.
-		 */
 		getTopRightImageTag : function(node) {
 			var topRightImg = props.getNodePropertyVal('img.top.right', node);
 			var topRightImgTag = "";
@@ -235,6 +233,15 @@ var render = function() {
 				}, "", false);
 			}
 			return topRightImgTag;
+		},
+
+		getNodeBkgImageStyle : function(node) {
+			var bkgImg = props.getNodePropertyVal('img.node.bkg', node);
+			var bkgImgStyle = "";
+			if (bkgImg) {
+				bkgImgStyle = "background-image: url(" + bkgImg + ");";
+			}
+			return bkgImgStyle;
 		},
 
 		/*
@@ -494,6 +501,8 @@ var render = function() {
 			// propCount);
 			var output = '';
 
+			var bkgStyle = _.getNodeBkgImageStyle(data.node);
+			
 			var mainNodeContent = _.renderNodeContent(data.node, true, true, true, true);
 			// console.log("mainNodeContent: "+mainNodeContent);
 			if (mainNodeContent.length > 0) {
@@ -503,7 +512,8 @@ var render = function() {
 				{
 					"class" : "node-table-row page-parent-node inactive-row",
 					"onClick" : "nav.clickOnNodeRow(this, '" + uid + "');", //
-					"id" : cssId
+					"id" : cssId,
+					"style" : bkgStyle
 				},// 
 				mainNodeContent);
 
