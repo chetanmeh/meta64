@@ -28,7 +28,9 @@ import com.meta64.mobile.util.JcrUtil;
 
 /**
  * Service for searching the repository. This searching is currently very basic, and just grabs the
- * first 100 results and returns.
+ * first 100 results. Despite it being basic right now, it is however EXTREMELY high performance and
+ * leverages the full and best search performance that can be gotten out of Lucene, which beats any
+ * other technology in the world in it's power.
  */
 @Component
 @Scope("singleton")
@@ -107,7 +109,7 @@ public class NodeSearchService {
 		String searchText = req.getSearchText();
 		if (searchText != null && searchText.length() > 0) {
 			searchText = searchText.toLowerCase();
-			
+
 			if (whereCount == 0) {
 				queryStr.append(" WHERE ");
 			}

@@ -95,6 +95,13 @@ import com.meta64.mobile.util.ThreadLocals;
  * 
  * Note, it's critical to understand the OakSession AOP code or else this class will be confusing
  * regarding how the OAK transations are managed and how logging in is done.
+ * 
+ * This class has no documentation on the methods because it's a wrapper around the service methods
+ * which is where the documentation can be found. It's a better architecture to have all the AOP for
+ * any given aspect be in one particular layer, because of how Spring AOP uses Proxies. Things can
+ * get pretty ugly when you have various proxied objects calling other proxies objects, so I have
+ * all the AOP for a service call in this controller and then all the services are pure and simple
+ * Spring Singletons.
  */
 @Controller
 public class AppController {
@@ -138,12 +145,9 @@ public class AppController {
 	@Autowired
 	private SpringMvcUtil springMvcUtil;
 
-	private static void logRequest(String url, Object req) throws Exception {
-		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
-	}
-
 	/*
-	 * This is the actual app page loading request, which is a thymeleaf-model-based call.
+	 * This is the actual app page loading request, for his SPA (Single Page Application) this is
+	 * the request to load the page.
 	 * 
 	 * ID is optional url parameter that user can specify to access a specific node in the
 	 * repository by uuid.
@@ -173,8 +177,6 @@ public class AppController {
 	public @ResponseBody byte[] captcha() throws Exception {
 		logRequest("captcha", null);
 		String captcha = CaptchaMaker.createCaptchaString();
-		// SessionContext sessionContext = (SessionContext)
-		// SpringContextUtil.getBean(SessionContext.class);
 		sessionContext.setCaptcha(captcha);
 		return CaptchaMaker.makeCaptcha(captcha);
 	}
@@ -189,23 +191,6 @@ public class AppController {
 		return res;
 	}
 
-	/*
-	 * Login mechanism is a bit tricky because the OakSession ASPECT (AOP) actually detects the
-	 * LoginRequest and performs authentication BEFORE this 'login' method even gets called, so by
-	 * the time we are in this method we can safely assume the userName and password resulted in a
-	 * successful login. If login fails the getJcrSession() call below will return null also.
-	 * 
-	 * IMPORTANT: this method DOES get called even on a fresh page load when the user hasn't logged
-	 * in yet, and this is done passing "{session}" in place of userName/password, which tells this
-	 * login method to get a username/password from the session. So a valid session that's already
-	 * logged in will simply return the correct login information from here as if it were logging in
-	 * the first time. For an SPA (Single Page App), handling page reloads needs to do something
-	 * like this because we aren't just having session beans embedded on some JSP the old-school
-	 * way, this is different and this is better! This is the proper way for an SPA to handle page
-	 * reloads.
-	 * 
-	 * @see OakSessionAspect.loginFromJoinPoint()
-	 */
 	@RequestMapping(value = API_PATH + "/login", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody LoginResponse login(@RequestBody LoginRequest req) throws Exception {
@@ -357,8 +342,7 @@ public class AppController {
 		nodeEditService.insertNode(session, req, res);
 		return res;
 	}
-	
-	/* Renames the node specified in the request to the new node name specified in the request */
+
 	@RequestMapping(value = API_PATH + "/renameNode", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody RenameNodeResponse renameNode(@RequestBody RenameNodeRequest req) throws Exception {
@@ -470,9 +454,9 @@ public class AppController {
 	}
 
 	/*
-	 * TODO: need to persist the real filename when uploaded, and then make the links
-	 * actually reference that filename on this type of path. Will have to add to binary
-	 * info property sent to client in JSON.
+	 * TODO: need to persist the real filename when uploaded, and then make the links actually
+	 * reference that filename on this type of path. Will have to add to binary info property sent
+	 * to client in JSON.
 	 */
 	@RequestMapping(value = API_PATH + "/bin/{fileName}", method = RequestMethod.GET)
 	@OakSession
@@ -533,5 +517,9 @@ public class AppController {
 		session.save();
 		res.setSuccess(true);
 		return res;
+	}
+
+	private static void logRequest(String url, Object req) throws Exception {
+		log.debug("REQ=" + url + " " + (req == null ? "none" : Convert.JsonStringify(req)));
 	}
 }

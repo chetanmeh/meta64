@@ -38,7 +38,7 @@ import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.XString;
 
 /**
- * Service for editing content of nodes.
+ * Service for editing content of nodes. That is, this method updates property values of JCR nodes.
  */
 @Component
 @Scope("singleton")
@@ -60,6 +60,9 @@ public class NodeEditService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	/*
+	 * Creates a new node as a *child* node of the node specified in the request.
+	 */
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -96,6 +99,10 @@ public class NodeEditService {
 		res.setSuccess(true);
 	}
 
+	/*
+	 * Creates a new node that is a sibling (same parent) of and at the same ordinal position as the
+	 * node specified in the request.
+	 */
 	public void insertNode(Session session, InsertNodeRequest req, InsertNodeResponse res) throws Exception {
 
 		String parentNodeId = req.getParentId();
@@ -124,6 +131,13 @@ public class NodeEditService {
 		res.setSuccess(true);
 	}
 
+	/*
+	 * Renames the node to a new node name specified in the request. In JCR the way you 'rename' a
+	 * node is actually by moving it to a new location, which actually under the same parent.
+	 * 
+	 * TODO: I can't remember if this maintains it's same ordinal position, but if not I'd call that
+	 * a bug. Need to do some testing.
+	 */
 	public void renameNode(Session session, RenameNodeRequest req, RenameNodeResponse res) throws Exception {
 
 		String nodeId = req.getNodeId();
@@ -144,6 +158,9 @@ public class NodeEditService {
 		res.setSuccess(true);
 	}
 
+	/*
+	 * Saves the value(s) of properties on the node specified in the request.
+	 */
 	public void saveProperty(Session session, SavePropertyRequest req, SavePropertyResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -156,6 +173,11 @@ public class NodeEditService {
 		res.setSuccess(true);
 	}
 
+	/*
+	 * Turns on the mixin MIX_REFERENCABLE which makes the JCR automatically create a UUID for the
+	 * node which is a unique key that can be used to address the node, and will be completely
+	 * unique.
+	 */
 	public void makeNodeReferencable(Session session, MakeNodeReferencableRequest req, MakeNodeReferencableResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -170,6 +192,9 @@ public class NodeEditService {
 		}
 	}
 
+	/*
+	 * Saves the node with new information based on whatever is specified in the request.
+	 */
 	public void saveNode(Session session, SaveNodeRequest req, SaveNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 
@@ -207,6 +232,9 @@ public class NodeEditService {
 		res.setSuccess(true);
 	}
 
+	/* 
+	 * Removes the property specified in the request from the node specified in the request
+	 */
 	public void deleteProperty(Session session, DeletePropertyRequest req, DeletePropertyResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -215,7 +243,6 @@ public class NodeEditService {
 		try {
 			Property prop = node.getProperty(propertyName);
 			if (prop != null) {
-				// System.out.println("Deleting property: " + propertyName);
 				prop.remove();
 			}
 			else {

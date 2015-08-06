@@ -11,7 +11,8 @@ import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.util.JcrRunnable;
 
 /**
- * Helper class to run some processing workload as the admin user.
+ * Helper class to run some processing workload as the admin user. Simplifies by encapsulating the
+ * session management at this abstracted layer.
  */
 @Component
 @Scope("singleton")

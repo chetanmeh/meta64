@@ -20,13 +20,13 @@ import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.XString;
 
-/* we need this daemon so that we can do email sends in a separate thread and not block any of the responsiveness 
- * of the gui 
- * 
- * Note: Will this demon still work acceptably even when there may be multiple ones running on different
- * instances of WARs ?  I think 'sticky sessions' is enough to make it work acceptably for now, because the editing
- * of a new node should happen on the same WAR where the node is created, and therefore the EmailNotification is created on
- * that same WAR.
+/**
+ * This is a 'dedicated thread' for sending emails periodically. We need this daemon so that we can
+ * do email sending without blocking any of the requests that require emails to be sent. That is,
+ * when some service method requires an email to be sent it doesn't send the request or even spawn a
+ * thread to send the request. It simply queues up in persistent storage he emails ready to be send
+ * and sends them out all in a single mail session all at once. This is the most efficient way for
+ * lots of obvious reasons.
  * 
  */
 @Component

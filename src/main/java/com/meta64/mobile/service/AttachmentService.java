@@ -40,7 +40,10 @@ import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.LimitedInputStream;
 
 /**
- * Service for editing node attachments
+ * Service for editing node attachments. Node attachments are binary attachments that the user can
+ * opload onto a node. Each node allows either zero or one attachments. Uploading a new attachment
+ * wipes out and replaces the previous attachment. If the attachment is an 'image' type then it gets
+ * displayed right on the page. Otherwise a download link is what gets displayed on the node.
  */
 @Component
 @Scope("singleton")
@@ -53,7 +56,9 @@ public class AttachmentService {
 	@Autowired
 	private SessionContext sessionContext;
 
-	/* Upload from User's computer. Standard HTML form-based uploading */
+	/*
+	 * Upload from User's computer. Standard HTML form-based uploading of a file from user machine
+	 */
 	public ResponseEntity<?> upload(Session session, String nodeId, MultipartFile uploadFile) throws Exception {
 		try {
 			String fileName = uploadFile.getOriginalFilename();
@@ -69,7 +74,11 @@ public class AttachmentService {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	public void attachBinaryFromStream(Session session, String nodeId, String fileName, InputStream is, String mimeType, int width, int height) throws Exception {
+	/*
+	 * Gets the binary attachment from a supplied stream and loads it into the repository on the
+	 * node specified in 'nodeId'
+	 */
+	private void attachBinaryFromStream(Session session, String nodeId, String fileName, InputStream is, String mimeType, int width, int height) throws Exception {
 		Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 
@@ -124,6 +133,9 @@ public class AttachmentService {
 		 */
 	}
 
+	/*
+	 * Removes the attachment from the node specified in the request.
+	 */
 	public void deleteAttachment(Session session, DeleteAttachmentRequest req, DeleteAttachmentResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
@@ -133,7 +145,10 @@ public class AttachmentService {
 		res.setSuccess(true);
 	}
 
-	public void deleteAllBinaryProperties(Node node) {
+	/*
+	 * Deletes all the binary-related properties from a node
+	 */
+	private void deleteAllBinaryProperties(Node node) {
 		JcrUtil.safeDeleteProperty(node, JcrProp.IMG_WIDTH);
 		JcrUtil.safeDeleteProperty(node, JcrProp.IMG_HEIGHT);
 		JcrUtil.safeDeleteProperty(node, JcrProp.BIN_DATA);
@@ -143,7 +158,8 @@ public class AttachmentService {
 
 	/*
 	 * Returns data for an attachment (Could be an image request, or any type of request for binary
-	 * data from a node)
+	 * data from a node). This is the method that services all calls from the browser to get the
+	 * data for the attachment to download/display the attachment.
 	 */
 	public ResponseEntity<InputStreamResource> getBinary(Session session, String nodeId) throws Exception {
 		try {
@@ -174,6 +190,10 @@ public class AttachmentService {
 		}
 	}
 
+	/*
+	 * Uploads an image attachment not from the user's machine but from some arbitrary internet URL
+	 * they have provided, that could be pointing to an image or any other kind of content actually.
+	 */
 	public void uploadFromUrl(Session session, UploadFromUrlRequest req, UploadFromUrlResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		String sourceUrl = req.getSourceUrl();
@@ -243,11 +263,8 @@ public class AttachmentService {
 		res.setSuccess(true);
 	}
 
-	// FYI: this never worked:
-	// String mimeType = URLConnection.guessContentTypeFromStream(uis);
-	// log.debug("guessed mime:" + mimeType);
-	//
-	// but this below works...
+	// FYI: Warning: this way of getting content type doesn't work.
+	// String mimeType = URLConnection.guessContentTypeFromStream(inputStream);
 	//
 	/* returns true if it was detected AND saved as an image */
 	private boolean detectAndSaveImage(Session session, String nodeId, String fileName, URL url) throws Exception {

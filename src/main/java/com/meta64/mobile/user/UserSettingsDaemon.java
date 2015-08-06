@@ -17,6 +17,14 @@ import org.springframework.stereotype.Component;
 import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.util.JcrRunnable;
 
+/*
+ * This would best be described as a "Background Thread" which saves user settings for all users (who are logged in)
+ * 
+ * TODO: need to use a listener for when a session becomes invalid for whatever reason (logout, timeout,...), and remove
+ * that entry from the global 'mapByUser' map, just to keep from having a memory leak. Right now it leaks, but only leaks
+ * a few bites per user login, so unless the site is massively going viral this is not a problem yet, and no one Cluster node would
+ * ever actually host enough users for it to be a significant leak. But all leaks are bad and I'll fix this.
+ */
 @Component
 @Scope("singleton")
 public class UserSettingsDaemon {
@@ -52,7 +60,6 @@ public class UserSettingsDaemon {
 				public void run(Session session) throws Exception {
 					try {
 						saveSettings(session);
-						session.save();
 						settingsDirty = false;
 					}
 					catch (Exception e) {
@@ -68,13 +75,14 @@ public class UserSettingsDaemon {
 
 	private void saveSettings(Session session) throws Exception {
 		Iterator it = mapByUser.entrySet().iterator();
-		
+
 		/* One iteration here per user */
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
 			String userName = (String) pair.getKey();
 			saveSettingsForUser(session, userName, (UnsavedUserSettings) pair.getValue());
 		}
+		session.save();
 	}
 
 	private void saveSettingsForUser(Session session, String userName, UnsavedUserSettings settings) throws Exception {
@@ -90,7 +98,7 @@ public class UserSettingsDaemon {
 			Map.Entry pair = (Map.Entry) it.next();
 			Object val = pair.getValue();
 			if (val != null) {
-				//log.debug(pair.getKey() + " = " + pair.getValue());
+				// log.debug(pair.getKey() + " = " + pair.getValue());
 				prefsNode.setProperty((String) pair.getKey(), (String) pair.getValue());
 			}
 		}

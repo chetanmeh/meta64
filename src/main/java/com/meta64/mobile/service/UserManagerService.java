@@ -1,7 +1,6 @@
 package com.meta64.mobile.service;
 
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
@@ -39,7 +38,8 @@ import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.XString;
 
 /**
- * Service methods for processing user management functions. Login, logout, etc.
+ * Service methods for processing user management functions. Login, logout, signup, user
+ * preferences, and settings persisted per-user
  * 
  */
 @Component
@@ -74,17 +74,33 @@ public class UserManagerService {
 
 	@Autowired
 	private ConstantsProvider constProvider;
-	
+
 	@Autowired
 	private Encryptor encryptor;
 
 	/*
-	 * Logs in the user using credentials held in 'req'
+	 * Login mechanism is a bit tricky because the OakSession ASPECT (AOP) actually detects the
+	 * LoginRequest and performs authentication BEFORE this 'login' method even gets called, so by
+	 * the time we are in this method we can safely assume the userName and password resulted in a
+	 * successful login. If login fails the getJcrSession() call below will return null also.
+	 * 
+	 * IMPORTANT: this method DOES get called even on a fresh page load when the user hasn't logged
+	 * in yet, and this is done passing "{session}" in place of userName/password, which tells this
+	 * login method to get a username/password from the session. So a valid session that's already
+	 * logged in will simply return the correct login information from here as if it were logging in
+	 * the first time. For an SPA (Single Page App), handling page reloads needs to do something
+	 * like this because we aren't just having session beans embedded on some JSP the old-school
+	 * way, this is different and this is better! This is the proper way for an SPA to handle page
+	 * reloads.
 	 */
 	public void login(Session session, LoginRequest req, LoginResponse res) throws Exception {
 		String userName = req.getUserName();
 		String password = req.getPassword();
 
+		/*
+		 * We have to get timezone information from the user's browser, so that all times on all
+		 * nodes always show up in their precise local time!
+		 */
 		sessionContext.setTimezone(DateUtil.getTimezoneFromOffset(req.getTzOffset()));
 		sessionContext.setTimeZoneAbbrev(DateUtil.getUSTimezone(-req.getTzOffset() / 60, req.isDst()));
 
@@ -132,12 +148,12 @@ public class UserManagerService {
 	}
 
 	/*
-	 * Processes last set of signup. Validation of registration code. This means user has clicked
-	 * the link they were sent during the signup email verification, and they are sending in a
-	 * signupCode that will turn on their account and actually create their account.
+	 * Processes last set of signup, which is validation of registration code. This means user has
+	 * clicked the link they were sent during the signup email verification, and they are sending in
+	 * a signupCode that will turn on their account and actually create their account.
 	 */
 	public void processSignupCode(final String signupCode, final Model model) throws Exception {
-		log.debug("User is trying signupCode: "+signupCode);
+		log.debug("User is trying signupCode: " + signupCode);
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
@@ -313,8 +329,8 @@ public class UserManagerService {
 			@Override
 			public void run(Session session) throws Exception {
 				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
-		
-				userPrefs.setAdvancedMode(JcrUtil.safeGetBooleanProp(prefsNode, JcrProp.USER_PREF_ADV_MODE));	
+
+				userPrefs.setAdvancedMode(JcrUtil.safeGetBooleanProp(prefsNode, JcrProp.USER_PREF_ADV_MODE));
 				userPrefs.setLastNode(JcrUtil.safeGetStringProp(prefsNode, JcrProp.USER_PREF_LAST_NODE));
 			}
 		});
@@ -322,6 +338,10 @@ public class UserManagerService {
 		return userPrefs;
 	}
 
+	/*
+	 * Each user has a node on the tree that holds all their user preferences. This method retrieves that node for the user logged into
+	 * the current HTTP Session (Session Scope Bean)
+	 */
 	public Node getUserPrefsNode(Session session) throws Exception {
 
 		String userName = sessionContext.getUserName();
@@ -346,6 +366,9 @@ public class UserManagerService {
 		return allUsersRoot;
 	}
 
+	/*
+	 * Runs when user is doing the 'change password'.
+	 */
 	public void changePassword(Session session, final ChangePasswordRequest req, ChangePasswordResponse res) throws Exception {
 		final String userName = sessionContext.getUserName();
 

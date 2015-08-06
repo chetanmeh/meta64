@@ -32,7 +32,10 @@ import com.meta64.mobile.util.Log;
 import com.meta64.mobile.util.XString;
 
 /**
- * Service for rendering the content of a page.
+ * Service for rendering the content of a page. The actual page is not rendered on the server side.
+ * What we are really doing here is generating a list of POJOS that get converted to JSON and sent
+ * to the client. But regardless of format this is the primary service for pulling content up for
+ * rendering the pages on the client as the user browses around on the tree.
  */
 @Component
 @Scope("singleton")
@@ -44,8 +47,8 @@ public class NodeRenderService {
 
 	@Autowired
 	private OakRepositoryBean oak;
-	
-	@Autowired 
+
+	@Autowired
 	private UserSettingsDaemon userSettingsDaemon;
 
 	@Autowired
@@ -54,6 +57,16 @@ public class NodeRenderService {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	/*
+	 * This is the call that gets all the data to show on a page. Whenever user is browsing to a new
+	 * page, this method gets called once per page and retrieves all the data for that page.
+	 * 
+	 * TODO: When 'edit mode' is not *on* on the client side, we probably should have a way of
+	 * passing a parameter to this method that retrieves *less than all* (i.e. not all, but a
+	 * subset) of the information for each node, so that rendering can be much faster. Currently
+	 * it's already lightning fast, but for scalability we need to be returning basically the least
+	 * amount of data that we can possible get away with.
+	 */
 	public void renderNode(Session session, RenderNodeRequest req, RenderNodeResponse res, boolean allowRootAutoPrefix) throws Exception {
 
 		List<NodeInfo> children = new LinkedList<NodeInfo>();
@@ -79,7 +92,7 @@ public class NodeRenderService {
 			res.setSuccess(false);
 			return;
 		}
-		
+
 		String path = node.getPath();
 		userSettingsDaemon.setSettingVal(sessionContext.getUserName(), JcrProp.USER_PREF_LAST_NODE, path);
 
@@ -126,6 +139,11 @@ public class NodeRenderService {
 		}
 	}
 
+	/*
+	 * There is a system defined way for admins to specify what node should be displayed in the
+	 * browser when a non-logged in user (i.e. anonymouse user) is browsing the site, and this
+	 * method retrieves that page data.
+	 */
 	public void anonPageLoad(Session session, AnonPageLoadRequest req, AnonPageLoadResponse res) throws Exception {
 
 		boolean allowRootAutoPrefix = false;

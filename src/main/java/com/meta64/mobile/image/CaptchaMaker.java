@@ -12,6 +12,11 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Implements the captcha image as seen on the Signup Page. I would normally use some existing
+ * framework for something like this but I wrote this a long time ago and it works well, so I always
+ * kept it. It's just too simple for me to have found fault with.
+ */
 public class CaptchaMaker {
 
 	private static final Random rand = new Random();
@@ -99,7 +104,6 @@ public class CaptchaMaker {
 			/* rotate & sheer */
 			g.rotate(angle, x, y);
 			g.shear(shearX, shearY);
-
 			g.drawChars(chars, i, 1, x, y);
 
 			/* unrotate & sheer (we don't want a cumulative effect) */

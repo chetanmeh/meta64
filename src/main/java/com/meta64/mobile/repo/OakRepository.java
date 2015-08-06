@@ -35,7 +35,9 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoTimeoutException;
 
 /**
- * Wrapper and abstraction around a JCR Repository instance
+ * Wrapper and abstraction around a JCR Repository instance for MongoDB.
+ * 
+ * TODO: Rename this class to MongoRepository.java
  */
 public class OakRepository {
 

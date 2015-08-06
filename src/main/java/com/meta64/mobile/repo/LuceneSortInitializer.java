@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 /*
  * This type of index configuration is very good for "ORDER BY" sorting or also for exact match 
- * queryes that lookup an exact value.
+ * queries that lookup an exact value.
  */
 class LuceneSortInitializer extends LuceneInitializerHelper {
 	private static final Logger log = LoggerFactory.getLogger(LuceneSortInitializer.class);

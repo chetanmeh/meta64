@@ -39,11 +39,10 @@ import com.meta64.mobile.util.ImportWarAndPeace;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
- * Service for searching the repository
+ * Import and Export to and from XML files, as well as the special processing to import the book War
+ * and Peace in it's special format.
  * 
- * TODO: I really need to separate out the ZIP and XML import/export into dedecated service classes.
- * One for zip and one for xml, instead of this one bigger class.
- * 
+ * TODO: We probably should separate out the book import part into a seperate service file.
  */
 @Component
 @Scope("singleton")

@@ -20,7 +20,11 @@ import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
- * Service for editing content of nodes.
+ * Service for controlling the positions (ordinals) of nodes relative to their parents and/or moving
+ * nodes to locate them under a different parent. This is similar type of functionality to
+ * cut-and-paste in file systems. Currently there is no way to 'clone' or copy nodes, but user can
+ * move any existing nodes they have to any new location they want, subject to security constraints
+ * of course.
  */
 @Component
 @Scope("singleton")
@@ -33,6 +37,9 @@ public class NodeMoveService {
 	@Autowired
 	private SessionContext sessionContext;
 
+	/*
+	 * Moves the the node to a new ordinal/position location (relative to parent)
+	 */
 	public void setNodePosition(Session session, SetNodePositionRequest req, SetNodePositionResponse res) throws Exception {
 		String parentNodeId = req.getParentNodeId();
 		Node parentNode = JcrUtil.findNode(session, parentNodeId);
@@ -42,6 +49,9 @@ public class NodeMoveService {
 		res.setSuccess(true);
 	}
 
+	/*
+	 * Deletes the set of nodes specified in the request
+	 */
 	public void deleteNodes(Session session, DeleteNodesRequest req, DeleteNodesResponse res) throws Exception {
 
 		for (String nodeId : req.getNodeIds()) {
@@ -51,14 +61,18 @@ public class NodeMoveService {
 		res.setSuccess(true);
 	}
 
-	public void deleteNode(Session session, String nodeId) throws Exception {
-		// log.debug("Deleting ID: " + nodeId);
-
+	/*
+	 * Deletes a single node by nodeId
+	 */
+	private void deleteNode(Session session, String nodeId) throws Exception {
 		Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 		node.remove();
 	}
 
+	/*
+	 * Moves a set of nodes to a new location
+	 */
 	public void moveNodes(Session session, MoveNodesRequest req, MoveNodesResponse res) throws Exception {
 		String targetId = req.getTargetNodeId();
 		Node targetNode = JcrUtil.findNode(session, targetId);

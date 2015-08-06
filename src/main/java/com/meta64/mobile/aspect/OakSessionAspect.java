@@ -25,9 +25,17 @@ import com.meta64.mobile.util.ThreadLocals;
 
 /**
  * This is the core (and maybe only) chunk of AOP that we use in this app, that wraps the processing
- * of a REST call and handles all the boilerplate for performing a REST call on the server which
+ * of a JSON call and handles all the boilerplate for performing a JSON call on the server which
  * comes from the JQuery ajax calls from the client. Primarily we use the cross cutting concerns of
  * user login, and JCR session lifecycle.
+ * 
+ * Remember, Spring AOP is a big awkward because of the use of Proxies. Problems WILL occur if you
+ * have a method in a bean that's not annotated calling a method in a bean that IS annotated,
+ * because in this case the AOP aspects that the annotations would imply WILL always happen actually
+ * will NOT happen.
+ * 
+ * TODO: Need to paste into this class the Stack Overflow page, or spring page on this proxy issue,
+ * because it will cause a HUGE gaping hole and bug if you don't know how it works.
  */
 @Aspect
 @Component

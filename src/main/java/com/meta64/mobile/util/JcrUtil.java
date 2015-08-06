@@ -223,7 +223,7 @@ public class JcrUtil {
 		PropertyIterator iter = node.getProperties();
 		int count = 0;
 		while (iter.hasNext()) {
-			Property p = iter.nextProperty();
+			iter.nextProperty();
 			count++;
 		}
 		return count;
