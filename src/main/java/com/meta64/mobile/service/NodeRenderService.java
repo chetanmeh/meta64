@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -24,6 +25,7 @@ import com.meta64.mobile.request.RenderNodeRequest;
 import com.meta64.mobile.response.AnonPageLoadResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
 import com.meta64.mobile.user.RunAsJcrAdmin;
+import com.meta64.mobile.user.UserSettingsDaemon;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.Log;
@@ -42,6 +44,9 @@ public class NodeRenderService {
 
 	@Autowired
 	private OakRepositoryBean oak;
+	
+	@Autowired 
+	private UserSettingsDaemon userSettingsDaemon;
 
 	@Autowired
 	private SessionContext sessionContext;
@@ -74,6 +79,9 @@ public class NodeRenderService {
 			res.setSuccess(false);
 			return;
 		}
+		
+		String path = node.getPath();
+		userSettingsDaemon.setSettingVal(sessionContext.getUserName(), JcrProp.USER_PREF_LAST_NODE, path);
 
 		if (req.isRenderParentIfLeaf() && !node.hasNodes() /* Convert.hasDisplayableNodes(node) */) {
 			res.setDisplayedParent(true);

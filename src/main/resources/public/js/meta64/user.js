@@ -42,7 +42,27 @@ var user = function() {
 			meta64.jqueryChangePage("#mainPage");
 
 			_setStateVarsUsingLoginResponse(res);
-			view.refreshTree(!util.emptyString(res.homeNodeOverride) ? res.homeNodeOverride : meta64.homeNodeId, false);
+
+			if (res.userPreferences.lastNode) {
+				console.log("lastNode: " + res.userPreferences.lastNode);
+			}
+			else {
+				console.log("lastNode is null.");
+			}
+
+			/* set ID to be the page we want to show user right after login */
+			var id = null;
+			if (!util.emptyString(res.homeNodeOverride)) {
+				id = res.homeNodeOverride;
+			} else {
+				if (res.userPreferences.lastNode) {
+					id = res.userPreferences.lastNode;
+				} else {
+					id = meta64.homeNodeId;
+				}
+			}
+
+			view.refreshTree(id, false);
 			_setTitleUsingLoginResponse(res);
 		} else {
 			if (usingCookies) {

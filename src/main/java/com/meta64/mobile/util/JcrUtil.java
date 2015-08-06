@@ -194,7 +194,31 @@ public class JcrUtil {
 	public static String getRequiredStringProp(Node node, String propName) throws Exception {
 		return node.getProperty(propName).getValue().getString();
 	}
+	
+	public static String safeGetStringProp(Node node, String propName) {
+		try {
+			return getRequiredStringProp(node, propName);
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
 
+	/* Gets string property from node. Throws exception of anything goes wrong */
+	public static boolean getRequiredBooleanProp(Node node, String propName) throws Exception {
+		return node.getProperty(propName).getValue().getBoolean();
+	}
+	
+	public static boolean safeGetBooleanProp(Node node, String propName) {
+		try {
+			return getRequiredBooleanProp(node, propName);
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
+
+	
 	public static int getPropertyCount(Node node) throws RepositoryException {
 		PropertyIterator iter = node.getProperties();
 		int count = 0;

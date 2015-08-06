@@ -280,7 +280,7 @@ public class UserManagerService {
 	}
 
 	public void setDefaultUserPreferences(Node prefsNode) throws Exception {
-		prefsNode.setProperty("advMode", false);
+		prefsNode.setProperty(JcrProp.USER_PREF_ADV_MODE, false);
 	}
 
 	public void saveUserPreferences(Session session, final SaveUserPreferencesRequest req, final SaveUserPreferencesResponse res) throws Exception {
@@ -295,7 +295,7 @@ public class UserManagerService {
 				/*
 				 * Assign preferences as properties on this node,
 				 */
-				prefsNode.setProperty("advMode", req.getUserPreferences().isAdvancedMode());
+				prefsNode.setProperty(JcrProp.USER_PREF_ADV_MODE, req.getUserPreferences().isAdvancedMode());
 				session.save();
 			}
 		});
@@ -313,9 +313,9 @@ public class UserManagerService {
 			@Override
 			public void run(Session session) throws Exception {
 				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
-				Property prop = prefsNode.getProperty("advMode");
-				userPrefs.setAdvancedMode(prop != null ? prop.getBoolean() : false);
-				log.debug("advMode=" + userPrefs.isAdvancedMode());
+		
+				userPrefs.setAdvancedMode(JcrUtil.safeGetBooleanProp(prefsNode, JcrProp.USER_PREF_ADV_MODE));	
+				userPrefs.setLastNode(JcrUtil.safeGetStringProp(prefsNode, JcrProp.USER_PREF_LAST_NODE));
 			}
 		});
 
