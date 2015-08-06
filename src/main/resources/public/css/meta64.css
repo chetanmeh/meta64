@@ -27,12 +27,30 @@ tr td div p {
 
 .compact-field-contain {
 	margin-bottom: 0;
+	margin-left: 10px;
 }
 
 .ui-field-contain>label ~ [class*="ui-"], .ui-field-contain .ui-controlgroup-controls
 	{
 	margin: 0;
 	margin-bottom: 10px;
+}
+
+/*
+Bold labels are more visible on a background image.
+*/
+.ui-mobile label, div.ui-controlgroup-label {
+	font-weight: bold;
+}
+
+.dialog-content {
+	/*
+	We have the ability to style our forms here, but this currenly is not used.
+	
+	background-image: url(/ibm-702-bright.jpg); 
+	background-size: 100% auto; 
+	background-repeat: no-repeat;
+	*/
 }
 
 .created-by-me {

@@ -44,12 +44,16 @@ var signupPg = function() {
 			}, //
 			formControls + captchaImage + buttonBar);
 
-			var internalMainContent = "Note: No email address is required currently, because this app is an alpha site that doesn't yet have email support.";
+			var internalMainContent = ""; // Note: No email address is
+			// required currently, because this
+			// app is an alpha site that doesn't
+			// yet have email support.";
 
 			var mainContent = render.makeTag("div", //
 			{
-				"role" : "main", //
-				"class" : "ui-content"
+				"role" : "main",
+				"class" : "ui-content dialog-content", 
+				"id" : _.domId + "-main"
 			}, //
 			internalMainContent + form);
 
@@ -57,6 +61,14 @@ var signupPg = function() {
 
 			util.setHtmlEnhanced($("#signupPg"), content);
 
+			/* 
+			$("#" + _.domId + "-main").css({
+				"backgroundImage" : "url(/ibm-702-bright.jpg);" 
+					"background-repeat" : "no-repeat;",
+					"background-size" : "100% auto"
+			});
+			*/
+			
 			$("#tryAnotherCaptchaButton").on("click", user.tryAnotherCaptcha);
 			$("#signupButton").on("click", user.signup);
 		},

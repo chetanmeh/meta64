@@ -174,7 +174,7 @@ var srch = function() {
 			}, //
 			"Go to Node");
 
-			return render.makeHorizontalFieldSet(openButton);
+			return render.makeHorizontalFieldSet(openButton, "compact-field-contain");
 		},
 
 		clickOnSearchResultRow : function(rowElm, uid) {

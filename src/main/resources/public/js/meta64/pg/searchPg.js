@@ -30,7 +30,7 @@ var searchPg = function() {
 			var mainContent = render.makeTag("div", //
 			{
 				"role" : "main", //
-				"class" : "ui-content"
+				"class" : "ui-content dialog-content"
 			}, //
 			internalMainContent + form);
 
