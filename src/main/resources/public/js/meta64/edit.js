@@ -170,7 +170,7 @@ var edit = function() {
 			elm.toggleClass("ui-icon-edit", meta64.editMode);
 			elm.toggleClass("ui-icon-forbidden", !meta64.editMode);
 			render.renderPageFromData();
-
+			
 			/*
 			 * Since edit mode turns on lots of buttons, the location of the
 			 * node we are viewing can change so much it goes completely

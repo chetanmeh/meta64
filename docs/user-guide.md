@@ -1,6 +1,7 @@
 ## End User and Admin Info
 
-This document will currently just contain information about how to use the app from a high-level perspective.
+This document will currently just contain information about how to use the app from a high-level perspective. I haven't really written much yet as you can see.
+
 
 ## How to put an image on the page upper right corner
 

@@ -12,8 +12,8 @@ tr td div p {
 	margin-bottom: 0;
 }
 
-.ui-field-contain > label ~ [class*="ui-"],
-.ui-field-contain .ui-controlgroup-controls {
+.ui-field-contain>label ~ [class*="ui-"], .ui-field-contain .ui-controlgroup-controls
+	{
 	margin: 0;
 	margin-bottom: 10px;
 }
@@ -36,11 +36,11 @@ tr td div p {
 }
 
 .captcha-image {
-	text-align:center;
+	text-align: center;
 }
 
 .donations {
-	text-align:center;
+	text-align: center;
 }
 
 .donate-back-button {
@@ -54,16 +54,11 @@ tr td div p {
 .header-text {
 	font-size: small;
 	margin-left: 16px;
-	
-	/*
-	background: yellow;
-	border: 1px dotted gray;
-	*/
 }
 
 .donate-center {
 	margin-top: 2em;
-	text-align:center;
+	text-align: center;
 }
 
 .donate-link {
@@ -77,11 +72,9 @@ tr td div p {
 }
 
 .privilege-list {
-	
 }
 
 .binary-link {
-	
 }
 
 .privilege-entry {
@@ -122,7 +115,7 @@ tr td div p {
 	width: 70%;
 }
 
-.prop-table { 
+.prop-table {
 	/* border: 1px solid gray; */
 	width: 100%;
 }
@@ -132,48 +125,35 @@ tr td div p {
 	padding: 10px;
 }
 
-.main-node-content {
-	position: relative;
-	margin-top: 0;
-	padding-top: 0;
-	
-	margin-top: 6px;
-	padding-right: 1.5em;
-	
-	/* padding-left: 5px; */
-	background: #ececec;
-	border: 3px solid gray;
-}
-
 .node-table-row {
 	position: relative;
 	border-bottom: 6px solid #d6d6d6;
-	/* padding-left: 1.5em; */
 	padding-right: 1.5em;
 }
 
+.page-parent-node {
+	background: #ededed;
+	padding-top: 10px;
+}
+
 .node-table-row .top-right-image {
-    position: absolute;
-    top: 0px;
-    right: 0px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
 
+/*
 .main-node-content {
-	position: relative;
+	margin-top: 0;
+	padding-top: 0;
 }
-
-.main-node-content .top-right-image {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-}
+*/
 
 .active-row {
 	border-left: 10px solid red;
 }
 
 .inactive-row {
-	/* transparent doesnt seem to work */
 	border-left: 10px solid transparent;
 }
 

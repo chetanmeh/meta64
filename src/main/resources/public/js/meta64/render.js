@@ -501,7 +501,7 @@ var render = function() {
 				var cssId = uid + "_row";
 				var content = _.makeTag("div", //
 				{
-					"class" : "node-table-row inactive-row",
+					"class" : "node-table-row page-parent-node inactive-row",
 					"onClick" : "nav.clickOnNodeRow(this, '" + uid + "');", //
 					"id" : cssId
 				},// 
@@ -560,14 +560,6 @@ var render = function() {
 
 				// console.log(" RENDER ROW[" + i + "]: node.id=" +
 				// node.id);
-
-				/*
-				 * &&& rethinking this. if no row is selected for this parent,
-				 * select the first row
-				 */
-				// if (!meta64.getHighlightedNode()) {
-				// meta64.highlightNode(node, false);
-				// }
 			}
 
 			rowCount++; // warning: this is the local variable/parameter
