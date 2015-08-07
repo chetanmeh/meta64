@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.util.JcrRunnable;
 
@@ -30,9 +31,6 @@ import com.meta64.mobile.util.JcrRunnable;
 public class UserSettingsDaemon {
 
 	private static final Logger log = LoggerFactory.getLogger(UserSettingsDaemon.class);
-
-	@Autowired
-	private UserManagerService userManagerService;
 
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
@@ -86,11 +84,11 @@ public class UserSettingsDaemon {
 	}
 
 	private void saveSettingsForUser(Session session, String userName, UnsavedUserSettings settings) throws Exception {
-		if ("anonymous".equals(userName.toLowerCase())) {
+		if (JcrPrincipal.ANONYMOUS.equals(userName.toLowerCase())) {
 			return;
 		}
 
-		Node prefsNode = userManagerService.getPrefsNodeForSessionUser(session, userName);
+		Node prefsNode = UserManagerService.getPrefsNodeForSessionUser(session, userName);
 
 		/* one iteration here per unsaved property */
 		Iterator it = settings.getMap().entrySet().iterator();

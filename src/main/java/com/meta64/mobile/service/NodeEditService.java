@@ -81,21 +81,6 @@ public class NodeEditService {
 		session.save();
 
 		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
-
-		// /*
-		// * If we are creating a node under a node that we don't own, send an email notification to
-		// * the owner of that node.
-		// * ACTUALLY the client can determine this and also not trigger an email until the
-		// node SAVE is actually done. Right now there is only empty content!
-		// */
-		// try {
-		// String parentNodeCreator = JcrUtil.getRequiredStringProp(node, "jcr:createdBy");
-		// if (sessionContext.getUserName().equals();
-		// }
-		// catch (Exception e) {
-		//
-		// }
-
 		res.setSuccess(true);
 	}
 
@@ -118,7 +103,7 @@ public class NodeEditService {
 
 		/* NT_UNSTRUCTURED IS ORDERABLE */
 		Node newNode = parentNode.addNode(name, JcrConstants.NT_UNSTRUCTURED);
-		newNode.setProperty("jcr:content", "");
+		newNode.setProperty(JcrProp.CONTENT, "");
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
 
@@ -232,7 +217,7 @@ public class NodeEditService {
 		res.setSuccess(true);
 	}
 
-	/* 
+	/*
 	 * Removes the property specified in the request from the node specified in the request
 	 */
 	public void deleteProperty(Session session, DeletePropertyRequest req, DeletePropertyResponse res) throws Exception {

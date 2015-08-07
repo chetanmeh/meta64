@@ -19,11 +19,18 @@ import com.meta64.mobile.util.DateUtil;
 /**
  * Wrapper for holding variables that we need to maintain server state of for a specific session.
  * Basic session state storage is all collected here.
+ * 
+ * The ScopedProxyMode.TARGET_CLASS annotation allows this session bean to be availabe on singletons
+ * or other beans that are not themselves session scoped.
  */
 @Component
-// @Scope("session")
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SessionContext {
+
+	/*
+	 * This lock ensures that only one server side function can be running at a time for any give
+	 * session.
+	 */
 	private ReentrantLock lock = new ReentrantLock();
 
 	/* Identification of user's account root node */
@@ -57,7 +64,7 @@ public class SessionContext {
 	}
 
 	public boolean isAdmin() {
-		return "admin".equalsIgnoreCase(userName);
+		return JcrPrincipal.ADMIN.equalsIgnoreCase(userName);
 	}
 
 	public String formatTime(Date date) {
@@ -70,7 +77,7 @@ public class SessionContext {
 			}
 			return dateFormat.format(date) + " " + getTimeZoneAbbrev();
 		}
-		/* else display timezone in standard GMT fomrat */
+		/* else display timezone in standard GMT format */
 		else {
 			if (dateFormat == null) {
 				dateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT_WITH_TIMEZONE, DateUtil.DATE_FORMAT_LOCALE);

@@ -4,6 +4,7 @@ import javax.jcr.Node;
 import javax.jcr.Session;
 
 import org.apache.jackrabbit.JcrConstants;
+import org.apache.jackrabbit.oak.spi.security.principal.EveryonePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 
 import com.meta64.mobile.config.ConstantsProvider;
 import com.meta64.mobile.config.JcrName;
+import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.mail.JcrOutboxMgr;
@@ -204,11 +206,11 @@ public class UserManagerService {
 	public void signup(SignupRequest req, SignupResponse res) throws Exception {
 
 		final String userName = req.getUserName();
-		if (userName.equalsIgnoreCase("admin") || userName.equalsIgnoreCase("administrator")) {
+		if (userName.equalsIgnoreCase(JcrPrincipal.ADMIN) || userName.equalsIgnoreCase("administrator")) {
 			throw new Exception("Sorry, you can't be the new admin.");
 		}
 
-		if (userName.equalsIgnoreCase("everyone")) {
+		if (userName.equalsIgnoreCase(EveryonePrincipal.NAME)) {
 			throw new Exception("Sorry, you can't be everyone.");
 		}
 
@@ -291,7 +293,7 @@ public class UserManagerService {
 	 * Get node that contains all preferences for this user, as properties on it.
 	 */
 	public static Node getPrefsNodeForSessionUser(Session session, String userName) throws Exception {
-		return JcrUtil.ensureNodeExists(session, "/userPreferences/", userName, //
+		return JcrUtil.ensureNodeExists(session, "/" + JcrName.USER_PREFERENCES + "/", userName, //
 				"User: " + userName);
 	}
 
@@ -339,8 +341,8 @@ public class UserManagerService {
 	}
 
 	/*
-	 * Each user has a node on the tree that holds all their user preferences. This method retrieves that node for the user logged into
-	 * the current HTTP Session (Session Scope Bean)
+	 * Each user has a node on the tree that holds all their user preferences. This method retrieves
+	 * that node for the user logged into the current HTTP Session (Session Scope Bean)
 	 */
 	public Node getUserPrefsNode(Session session) throws Exception {
 

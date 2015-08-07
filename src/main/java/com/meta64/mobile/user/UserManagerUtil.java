@@ -12,6 +12,8 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.meta64.mobile.config.JcrName;
+import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -29,7 +31,7 @@ public class UserManagerUtil {
 		Authorizable authorizable = userManager.getAuthorizable(userName);
 		return authorizable;
 	}
-	
+
 	public static boolean createUser(Session session, String userName, String password) throws Exception {
 		boolean ret = false;
 		UserManager userManager = ((JackrabbitSession) session).getUserManager();
@@ -49,11 +51,11 @@ public class UserManagerUtil {
 
 	public static RefInfo getRootNodeRefInfoForUser(Session session, String userName) throws Exception {
 		Node rootNode = null;
-		if (userName.equalsIgnoreCase("admin")) {
+		if (userName.equalsIgnoreCase(JcrPrincipal.ADMIN)) {
 			rootNode = session.getRootNode();
 		}
 		else {
-			rootNode = session.getNode("/root/" + userName);
+			rootNode = session.getNode("/"+JcrName.ROOT+"/" + userName);
 		}
 		return new RefInfo(rootNode.getIdentifier(), rootNode.getPath());
 	}
@@ -65,7 +67,7 @@ public class UserManagerUtil {
 	 */
 	public static boolean createUserRootNode(Session session, String userName) throws Exception {
 
-		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/root");
+		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/"+JcrName.ROOT);
 		if (allUsersRoot == null) {
 			throw new Exception("/root not found!");
 		}
@@ -104,10 +106,10 @@ public class UserManagerUtil {
 			log.debug("Admin account credentials not working. Trying with default admin/admin.");
 
 			try {
-				session = oak.getRepository().login(new SimpleCredentials("admin", "admin".toCharArray()));
+				session = oak.getRepository().login(new SimpleCredentials(JcrPrincipal.ADMIN, "admin".toCharArray()));
 				log.debug("Admin user login verified, using defaults.");
 
-				changePassword(session, "admin", oak.getJcrAdminPassword());
+				changePassword(session, JcrPrincipal.ADMIN, oak.getJcrAdminPassword());
 				session.save();
 			}
 			catch (Exception e2) {

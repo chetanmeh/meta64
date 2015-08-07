@@ -117,7 +117,7 @@ public class Convert {
 
 		NodeType nodeType = node.getPrimaryNodeType();
 		String primaryTypeName = nodeType.getName();
-		//log.debug("Node: "+node.getPath()+node.getName()+" type: "+primaryTypeName);
+		// log.debug("Node: "+node.getPath()+node.getName()+" type: "+primaryTypeName);
 
 		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), propList, hasDisplayableNodes, false, hasBinary, binaryIsImage, binVer, //
 				imageSize != null ? imageSize.getWidth() : 0, //

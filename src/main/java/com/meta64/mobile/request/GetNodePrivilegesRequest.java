@@ -4,8 +4,8 @@ public class GetNodePrivilegesRequest {
 	private String nodeId;
 	private boolean includeAcl;
 	private boolean includeOwners;
-	
-	public boolean isIncludeAcl() {	
+
+	public boolean isIncludeAcl() {
 		return includeAcl;
 	}
 

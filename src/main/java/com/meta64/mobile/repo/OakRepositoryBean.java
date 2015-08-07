@@ -68,8 +68,8 @@ public class OakRepositoryBean extends OakRepository {
 			@Override
 			public void run(Session session) throws Exception {
 				JcrUtil.ensureNodeExists(session, "/", userLandingPageNode, null);
-				JcrUtil.ensureNodeExists(session, "/", "root", "Root of All Users");
-				JcrUtil.ensureNodeExists(session, "/", "userPreferences", "Preferences of All Users");
+				JcrUtil.ensureNodeExists(session, "/", JcrName.ROOT, "Root of All Users");
+				JcrUtil.ensureNodeExists(session, "/", JcrName.USER_PREFERENCES, "Preferences of All Users");
 				JcrUtil.ensureNodeExists(session, "/", JcrName.OUTBOX, "System Email Outbox");
 				JcrUtil.ensureNodeExists(session, "/", JcrName.SIGNUP, "Pending Signups");
 			}

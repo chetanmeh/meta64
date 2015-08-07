@@ -1,7 +1,6 @@
 package com.meta64.mobile.user;
 
 import java.security.Principal;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,8 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility methods for changing access controls on nodes. This is: who can read nodes, modify
- * nodes, delete nodes, etc. Standard access privileges provided by JCR specification.
+ * Utility methods for changing access controls on nodes. This is: who can read nodes, modify nodes,
+ * delete nodes, etc. Standard access privileges provided by JCR specification.
  * 
  * http://jackrabbit.apache.org/oak/docs/security/accesscontrol/editing.html
  */

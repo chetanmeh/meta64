@@ -1,7 +1,6 @@
 package com.meta64.mobile.service;
 
 import java.security.Principal;
-
 import java.util.List;
 
 import javax.jcr.Node;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;
@@ -31,8 +31,8 @@ import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
- * Service methods for (ACL): processing security, privileges, and Access Control List information on
- * nodes.
+ * Service methods for (ACL): processing security, privileges, and Access Control List information
+ * on nodes.
  * 
  */
 @Component
@@ -88,7 +88,7 @@ public class AclService {
 		List<String> privileges = req.getPrivileges();
 		Principal principalObj = null;
 
-		if (principal.equalsIgnoreCase("everyone")) {
+		if (principal.equalsIgnoreCase(EveryonePrincipal.NAME)) {
 			principalObj = EveryonePrincipal.getInstance();
 		}
 		else {

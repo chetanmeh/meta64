@@ -6,16 +6,19 @@ package com.meta64.mobile.request;
 public class RenameNodeRequest {
 	private String nodeId;
 	private String newName;
-	
+
 	public String getNodeId() {
 		return nodeId;
 	}
+
 	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
 	}
+
 	public String getNewName() {
 		return newName;
 	}
+
 	public void setNewName(String newName) {
 		this.newName = newName;
 	}

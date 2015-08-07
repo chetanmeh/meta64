@@ -14,6 +14,7 @@ import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.RefInfo;
@@ -47,7 +48,7 @@ public class JcrUtil {
 	}
 
 	public static void checkNodeCreatedBy(Node node, String userName) throws Exception {
-		if ("admin".equals(userName)) return;
+		if (JcrPrincipal.ADMIN.equals(userName)) return;
 		if (userName == null || !userName.equals(getRequiredStringProp(node, JcrProp.CREATED_BY))) throw new Exception("Access failed.");
 	}
 
@@ -62,6 +63,7 @@ public class JcrUtil {
 
 	/**
 	 * Wrapper around findNode that will return null if not found instead of throwing exception
+	 * 
 	 * @param session
 	 * @param id
 	 * @return null if not found.
@@ -194,7 +196,7 @@ public class JcrUtil {
 	public static String getRequiredStringProp(Node node, String propName) throws Exception {
 		return node.getProperty(propName).getValue().getString();
 	}
-	
+
 	public static String safeGetStringProp(Node node, String propName) {
 		try {
 			return getRequiredStringProp(node, propName);
@@ -208,7 +210,7 @@ public class JcrUtil {
 	public static boolean getRequiredBooleanProp(Node node, String propName) throws Exception {
 		return node.getProperty(propName).getValue().getBoolean();
 	}
-	
+
 	public static boolean safeGetBooleanProp(Node node, String propName) {
 		try {
 			return getRequiredBooleanProp(node, propName);
@@ -218,7 +220,6 @@ public class JcrUtil {
 		}
 	}
 
-	
 	public static int getPropertyCount(Node node) throws RepositoryException {
 		PropertyIterator iter = node.getProperties();
 		int count = 0;

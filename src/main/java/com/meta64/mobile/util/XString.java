@@ -47,7 +47,7 @@ public class XString {
 		List<String> list = null;
 		StringTokenizer t = new StringTokenizer(val, delimiter, false);
 		while (t.hasMoreTokens()) {
-			if (list==null) {
+			if (list == null) {
 				list = new LinkedList<String>();
 			}
 			list.add(trim ? t.nextToken().trim() : t.nextToken());
