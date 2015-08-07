@@ -497,6 +497,10 @@ var meta64 = function() {
 			_.displaySignupMessage();
 
 			$(window).on('orientationchange', _.orientationHandler);
+			$(window).bind('beforeunload', function() {
+				return "Leave Meta64 ?";
+			});
+
 			_.addClickListeners();
 
 			_.deviceWidth = $(window).width();
