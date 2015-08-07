@@ -223,6 +223,24 @@ var render = function() {
 			}, _.renderNodeContent(node, true, true, true, true)));
 		},
 
+		showNodeUrl : function() {
+			var node = meta64.getHighlightedNode();
+			if (!node) {
+				alert("You must first click on a node.");
+				return;
+			}
+			var url = window.location.origin + "?id=" + node.path;
+			meta64.jqueryChangePage("#mainPage");
+
+			var message = "URL using path: <br>" + url;
+			var uuid = props.getNodePropertyVal("jcr:uuid", node);
+			if (uuid) {
+				message += "<p>URL for UUID: <br>" + window.location.origin + "?id=" + uuid;
+			}
+
+			messagePg.showMessage("Full External URL of Node", message);
+		},
+
 		getTopRightImageTag : function(node) {
 			var topRightImg = props.getNodePropertyVal('img.top.right', node);
 			var topRightImgTag = "";
@@ -502,7 +520,7 @@ var render = function() {
 			var output = '';
 
 			var bkgStyle = _.getNodeBkgImageStyle(data.node);
-			
+
 			var mainNodeContent = _.renderNodeContent(data.node, true, true, true, true);
 			// console.log("mainNodeContent: "+mainNodeContent);
 			if (mainNodeContent.length > 0) {

@@ -3,10 +3,10 @@ console.log("running module: confirmPg.js");
 var confirmPg = function() {
 
 	var _title, _message, _buttonText, _callback;
-	
+
 	var _ = {
-			domId : "confirmPg",
-			
+		domId : "confirmPg",
+
 		areYouSure : function(title, message, buttonText, callback) {
 			_title = title;
 			_message = message;

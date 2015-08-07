@@ -14,8 +14,7 @@ public class NodeInfo {
 	private String primaryTypeName;
 
 	// TODO: There is a slight waste of space here, because createdBy is also in 'properties' but so
-	// the client can
-	// have super fast access to it, i'm making it a direct property also.
+	// the client can have super fast access to it, i'm making it a direct property also.
 	private String createdBy;
 	private String lastModified;
 

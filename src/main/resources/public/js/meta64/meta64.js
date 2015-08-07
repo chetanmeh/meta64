@@ -282,7 +282,6 @@ var meta64 = function() {
 			// $("#propsToggleButton").on("click", props.propsToggle);
 			$("#deletePropertyButton").on("click", props.deleteProperty);
 			$("#editModeButton").on("click", edit.editMode);
-			$("#makeNodeReferencableButton").on("click", edit.makeNodeReferencable);
 		},
 
 		openDonatePg : function() {

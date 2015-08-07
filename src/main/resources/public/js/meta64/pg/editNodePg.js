@@ -17,8 +17,9 @@ var editNodePg = function() {
 
 			var saveNodeButton = render.makeButton("Save", "saveNodeButton", "b", "ui-btn-icon-left ui-icon-check");
 			var addPropertyButton = render.makeButton("Add Property", "addPropertyButton", "a");
+			var makeNodeReferencableButton = render.makeButton("Make Node Referencable", "makeNodeReferencableButton", "a");
 			var cancelEditButton = render.makeButton("Close", "cancelEditButton", "a");
-			var buttonBar = render.makeHorzControlGroup(saveNodeButton + addPropertyButton + cancelEditButton);
+			var buttonBar = render.makeHorzControlGroup(saveNodeButton + addPropertyButton + makeNodeReferencableButton + cancelEditButton);
 
 			var internalMainContent = "<div id='editNodePathDisplay' class='path-display-in-editor'></div>" + //
 			"<div id='editNodeInstructions'></div>" + //
@@ -38,6 +39,7 @@ var editNodePg = function() {
 			$("#saveNodeButton").on("click", edit.saveNode);
 			$("#cancelEditButton").on("click", edit.cancelEdit);
 			$("#addPropertyButton").on("click", props.addProperty);
+			$("#makeNodeReferencableButton").on("click", edit.makeNodeReferencable);
 		},
 
 		init : function() {

@@ -73,7 +73,8 @@ var popupMenuPg = function() {
 
 			var viewOptionsMenuItems = //
 			_menuItem("Toggle Properties", "propsToggleButton", "props.propsToggle();") + // 
-			_menuItem("Refresh", "refreshPageButton", "view.refreshPage();"); // 
+			_menuItem("Refresh", "refreshPageButton", "view.refreshPage();")+ // 
+			_menuItem("Show URL", "showFullNodeUrlButton", "render.showNodeUrl();"); //
 			var viewOptionsMenu = _makeTopLevelMenu("View Options", viewOptionsMenuItems);
 
 			var content = render.makeTag("div", {

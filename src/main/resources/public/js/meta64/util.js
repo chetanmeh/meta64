@@ -272,7 +272,7 @@ var util = function() {
 			// });
 			return true;
 		},
-
+		
 		bindEnterKey : function(id, func) {
 			_.bindKey(id, func, 13);
 		},
