@@ -16,5 +16,8 @@ Any node can optionally have the following which will always cause the specified
     property: img.node.bkg
     value: URL of image
 
+## Markdown Tips
 
+To display an image:
+	![Eat Apple Pie] (https://upload.wikimedia.org/wikipedia/commons/4/4b/Apple_pie.jpg)
 
