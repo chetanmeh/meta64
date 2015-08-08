@@ -1,7 +1,6 @@
 package com.meta64.mobile.user;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -72,13 +71,8 @@ public class UserSettingsDaemon {
 	}
 
 	private void saveSettings(Session session) throws Exception {
-		Iterator it = mapByUser.entrySet().iterator();
-
-		/* One iteration here per user */
-		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
-			String userName = (String) pair.getKey();
-			saveSettingsForUser(session, userName, (UnsavedUserSettings) pair.getValue());
+		for (Map.Entry<String, UnsavedUserSettings> entry : mapByUser.entrySet()) {
+			saveSettingsForUser(session, entry.getKey(), entry.getValue());
 		}
 		session.save();
 	}
@@ -91,13 +85,10 @@ public class UserSettingsDaemon {
 		Node prefsNode = UserManagerService.getPrefsNodeForSessionUser(session, userName);
 
 		/* one iteration here per unsaved property */
-		Iterator it = settings.getMap().entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
-			Object val = pair.getValue();
-			if (val != null) {
-				// log.debug(pair.getKey() + " = " + pair.getValue());
-				prefsNode.setProperty((String) pair.getKey(), (String) pair.getValue());
+		for (Map.Entry<String, Object> entry : settings.getMap().entrySet()) {
+			if (entry.getValue() != null) {
+				// log.debug(entry.getKey() + " = " + entry.getValue());
+				prefsNode.setProperty(entry.getKey(), (String) entry.getValue());
 			}
 		}
 		settings.getMap().clear();
