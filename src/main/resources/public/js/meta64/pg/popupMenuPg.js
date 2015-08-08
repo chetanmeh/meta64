@@ -60,6 +60,7 @@ var popupMenuPg = function() {
 			_menuItem("Finish Moving", "finishMovingSelNodesButton", "edit.finishMovingSelNodes();") + // 
 			_menuItem("Rename", "renameNodePgButton", "edit.openRenameNodePg();") + //
 			_menuItem("Delete", "deleteSelNodesButton", "edit.deleteSelNodes();") + // 
+			_menuItem("Clear Selections", "clearSelectionsButton", "edit.clearSelections();") + // 
 			_menuItem("Import", "openImportPgButton", "edit.openImportPg();") + // 
 			_menuItem("Export", "openExportPgButton", "edit.openExportPg();"); // 
 
@@ -67,7 +68,6 @@ var popupMenuPg = function() {
 
 			// var searchMenuItems = //
 			// _menuItem("Text Search", "searchPgButton", "srch.searchPg();") +
-			// //
 			// _menuItem("Timeline", "timelineButton", "srch.timeline();");//
 			// var searchMenu = _makeTopLevelMenu("Search", searchMenuItems);
 

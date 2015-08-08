@@ -170,7 +170,7 @@ var edit = function() {
 			elm.toggleClass("ui-icon-edit", meta64.editMode);
 			elm.toggleClass("ui-icon-forbidden", !meta64.editMode);
 			render.renderPageFromData();
-			
+
 			/*
 			 * Since edit mode turns on lots of buttons, the location of the
 			 * node we are viewing can change so much it goes completely
@@ -350,7 +350,7 @@ var edit = function() {
 		},
 
 		openRenameNodePg : function() {
-			meta64.changePage(renameNodePg); 
+			meta64.changePage(renameNodePg);
 		},
 
 		renameNode : function() {
@@ -647,6 +647,19 @@ var edit = function() {
 			 */
 			_.nodeInsertTarget = null;
 			_.startEditingNewNode();
+		},
+
+		clearSelections : function() {
+			meta64.clearSelectedNodes();
+
+			/*
+			 * We could write code that only scans for all the "SEL" buttons and
+			 * updates the state of them, but for now we take the simple
+			 * approach and just re-render the page. There is no call to the
+			 * server, so this is actually very efficient.
+			 */
+			render.renderPageFromData();
+			meta64.jqueryChangePage("#mainPage");
 		},
 
 		/*

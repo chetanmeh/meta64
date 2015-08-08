@@ -137,7 +137,7 @@ var nav = function() {
 				checked = true;
 			}
 
-			console.log("Classes: " + classes);
+			//console.log("Classes: " + classes);
 
 			if (checked) {
 				meta64.selectedNodes[uid] = true;

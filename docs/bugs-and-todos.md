@@ -1,11 +1,11 @@
 # Technical Debt
 * We have serval places in the code where we do something like delete nodes, etc, and we are going back to the server to refresh the page, when really the client-side has enough information to refresh the page without going back to server, but it takes additional work. Waiting for the feature set to become more stable before attacking these kinds of performance optimizations.
 
-
 # TODO
-* need menu item for 'clear selections' (remove selected nodes)
-* Need to implement "forgot my password", and reset password without sending actual password to user, but instead
-a limited duration random code that can be used to login and change password.
+* Need same button bar on header node (parent node) of pages that we have on the child nodes on each page
+during edit mode, but really the only button needed here is the 'edit' button.
+* Adding a new record is taking way over one second. Nearly two. Which is noticeable. This started happening when lucene indexes were added and warnings are getting logged during this time, so there's something we aren't quite doing right in here I think.
+* Need to implement "forgot my password", and reset password without sending actual password to user, but instead a limited duration (like 5minutes) random code that can be used to login and change password.
 * need 'delete account' capability where user can leave meta64, and have all their data deleted from the server.
 * search results that have no results should show a message instead of just blank page!
 * search results header bar can scroll off screen. make it fixed at top just like main page header.
@@ -26,8 +26,8 @@ a limited duration random code that can be used to login and change password.
 * Some way to let user render text at a narrower width across the page. Lines going completely across a wide screen are hard to read - at least on a wide screen device
 * Need "Move to Top" and "Move to Bottom" in addition to "up"/"down"
 * More JUnit unit tests.
+* If user spends a very long time editing a node without saving, and the session times out they can lose ability to save. Need intermittent save to a property like "content-unsaved" so that when they open the editor, the next time we can detect this, and ask them if they would like to continue editing their unsaved work.
 
 # List of Known Bugs
 * sometimes when I click on the top node (page parent node) it is unable to select the node (no red indicator shows on left). Saw this happen when I accessed a node via url that was shared from another user. Also happens when you click Home button.
-* password cookie key will be encrypted using AES from http://point-at-infinity.org/jsaes/, probably and probably the
-https://panopticlick.eff.org/ methodology of generating a string to use for the encryption key which will be rather unique to the machine. This means if a hacker gets your cookie, it will still be difficult to decrypt, unless they can also run javascript on your machine and sent the output to their servers. Of course a hacker can lure you to their server, where they can run JS on a page and get your panopticlick info, but that is one additional challenge for them.
+* password cookie key will be encrypted using AES from http://point-at-infinity.org/jsaes/, probably and probably the https://panopticlick.eff.org/ methodology of generating a string to use for the encryption key which will be rather unique to the machine. This means if a hacker gets your cookie, it will still be difficult to decrypt, unless they can also run javascript on your machine and sent the output to their servers. Of course a hacker can lure you to their server, where they can run JS on a page and get your panopticlick info, but that is one additional challenge for them.
