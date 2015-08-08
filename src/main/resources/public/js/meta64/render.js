@@ -516,7 +516,9 @@ var render = function() {
 				var cssId = uid + "_row";
 
 				var buttonBar = "";
-				if (meta64.editMode) {
+
+				/* Add edit button if edit mode and this isn't the root */
+				if (meta64.editMode && data.node.path != "/") {
 
 					/* Construct Create Subnode Button */
 					var editNodeButton = _.makeTag("a", //

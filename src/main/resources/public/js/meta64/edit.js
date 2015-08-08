@@ -512,7 +512,7 @@ var edit = function() {
 
 						var allButtons = addMultiButton + clearButton + deleteButton;
 						if (allButtons.length > 0) {
-							buttonBar = render.makeHorizontalFieldSet(allButtons);
+							buttonBar = render.makeHorizontalFieldSet(allButtons, "property-edit-button-bar");
 						} else {
 							buttonBar = "";
 						}
@@ -545,7 +545,7 @@ var edit = function() {
 					}
 
 					fields += render.makeTag("div", {
-						"class" : "ui-field-contain"
+						"class" : "ui-field-contain property-edit-field"
 					}, field);
 
 					counter++;
@@ -560,7 +560,7 @@ var edit = function() {
 						}, '');
 
 				fields += render.makeTag("div", {
-					"class" : "ui-field-contain"
+					"class" : "ui-field-contain property-edit-field"
 				}, field);
 			}
 			util.setHtmlEnhanced($("#propertyEditFieldContainer"), fields);

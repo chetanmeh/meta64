@@ -29,6 +29,23 @@ tr td div p {
 	margin-top: 0;
 }
 
+.property-edit-button-bar {
+	margin-top: 0;
+}
+
+.property-edit-field {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.property-edit-field:nth-child(odd) {
+	background: #efefef;
+}
+
+.property-edit-field:nth-child(even) {
+	background: #dedede;
+}
+
 .compact-field-contain {
 	margin-bottom: 0;
 	margin-left: 10px;
