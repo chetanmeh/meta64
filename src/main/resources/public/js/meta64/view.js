@@ -80,9 +80,13 @@ var view = function() {
 			var node = edit.editNode;
 			var e = $(domId);
 			if (edit.editingUnsavedNode) {
+				e.html("");
 				e.hide();
 			} else {
-				e.html("Path: " + render.formatPath(node))
+				var pathDisplay = "Path: " + render.formatPath(node);
+				pathDisplay += "<br>ID: "+ node.id;
+				pathDisplay += "<br>Modified: " + node.lastModified;
+				e.html(pathDisplay);
 				e.show();
 			}
 			e.trigger("updatelayout");

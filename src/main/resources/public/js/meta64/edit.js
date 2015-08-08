@@ -581,7 +581,9 @@ var edit = function() {
 			 */
 			util.setVisibility("#addPropertyButton", !_.editingUnsavedNode);
 
-			util.setVisibility("#makeNodeReferencableButton", !_.editingUnsavedNode);
+			var isUuid = _.editNode && _.editNode.id && !_.editNode.id.startsWith("/");
+			//console.log("isUuid: " + isUuid);
+			util.setVisibility("#makeNodeReferencableButton", _.editNode && !isUuid && !_.editingUnsavedNode);
 		},
 
 		insertNode : function(uid) {

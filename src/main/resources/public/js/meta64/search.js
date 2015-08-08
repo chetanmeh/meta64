@@ -163,7 +163,7 @@ var srch = function() {
 			_.makeButtonBarHtml(uid) + render.makeTag("div", //
 			{
 				"id" : uid + "_srch_content"
-			}, render.renderNodeContent(node, true, true, true, true)));
+			}, render.renderNodeContent(node, true, true, true)));
 		},
 
 		makeButtonBarHtml : function(uid) {

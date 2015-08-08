@@ -66,7 +66,7 @@ var render = function() {
 		/*
 		 * node: JSON of NodeInfo.java
 		 */
-		renderNodeContent : function(node, showIdentifier, showPath, showName, renderBinary) {
+		renderNodeContent : function(node, showPath, showName, renderBinary) {
 			var headerText = "";
 			var ret = "";
 
@@ -95,25 +95,6 @@ var render = function() {
 					headerText += "  Modified: " + node.lastModified;
 				}
 				headerText += "</div>";
-			}
-
-			if (showIdentifier && meta64.editMode) {
-				if (node.id === node.path && showPath) {
-					// ret += "ID: *<br>";
-				} else {
-					/*
-					 * if ID contains a slash then it's more path than ID, so I
-					 * won't show it as an ID. This is kind of confusing how JCR
-					 * will put in the ID as a path component, which is valid
-					 * but then again it's not an ID either.
-					 */
-					// if (!node.id.contains("/")) {
-					headerText += "ID: " + node.id + cnst.BR; // TODO: this
-					// <br> tag
-					// here is ugly and
-					// wrong.
-					// }
-				}
 			}
 
 			/*
@@ -227,7 +208,7 @@ var render = function() {
 			buttonBarHtml + _.makeTag("div", //
 			{
 				"id" : uid + "_content"
-			}, _.renderNodeContent(node, true, true, true, true)));
+			}, _.renderNodeContent(node, true, true, true)));
 		},
 
 		showNodeUrl : function() {
@@ -528,7 +509,7 @@ var render = function() {
 
 			var bkgStyle = _.getNodeBkgImageStyle(data.node);
 
-			var mainNodeContent = _.renderNodeContent(data.node, true, true, true, true);
+			var mainNodeContent = _.renderNodeContent(data.node, true, true, true);
 			// console.log("mainNodeContent: "+mainNodeContent);
 			if (mainNodeContent.length > 0) {
 				var uid = data.node.uid;
