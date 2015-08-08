@@ -605,25 +605,25 @@ var render = function() {
 
 			var elm = $("#" + node.imgId);
 			if (elm) {
-				var width = elm.attr("width");
-				var height = elm.attr("height");
-				// console.log("width=" + width + " height=" + height);
+				//var width = elm.attr("width");
+				//var height = elm.attr("height");
+				//console.log("width=" + width + " height=" + height);
 
 				if (node.width && node.height) {
 
-					if (node.width > meta64.deviceWidth - 50) {
+					if (node.width > meta64.deviceWidth - 80) {
 
 						/* set the width we want to go for */
-						var width = meta64.deviceWidth - 50;
+						//var width = meta64.deviceWidth - 80;
 
 						/*
 						 * and set the height to the value it needs to be at for
 						 * same w/h ratio (no image stretching)
 						 */
-						var height = width * node.height / node.width;
+						//var height = width * node.height / node.width;
 
-						elm.attr("width", width);
-						elm.attr("height", height);
+						elm.attr("width", "100%");
+						elm.attr("height", "auto");
 					}
 					/* Image does fit on screen so render it at it's exact size */
 					else {

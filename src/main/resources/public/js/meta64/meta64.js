@@ -527,7 +527,7 @@ var meta64 = function() {
 				var width = $(window).width();
 
 				if (width != _.deviceWidth) {
-					// console.log("Screen width changed: " + width);
+					console.log("Screen width changed: " + width);
 
 					_.deviceWidth = width;
 					_.deviceHeight = $(window).height();
@@ -548,6 +548,11 @@ var meta64 = function() {
 
 		screenSizeChange : function() {
 			if (_.currentNodeData) {
+				
+				if (meta64.currentNode.imgId) {
+					render.adjustImageSize( meta64.currentNode);
+				}
+				
 				$.each(_.currentNodeData.children, function(i, node) {
 					if (node.imgId) {
 						render.adjustImageSize(node);
