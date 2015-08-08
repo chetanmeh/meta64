@@ -573,6 +573,12 @@ var render = function() {
 
 			util.setHtmlEnhancedById("#listView", output);
 
+			//TODO: Instead of calling screenSizeChange here immediately, it would be better
+			//to be setting the image sizes exactly on the attributes of each image, 
+			//as the HTML text is rendered before we even call setHtmlEnhancedById, so that 
+			//images always are GUARANTEED to render correctly immediately.
+			meta64.screenSizeChange();
+			
 			if (!meta64.getHighlightedNode()) {
 				util.scrollToTop();
 			}
