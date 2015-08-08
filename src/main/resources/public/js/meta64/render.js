@@ -573,12 +573,15 @@ var render = function() {
 
 			util.setHtmlEnhancedById("#listView", output);
 
-			//TODO: Instead of calling screenSizeChange here immediately, it would be better
-			//to be setting the image sizes exactly on the attributes of each image, 
-			//as the HTML text is rendered before we even call setHtmlEnhancedById, so that 
-			//images always are GUARANTEED to render correctly immediately.
+			/*
+			 * TODO: Instead of calling screenSizeChange here immediately, it
+			 * would be better to set the image sizes exactly on the attributes
+			 * of each image, as the HTML text is rendered before we even call
+			 * setHtmlEnhancedById, so that images always are GUARANTEED to
+			 * render correctly immediately.
+			 */
 			meta64.screenSizeChange();
-			
+
 			if (!meta64.getHighlightedNode()) {
 				util.scrollToTop();
 			}
@@ -611,23 +614,21 @@ var render = function() {
 
 			var elm = $("#" + node.imgId);
 			if (elm) {
-				//var width = elm.attr("width");
-				//var height = elm.attr("height");
-				//console.log("width=" + width + " height=" + height);
+				// var width = elm.attr("width");
+				// var height = elm.attr("height");
+				// console.log("width=" + width + " height=" + height);
 
 				if (node.width && node.height) {
 
 					if (node.width > meta64.deviceWidth - 80) {
 
 						/* set the width we want to go for */
-						//var width = meta64.deviceWidth - 80;
-
+						// var width = meta64.deviceWidth - 80;
 						/*
 						 * and set the height to the value it needs to be at for
 						 * same w/h ratio (no image stretching)
 						 */
-						//var height = width * node.height / node.width;
-
+						// var height = width * node.height / node.width;
 						elm.attr("width", "100%");
 						elm.attr("height", "auto");
 					}

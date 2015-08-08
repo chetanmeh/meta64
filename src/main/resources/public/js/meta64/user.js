@@ -45,8 +45,7 @@ var user = function() {
 
 			if (res.userPreferences.lastNode) {
 				console.log("lastNode: " + res.userPreferences.lastNode);
-			}
-			else {
+			} else {
 				console.log("lastNode is null.");
 			}
 
@@ -256,6 +255,12 @@ var user = function() {
 		},
 
 		logout : function() {
+			if (meta64.isAnonUser) {
+				return;
+			}
+			
+			/* Remove warning dialog to ask user about leaving the page */
+			$(window).off("beforeunload");
 
 			/*
 			 * our choice of behavior here is that when logging out we clean out

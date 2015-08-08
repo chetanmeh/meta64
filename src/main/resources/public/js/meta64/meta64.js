@@ -496,9 +496,14 @@ var meta64 = function() {
 			_.initConstants();
 			_.displaySignupMessage();
 
-			$(window).on('orientationchange', _.orientationHandler);
-			$(window).bind('beforeunload', function() {
+			$(window).on("orientationchange", _.orientationHandler);
+			
+			$(window).bind("beforeunload", function() {
 				return "Leave Meta64 ?";
+			});
+			
+			$(window).on("unload", function() {
+				user.logout();
 			});
 
 			_.addClickListeners();
@@ -548,11 +553,11 @@ var meta64 = function() {
 
 		screenSizeChange : function() {
 			if (_.currentNodeData) {
-				
+
 				if (meta64.currentNode.imgId) {
-					render.adjustImageSize( meta64.currentNode);
+					render.adjustImageSize(meta64.currentNode);
 				}
-				
+
 				$.each(_.currentNodeData.children, function(i, node) {
 					if (node.imgId) {
 						render.adjustImageSize(node);

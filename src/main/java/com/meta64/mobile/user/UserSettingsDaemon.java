@@ -84,7 +84,7 @@ public class UserSettingsDaemon {
 	}
 
 	private void saveSettingsForUser(Session session, String userName, UnsavedUserSettings settings) throws Exception {
-		if (JcrPrincipal.ANONYMOUS.equals(userName.toLowerCase())) {
+		if (userName == null || JcrPrincipal.ANONYMOUS.equalsIgnoreCase(userName)) {
 			return;
 		}
 
@@ -104,6 +104,9 @@ public class UserSettingsDaemon {
 	}
 
 	public void setSettingVal(String userName, String propertyName, Object propertyVal) {
+		if (userName == null) {
+			return;
+		}
 		UnsavedUserSettings settings = mapByUser.get(userName);
 		if (settings == null) {
 			settings = new UnsavedUserSettings();
