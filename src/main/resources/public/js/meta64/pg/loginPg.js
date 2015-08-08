@@ -45,6 +45,7 @@ var loginPg = function() {
 		},
 
 		init : function() {
+			user.populateLoginPgFromCookies();
 			util.delayedFocus("#userName");
 		}
 	};

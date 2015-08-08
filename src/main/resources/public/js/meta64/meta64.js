@@ -503,7 +503,7 @@ var meta64 = function() {
 			});
 			
 			$(window).on("unload", function() {
-				user.logout();
+				user.logout(false);
 			});
 
 			_.addClickListeners();
@@ -532,7 +532,7 @@ var meta64 = function() {
 				var width = $(window).width();
 
 				if (width != _.deviceWidth) {
-					console.log("Screen width changed: " + width);
+					//console.log("Screen width changed: " + width);
 
 					_.deviceWidth = width;
 					_.deviceHeight = $(window).height();

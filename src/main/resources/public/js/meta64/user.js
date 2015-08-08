@@ -37,6 +37,7 @@ var user = function() {
 			if (usr != "anonymous") {
 				_.writeCookie(cnst.COOKIE_LOGIN_USR, usr);
 				_.writeCookie(cnst.COOKIE_LOGIN_PWD, pwd);
+				_.writeCookie(cnst.COOKIE_LOGIN_STATE, "1");
 			}
 
 			meta64.jqueryChangePage("#mainPage");
@@ -73,6 +74,7 @@ var user = function() {
 				 */
 				$.removeCookie(cnst.COOKIE_LOGIN_USR);
 				$.removeCookie(cnst.COOKIE_LOGIN_PWD);
+				$.writeCookie(cnst.COOKIE_LOGIN_STATE, "0");
 				location.reload();
 			}
 		}
@@ -123,6 +125,7 @@ var user = function() {
 		populateLoginPgFromCookies : function() {
 			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
 			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
+			
 			if (usr) {
 				$("#userName").val(usr);
 			}
@@ -140,16 +143,17 @@ var user = function() {
 
 			/* Open login dialog */
 			if (loginEnable) {
-				_.populateLoginPgFromCookies();
-
-				/* make credentials visible only if not logged in */
-				util.setVisibility("#loginCredentialFields", meta64.isAnonUser);
+				// _.populateLoginPgFromCookies();
+				//
+				// /* make credentials visible only if not logged in */
+				// util.setVisibility("#loginCredentialFields",
+				// meta64.isAnonUser);
 
 				meta64.changePage(loginPg);
 			}
 			/* or log out immediately */
 			else {
-				_.logout();
+				_.logout(true);
 			}
 		},
 
@@ -192,6 +196,14 @@ var user = function() {
 		},
 
 		refreshLogin : function() {
+
+			var loginState = $.cookie(cnst.COOKIE_LOGIN_STATE);
+
+			/* if we have known state as logged out, then do nothing here */
+			if (loginState === "0") {
+				meta64.loadAnonPageHome(false);
+				return;
+			}
 
 			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
 			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
@@ -254,23 +266,17 @@ var user = function() {
 			});
 		},
 
-		logout : function() {
+		logout : function(updateLoginStateCookie) {
 			if (meta64.isAnonUser) {
 				return;
 			}
-			
+
 			/* Remove warning dialog to ask user about leaving the page */
 			$(window).off("beforeunload");
 
-			/*
-			 * our choice of behavior here is that when logging out we clean out
-			 * cookies, so the logout is permanent. User can stay logged in
-			 * simply by never logging out, but the logout securely disables the
-			 * client computer from being able to just automatically log in
-			 * again, which seems like the behavior I'd like.
-			 */
-			$.removeCookie(cnst.COOKIE_LOGIN_USR);
-			$.removeCookie(cnst.COOKIE_LOGIN_PWD);
+			if (updateLoginStateCookie) {
+				user.writeCookie(cnst.COOKIE_LOGIN_STATE, "0");
+			}
 
 			util.json("logout", {}, _logoutResponse);
 		},
