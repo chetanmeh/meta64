@@ -25,6 +25,10 @@ tr td div p {
 	padding: 1px 1px 1px 1px;
 }
 
+.page-top-button-bar {
+	margin-top: 0;
+}
+
 .compact-field-contain {
 	margin-bottom: 0;
 	margin-left: 10px;

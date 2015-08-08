@@ -45,6 +45,13 @@ var render = function() {
 	}
 
 	var _ = {
+		/*
+		 * Important little method here. All GUI page/divs are created using
+		 * this sort of specification here that they all must have a 'build'
+		 * method that is called first time only, and then the 'init' method
+		 * called before each time the component gets displayed with new
+		 * information.
+		 */
 		buildPage : function(pg) {
 			if (!pg.built) {
 				pg.build();
@@ -526,6 +533,19 @@ var render = function() {
 			if (mainNodeContent.length > 0) {
 				var uid = data.node.uid;
 				var cssId = uid + "_row";
+
+				var buttonBar = "";
+				if (meta64.editMode) {
+
+					/* Construct Create Subnode Button */
+					var editNodeButton = _.makeTag("a", //
+					{
+						"onClick" : "edit.runEditNode('" + uid + "');",
+						"class" : "ui-btn ui-btn-inline ui-icon-edit ui-mini ui-btn-icon-left"
+					}, "Edit");
+					buttonBar = _.makeHorizontalFieldSet(editNodeButton, "compact-field-contain page-top-button-bar");
+				}
+
 				var content = _.makeTag("div", //
 				{
 					"class" : "node-table-row page-parent-node inactive-row",
@@ -533,7 +553,7 @@ var render = function() {
 					"id" : cssId,
 					"style" : bkgStyle
 				},// 
-				mainNodeContent);
+				buttonBar + mainNodeContent);
 
 				$("#mainNodeContent").show();
 				$("#mainNodeContent").html(content);

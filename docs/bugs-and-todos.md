@@ -2,8 +2,6 @@
 * We have serval places in the code where we do something like delete nodes, etc, and we are going back to the server to refresh the page, when really the client-side has enough information to refresh the page without going back to server, but it takes additional work. Waiting for the feature set to become more stable before attacking these kinds of performance optimizations.
 
 # TODO
-* Need same button bar on header node (parent node) of pages that we have on the child nodes on each page
-during edit mode, but really the only button needed here is the 'edit' button.
 * Adding a new record is taking way over one second. Nearly two. Which is noticeable. This started happening when lucene indexes were added and warnings are getting logged during this time, so there's something we aren't quite doing right in here I think.
 * Need to implement "forgot my password", and reset password without sending actual password to user, but instead a limited duration (like 5minutes) random code that can be used to login and change password.
 * need 'delete account' capability where user can leave meta64, and have all their data deleted from the server.
