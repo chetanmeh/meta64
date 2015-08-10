@@ -1,14 +1,23 @@
 package com.meta64.mobile;
 
+import java.util.HashMap;
+
 import javax.jcr.Session;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.oauth1.AuthorizedRequestToken;
+import org.springframework.social.oauth1.OAuth1Operations;
+import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.meta64.mobile.annotate.OakSession;
 import com.meta64.mobile.config.SessionContext;
@@ -87,6 +97,7 @@ import com.meta64.mobile.util.BrandingUtil;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.SpringMvcUtil;
 import com.meta64.mobile.util.ThreadLocals;
+import com.meta64.mobile.util.XString;
 
 /**
  * Primary Spring MVC controller. All application logic from the browser connects directly to this
@@ -144,6 +155,92 @@ public class AppController {
 
 	@Autowired
 	private SpringMvcUtil springMvcUtil;
+
+	@Value("${spring.social.twitter.app-id}")
+	private String twitterAppId;
+
+	@Value("${spring.social.twitter.app-secret}")
+	private String twitterAppSecret;
+
+	/*
+	 * TODO: this map, and the twitterLogin and twitterCallback methods will be moved into a service
+	 * class (out of this class), very soon.
+	 */
+	private final HashMap<String, OAuthToken> oauthTokenMap = new HashMap<String, OAuthToken>();
+
+	@RequestMapping(value = "/twitterLogin", method = RequestMethod.GET)
+	public ModelAndView twitterLogin(Model model) throws Exception {
+		logRequest("twitterLogin", null);
+
+		if (XString.isEmpty(twitterAppId) || XString.isEmpty(twitterAppSecret)) {
+			throw new Exception("Meta64 instance is not configured for twitter logins.");
+		}
+
+		TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(twitterAppId, //
+				twitterAppSecret);
+		OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
+		OAuthToken token = oauthOperations.fetchRequestToken("http://meta64.com/twitterAuth", null);
+
+		oauthTokenMap.put(token.getValue(), token);
+
+		String url = oauthOperations.buildAuthenticateUrl(token.getValue(), null);
+		return new ModelAndView("redirect:" + url);
+	}
+
+	@RequestMapping("/twitterAuth")
+	public String twitterCallback(//
+			@RequestParam(value = "oauth_token", required = true) String oauthToken, //
+			@RequestParam(value = "oauth_verifier", required = true) String oauthVerifier, //
+			Model model) throws Exception {
+		logRequest("twitterCallback", null);
+
+		if (XString.isEmpty(twitterAppId) || XString.isEmpty(twitterAppSecret)) {
+			throw new Exception("Meta64 instance is not configured for twitter logins.");
+		}
+
+		log.debug("TwitterCallback: Sent: " + oauthToken);
+		if (!oauthTokenMap.containsKey(oauthToken)) {
+			throw new Exception("Bad oauth_token");
+		}
+		OAuthToken token = oauthTokenMap.remove(oauthToken);
+
+		TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(twitterAppId, //
+				twitterAppSecret);
+
+		OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
+		OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(token, oauthVerifier), null);
+		Connection<Twitter> twitterConnection = connectionFactory.createConnection(accessToken);
+
+		String userName = twitterConnection.fetchUserProfile().getUsername();
+		log.debug("UserName: " + userName);
+
+		/**
+		 * TWITTER LOGIN not quite complete yet.
+		 * 
+		 * A little more TODO!!
+		 * 
+		 * The rest of this method is just returning the index page, without actually having logged
+		 * in as twitter user, so the twitter login is not quite complete. What remains to be done
+		 * is to use the 'userName' that we just retrieve above, and then look it up as
+		 * 'twitter-userName' (i.e. prefix with twitter) and if the name is found in the system do a
+		 * normal login, and if not found then carry out all the processing to do a signup and force
+		 * the signup to be complete (i.e. no normal email being sent, etc), and then once we have
+		 * the signup forcet thru all at once here, we can process this request as if it were an
+		 * actual login request and set the session state to reflect logged in state and return the
+		 * gui to the user as a logged in page.
+		 * 
+		 * And finally, I guess you'll notice this but the loginPg.js has the twitter button removed
+		 * for now so that I can go ahead and check in the code without anything appearing 'broken'
+		 */
+
+		brandingUtil.addBrandingAttributes(model);
+
+		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
+		springMvcUtil.addCssFileNameProp(model, "meta64Css", "/css/meta64");
+		springMvcUtil.addThirdPartyLibs(model);
+
+		return "index";
+	}
 
 	/*
 	 * This is the actual app page loading request, for his SPA (Single Page Application) this is

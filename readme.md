@@ -1,4 +1,4 @@
-## Meta64: An Open-Source Portal and Content Repository
+## An Open-Source Portal and Content Repository
 Meta64 is an Open Source "Mobile First" Wiki-type content repository (or CMS) built on Apache Oak JCR and MongoDb. The **meta64.com** website is currently geared towards the web developer audience, and the development of the platform; but the technology itself is a platform for building portals. This "Portal Platform" allows users to signup and create accounts where they can host content. The content can be any kind of text, data, images, and/or binaries, and can be shared to other users, who can then browse and/or edit the content collaboratively. The goal is to create a portal that is somewhat similar to Wikipedia (collaborative editing and sharing of markdown), but having many Social Media-types of capabilities. Another goal, from a technology standpoint, was to use only content repository open-standards for data, open source APIs, highly scalable data storage, and a very modern Mobile front end.
 
 ## Technology Stack
@@ -6,17 +6,10 @@ Meta64 is an Open Source "Mobile First" Wiki-type content repository (or CMS) bu
 * Server: Java, SpringBoot + Spring Framework, Apache Oak JCR (Lucene embedded), MongoDb, Tomcat Embedded 
 
 ## Links
-* GitHub Main Page
-  - https://github.com/Clay-Ferguson/meta64
-
-* GitHub Docs
-  - https://github.com/Clay-Ferguson/meta64/tree/master/docs/
-
-* Screencasts on Youtube
-  - https://www.youtube.com/playlist?list=PL3dRK8t30WnJUQ2vvlrY1ZH_awcGTXtEe
-  
-* Browse Demo Content (Book: War and Peace) 
-  - http://www.meta64.com/?id=/meta64/war-and-peace
+[GitHub Main Page](https://github.com/Clay-Ferguson/meta64)
+[GitHub Docs](https://github.com/Clay-Ferguson/meta64/tree/master/docs/)
+[Screencasts on Youtube](https://www.youtube.com/playlist?list=PL3dRK8t30WnJUQ2vvlrY1ZH_awcGTXtEe)
+[Browse Demo Content (Book: War and Peace)](http://www.meta64.com/?id=/meta64/war-and-peace)
 
 ## Meta64 Overview
 Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you're on meta64.com) is actually running this portal, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that *"everything is content"* and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
@@ -102,7 +95,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 
 Other than SpringBoot, the main dependency needed for running/building meta64 is JackrabbitOak. This project is currently being hosted here:
 
-https://github.com/apache/jackrabbit-oak
+https://github.com/apache/jackrabbit-oak   
 https://jackrabbit.apache.org/oak/docs/index.html
 
 The latest stable release that is recommended by the project owners is 1.2.3, and this is the version that meta64 is using.
@@ -119,8 +112,6 @@ The latest stable release that is recommended by the project owners is 1.2.3, an
 ## About the Developer
 Meta64 is currently owned and maintained by Clay Ferguson. I am a 47 yr old Java Developer located in Dallas, Texas. I have 24 years of coding experience primarily in business intelligence, financial analysis, and for the past 14 years web development. Feel free to get in touch with me here:
 
-**linkedin.com:** http://www.linkedin.com/in/wclayf
-
-**GitHub:** https://github.com/Clay-Ferguson
-
-**email:** wclayf@gmail.com
+**linkedin.com:** http://www.linkedin.com/in/wclayf  
+**GitHub:** https://github.com/Clay-Ferguson  
+**email:** wclayf@gmail.com  

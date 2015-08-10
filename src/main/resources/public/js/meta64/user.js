@@ -108,7 +108,17 @@ var user = function() {
 		}
 	}
 
+	var _twitterLoginResponse = function(res) {
+		console.log("twitter Login response recieved.");
+	}
+
 	var _ = {
+
+		twitterLogin : function() {
+			/* Remove warning dialog to ask user about leaving the page */
+			$(window).off("beforeunload");
+			window.location.href = window.location.origin + "/twitterLogin";
+		},
 
 		openSignupPg : function() {
 			meta64.changePage(signupPg);
@@ -125,7 +135,7 @@ var user = function() {
 		populateLoginPgFromCookies : function() {
 			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
 			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
-			
+
 			if (usr) {
 				$("#userName").val(usr);
 			}

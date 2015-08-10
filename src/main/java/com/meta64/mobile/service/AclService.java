@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.repo.OakRepositoryBean;

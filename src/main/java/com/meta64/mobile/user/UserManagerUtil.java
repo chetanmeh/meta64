@@ -55,7 +55,7 @@ public class UserManagerUtil {
 			rootNode = session.getRootNode();
 		}
 		else {
-			rootNode = session.getNode("/"+JcrName.ROOT+"/" + userName);
+			rootNode = session.getNode("/" + JcrName.ROOT + "/" + userName);
 		}
 		return new RefInfo(rootNode.getIdentifier(), rootNode.getPath());
 	}
@@ -67,7 +67,7 @@ public class UserManagerUtil {
 	 */
 	public static boolean createUserRootNode(Session session, String userName) throws Exception {
 
-		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/"+JcrName.ROOT);
+		Node allUsersRoot = JcrUtil.getNodeByPath(session, "/" + JcrName.ROOT);
 		if (allUsersRoot == null) {
 			throw new Exception("/root not found!");
 		}

@@ -168,13 +168,13 @@ var srch = function() {
 
 		makeButtonBarHtml : function(uid) {
 
-			var openButton = render.makeTag("a", {
+			var gotoButton = render.makeTag("a", {
 				"onClick" : "srch.clickSearchNode('" + uid + "');",
 				"class" : "ui-btn ui-mini ui-btn-b ui-btn-inline ui-icon-carat-l ui-btn-icon-left"
 			}, //
 			"Go to Node");
 
-			return render.makeHorizontalFieldSet(openButton, "compact-field-contain");
+			return render.makeHorizontalFieldSet(gotoButton, "compact-field-contain");
 		},
 
 		clickOnSearchResultRow : function(rowElm, uid) {
