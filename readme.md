@@ -6,10 +6,10 @@ Meta64 is an Open Source "Mobile First" Wiki-type content repository (or CMS) bu
 * Server: Java, SpringBoot + Spring Framework, Apache Oak JCR (Lucene embedded), MongoDb, Tomcat Embedded 
 
 ## Links
-[GitHub Main Page](https://github.com/Clay-Ferguson/meta64)
-[GitHub Docs](https://github.com/Clay-Ferguson/meta64/tree/master/docs/)
-[Screencasts on Youtube](https://www.youtube.com/playlist?list=PL3dRK8t30WnJUQ2vvlrY1ZH_awcGTXtEe)
-[Browse Demo Content (Book: War and Peace)](http://www.meta64.com/?id=/meta64/war-and-peace)
+[GitHub Main Page](https://github.com/Clay-Ferguson/meta64)  
+[GitHub Docs](https://github.com/Clay-Ferguson/meta64/tree/master/docs/)  
+[Screencasts on Youtube](https://www.youtube.com/playlist?list=PL3dRK8t30WnJUQ2vvlrY1ZH_awcGTXtEe)  
+[Browse Demo Content (Book: War and Peace)](http://www.meta64.com/?id=/meta64/war-and-peace)  
 
 ## Meta64 Overview
 Meta64 is at it's core a **Content Repository Browser**, or an app for interacting with hierarchical data. The website you are now reading (if you're on meta64.com) is actually running this portal, and makes up everything you are seeing. The technology however is much more than a Content Browser, because it presents a GUI front end appropriate to both non-technical users, as well as the more technical users of back-end content repositories. The theory here is that *"everything is content"* and since both end users and technical users need to be able to interact with hierarchical data stores, it's desirable to have one system architecture that serves both roles well.
