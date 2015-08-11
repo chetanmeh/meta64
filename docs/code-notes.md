@@ -74,6 +74,14 @@ Use CTRL-C to terminate the app gracefully.
        --mail.host=somehost.someserver.net
        --aeskey=9999999999999999
     
+## Hosts File
+The configuration properties are set to use meta64-dev.com as the host name for TEST and DEV profiles, which is not a real domain name, and so you need to modify your 'hosts file' to add the following line:
+
+    127.0.0.1 meta64-dev.com
+    
+Note: On Windows this file is located in: **c:\Windows\System32\drivers\etc\hosts**. Also remember you need to run your text editor as administrative user in order to be able to edit that file. Do this with right click notepad.exe, and choosing "Run as Administator".  
+    
+    
 ## Encryption Key Config
 
 For temporarily storing passwords before the user is created in the repository the following key needs to be supplied:

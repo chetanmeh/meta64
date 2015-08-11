@@ -25,14 +25,14 @@ var loginPg = function() {
 			 * 
 			 * See server controller. Implementation is about 95% complete, but not yet fully complete!
 			 * */
-			//var twitterButton = render.makeButton("Login with Twitter", "twitterLoginButton", "a", "ui-btn-icon-left ui-icon-user");
-			//var socialButtonBar = render.makeHorzControlGroup(twitterButton);
+			var twitterButton = render.makeButton("Login with Twitter", "twitterLoginButton", "a", "ui-btn-icon-left ui-icon-user");
+			var socialButtonBar = render.makeHorzControlGroup(twitterButton);
 			
 			var form = render.makeTag("div", //
 			{
 				"class" : "ui-field-contain" //
 			}, //
-			formControls + buttonBar /* + socialButtonBar */);
+			formControls + buttonBar + socialButtonBar);
 
 			var internalMainContent = "";
 			var mainContent = render.makeTag("div", //
@@ -47,7 +47,7 @@ var loginPg = function() {
 			util.setHtmlEnhanced($("#loginPg"), content);
 
 			$("#loginButton").on("click", user.login);
-			//$("#twitterLoginButton").on("click", user.twitterLogin);
+			$("#twitterLoginButton").on("click", user.twitterLogin);
 			util.bindEnterKey("#userName", user.login);
 			util.bindEnterKey("#password", user.login);
 		},

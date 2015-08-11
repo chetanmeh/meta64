@@ -90,8 +90,8 @@ var user = function() {
 	}
 
 	var _logoutResponse = function(res) {
-		meta64.jqueryChangePage("#mainPage");
-		location.reload();
+		/* reloads browser with the query parameters stripped off the path */
+		window.location.href = window.location.origin;
 	}
 
 	var _changePasswordResponse = function(res) {
@@ -207,38 +207,40 @@ var user = function() {
 
 		refreshLogin : function() {
 
-			var loginState = $.cookie(cnst.COOKIE_LOGIN_STATE);
+			var callUsr, callPwd, usingCookies = false;
+			var loginSessionReady = $("#loginSessionReady").text();
+			if (loginSessionReady === "true") {
+				/* using blank credentials will cause server to look for a valid session */
+				callUsr = "";
+				callPwd = "";
+				usingCookies = true;
+			} else {
+				var loginState = $.cookie(cnst.COOKIE_LOGIN_STATE);
 
-			/* if we have known state as logged out, then do nothing here */
-			if (loginState === "0") {
-				meta64.loadAnonPageHome(false);
-				return;
+				/* if we have known state as logged out, then do nothing here */
+				if (loginState === "0") {
+					meta64.loadAnonPageHome(false);
+					return;
+				}
+				
+				var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
+				var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
+
+				usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
+				// console.log("cookieUser=" + usr + " usingCookies = " +
+				// usingCookies);
+				/*
+				 * empyt credentials causes server to try to log in with any active session credentials.
+				 */
+				callUsr = usr ? usr : ""; 
+				callPwd = pwd ? pwd : "";
 			}
 
-			var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
-			var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
-
-			var usingCookies = !util.emptyString(usr) && !util.emptyString(pwd);
-			// console.log("cookieUser=" + usr + " usingCookies = " +
-			// usingCookies);
-			/*
-			 * Session is a special indicator that tells server to just attempt
-			 * the login from the session varibles. perhaps I should have added
-			 * a REST attribute for this. It's sort of a an anti-pattern. (TODO:
-			 * fix)
-			 */
-			var callUsr = usr ? usr : "{session}";
-			var callPwd = pwd ? pwd : "{session}";
-
-			// console.log("refreshLogin with name: " + callUsr);
-
-			// var hrs = -(new Date().getTimezoneOffset() / 60);
-			// alert("TimeZoneOffset: "+hrs);
+			console.log("refreshLogin with name: " + callUsr);
 
 			var prms = util.json("login", {
 				"userName" : callUsr,
 				"password" : callPwd,
-				"usingCookies" : usingCookies,
 				"tzOffset" : new Date().getTimezoneOffset(),
 				"dst" : util.daylightSavingsTime
 			});

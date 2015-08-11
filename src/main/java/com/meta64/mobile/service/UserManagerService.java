@@ -23,10 +23,12 @@ import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.model.UserPreferences;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.ChangePasswordRequest;
+import com.meta64.mobile.request.CloseAccountRequest;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.SaveUserPreferencesRequest;
 import com.meta64.mobile.request.SignupRequest;
 import com.meta64.mobile.response.ChangePasswordResponse;
+import com.meta64.mobile.response.CloseAccountResponse;
 import com.meta64.mobile.response.LoginResponse;
 import com.meta64.mobile.response.SaveUserPreferencesResponse;
 import com.meta64.mobile.response.SignupResponse;
@@ -37,6 +39,7 @@ import com.meta64.mobile.util.DateUtil;
 import com.meta64.mobile.util.Encryptor;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
+import com.meta64.mobile.util.ValContainer;
 import com.meta64.mobile.util.XString;
 
 /**
@@ -87,7 +90,7 @@ public class UserManagerService {
 	 * successful login. If login fails the getJcrSession() call below will return null also.
 	 * 
 	 * IMPORTANT: this method DOES get called even on a fresh page load when the user hasn't logged
-	 * in yet, and this is done passing "{session}" in place of userName/password, which tells this
+	 * in yet, and this is done passing "" (blank) in place of userName/password, which tells this
 	 * login method to get a username/password from the session. So a valid session that's already
 	 * logged in will simply return the correct login information from here as if it were logging in
 	 * the first time. For an SPA (Single Page App), handling page reloads needs to do something
@@ -106,7 +109,7 @@ public class UserManagerService {
 		sessionContext.setTimezone(DateUtil.getTimezoneFromOffset(req.getTzOffset()));
 		sessionContext.setTimeZoneAbbrev(DateUtil.getUSTimezone(-req.getTzOffset() / 60, req.isDst()));
 
-		if (userName.equals("{session}")) {
+		if (userName.equals("")) {
 			userName = sessionContext.getUserName();
 		}
 		else {
@@ -149,6 +152,33 @@ public class UserManagerService {
 		}
 	}
 
+	public void closeAccount(Session session, CloseAccountRequest req, CloseAccountResponse res) throws Exception {
+		log.debug("Closing Account: " + sessionContext.getUserName());
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				String userName = sessionContext.getUserName();
+
+				/* Remove user from JCR user manager */
+				UserManagerUtil.removeUser(session, userName);
+
+				/*
+				 * And remove the two nodes on the tree that we have for this user (root and
+				 * preferences)
+				 */
+				Node allUsersRoot = JcrUtil.getNodeByPath(session, "/" + JcrName.ROOT + "/" + userName);
+				if (allUsersRoot != null) {
+					allUsersRoot.remove();
+				}
+				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
+				if (prefsNode != null) {
+					prefsNode.remove();
+				}
+				session.save();
+			}
+		});
+	}
+
 	/*
 	 * Processes last set of signup, which is validation of registration code. This means user has
 	 * clicked the link they were sent during the signup email verification, and they are sending in
@@ -162,30 +192,22 @@ public class UserManagerService {
 				try {
 					Node node = nodeSearchService.findNodeByProperty(session, "/" + JcrName.SIGNUP, //
 							JcrProp.CODE, signupCode);
+
 					if (node != null) {
 						String userName = JcrUtil.getRequiredStringProp(node, JcrProp.USER);
 						String password = JcrUtil.getRequiredStringProp(node, JcrProp.PWD);
 						password = encryptor.decrypt(password);
 						String email = JcrUtil.getRequiredStringProp(node, JcrProp.EMAIL);
 
-						if (UserManagerUtil.createUser(session, userName, password)) {
-							UserManagerUtil.createUserRootNode(session, userName);
+						initNewUser(session, userName, password, email, JcrProp.VAL_META64);
 
-							Node prefsNode = getPrefsNodeForSessionUser(session, userName);
-							prefsNode.setProperty(JcrProp.EMAIL, email);
-							setDefaultUserPreferences(prefsNode);
-
-							/*
-							 * allow JavaScript to detect all it needs to detect which is to display
-							 * a message to user saying the signup is complete.
-							 */
-							model.addAttribute("signupCode", "ok");
-
-							log.debug("Removing signup node.");
-							node.remove();
-							session.save();
-							log.debug("Successful signup complete.");
-						}
+						/*
+						 * allow JavaScript to detect all it needs to detect which is to display a
+						 * message to user saying the signup is complete.
+						 */
+						model.addAttribute("signupCode", "ok");
+						node.remove();
+						session.save();
 					}
 					else {
 						throw new Exception("Signup Code is invalid.");
@@ -196,6 +218,46 @@ public class UserManagerService {
 				}
 			}
 		});
+	}
+
+	/*
+	 * Email will not be null unless it's a Social Media oAuth signup.
+	 * 
+	 * oauthService == 'twitter' or 'meta64'
+	 */
+	public void initNewUser(Session session, String userName, String password, String email, String oauthService) throws Exception {
+		if (UserManagerUtil.createUser(session, userName, password)) {
+			UserManagerUtil.createUserRootNode(session, userName);
+
+			Node prefsNode = getPrefsNodeForSessionUser(session, userName);
+			if (email != null) {
+				prefsNode.setProperty(JcrProp.EMAIL, email);
+			}
+
+			prefsNode.setProperty(JcrProp.AUTH_SERVICE, oauthService);
+			prefsNode.setProperty(JcrProp.PWD, encryptor.encrypt(password));
+
+			setDefaultUserPreferences(prefsNode);
+			session.save();
+			log.debug("Successful signup complete.");
+		}
+	}
+
+	/* Returns true if the user exists and matches the oauthServie */
+	public boolean userExists(Session session, String userName, String oauthService, ValContainer<String> passwordContainer) throws Exception {
+		Node prefsNode = JcrUtil.getNodeByPath(session, "/" + JcrName.USER_PREFERENCES + "/" + userName);
+		if (prefsNode != null) {
+			String serviceProperty = JcrUtil.safeGetStringProp(prefsNode, JcrProp.AUTH_SERVICE);
+			if (oauthService.equals(serviceProperty)) {
+				if (passwordContainer != null) {
+					String password = JcrUtil.safeGetStringProp(prefsNode, JcrProp.PWD);
+					password = encryptor.decrypt(password);
+					passwordContainer.setVal(password);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*

@@ -114,6 +114,7 @@ public class JcrUtil {
 			parentPath += "/";
 		}
 
+		// log.debug("Looking up node by path: "+(parentPath+name));
 		Node node = JcrUtil.getNodeByPath(session, parentPath + name);
 		if (node != null) {
 			return node;

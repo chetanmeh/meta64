@@ -3,7 +3,6 @@ package com.meta64.mobile.request;
 public class LoginRequest {
 	private String userName;
 	private String password;
-	private boolean usingCookies;
 
 	/* timezone offset */
 	private int tzOffset;
@@ -25,14 +24,6 @@ public class LoginRequest {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public boolean isUsingCookies() {
-		return usingCookies;
-	}
-
-	public void setUsingCookies(boolean usingCookies) {
-		this.usingCookies = usingCookies;
 	}
 
 	public int getTzOffset() {

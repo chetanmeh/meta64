@@ -124,7 +124,7 @@ public class OakSessionAspect {
 			password = loginRequest.getPassword();
 			// usingCookies = loginRequest.isUsingCookies();
 
-			if (userName.equals("{session}")) {
+			if (userName.equals("")) {
 				userName = sessionContext.getUserName();
 				password = sessionContext.getPassword();
 			}

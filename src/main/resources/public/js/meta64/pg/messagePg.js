@@ -11,7 +11,7 @@ var messagePg = function() {
 			_title = title;
 			_message = message;
 			_callback = callback;
-			meta64.changePage(messagePg);
+			meta64.openDialog(messagePg);
 		},
 
 		build : function() {
@@ -23,19 +23,16 @@ var messagePg = function() {
 			}, fields);
 
 			util.setHtmlEnhanced($("#messagePg"), content);
+			
+			$("#messagePgOkButton").on("click", function() {
+				_callback();
+			});
 		},
 
 		init : function() {
 			$("#messagePgTitle").text(_title);
 			$("#messagePgMessage").html(_message);
-			$("#messagePgOkButton").off("click");
-
-			if (_callback) {
-				$("#messagePgOkButton").text(_buttonText).on("click", function() {
-					_callback();
-					$(this).off("click");
-				});
-			}
+			$("#messagePgOkButton").text(_buttonText);
 		}
 	};
 

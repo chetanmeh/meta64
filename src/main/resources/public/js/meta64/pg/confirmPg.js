@@ -12,7 +12,7 @@ var confirmPg = function() {
 			_message = message;
 			_buttonText = buttonText;
 			_callback = callback;
-			meta64.changePage(confirmPg);
+			meta64.openDialog(confirmPg);
 		},
 
 		build : function() {
@@ -25,16 +25,16 @@ var confirmPg = function() {
 			}, fields);
 
 			util.setHtmlEnhanced($("#confirmPg"), content);
+			
+			$("#confirmPgYesButton").on("click", function() {
+				_callback();
+			});
 		},
 
 		init : function() {
 			$("#confirmPgTitle").text(_title);
 			$("#confirmPgMessage").text(_message);
-			$("#confirmPgYesButton").off("click");
-			$("#confirmPgYesButton").text(_buttonText).on("click", function() {
-				_callback();
-				$(this).off("click");
-			});
+			$("#confirmPgYesButton").text(_buttonText);
 		}
 	};
 

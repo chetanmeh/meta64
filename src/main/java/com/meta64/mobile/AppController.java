@@ -1,23 +1,14 @@
 package com.meta64.mobile;
 
-import java.util.HashMap;
-
 import javax.jcr.Session;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.oauth1.AuthorizedRequestToken;
-import org.springframework.social.oauth1.OAuth1Operations;
-import org.springframework.social.oauth1.OAuthToken;
-import org.springframework.social.twitter.api.Twitter;
-import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.meta64.mobile.annotate.OakSession;
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.repo.OakRepositoryBean;
 import com.meta64.mobile.request.AddPrivilegeRequest;
 import com.meta64.mobile.request.AnonPageLoadRequest;
 import com.meta64.mobile.request.ChangePasswordRequest;
+import com.meta64.mobile.request.CloseAccountRequest;
 import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.DeleteAttachmentRequest;
 import com.meta64.mobile.request.DeleteNodesRequest;
@@ -62,6 +55,7 @@ import com.meta64.mobile.request.UploadFromUrlRequest;
 import com.meta64.mobile.response.AddPrivilegeResponse;
 import com.meta64.mobile.response.AnonPageLoadResponse;
 import com.meta64.mobile.response.ChangePasswordResponse;
+import com.meta64.mobile.response.CloseAccountResponse;
 import com.meta64.mobile.response.CreateSubNodeResponse;
 import com.meta64.mobile.response.DeleteAttachmentResponse;
 import com.meta64.mobile.response.DeleteNodesResponse;
@@ -92,12 +86,16 @@ import com.meta64.mobile.service.NodeEditService;
 import com.meta64.mobile.service.NodeMoveService;
 import com.meta64.mobile.service.NodeRenderService;
 import com.meta64.mobile.service.NodeSearchService;
+import com.meta64.mobile.service.OAuthLoginService;
 import com.meta64.mobile.service.UserManagerService;
+import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.BrandingUtil;
 import com.meta64.mobile.util.Convert;
+import com.meta64.mobile.util.JcrRunnable;
+import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.SpringMvcUtil;
 import com.meta64.mobile.util.ThreadLocals;
-import com.meta64.mobile.util.XString;
+import com.meta64.mobile.util.ValContainer;
 
 /**
  * Primary Spring MVC controller. All application logic from the browser connects directly to this
@@ -156,34 +154,16 @@ public class AppController {
 	@Autowired
 	private SpringMvcUtil springMvcUtil;
 
-	@Value("${spring.social.twitter.app-id}")
-	private String twitterAppId;
+	@Autowired
+	private OAuthLoginService oauthLoginService;
 
-	@Value("${spring.social.twitter.app-secret}")
-	private String twitterAppSecret;
-
-	/*
-	 * TODO: this map, and the twitterLogin and twitterCallback methods will be moved into a service
-	 * class (out of this class), very soon.
-	 */
-	private final HashMap<String, OAuthToken> oauthTokenMap = new HashMap<String, OAuthToken>();
+	@Autowired
+	private RunAsJcrAdmin adminRunner;
 
 	@RequestMapping(value = "/twitterLogin", method = RequestMethod.GET)
 	public ModelAndView twitterLogin(Model model) throws Exception {
 		logRequest("twitterLogin", null);
-
-		if (XString.isEmpty(twitterAppId) || XString.isEmpty(twitterAppSecret)) {
-			throw new Exception("Meta64 instance is not configured for twitter logins.");
-		}
-
-		TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(twitterAppId, //
-				twitterAppSecret);
-		OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
-		OAuthToken token = oauthOperations.fetchRequestToken("http://meta64.com/twitterAuth", null);
-
-		oauthTokenMap.put(token.getValue(), token);
-
-		String url = oauthOperations.buildAuthenticateUrl(token.getValue(), null);
+		String url = oauthLoginService.getTwitterLoginUrl();
 		return new ModelAndView("redirect:" + url);
 	}
 
@@ -194,44 +174,37 @@ public class AppController {
 			Model model) throws Exception {
 		logRequest("twitterCallback", null);
 
-		if (XString.isEmpty(twitterAppId) || XString.isEmpty(twitterAppSecret)) {
-			throw new Exception("Meta64 instance is not configured for twitter logins.");
-		}
+		log.debug("Twitter auth callback running.");
+		final String userName = oauthLoginService.completeAuthenticaion(oauthToken, oauthVerifier);
+		final ValContainer<String> passwordContainer = new ValContainer<String>();
 
-		log.debug("TwitterCallback: Sent: " + oauthToken);
-		if (!oauthTokenMap.containsKey(oauthToken)) {
-			throw new Exception("Bad oauth_token");
-		}
-		OAuthToken token = oauthTokenMap.remove(oauthToken);
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				if (!userManagerService.userExists(session, userName, JcrProp.VAL_TWITTER, passwordContainer)) {
+					String _password = JcrUtil.getGUID();
+					userManagerService.initNewUser(session, userName, _password, null, JcrProp.VAL_TWITTER);
+					passwordContainer.setVal(_password);
+					log.debug("twitter user created and initialized.");
+				}
+				else {
+					log.debug("twitter account did already exist. Logging in now.");
+					// passwordContainer will alredy have correct value here from userExists.
+				}
+			}
+		});
 
-		TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(twitterAppId, //
-				twitterAppSecret);
+		String password = passwordContainer.getVal();
 
-		OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
-		OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(token, oauthVerifier), null);
-		Connection<Twitter> twitterConnection = connectionFactory.createConnection(accessToken);
-
-		String userName = twitterConnection.fetchUserProfile().getUsername();
-		log.debug("UserName: " + userName);
-
-		/**
-		 * TWITTER LOGIN not quite complete yet.
-		 * 
-		 * A little more TODO!!
-		 * 
-		 * The rest of this method is just returning the index page, without actually having logged
-		 * in as twitter user, so the twitter login is not quite complete. What remains to be done
-		 * is to use the 'userName' that we just retrieve above, and then look it up as
-		 * 'twitter-userName' (i.e. prefix with twitter) and if the name is found in the system do a
-		 * normal login, and if not found then carry out all the processing to do a signup and force
-		 * the signup to be complete (i.e. no normal email being sent, etc), and then once we have
-		 * the signup forcet thru all at once here, we can process this request as if it were an
-		 * actual login request and set the session state to reflect logged in state and return the
-		 * gui to the user as a logged in page.
-		 * 
-		 * And finally, I guess you'll notice this but the loginPg.js has the twitter button removed
-		 * for now so that I can go ahead and check in the code without anything appearing 'broken'
+		/*
+		 * Setting credentials into sessionContext should be enough to set to "logged in" state.
 		 */
+		model.addAttribute("loginSessionReady", "true");
+
+		sessionContext.setUserName(userName);
+		sessionContext.setPassword(password);
+
+		log.debug("Session now has credentials attached. pwd=" + password);
 
 		brandingUtil.addBrandingAttributes(model);
 
@@ -251,7 +224,8 @@ public class AppController {
 	 */
 	@RequestMapping("/")
 	public String mobile(@RequestParam(value = "id", required = false) String id, //
-			@RequestParam(value = "signupCode", required = false) String signupCode, Model model) throws Exception {
+			@RequestParam(value = "signupCode", required = false) String signupCode, //
+			Model model) throws Exception {
 		logRequest("mobile", null);
 
 		if (signupCode != null) {
@@ -297,6 +271,17 @@ public class AppController {
 		res.setMessage("success: " + String.valueOf(++sessionContext.counter));
 		Session session = ThreadLocals.getJcrSession();
 		userManagerService.login(session, req, res);
+		return res;
+	}
+
+	@RequestMapping(value = API_PATH + "/closeAccount", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody CloseAccountResponse closeAccount(@RequestBody CloseAccountRequest req) throws Exception {
+		logRequest("closeAccount", req);
+		CloseAccountResponse res = new CloseAccountResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+		userManagerService.closeAccount(session, req, res);
 		return res;
 	}
 

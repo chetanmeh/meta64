@@ -10,6 +10,21 @@ var prefs = function() {
 			}
 		},
 
+		closeAccountResponse : function() {
+			/* Remove warning dialog to ask user about leaving the page */
+			$(window).off("beforeunload");
+
+			/* reloads browser with the query parameters stripped off the path */
+			window.location.href = window.location.origin;
+		},
+
+		closeAccount : function() {
+
+			confirmPg.areYouSure("Oh No!", "Close your Account? Are you sure? This was so unexpected!", "Yes, Close Account.", function() {
+				util.json("closeAccount", {}, _.closeAccountResponse);
+			});
+		},
+
 		savePreferences : function() {
 			meta64.editModeOption = $("#editModeSimple").is(":checked") ? meta64.MODE_SIMPLE : meta64.MODE_ADVANCED;
 
@@ -24,9 +39,9 @@ var prefs = function() {
 			$('#editModeSimple').prop('checked', meta64.editModeOption === meta64.MODE_SIMPLE).checkboxradio('refresh');
 			$('#editModeAdvanced').prop('checked', meta64.editModeOption === meta64.MODE_ADVANCED).checkboxradio('refresh');
 		},
-		
+
 		accountPreferencesPg : function() {
-			
+
 			meta64.changePage(prefsPg);
 			_.populatePreferencesPg();
 		}
@@ -36,4 +51,4 @@ var prefs = function() {
 	return _;
 }();
 
-//# sourceURL=prefs.js
+// # sourceURL=prefs.js

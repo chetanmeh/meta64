@@ -49,6 +49,20 @@ public class UserManagerUtil {
 		return ret;
 	}
 
+	public static boolean removeUser(Session session, String userName) throws Exception {
+		boolean ret = false;
+		UserManager userManager = ((JackrabbitSession) session).getUserManager();
+		Authorizable authorizable = userManager.getAuthorizable(userName);
+		if (authorizable != null) {
+			authorizable.remove();
+		}
+		else {
+			// if user not found we just do nothing, and throw no exception so that the rest
+			// of the clean up of the account will continue
+		}
+		return ret;
+	}
+
 	public static RefInfo getRootNodeRefInfoForUser(Session session, String userName) throws Exception {
 		Node rootNode = null;
 		if (userName.equalsIgnoreCase(JcrPrincipal.ADMIN)) {

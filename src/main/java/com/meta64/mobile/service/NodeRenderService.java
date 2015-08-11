@@ -42,6 +42,8 @@ import com.meta64.mobile.util.XString;
 public class NodeRenderService {
 	private static final Logger log = LoggerFactory.getLogger(NodeRenderService.class);
 
+	private boolean debug = false;
+
 	@Value("${anonUserLandingPageNode}")
 	private String anonUserLandingPageNode;
 
@@ -73,7 +75,10 @@ public class NodeRenderService {
 		res.setChildren(children);
 
 		String targetId = req.getNodeId();
-		// log.debug("renderNode targetId:" + targetId);
+
+		if (debug) {
+			log.debug("renderNode targetId:" + targetId);
+		}
 
 		Node node = JcrUtil.safeFindNode(session, targetId);
 
@@ -91,6 +96,10 @@ public class NodeRenderService {
 			res.setMessage("Node not found.");
 			res.setSuccess(false);
 			return;
+		}
+
+		if (debug) {
+			log.debug("found node:" + targetId);
 		}
 
 		String path = node.getPath();
@@ -121,6 +130,9 @@ public class NodeRenderService {
 		NodeIterator nodeIter = node.getNodes();
 		try {
 			int nodeCount = 0;
+			if (debug) {
+				log.debug("starting iteration of children.");
+			}
 			while (true) {
 				Node n = nodeIter.nextNode();
 				children.add(Convert.convertToNodeInfo(sessionContext, session, n));
@@ -131,6 +143,10 @@ public class NodeRenderService {
 				 */
 				if (++nodeCount > 1000) {
 					throw new Exception("Node has too many children (> 1000)");
+				}
+
+				if (debug) {
+					log.debug("child: " + nodeCount);
 				}
 			}
 		}

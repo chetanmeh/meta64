@@ -141,6 +141,11 @@ var meta64 = function() {
 			render.buildPage(pg);
 			$.mobile.pageContainer.pagecontainer("change", "#" + pg.domId);
 		},
+		
+		openDialog : function(pg) {
+			render.buildPage(pg);
+			$.mobile.changePage("#" + pg.domId, { role: "dialog" } );
+		},
 
 		popup : function() {
 			render.buildPage(popupMenuPg);
