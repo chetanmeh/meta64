@@ -7,8 +7,11 @@ Meta64 is an Open Source "Mobile First" Wiki-type content repository (or CMS) bu
 
 ## Links
 [GitHub Main Page](https://github.com/Clay-Ferguson/meta64)  
-[GitHub Docs](https://github.com/Clay-Ferguson/meta64/tree/master/docs/)  
+
+[GitHub Docs](https://github.com/Clay-Ferguson/meta64/tree/master/docs/)
+  
 [Screencasts on Youtube](https://www.youtube.com/playlist?list=PL3dRK8t30WnJUQ2vvlrY1ZH_awcGTXtEe)  
+
 [Browse Demo Content (Book: War and Peace)](http://www.meta64.com/?id=/meta64/war-and-peace)  
 
 ## Meta64 Overview
