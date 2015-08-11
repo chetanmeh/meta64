@@ -3,14 +3,14 @@ console.log("running module: loginPg.js");
 var loginPg = function() {
 
 	var _ = {
-			domId : "loginPg",
+		domId : "loginPg",
 		build : function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header"//,
-				//"data-position" : "fixed",
-				//"data-tap-toggle" : "false"
+				"data-role" : "header"// ,
+			// "data-position" : "fixed",
+			// "data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Login</h2>");
 
@@ -21,18 +21,22 @@ var loginPg = function() {
 			var backButton = render.makeBackButton("Close", "cancelLoginButton", "a");
 			var buttonBar = render.makeHorzControlGroup(loginButton + backButton);
 
-			/* Social Login Buttons 
+			/*
+			 * Social Login Buttons
 			 * 
-			 * See server controller. Implementation is about 95% complete, but not yet fully complete!
-			 * */
-			var twitterButton = render.makeButton("Login with Twitter", "twitterLoginButton", "a", "ui-btn-icon-left ui-icon-user");
+			 * See server controller. Implementation is about 95% complete, but
+			 * not yet fully complete!
+			 */
+			var twitterButton = render.makeButton("Twitter", "twitterLoginButton", "a", "ui-btn-icon-left ui-icon-user");
 			var socialButtonBar = render.makeHorzControlGroup(twitterButton);
-			
+
+			var divider = "<div><h3>Or Login With...</h3></div>";
+
 			var form = render.makeTag("div", //
 			{
 				"class" : "ui-field-contain" //
 			}, //
-			formControls + buttonBar + socialButtonBar);
+			formControls + buttonBar);
 
 			var internalMainContent = "";
 			var mainContent = render.makeTag("div", //
@@ -40,7 +44,7 @@ var loginPg = function() {
 				"role" : "main", //
 				"class" : "ui-content dialog-content"
 			}, //
-			internalMainContent + form);
+			internalMainContent + form + divider + socialButtonBar);
 
 			var content = header + mainContent;
 
