@@ -141,10 +141,12 @@ var meta64 = function() {
 			render.buildPage(pg);
 			$.mobile.pageContainer.pagecontainer("change", "#" + pg.domId);
 		},
-		
+
 		openDialog : function(pg) {
 			render.buildPage(pg);
-			$.mobile.changePage("#" + pg.domId, { role: "dialog" } );
+			$.mobile.changePage("#" + pg.domId, {
+				role : "dialog"
+			});
 		},
 
 		popup : function() {
@@ -502,14 +504,20 @@ var meta64 = function() {
 			_.displaySignupMessage();
 
 			$(window).on("orientationchange", _.orientationHandler);
-			
+
 			$(window).bind("beforeunload", function() {
 				return "Leave Meta64 ?";
 			});
-			
-			$(window).on("unload", function() {
-				user.logout(false);
-			});
+
+			/*
+			 * I thought this was a good idea, but actually it destroys the
+			 * session, when the user is entering an "id=\my\path" type of url
+			 * to open a specific node. Need to rethink this. Basically for now
+			 * I'm thinking going to a different url shouldn't blow up the
+			 * session, which is what 'logout' does.
+			 * 
+			 * $(window).on("unload", function() { user.logout(false); });
+			 */
 
 			_.addClickListeners();
 
@@ -537,7 +545,7 @@ var meta64 = function() {
 				var width = $(window).width();
 
 				if (width != _.deviceWidth) {
-					//console.log("Screen width changed: " + width);
+					// console.log("Screen width changed: " + width);
 
 					_.deviceWidth = width;
 					_.deviceHeight = $(window).height();

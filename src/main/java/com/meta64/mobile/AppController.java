@@ -229,7 +229,7 @@ public class AppController {
 			@RequestParam(value = "signupCode", required = false) String signupCode, //
 			Model model) throws Exception {
 		logRequest("mobile", null);
-
+		
 		if (signupCode != null) {
 			userManagerService.processSignupCode(signupCode, model);
 		}

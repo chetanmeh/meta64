@@ -38,6 +38,8 @@ var view = function() {
 			if (!nodeId) {
 				nodeId = meta64.currentNodeId;
 			}
+			
+			console.log("Refreshing tree: nodeId="+nodeId);
 
 			var prms = util.json("renderNode", {
 				"nodeId" : nodeId,

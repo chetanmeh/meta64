@@ -53,11 +53,14 @@ var user = function() {
 			/* set ID to be the page we want to show user right after login */
 			var id = null;
 			if (!util.emptyString(res.homeNodeOverride)) {
+				console.log("loading homeNodeOverride=" + res.homeNodeOverride);
 				id = res.homeNodeOverride;
 			} else {
 				if (res.userPreferences.lastNode) {
+					console.log("loading lastNode="+res.userPreferences.lastNode);
 					id = res.userPreferences.lastNode;
 				} else {
+					console.log("loading homeNodeId="+meta64.homeNodeId);
 					id = meta64.homeNodeId;
 				}
 			}
@@ -210,7 +213,10 @@ var user = function() {
 			var callUsr, callPwd, usingCookies = false;
 			var loginSessionReady = $("#loginSessionReady").text();
 			if (loginSessionReady === "true") {
-				/* using blank credentials will cause server to look for a valid session */
+				/*
+				 * using blank credentials will cause server to look for a valid
+				 * session
+				 */
 				callUsr = "";
 				callPwd = "";
 				usingCookies = true;
@@ -222,7 +228,7 @@ var user = function() {
 					meta64.loadAnonPageHome(false);
 					return;
 				}
-				
+
 				var usr = $.cookie(cnst.COOKIE_LOGIN_USR);
 				var pwd = $.cookie(cnst.COOKIE_LOGIN_PWD);
 
@@ -230,9 +236,10 @@ var user = function() {
 				// console.log("cookieUser=" + usr + " usingCookies = " +
 				// usingCookies);
 				/*
-				 * empyt credentials causes server to try to log in with any active session credentials.
+				 * empyt credentials causes server to try to log in with any
+				 * active session credentials.
 				 */
-				callUsr = usr ? usr : ""; 
+				callUsr = usr ? usr : "";
 				callPwd = pwd ? pwd : "";
 			}
 

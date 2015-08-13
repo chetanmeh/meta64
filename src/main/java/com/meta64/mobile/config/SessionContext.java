@@ -7,11 +7,14 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PreDestroy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.AppController;
 import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.util.DateUtil;
@@ -26,6 +29,7 @@ import com.meta64.mobile.util.DateUtil;
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SessionContext {
+	private static final Logger log = LoggerFactory.getLogger(SessionContext.class);
 
 	/*
 	 * This lock ensures that only one server side function can be running at a time for any give

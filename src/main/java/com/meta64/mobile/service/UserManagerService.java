@@ -145,6 +145,9 @@ public class UserManagerService {
 			res.setSuccess(true);
 		}
 		res.setAnonUserLandingPageNode(anonUserLandingPageNode);
+
+		log.debug("Processing Login: homeNodeOverride=" + (sessionContext.getUrlId() != null ? sessionContext.getUrlId() : "null"));
+
 		res.setHomeNodeOverride(sessionContext.getUrlId());
 
 		if (res.getUserPreferences() == null) {
