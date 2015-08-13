@@ -52,7 +52,7 @@ import com.mongodb.MongoTimeoutException;
 @Component
 @Scope("singleton")
 public class OakRepository {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(OakRepository.class);
 
 	private DocumentNodeStore nodeStore;
@@ -62,7 +62,7 @@ public class OakRepository {
 	private SecurityProvider securityProvider;
 
 	private boolean initialized = false;
-	
+
 	/*
 	 * MongoDb Server Connection Info
 	 */
@@ -184,7 +184,7 @@ public class OakRepository {
 	public DocumentNodeState getRoot() {
 		return root;
 	}
-	
+
 	@PreDestroy
 	public void preDestroy() {
 		close();

@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.AppController;
 import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.util.DateUtil;

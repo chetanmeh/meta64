@@ -2,7 +2,6 @@ package com.meta64.mobile.util;
 
 import java.security.Key;
 
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;

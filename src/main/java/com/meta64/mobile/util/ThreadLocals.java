@@ -19,7 +19,7 @@ public class ThreadLocals {
 	private static final ThreadLocal<Session> jcrSession = new ThreadLocal<Session>();
 	private static final ThreadLocal<OakResponseBase> oakResponse = new ThreadLocal<OakResponseBase>();
 	private static final ThreadLocal<PegDownProcessor> markdownProc = new ThreadLocal<PegDownProcessor>();
-	
+
 	public static void setJcrSession(Session session) {
 		jcrSession.set(session);
 	}
@@ -35,7 +35,7 @@ public class ThreadLocals {
 	public static PegDownProcessor getMarkdownProc() {
 		return markdownProc.get();
 	}
-	
+
 	public static void setResponse(OakResponseBase response) {
 		oakResponse.set(response);
 	}

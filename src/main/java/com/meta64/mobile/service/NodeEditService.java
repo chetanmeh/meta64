@@ -196,7 +196,8 @@ public class NodeEditService {
 				 * the worst behavior from client code, for security and robustness.
 				 */
 				if (JcrUtil.isSavableProperty(property.getName())) {
-					//log.debug("Property to save: " + property.getName() + "=" + property.getValue());
+					// log.debug("Property to save: " + property.getName() + "=" +
+					// property.getValue());
 					node.setProperty(property.getName(), property.getValue());
 				}
 				else {

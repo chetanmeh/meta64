@@ -38,17 +38,26 @@ public class SpringMvcUtil {
 		ConstantsProviderImpl.setCacheVersion(String.valueOf(jsVersion));
 	}
 
-	public void addJsFileNameProp(Model model, String varName, String fileName) {
+	private void addJsFileNameProp(Model model, String varName, String fileName) {
 		model.addAttribute(varName, fileName + ".js?ver=" + String.valueOf(jsVersion));
 	}
 
-	public void addCssFileNameProp(Model model, String varName, String fileName) {
+	private void addCssFileNameProp(Model model, String varName, String fileName) {
 		model.addAttribute(varName, fileName + ".css?ver=" + String.valueOf(jsVersion));
 	}
 
-	public void addThirdPartyLibs(Model model) {
+	private void addThirdPartyLibs(Model model) {
 		model.addAttribute("jqueryMobileCss", jqueryMobileCss);
 		model.addAttribute("jqueryJs", jqueryJs);
 		model.addAttribute("jqueryMobileJs", jqueryMobileJs);
+	}
+
+	/*
+	 * Configure single page application.
+	 */
+	public void configureSpa(Model model) {
+		addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
+		addCssFileNameProp(model, "meta64Css", "/css/meta64");
+		addThirdPartyLibs(model);
 	}
 }

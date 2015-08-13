@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.meta64.mobile.annotate.OakSession;
-import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.CaptchaMaker;
 import com.meta64.mobile.repo.OakRepository;
@@ -93,11 +92,8 @@ import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.BrandingUtil;
 import com.meta64.mobile.util.Convert;
-import com.meta64.mobile.util.JcrRunnable;
-import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.SpringMvcUtil;
 import com.meta64.mobile.util.ThreadLocals;
-import com.meta64.mobile.util.ValContainer;
 
 /**
  * Primary Spring MVC controller. All application logic from the browser connects directly to this
@@ -105,7 +101,7 @@ import com.meta64.mobile.util.ValContainer;
  * controller, and the binary attachments are also served up thru this interface.
  * 
  * Note, it's critical to understand the OakSession AOP code or else this class will be confusing
- * regarding how the OAK transations are managed and how logging in is done.
+ * regarding how the OAK transactions are managed and how logging in is done.
  * 
  * This class has no documentation on the methods because it's a wrapper around the service methods
  * which is where the documentation can be found. It's a better architecture to have all the AOP for
@@ -165,7 +161,7 @@ public class AppController {
 	@RequestMapping(value = "/twitterLogin", method = RequestMethod.GET)
 	public ModelAndView twitterLogin(Model model) throws Exception {
 		logRequest("twitterLogin", null);
-		String url = oauthLoginService.getTwitterLoginUrl();
+		String url = oauthLoginService.twitterLogin();
 		return new ModelAndView("redirect:" + url);
 	}
 
@@ -175,45 +171,10 @@ public class AppController {
 			@RequestParam(value = "oauth_verifier", required = true) String oauthVerifier, //
 			Model model) throws Exception {
 		logRequest("twitterCallback", null);
-
-		log.debug("Twitter auth callback running.");
-		final String userName = oauthLoginService.completeAuthenticaion(oauthToken, oauthVerifier);
-		final ValContainer<String> passwordContainer = new ValContainer<String>();
-
-		adminRunner.run(new JcrRunnable() {
-			@Override
-			public void run(Session session) throws Exception {
-				if (!userManagerService.userExists(session, userName, JcrProp.VAL_TWITTER, passwordContainer)) {
-					String _password = JcrUtil.getGUID();
-					userManagerService.initNewUser(session, userName, _password, null, JcrProp.VAL_TWITTER);
-					passwordContainer.setVal(_password);
-					log.debug("twitter user created and initialized.");
-				}
-				else {
-					log.debug("twitter account did already exist. Logging in now.");
-					// passwordContainer will alredy have correct value here from userExists.
-				}
-			}
-		});
-
-		String password = passwordContainer.getVal();
-
-		/*
-		 * Setting credentials into sessionContext should be enough to set to "logged in" state.
-		 */
-		model.addAttribute("loginSessionReady", "true");
-
-		sessionContext.setUserName(userName);
-		sessionContext.setPassword(password);
-
-		log.debug("Session now has credentials attached. pwd=" + password);
+		oauthLoginService.twitterCallback(model, oauthToken, oauthVerifier);
 
 		brandingUtil.addBrandingAttributes(model);
-
-		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
-		springMvcUtil.addCssFileNameProp(model, "meta64Css", "/css/meta64");
-		springMvcUtil.addThirdPartyLibs(model);
-
+		springMvcUtil.configureSpa(model);
 		return "index";
 	}
 
@@ -229,7 +190,7 @@ public class AppController {
 			@RequestParam(value = "signupCode", required = false) String signupCode, //
 			Model model) throws Exception {
 		logRequest("mobile", null);
-		
+
 		if (signupCode != null) {
 			userManagerService.processSignupCode(signupCode, model);
 		}
@@ -237,11 +198,7 @@ public class AppController {
 		log.debug("Rendering main page: current userName: " + sessionContext.getUserName() + " id=" + id);
 
 		brandingUtil.addBrandingAttributes(model);
-
-		springMvcUtil.addJsFileNameProp(model, "scriptLoaderJs", "/js/scriptLoader");
-		springMvcUtil.addCssFileNameProp(model, "meta64Css", "/css/meta64");
-		springMvcUtil.addThirdPartyLibs(model);
-
+		springMvcUtil.configureSpa(model);
 		sessionContext.setUrlId(id);
 		return "index";
 	}
@@ -320,7 +277,7 @@ public class AppController {
 		nodeRenderService.renderNode(session, req, res, true);
 		return res;
 	}
-	
+
 	@RequestMapping(value = API_PATH + "/initNodeEdit", method = RequestMethod.POST)
 	@OakSession
 	public @ResponseBody InitNodeEditResponse initNodeEdit(@RequestBody InitNodeEditRequest req) throws Exception {
@@ -564,7 +521,8 @@ public class AppController {
 	// http://blog.netgloo.com/2015/02/08/spring-boot-file-upload-with-ajax/
 	@RequestMapping(value = API_PATH + "/upload", method = RequestMethod.POST)
 	@OakSession
-	public @ResponseBody ResponseEntity<?> upload(@RequestParam("nodeId") String nodeId, @RequestParam("file") MultipartFile uploadFile) throws Exception {
+	public @ResponseBody ResponseEntity<?> upload(@RequestParam("nodeId") String nodeId, //
+			@RequestParam("file") MultipartFile uploadFile) throws Exception {
 		logRequest("upload", null);
 		Session session = ThreadLocals.getJcrSession();
 		return attachmentService.upload(session, nodeId, uploadFile);
@@ -609,8 +567,6 @@ public class AppController {
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 		userManagerService.saveUserPreferences(session, req, res);
-		session.save();
-		res.setSuccess(true);
 		return res;
 	}
 

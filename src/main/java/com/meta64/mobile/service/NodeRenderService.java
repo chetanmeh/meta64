@@ -166,7 +166,7 @@ public class NodeRenderService {
 			res.setSuccess(false);
 			return;
 		}
-		
+
 		NodeInfo nodeInfo = Convert.convertToNodeInfo(sessionContext, session, node, false);
 		res.setNodeInfo(nodeInfo);
 		res.setSuccess(true);
