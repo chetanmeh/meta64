@@ -382,8 +382,6 @@ var meta64 = function() {
 			util.setVisibility("#openSignupPgButton", _.isAnonUser);
 			util.setVisibility("#mainMenuSearchButton", !_.isAnonUser && highlightNode != null);
 			util.setVisibility("#mainMenuTimelineButton", !_.isAnonUser && highlightNode != null);
-
-			util.setVisibility("#mainNavBar", !_.isAnonUser);
 		},
 
 		getSingleSelectedNode : function() {

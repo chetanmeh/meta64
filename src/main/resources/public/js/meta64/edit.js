@@ -9,19 +9,19 @@ var edit = function() {
 	var _sendNotificationPendingSave;
 
 	var _saveNodeResponse = function(res) {
-		util.checkSuccess("Save node", res);
-
-		view.refreshTree(null, false);
-		meta64.jqueryChangePage("#mainPage");
-		view.scrollToSelectedNode();
+		if (util.checkSuccess("Save node", res)) {
+			view.refreshTree(null, false);
+			meta64.jqueryChangePage("#mainPage");
+			view.scrollToSelectedNode();
+		}
 	}
 
 	var _renameNodeResponse = function(res) {
-		util.checkSuccess("Rename node", res);
-
-		view.refreshTree(null, false);
-		meta64.jqueryChangePage("#mainPage");
-		view.scrollToSelectedNode();
+		if (util.checkSuccess("Rename node", res)) {
+			view.refreshTree(null, false);
+			meta64.jqueryChangePage("#mainPage");
+			view.scrollToSelectedNode();
+		}
 	}
 
 	var _exportResponse = function(res) {
@@ -72,32 +72,35 @@ var edit = function() {
 	}
 
 	var _moveNodesResponse = function(res) {
-		util.checkSuccess("Move nodes", res);
+		if (util.checkSuccess("Move nodes", res)) {
 
-		_.nodesToMove = null; // reset
-		view.refreshTree(null, false);
+			_.nodesToMove = null; // reset
+			view.refreshTree(null, false);
+		}
 	}
 
 	var _setNodePositionResponse = function(res) {
-		util.checkSuccess("Change node position", res);
+		if (util.checkSuccess("Change node position", res)) {
 
-		view.refreshTree(null, false);
-		meta64.jqueryChangePage("#mainPage");
-		view.scrollToSelectedNode();
+			view.refreshTree(null, false);
+			meta64.jqueryChangePage("#mainPage");
+			view.scrollToSelectedNode();
+		}
 	}
 
 	var _insertNodeResponse = function(res) {
-		util.checkSuccess("Insert node", res);
+		if (util.checkSuccess("Insert node", res)) {
 
-		/*
-		 * TODO: verify this value gets used now that we aren't going
-		 * IMMEDIATELY to the treeview after creates
-		 */
-		meta64.newChildNodeId = res.newNode.id;
-		meta64.initNode(res.newNode);
-		meta64.highlightNode(res.newNode, true);
+			/*
+			 * TODO: verify this value gets used now that we aren't going
+			 * IMMEDIATELY to the treeview after creates
+			 */
+			meta64.newChildNodeId = res.newNode.id;
+			meta64.initNode(res.newNode);
+			meta64.highlightNode(res.newNode, true);
 
-		_.runEditNode(res.newNode.uid);
+			_.runEditNode(res.newNode.uid);
+		}
 	}
 
 	var _makeNodeReferencableResponse = function(res) {
@@ -433,7 +436,7 @@ var edit = function() {
 				return;
 			}
 			_.editingUnsavedNode = false;
-		
+
 			util.json("initNodeEdit", {
 				"nodeId" : node.id
 			}, _initNodeEditResponse);
