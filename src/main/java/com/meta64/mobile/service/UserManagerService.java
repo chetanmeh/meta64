@@ -399,6 +399,9 @@ public class UserManagerService {
 
 				userPrefs.setAdvancedMode(JcrUtil.safeGetBooleanProp(prefsNode, JcrProp.USER_PREF_ADV_MODE));
 				userPrefs.setLastNode(JcrUtil.safeGetStringProp(prefsNode, JcrProp.USER_PREF_LAST_NODE));
+				
+				//String password = JcrUtil.safeGetStringProp(prefsNode, JcrProp.PWD);
+				//log.debug("password: "+encryptor.decrypt(password));
 			}
 		});
 
@@ -442,7 +445,12 @@ public class UserManagerService {
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
-				UserManagerUtil.changePassword(session, userName, req.getNewPassword());
+				String password = req.getNewPassword();
+				UserManagerUtil.changePassword(session, userName, password);
+				
+				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
+				prefsNode.setProperty(JcrProp.PWD, encryptor.encrypt(password));
+				
 				session.save();
 			}
 		});
