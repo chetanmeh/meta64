@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.config.SessionContext;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.DeleteNodesRequest;
 import com.meta64.mobile.request.MoveNodesRequest;
 import com.meta64.mobile.request.SetNodePositionRequest;
@@ -32,7 +32,7 @@ public class NodeMoveService {
 	private static final Logger log = LoggerFactory.getLogger(NodeMoveService.class);
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;

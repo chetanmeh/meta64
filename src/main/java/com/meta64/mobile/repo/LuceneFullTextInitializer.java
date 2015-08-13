@@ -10,12 +10,16 @@ import static org.apache.jackrabbit.oak.plugins.index.lucene.LuceneIndexConstant
 
 import java.util.Set;
 
+import org.apache.jackrabbit.oak.api.Type;
 import org.apache.jackrabbit.oak.plugins.index.lucene.IndexFormatVersion;
 import org.apache.jackrabbit.oak.plugins.index.lucene.LuceneIndexConstants;
 import org.apache.jackrabbit.oak.plugins.index.lucene.util.LuceneInitializerHelper;
+import org.apache.jackrabbit.oak.plugins.tree.impl.TreeConstants;
 import org.apache.jackrabbit.oak.spi.state.NodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 /*
  * Creates an index on propertyName thats able to do "Full Text" searching.
@@ -40,12 +44,13 @@ class LuceneFullTextInitializer extends LuceneInitializerHelper {
 	public void initialize(NodeBuilder builder) {
 		if (builder.hasChildNode(INDEX_DEFINITIONS_NAME) && //
 				builder.getChildNode(INDEX_DEFINITIONS_NAME).hasChildNode(name)) {
-			log.debug("Node already exists: " + INDEX_DEFINITIONS_NAME + "/" + name + " so it will not be created.");
+			log.debug("Index node already exists: " + INDEX_DEFINITIONS_NAME + "/" + name + " so it will not be created.");
 		}
 		else {
 			log.debug("Creating lucene indexing node: " + INDEX_DEFINITIONS_NAME + "/" + name);
 			NodeBuilder index = builder.child(INDEX_DEFINITIONS_NAME).child(name);
 			index.setProperty(JCR_PRIMARYTYPE, INDEX_DEFINITIONS_NODE_TYPE, NAME)//
+					.setProperty(LuceneIndexConstants.PROP_NAME, name)//
 					.setProperty(TYPE_PROPERTY_NAME, TYPE_LUCENE)//
 					.setProperty(REINDEX_PROPERTY_NAME, true)
 					// .setProperty(LuceneIndexConstants.TEST_MODE, true)
@@ -53,19 +58,11 @@ class LuceneFullTextInitializer extends LuceneInitializerHelper {
 					.setProperty(LuceneIndexConstants.SUGGEST_UPDATE_FREQUENCY_MINUTES, 30)//
 					.setProperty(LuceneIndexConstants.COMPAT_MODE, IndexFormatVersion.V2.getVersion());
 
-			/*
-			 * I think this 'nt:base' here causes the following message in the log file:
-			 * 
-			 * IndexRule node does not have orderable children in [Lucene Index : <No 'name'
-			 * property defined>]
-			 * 
-			 * But I have no idea what this means or if it's a problem, and would only conclude that
-			 * I need to try 'nt:unstructured' if I want to try and make that message go away.
-			 */
+			NodeBuilder rulesNode = index.child(LuceneIndexConstants.INDEX_RULES);
+			rulesNode.setProperty(TreeConstants.OAK_CHILD_ORDER, ImmutableList.of("nt:unstructured"), Type.NAMES);
 
-			NodeBuilder props = index.child(LuceneIndexConstants.INDEX_RULES).child("nt:base")//
-					.child(LuceneIndexConstants.PROP_NODE);
-
+			NodeBuilder props = rulesNode.child("nt:unstructured").child(LuceneIndexConstants.PROP_NODE);
+			props.setProperty(TreeConstants.OAK_CHILD_ORDER, ImmutableList.of("nt:unstructured"), Type.NAMES);
 			enableFulltextIndex(props.child("allProps"));
 		}
 	}
@@ -88,6 +85,7 @@ class LuceneFullTextInitializer extends LuceneInitializerHelper {
 		}
 		else {
 			propNode.setProperty(LuceneIndexConstants.PROP_NAME, propertyName);
+			propNode.setProperty(LuceneIndexConstants.PROP_IS_REGEX, false);
 		}
 	}
 }

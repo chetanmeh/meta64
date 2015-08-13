@@ -2,9 +2,6 @@ console.log("running module: render.js");
 
 var render = function() {
 
-	/* Holds the function that performs markdown conversion, and is set lazily */
-	var _markdown;
-
 	/*
 	 * This is the content displayed when the user signs in, and we see that
 	 * they have no content being displayed. We want to give them some
@@ -130,12 +127,13 @@ var render = function() {
 				var contentProp = props.getNodeProperty(jcrCnst.CONTENT, node);
 				// console.log("contentProp: " + contentProp);
 				if (contentProp) {
+					
 					var jcrContent = props.renderProperty(contentProp);
 
 					if (jcrContent.length > 0) {
 						ret += _.makeTag("div", {
 							"class" : "jcr-content"
-						}, _.markdown(jcrContent));
+						}, _.wrapHtml(jcrContent));
 					}
 				}
 			}
@@ -416,26 +414,8 @@ var render = function() {
 			return ret;
 		},
 
-		markdown : function(text) {
-
-			/*
-			 * I will lazy load this function just in case this helps overall
-			 * app startup time
-			 */
-			if (!_markdown) {
-				_markdown = new Markdown.getSanitizingConverter().makeHtml;
-			}
-
-			/*
-			 * Note that $.mobile.ignoreContentEnabled = true; is required for
-			 * this to work.
-			 * 
-			 * This is an interesting piece of code here. What this does it make
-			 * sure that anchor tags <a> that are in our user-edited content
-			 * don't get processed by JQuery an 'enhanced' in a way that actuall
-			 * breaks the functionality of external links.
-			 */
-			return "<div data-ajax='false'>" + _markdown(text) + "</div>";
+		wrapHtml : function(text) {
+			return "<div data-ajax='false'>" + text + "</div>";
 		},
 
 		/*

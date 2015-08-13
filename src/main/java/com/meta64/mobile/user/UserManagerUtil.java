@@ -16,7 +16,7 @@ import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.model.RefInfo;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.util.JcrUtil;
 
 /**
@@ -108,7 +108,7 @@ public class UserManagerUtil {
 		((User) authorizable).changePassword(newPassword);
 	}
 
-	public static void verifyAdminAccountReady(OakRepositoryBean oak) throws Exception {
+	public static void verifyAdminAccountReady(OakRepository oak) throws Exception {
 
 		Session session = null;
 

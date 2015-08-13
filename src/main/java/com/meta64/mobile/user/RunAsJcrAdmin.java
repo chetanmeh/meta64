@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.util.JcrRunnable;
 
 /**
@@ -19,7 +19,7 @@ import com.meta64.mobile.util.JcrRunnable;
 public class RunAsJcrAdmin {
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	public void run(JcrRunnable runner) throws Exception {
 		Session session = null;

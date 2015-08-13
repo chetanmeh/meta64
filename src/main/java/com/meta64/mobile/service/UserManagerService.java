@@ -21,7 +21,7 @@ import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.mail.JcrOutboxMgr;
 import com.meta64.mobile.model.RefInfo;
 import com.meta64.mobile.model.UserPreferences;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.ChangePasswordRequest;
 import com.meta64.mobile.request.CloseAccountRequest;
 import com.meta64.mobile.request.LoginRequest;
@@ -63,7 +63,7 @@ public class UserManagerService {
 	public String mailHost;
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;

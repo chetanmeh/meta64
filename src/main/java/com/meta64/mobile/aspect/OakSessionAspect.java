@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.model.UserPreferences;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.LoginRequest;
 import com.meta64.mobile.request.SignupRequest;
 import com.meta64.mobile.response.LoginResponse;
@@ -44,7 +44,7 @@ public class OakSessionAspect {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Around("@annotation(com.meta64.mobile.annotate.OakSession)")
 	public Object call(final ProceedingJoinPoint joinPoint) throws Throwable {

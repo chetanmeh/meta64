@@ -24,7 +24,7 @@ import com.meta64.mobile.annotate.OakSession;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.image.CaptchaMaker;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.AddPrivilegeRequest;
 import com.meta64.mobile.request.AnonPageLoadRequest;
 import com.meta64.mobile.request.ChangePasswordRequest;
@@ -36,6 +36,7 @@ import com.meta64.mobile.request.DeletePropertyRequest;
 import com.meta64.mobile.request.ExportRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
 import com.meta64.mobile.request.ImportRequest;
+import com.meta64.mobile.request.InitNodeEditRequest;
 import com.meta64.mobile.request.InsertBookRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
 import com.meta64.mobile.request.LoginRequest;
@@ -63,6 +64,7 @@ import com.meta64.mobile.response.DeletePropertyResponse;
 import com.meta64.mobile.response.ExportResponse;
 import com.meta64.mobile.response.GetNodePrivilegesResponse;
 import com.meta64.mobile.response.ImportResponse;
+import com.meta64.mobile.response.InitNodeEditResponse;
 import com.meta64.mobile.response.InsertBookResponse;
 import com.meta64.mobile.response.InsertNodeResponse;
 import com.meta64.mobile.response.LoginResponse;
@@ -146,7 +148,7 @@ public class AppController {
 	private AclService aclService;
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private BrandingUtil brandingUtil;
@@ -316,6 +318,17 @@ public class AppController {
 		ThreadLocals.setResponse(res);
 		Session session = ThreadLocals.getJcrSession();
 		nodeRenderService.renderNode(session, req, res, true);
+		return res;
+	}
+	
+	@RequestMapping(value = API_PATH + "/initNodeEdit", method = RequestMethod.POST)
+	@OakSession
+	public @ResponseBody InitNodeEditResponse initNodeEdit(@RequestBody InitNodeEditRequest req) throws Exception {
+		logRequest("initNodeEdit", req);
+		InitNodeEditResponse res = new InitNodeEditResponse();
+		ThreadLocals.setResponse(res);
+		Session session = ThreadLocals.getJcrSession();
+		nodeRenderService.initNodeEdit(session, req, res);
 		return res;
 	}
 

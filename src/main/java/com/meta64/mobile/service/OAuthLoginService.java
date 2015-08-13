@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.config.ConstantsProvider;
 import com.meta64.mobile.config.SessionContext;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.XString;
 
@@ -35,7 +35,7 @@ public class OAuthLoginService {
 	private String anonUserLandingPageNode;
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;

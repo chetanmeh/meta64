@@ -19,10 +19,12 @@ import org.springframework.stereotype.Component;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.AnonPageLoadRequest;
+import com.meta64.mobile.request.InitNodeEditRequest;
 import com.meta64.mobile.request.RenderNodeRequest;
 import com.meta64.mobile.response.AnonPageLoadResponse;
+import com.meta64.mobile.response.InitNodeEditResponse;
 import com.meta64.mobile.response.RenderNodeResponse;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserSettingsDaemon;
@@ -48,7 +50,7 @@ public class NodeRenderService {
 	private String anonUserLandingPageNode;
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private UserSettingsDaemon userSettingsDaemon;
@@ -119,7 +121,7 @@ public class NodeRenderService {
 			levelsUpRemaining--;
 		}
 
-		NodeInfo nodeInfo = Convert.convertToNodeInfo(sessionContext, session, node);
+		NodeInfo nodeInfo = Convert.convertToNodeInfo(sessionContext, session, node, true);
 		NodeType type = node.getPrimaryNodeType();
 		boolean ordered = type.hasOrderableChildNodes();
 		nodeInfo.setChildrenOrdered(ordered);
@@ -135,7 +137,7 @@ public class NodeRenderService {
 			}
 			while (true) {
 				Node n = nodeIter.nextNode();
-				children.add(Convert.convertToNodeInfo(sessionContext, session, n));
+				children.add(Convert.convertToNodeInfo(sessionContext, session, n, true));
 
 				/*
 				 * Instead of crashing browser with too much load, just fail a bit more gracefully
@@ -153,6 +155,21 @@ public class NodeRenderService {
 		catch (NoSuchElementException ex) {
 			// not an error. Normal iterator end condition.
 		}
+	}
+
+	public void initNodeEdit(Session session, InitNodeEditRequest req, InitNodeEditResponse res) throws Exception {
+		String nodeId = req.getNodeId();
+		Node node = JcrUtil.safeFindNode(session, nodeId);
+
+		if (node == null) {
+			res.setMessage("Node not found.");
+			res.setSuccess(false);
+			return;
+		}
+		
+		NodeInfo nodeInfo = Convert.convertToNodeInfo(sessionContext, session, node, false);
+		res.setNodeInfo(nodeInfo);
+		res.setSuccess(true);
 	}
 
 	/*

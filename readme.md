@@ -88,7 +88,7 @@ The code is "Open Source" (and on GitHub) but still pre-alpha prototype currentl
 * Using Google Closure Compiler for JS Minification
 * Pure Java on Server
 * Spring Java-only configuration with Annotations, and no XML configs.
-* Client-Side JavaScript Markdown (using Pagedown API) renders pages 
+* Server-Side JavaScript Markdown (using 'org.pegdown' API) renders pages 
 * Built using Maven
 * Launches from a single "uber jar" containing Tomcat embedded and pre-configured
 

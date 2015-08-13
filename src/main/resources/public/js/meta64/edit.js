@@ -57,6 +57,20 @@ var edit = function() {
 		}
 	}
 
+	var _initNodeEditResponse = function(res) {
+		if (util.checkSuccess("Editing node", res)) {
+
+			/*
+			 * Server will have sent us back the raw text content, that should
+			 * be markdown instead of any HTML, so that we can display this and
+			 * save.
+			 */
+			_.editNode = res.nodeInfo;
+
+			meta64.changePage(editNodePg);
+		}
+	}
+
 	var _moveNodesResponse = function(res) {
 		util.checkSuccess("Move nodes", res);
 
@@ -83,7 +97,7 @@ var edit = function() {
 		meta64.initNode(res.newNode);
 		meta64.highlightNode(res.newNode, true);
 
-		edit.runEditNode(res.newNode.uid);
+		_.runEditNode(res.newNode.uid);
 	}
 
 	var _makeNodeReferencableResponse = function(res) {
@@ -105,7 +119,7 @@ var edit = function() {
 		console.log("new child identifier: " + meta64.newChildNodeId);
 
 		meta64.initNode(res.newNode);
-		edit.runEditNode(res.newNode.uid);
+		_.runEditNode(res.newNode.uid);
 	}
 
 	var _ = {
@@ -419,9 +433,10 @@ var edit = function() {
 				return;
 			}
 			_.editingUnsavedNode = false;
-			_.editNode = node;
-			// _.populateEditNodePg();
-			meta64.changePage(editNodePg);
+			// _.editNode = node;
+			util.json("initNodeEdit", {
+				"nodeId" : node.id,
+			}, _initNodeEditResponse);
 		},
 
 		/*
@@ -582,7 +597,7 @@ var edit = function() {
 			util.setVisibility("#addPropertyButton", !_.editingUnsavedNode);
 
 			var isUuid = _.editNode && _.editNode.id && !_.editNode.id.startsWith("/");
-			//console.log("isUuid: " + isUuid);
+			// console.log("isUuid: " + isUuid);
 			util.setVisibility("#makeNodeReferencableButton", _.editNode && !isUuid && !_.editingUnsavedNode);
 		},
 

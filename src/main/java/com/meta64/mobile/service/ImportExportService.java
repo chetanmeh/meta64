@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.config.SpringContextUtil;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.ExportRequest;
 import com.meta64.mobile.request.ImportRequest;
 import com.meta64.mobile.request.InsertBookRequest;
@@ -53,7 +53,7 @@ public class ImportExportService {
 	private byte[] byteBuf = new byte[BUF_SIZE];
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;

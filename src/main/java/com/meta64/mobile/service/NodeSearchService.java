@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.NodeInfo;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.NodeSearchRequest;
 import com.meta64.mobile.response.NodeSearchResponse;
 import com.meta64.mobile.user.RunAsJcrAdmin;
@@ -42,7 +42,7 @@ public class NodeSearchService {
 	private static boolean searchAllProps = false;
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;
@@ -174,7 +174,7 @@ public class NodeSearchService {
 		res.setSearchResults(searchResults);
 
 		while (nodes.hasNext()) {
-			searchResults.add(Convert.convertToNodeInfo(sessionContext, session, nodes.nextNode()));
+			searchResults.add(Convert.convertToNodeInfo(sessionContext, session, nodes.nextNode(), true));
 			if (counter++ > MAX_NODES) {
 				break;
 			}

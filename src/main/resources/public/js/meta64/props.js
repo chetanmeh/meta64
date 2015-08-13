@@ -270,7 +270,7 @@ var props = function() {
 						if (isBinaryProp) {
 							ret += "<td class='prop-table-val-col'>[binary]</td>";
 						} else if (!property.values) {
-							ret += "<td class='prop-table-val-col'>" + render.markdown(property.value) + "</td>";
+							ret += "<td class='prop-table-val-col'>" + render.wrapHtml(property.htmlValue) + "</td>";
 						} else {
 							ret += "<td class='prop-table-val-col'>" + props.renderPropertyValues(property.values) + "</td>";
 						}
@@ -323,7 +323,7 @@ var props = function() {
 				if (!property.value || property.value.length == 0) {
 					return "";
 				}
-				return render.markdown(property.value);
+				return render.wrapHtml(property.htmlValue); 
 			} else {
 				return _.renderPropertyValues(property.values);
 			}
@@ -332,7 +332,7 @@ var props = function() {
 		renderPropertyValues : function(values) {
 			var ret = "<div>";
 			$.each(values, function(i, value) {
-				ret += render.markdown(value) + cnst.BR;
+				ret += render.wrapHtml(value) + cnst.BR;
 			});
 			ret += "</div>";
 			return ret;

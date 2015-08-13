@@ -15,6 +15,7 @@ import javax.jcr.nodetype.NodeType;
 import javax.jcr.security.AccessControlEntry;
 import javax.jcr.security.Privilege;
 
+import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public class Convert {
 	}
 
 	/* WARNING: skips the check for ordered children and just assigns false for performance reasons */
-	public static NodeInfo convertToNodeInfo(SessionContext sessionContext, Session session, Node node) throws Exception {
+	public static NodeInfo convertToNodeInfo(SessionContext sessionContext, Session session, Node node, boolean htmlOnly) throws Exception {
 		boolean hasBinary = false;
 		boolean binaryIsImage = false;
 		long binVer = 0;
@@ -113,7 +114,7 @@ public class Convert {
 
 		ValContainer<String> createdBy = new ValContainer<String>();
 		ValContainer<String> lastModified = new ValContainer<String>();
-		List<PropertyInfo> propList = buildPropertyInfoList(sessionContext, node, createdBy, lastModified);
+		List<PropertyInfo> propList = buildPropertyInfoList(sessionContext, node, createdBy, lastModified, htmlOnly);
 
 		NodeType nodeType = node.getPrimaryNodeType();
 		String primaryTypeName = nodeType.getName();
@@ -179,7 +180,7 @@ public class Convert {
 	}
 
 	public static List<PropertyInfo> buildPropertyInfoList(SessionContext sessionContext, Node node, //
-			ValContainer<String> createdBy, ValContainer<String> lastModified) throws RepositoryException {
+			ValContainer<String> createdBy, ValContainer<String> lastModified, boolean htmlOnly) throws RepositoryException {
 		List<PropertyInfo> props = null;
 		PropertyIterator iter = node.getProperties();
 		PropertyInfo contentPropInfo = null;
@@ -201,11 +202,11 @@ public class Convert {
 			}
 
 			if (lastModified != null && JcrProp.LAST_MODIFIED.equals(p.getName())) {
-				String lastModifiedVal = formatValue(sessionContext, p.getValue());
+				String lastModifiedVal = formatValue(sessionContext, p.getValue(), false);
 				lastModified.setVal(lastModifiedVal);
 			}
 
-			PropertyInfo propInfo = convertToPropertyInfo(sessionContext, p);
+			PropertyInfo propInfo = convertToPropertyInfo(sessionContext, p, htmlOnly);
 			// if (Log.renderNodeRequest) {
 			// log.debug("   PROP Name: " + p.getName());
 			// }
@@ -230,15 +231,16 @@ public class Convert {
 		return props;
 	}
 
-	public static PropertyInfo convertToPropertyInfo(SessionContext sessionContext, Property prop) throws RepositoryException {
+	public static PropertyInfo convertToPropertyInfo(SessionContext sessionContext, Property prop, boolean htmlOnly) throws RepositoryException {
 		String value = null;
+		String htmlValue = null;
 		List<String> values = null;
 
 		/* multivalue */
 		if (prop.isMultiple()) {
 			values = new LinkedList<String>();
 			for (Value v : prop.getValues()) {
-				values.add(formatValue(sessionContext, v));
+				values.add(formatValue(sessionContext, v, false));
 			}
 		}
 		/* else single value */
@@ -246,25 +248,53 @@ public class Convert {
 			if (prop.getName().equals(JcrProp.BIN_DATA)) {
 				value = "[binary data]";
 			}
+			else if (prop.getName().equals(JcrProp.CONTENT)) {
+				if (htmlOnly) {
+					htmlValue = formatValue(sessionContext, prop.getValue(), true);
+					value = "n/r";
+				}
+				else {
+					htmlValue = "n/r";
+					value = formatValue(sessionContext, prop.getValue(), false);
+				}
+			}
 			else {
-				value = formatValue(sessionContext, prop.getValue());
+				value = formatValue(sessionContext, prop.getValue(), false);
 			}
 		}
-		PropertyInfo propInfo = new PropertyInfo(prop.getType(), prop.getName(), value, values);
+		PropertyInfo propInfo = new PropertyInfo(prop.getType(), prop.getName(), value, htmlValue, values);
 		return propInfo;
 	}
 
-	public static String formatValue(SessionContext sessionContext, Value value) {
+	public static String formatValue(SessionContext sessionContext, Value value, boolean convertToHtml) {
 		try {
 			if (value.getType() == PropertyType.DATE) {
 				return sessionContext.formatTime(value.getDate().getTime());
 			}
 			else {
-				return value.getString();
+				if (convertToHtml) {
+					return getMarkdownProc().markdownToHtml(value.getString());
+				}
+				else {
+					return value.getString();
+				}
 			}
 		}
 		catch (Exception e) {
 			return "[date??]";
 		}
+	}
+
+	/*
+	 * PegDownProcessor is not threadsafe, and also I don't want to create more of them than
+	 * necessary so we simply attach one to each thread, and the thread-safey is no longer an issue.
+	 */
+	public static PegDownProcessor getMarkdownProc() {
+		PegDownProcessor proc = ThreadLocals.getMarkdownProc();
+		if (proc == null) {
+			proc = new PegDownProcessor();
+			ThreadLocals.setMarkdownProc(proc);
+		}
+		return proc;
 	}
 }

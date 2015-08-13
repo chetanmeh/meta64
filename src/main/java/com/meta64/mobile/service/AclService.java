@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.AccessControlEntryInfo;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.AddPrivilegeRequest;
 import com.meta64.mobile.request.GetNodePrivilegesRequest;
 import com.meta64.mobile.request.RemovePrivilegeRequest;
@@ -40,7 +40,7 @@ public class AclService {
 	private static final Logger log = LoggerFactory.getLogger(AclService.class);
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;

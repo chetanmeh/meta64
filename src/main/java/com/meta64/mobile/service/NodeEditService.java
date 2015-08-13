@@ -17,7 +17,7 @@ import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.mail.JcrOutboxMgr;
 import com.meta64.mobile.model.PropertyInfo;
-import com.meta64.mobile.repo.OakRepositoryBean;
+import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.CreateSubNodeRequest;
 import com.meta64.mobile.request.DeletePropertyRequest;
 import com.meta64.mobile.request.InsertNodeRequest;
@@ -46,7 +46,7 @@ public class NodeEditService {
 	private static final Logger log = LoggerFactory.getLogger(NodeEditService.class);
 
 	@Autowired
-	private OakRepositoryBean oak;
+	private OakRepository oak;
 
 	@Autowired
 	private SessionContext sessionContext;
@@ -80,7 +80,7 @@ public class NodeEditService {
 		JcrUtil.timestampNewNode(session, newNode);
 		session.save();
 
-		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
+		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode, true));
 		res.setSuccess(true);
 	}
 
@@ -112,7 +112,7 @@ public class NodeEditService {
 		}
 
 		session.save();
-		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode));
+		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode, true));
 		res.setSuccess(true);
 	}
 
@@ -153,7 +153,7 @@ public class NodeEditService {
 		node.setProperty(req.getPropertyName(), req.getPropertyValue());
 		session.save();
 
-		PropertyInfo propertySaved = new PropertyInfo(-1, req.getPropertyName(), req.getPropertyValue(), null);
+		PropertyInfo propertySaved = new PropertyInfo(-1, req.getPropertyName(), req.getPropertyValue(), null, null);
 		res.setPropertySaved(propertySaved);
 		res.setSuccess(true);
 	}
