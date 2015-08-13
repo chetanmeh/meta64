@@ -433,9 +433,9 @@ var edit = function() {
 				return;
 			}
 			_.editingUnsavedNode = false;
-			// _.editNode = node;
+		
 			util.json("initNodeEdit", {
-				"nodeId" : node.id,
+				"nodeId" : node.id
 			}, _initNodeEditResponse);
 		},
 
