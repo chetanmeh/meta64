@@ -110,14 +110,16 @@ public class Convert {
 		 * node.hasNodes() won't work here, because the gui doesn't display nt:bin nodes as actual
 		 * nodes
 		 */
-		boolean hasDisplayableNodes = node.hasNodes(); // hasDisplayableNodes(node);
+		boolean hasNodes = node.hasNodes();
+		log.trace("hasNodes=" + hasNodes + " path=" + node.getPath());
+		boolean hasDisplayableNodes = hasNodes; // hasDisplayableNodes(node);
 
 		ValContainer<String> createdBy = new ValContainer<String>();
 		ValContainer<String> lastModified = new ValContainer<String>();
 		List<PropertyInfo> propList = buildPropertyInfoList(sessionContext, node, createdBy, lastModified, htmlOnly);
 
-		NodeType nodeType = node.getPrimaryNodeType();
-		String primaryTypeName = nodeType.getName();
+		NodeType nodeType = JcrUtil.safeGetPrimaryNodeType(node);
+		String primaryTypeName = nodeType == null ? "n/a" : nodeType.getName();
 		// log.debug("Node: "+node.getPath()+node.getName()+" type: "+primaryTypeName);
 
 		NodeInfo nodeInfo = new NodeInfo(node.getIdentifier(), node.getPath(), node.getName(), propList, hasDisplayableNodes, false, hasBinary, binaryIsImage, binVer, //
@@ -222,11 +224,14 @@ public class Convert {
 				props.add(propInfo);
 			}
 		}
-		Collections.sort(props, propertyInfoComparator);
 
-		/* put content prop always at top of list */
-		if (contentPropInfo != null) {
-			props.add(0, contentPropInfo);
+		if (props != null) {
+			Collections.sort(props, propertyInfoComparator);
+
+			/* put content prop always at top of list */
+			if (contentPropInfo != null) {
+				props.add(0, contentPropInfo);
+			}
 		}
 		return props;
 	}

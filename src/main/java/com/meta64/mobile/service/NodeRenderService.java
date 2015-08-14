@@ -30,7 +30,6 @@ import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserSettingsDaemon;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
-import com.meta64.mobile.util.Log;
 import com.meta64.mobile.util.XString;
 
 /**
@@ -43,8 +42,6 @@ import com.meta64.mobile.util.XString;
 @Scope("singleton")
 public class NodeRenderService {
 	private static final Logger log = LoggerFactory.getLogger(NodeRenderService.class);
-
-	private boolean debug = false;
 
 	@Value("${anonUserLandingPageNode}")
 	private String anonUserLandingPageNode;
@@ -75,13 +72,9 @@ public class NodeRenderService {
 
 		List<NodeInfo> children = new LinkedList<NodeInfo>();
 		res.setChildren(children);
-
 		String targetId = req.getNodeId();
 
-		if (debug) {
-			log.debug("renderNode targetId:" + targetId);
-		}
-
+		log.trace("renderNode targetId:" + targetId);
 		Node node = JcrUtil.safeFindNode(session, targetId);
 
 		/*
@@ -99,10 +92,7 @@ public class NodeRenderService {
 			res.setSuccess(false);
 			return;
 		}
-
-		if (debug) {
-			log.debug("found node:" + targetId);
-		}
+		log.trace("found node:" + targetId);
 
 		String path = node.getPath();
 		userSettingsDaemon.setSettingVal(sessionContext.getUserName(), JcrProp.USER_PREF_LAST_NODE, path);
@@ -115,26 +105,21 @@ public class NodeRenderService {
 		int levelsUpRemaining = req.getUpLevel();
 		while (node != null && levelsUpRemaining > 0) {
 			node = node.getParent();
-			if (Log.renderNodeRequest) {
-				// log.debug("   upLevel to nodeid: "+item.getPath());
-			}
+			log.trace("   upLevel to nodeid: " + node.getPath());
 			levelsUpRemaining--;
 		}
 
 		NodeInfo nodeInfo = Convert.convertToNodeInfo(sessionContext, session, node, true);
-		NodeType type = node.getPrimaryNodeType();
-		boolean ordered = type.hasOrderableChildNodes();
+		NodeType type = JcrUtil.safeGetPrimaryNodeType(node);
+		boolean ordered = type == null ? false : type.hasOrderableChildNodes();
 		nodeInfo.setChildrenOrdered(ordered);
 		// log.debug("Primary type: " + type.getName() + " childrenOrdered=" +
 		// ordered);
 		res.setNode(nodeInfo);
 
 		NodeIterator nodeIter = node.getNodes();
+		int nodeCount = 0;
 		try {
-			int nodeCount = 0;
-			if (debug) {
-				log.debug("starting iteration of children.");
-			}
 			while (true) {
 				Node n = nodeIter.nextNode();
 				children.add(Convert.convertToNodeInfo(sessionContext, session, n, true));
@@ -147,13 +132,15 @@ public class NodeRenderService {
 					throw new Exception("Node has too many children (> 1000)");
 				}
 
-				if (debug) {
-					log.debug("child: " + nodeCount);
-				}
+				log.trace("    node[" + nodeCount + "] path: " + n.getPath());
 			}
 		}
 		catch (NoSuchElementException ex) {
 			// not an error. Normal iterator end condition.
+		}
+
+		if (nodeCount == 0) {
+			log.trace("    no child nodes found.");
 		}
 	}
 

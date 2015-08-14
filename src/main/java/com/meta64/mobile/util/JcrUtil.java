@@ -9,6 +9,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
@@ -59,6 +60,15 @@ public class JcrUtil {
 
 	public static Node findNode(Session session, String id) throws Exception {
 		return id.startsWith("/") ? session.getNode(id) : session.getNodeByIdentifier(id);
+	}
+
+	public static NodeType safeGetPrimaryNodeType(Node node) {
+		try {
+			return node.getPrimaryNodeType();
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**

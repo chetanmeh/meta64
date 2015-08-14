@@ -34,14 +34,14 @@ public class UserSettingsDaemon {
 
 	@Scheduled(fixedDelay = 20 * 1000)
 	public void run() {
-		log.trace("UserSettingsDeamon.run");
+		//log.trace("UserSettingsDeamon.run");
 		synchronized (lock) {
 			if (mapByUser == null) {
-				log.trace("nothing to save.");
+				//log.trace("nothing to save.");
 				return;
 			}
 		}
-		log.trace("Saving settings.");
+		//log.trace("Saving settings.");
 
 		try {
 			adminRunner.run(new JcrRunnable() {
