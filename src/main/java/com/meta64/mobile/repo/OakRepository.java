@@ -55,6 +55,7 @@ public class OakRepository {
 
 	private static final Logger log = LoggerFactory.getLogger(OakRepository.class);
 
+	private LuceneIndexProvider indexProvider;
 	private DocumentNodeStore nodeStore;
 	private DocumentNodeState root;
 	private Repository repository;
@@ -92,11 +93,12 @@ public class OakRepository {
 
 	@PostConstruct
 	public void postConstruct() throws Exception {
-
 		mongoInit(mongoDbHost, mongoDbPort, mongoDbName);
-
-		UserManagerUtil.verifyAdminAccountReady(this);
-		initRequiredNodes();
+	}
+	
+	@PreDestroy
+	public void preDestroy() {
+		close();
 	}
 
 	public void initRequiredNodes() throws Exception {
@@ -128,30 +130,34 @@ public class OakRepository {
 			DocumentNodeStore ns = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
 			root = ns.getRoot();
 
-			/*
-			 * This code appears to successfully initialize a new repository, but just be aware when
-			 * you change this code you have to blow away your repository and let a new one be
-			 * created.
-			 * 
+			Jcr jcr = new Jcr(new Oak(ns));
+			jcr = jcr.with(getSecurityProvider());
+			
+			/* 
 			 * WARNING: Not all valid SQL will work with these lucene queries. Namely the contains()
 			 * method fails so always use '=' operator for exact string matches or LIKE %something%,
 			 * instead of using the contains method.
 			 */
-			LuceneIndexProvider provider = new LuceneIndexProvider().with(getNodeAggregator());
-			repository = new Jcr(new Oak(ns))//
-					.with(getSecurityProvider())//
-					.with(new LuceneFullTextInitializer("contentIndex", "jcr:content", (Set<String>) null))//
-					.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified", (Set<String>) null))//
-					.with(new LuceneSortInitializer("codeIndex", "code", (Set<String>) null)).with((QueryIndexProvider) provider)//
-					.with((Observer) provider)//
-					.with(new LuceneIndexEditorProvider())//
-					.createRepository();
-
+			indexProvider = new LuceneIndexProvider();
+			indexProvider = indexProvider.with(getNodeAggregator());
+			jcr = jcr.with(new LuceneFullTextInitializer("contentIndex", "jcr:content", (Set<String>) null).async());
+			jcr = jcr.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified", (Set<String>) null).async());
+			jcr = jcr.with(new LuceneSortInitializer("codeIndex", "code", (Set<String>) null).async());
+			jcr = jcr.with((QueryIndexProvider) indexProvider);
+			jcr = jcr.with((Observer) indexProvider);
+			jcr = jcr.with(new LuceneIndexEditorProvider());
+			
+			repository = jcr.createRepository();
+			
 			log.debug("MongoDb connection ok.");
+			
+			UserManagerUtil.verifyAdminAccountReady(this);
+			initRequiredNodes();
+			
+			log.debug("Repository fully initialized.");
 		}
 		catch (MongoTimeoutException e) {
-			log.error("********** Did you forget to start MongoDb Server? **********");
-			e.printStackTrace();
+			log.error("********** Did you forget to start MongoDb Server? **********", e);
 			throw e;
 		}
 	}
@@ -163,7 +169,7 @@ public class OakRepository {
 	}
 
 	private SecurityProvider getSecurityProvider() {
-		Map<String, Object> userParams = new HashMap();
+		Map<String, Object> userParams = new HashMap<String, Object>();
 		userParams.put(UserConstants.PARAM_ADMIN_ID, "admin");
 		userParams.put(UserConstants.PARAM_OMIT_ADMIN_PW, false);
 
@@ -173,21 +179,24 @@ public class OakRepository {
 	}
 
 	public void close() {
-		log.debug("Closing repository.");
+		
+		log.debug("Closing nodeStore.");
 		if (nodeStore != null) {
 			nodeStore.dispose();
 			nodeStore = null;
 		}
+
+		log.debug("Closing indexProvider.");
+		if (indexProvider != null) {
+			indexProvider.close();
+			indexProvider = null;
+		}
 		repository = null;
+		initialized = false;
 	}
 
 	public DocumentNodeState getRoot() {
 		return root;
-	}
-
-	@PreDestroy
-	public void preDestroy() {
-		close();
 	}
 
 	public String getJcrAdminUserName() {
