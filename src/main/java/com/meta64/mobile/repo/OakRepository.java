@@ -5,7 +5,6 @@ import static org.apache.jackrabbit.JcrConstants.JCR_CONTENT;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -55,6 +54,7 @@ public class OakRepository {
 
 	private static final Logger log = LoggerFactory.getLogger(OakRepository.class);
 
+	private boolean indexEnabled = true;
 	private LuceneIndexProvider indexProvider;
 	private DocumentNodeStore nodeStore;
 	private DocumentNodeState root;
@@ -95,7 +95,7 @@ public class OakRepository {
 	public void postConstruct() throws Exception {
 		mongoInit(mongoDbHost, mongoDbPort, mongoDbName);
 	}
-	
+
 	@PreDestroy
 	public void preDestroy() {
 		close();
@@ -132,28 +132,30 @@ public class OakRepository {
 
 			Jcr jcr = new Jcr(new Oak(ns));
 			jcr = jcr.with(getSecurityProvider());
-			
-			/* 
-			 * WARNING: Not all valid SQL will work with these lucene queries. Namely the contains()
-			 * method fails so always use '=' operator for exact string matches or LIKE %something%,
-			 * instead of using the contains method.
-			 */
-			indexProvider = new LuceneIndexProvider();
-			indexProvider = indexProvider.with(getNodeAggregator());
-			jcr = jcr.with(new LuceneFullTextInitializer("contentIndex", "jcr:content", (Set<String>) null).async());
-			jcr = jcr.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified", (Set<String>) null).async());
-			jcr = jcr.with(new LuceneSortInitializer("codeIndex", "code", (Set<String>) null).async());
-			jcr = jcr.with((QueryIndexProvider) indexProvider);
-			jcr = jcr.with((Observer) indexProvider);
-			jcr = jcr.with(new LuceneIndexEditorProvider());
-			
+
+			if (indexEnabled) {
+				/*
+				 * WARNING: Not all valid SQL will work with these lucene queries. Namely the
+				 * contains() method fails so always use '=' operator for exact string matches or
+				 * LIKE %something%, instead of using the contains method.
+				 */
+				indexProvider = new LuceneIndexProvider();
+				indexProvider = indexProvider.with(getNodeAggregator());
+				jcr = jcr.with(new LuceneFullTextInitializer("contentIndex", "jcr:content"));
+				jcr = jcr.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified"));
+				jcr = jcr.with(new LuceneSortInitializer("codeIndex", "code"));
+				jcr = jcr.with((QueryIndexProvider) indexProvider);
+				jcr = jcr.with((Observer) indexProvider);
+				jcr = jcr.with(new LuceneIndexEditorProvider());
+			}
+
 			repository = jcr.createRepository();
-			
+
 			log.debug("MongoDb connection ok.");
-			
+
 			UserManagerUtil.verifyAdminAccountReady(this);
 			initRequiredNodes();
-			
+
 			log.debug("Repository fully initialized.");
 		}
 		catch (MongoTimeoutException e) {
@@ -179,7 +181,7 @@ public class OakRepository {
 	}
 
 	public void close() {
-		
+
 		log.debug("Closing nodeStore.");
 		if (nodeStore != null) {
 			nodeStore.dispose();
