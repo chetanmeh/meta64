@@ -224,7 +224,7 @@ var render = function() {
 				message += "<p>URL for UUID: <br>" + window.location.origin + "?id=" + uuid;
 			}
 
-			messagePg.showMessage("Full External URL of Node", message);
+			messagePg.showMessage("URL of Node", message);
 		},
 
 		getTopRightImageTag : function(node) {

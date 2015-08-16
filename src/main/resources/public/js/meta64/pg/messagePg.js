@@ -32,7 +32,6 @@ var messagePg = function() {
 		init : function() {
 			$("#messagePgTitle").text(_title);
 			$("#messagePgMessage").html(_message);
-			$("#messagePgOkButton").text(_buttonText);
 		}
 	};
 
