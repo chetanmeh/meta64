@@ -110,8 +110,21 @@ var util = function() {
 			});
 
 			prms.fail(function(xhr, status) {
-				alert("Server request failed."); // xhr.responseText);
-				// //JSON.parse(xhr.responseText));
+				var msg = "Server request failed.\n\n";
+
+				/* catch block should fail silently */
+				try {
+					msg += "Status: " + xhr.statusText + "\n";
+					msg += "Code: " + xhr.status + "\n";
+				} catch (ex) {
+				}
+
+				/* this catch block should also fail silently */
+				try {
+					msg += "Response: " + JSON.parse(xhr.responseText).exception;
+				} catch (ex) {
+				}
+				alert(msg);
 			});
 
 			prms.complete(function() {
@@ -272,7 +285,7 @@ var util = function() {
 			// });
 			return true;
 		},
-		
+
 		bindEnterKey : function(id, func) {
 			_.bindKey(id, func, 13);
 		},
@@ -497,5 +510,5 @@ var util = function() {
 	return _;
 }();
 
-//# sourceURL=util.js
+// # sourceURL=util.js
 

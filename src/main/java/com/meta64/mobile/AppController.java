@@ -177,7 +177,7 @@ public class AppController {
 		springMvcUtil.configureSpa(model);
 		return "index";
 	}
-
+	
 	/*
 	 * This is the actual app page loading request, for his SPA (Single Page Application) this is
 	 * the request to load the page.

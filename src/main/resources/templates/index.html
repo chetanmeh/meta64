@@ -14,7 +14,7 @@
 
 <script th:inline="javascript">
 	/*
-	Very old browsers may not have the console.log/console.error functions.
+	Old browsers may not have the console.log/console.error functions.
 	 */
 	if (!window.console) {
 		console = {
@@ -26,8 +26,12 @@
 	}
 
 	window.onerror = function(message, url, line, col, err) {
-		console.log("ERROR: " + message + " [url:" + url + "] line " + line + " col: " + col + " err: " + err.stack);
-	};
+		var msg = "ERROR: " + message + " [url:" + url + "] line " + line + " col: " + col;
+		if (err.stack) {
+			msg += " err: " + err.stack;
+		}
+		console.log(msg);
+	}
 
 	/*<![CDATA[*/
 	var cookiePrefix = /*[[${@constantsProvider.getCookiePrefix()}]]*/"";
@@ -68,7 +72,7 @@
 <body id="bodyId">
 	<div id="signupCodeResponse" style="display: none;"
 		th:text="@{${signupCode}}"></div>
-		
+
 	<div id="loginSessionReady" style="display: none;"
 		th:text="@{${loginSessionReady}}"></div>
 
