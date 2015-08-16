@@ -1,10 +1,13 @@
 package com.meta64.mobile.service;
 
 import java.util.Calendar;
+import java.util.List;
 
+import javax.jcr.Credentials;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
@@ -32,6 +35,7 @@ import com.meta64.mobile.response.MakeNodeReferencableResponse;
 import com.meta64.mobile.response.RenameNodeResponse;
 import com.meta64.mobile.response.SaveNodeResponse;
 import com.meta64.mobile.response.SavePropertyResponse;
+import com.meta64.mobile.user.AccessControlUtil;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.util.Convert;
 import com.meta64.mobile.util.JcrUtil;
@@ -66,6 +70,18 @@ public class NodeEditService {
 	public void createSubNode(Session session, CreateSubNodeRequest req, CreateSubNodeResponse res) throws Exception {
 		String nodeId = req.getNodeId();
 		Node node = JcrUtil.findNode(session, nodeId);
+		String curUser = session.getUserID();
+
+		/*
+		 * If this is a publicly appendable node, then we always use admin to append a comment type
+		 * node under it. No other type of child node creation is allowed.
+		 */
+		boolean publicAppend = JcrUtil.isPublicAppend(node);
+		if (publicAppend) {
+			session.logout();
+			session = oak.newAdminSession();
+			node = JcrUtil.findNode(session, nodeId);
+		}
 
 		// //Wrong! Only editing actual content requires a "createdBy" check
 		// if (!JcrUtil.isUserAccountRoot(sessionContext, node)) {
@@ -78,6 +94,11 @@ public class NodeEditService {
 		Node newNode = node.addNode(name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty(JcrProp.CONTENT, "");
 		JcrUtil.timestampNewNode(session, newNode);
+
+		if (publicAppend) {
+			newNode.setProperty(JcrProp.COMMENT_BY, curUser);
+			newNode.setProperty(JcrProp.PUBLIC_APPEND, "true");
+		}
 		session.save();
 
 		res.setNewNode(Convert.convertToNodeInfo(sessionContext, session, newNode, true));
@@ -105,6 +126,9 @@ public class NodeEditService {
 		Node newNode = parentNode.addNode(name, JcrConstants.NT_UNSTRUCTURED);
 		newNode.setProperty(JcrProp.CONTENT, "");
 		JcrUtil.timestampNewNode(session, newNode);
+
+		// TODO: Did I need this save, in addition to one below?? If so need a big long comment in
+		// here about why!
 		session.save();
 
 		if (!XString.isEmpty(req.getTargetName())) {
@@ -184,8 +208,20 @@ public class NodeEditService {
 		String nodeId = req.getNodeId();
 
 		// log.debug("saveNode. nodeId=" + nodeId);
-		final Node node = JcrUtil.findNode(session, nodeId);
-		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		Node node = JcrUtil.findNode(session, nodeId);
+
+		String commentBy = JcrUtil.safeGetStringProp(node, JcrProp.COMMENT_BY);
+		if (commentBy != null) {
+			if (!commentBy.equals(session.getUserID())) {
+				throw new Exception("You cannot edit someone elses comment.");
+			}
+			session.logout();
+			session = oak.newAdminSession();
+			node = JcrUtil.findNode(session, nodeId);
+		}
+		else {
+			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+		}
 
 		if (req.getProperties() != null) {
 			for (PropertyInfo property : req.getProperties()) {
@@ -210,7 +246,12 @@ public class NodeEditService {
 			node.setProperty(JcrProp.LAST_MODIFIED_BY, session.getUserID());
 
 			if (req.isSendNotification()) {
-				outboxMgr.sendNotificationForChildNodeCreate(node, sessionContext.getUserName());
+				if (commentBy != null) {
+					outboxMgr.sendNotificationForChildNodeCreate(node, commentBy, JcrProp.COMMENT_BY);
+				}
+				else {
+					outboxMgr.sendNotificationForChildNodeCreate(node, sessionContext.getUserName(), JcrProp.CREATED_BY);
+				}
 			}
 
 			session.save();

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.repo.OakRepository;
 import com.meta64.mobile.request.DeleteNodesRequest;
@@ -18,6 +19,7 @@ import com.meta64.mobile.response.DeleteNodesResponse;
 import com.meta64.mobile.response.MoveNodesResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.util.JcrUtil;
+import com.meta64.mobile.util.ValContainer;
 
 /**
  * Service for controlling the positions (ordinals) of nodes relative to their parents and/or moving
@@ -54,20 +56,55 @@ public class NodeMoveService {
 	 */
 	public void deleteNodes(Session session, DeleteNodesRequest req, DeleteNodesResponse res) throws Exception {
 
+		ValContainer<Boolean> switchedToAdminSession = new ValContainer<Boolean>();
 		for (String nodeId : req.getNodeIds()) {
-			deleteNode(session, nodeId);
+			deleteNode(session, nodeId, switchedToAdminSession);
+			if (switchedToAdminSession.getVal()) {
+				break;
+			}
 		}
-		session.save();
+
+		/*
+		 * This is kinda ugly but the logic is that if 'deleteNode' conducted the delete as the
+		 * admin session then we expect it to also have done a save, so this 'session' in this local
+		 * scope is now logged out and unuable actually.
+		 */
+		if (!switchedToAdminSession.getVal()) {
+			session.save();
+		}
 		res.setSuccess(true);
 	}
 
 	/*
 	 * Deletes a single node by nodeId
 	 */
-	private void deleteNode(Session session, String nodeId) throws Exception {
+	private void deleteNode(Session session, String nodeId, ValContainer<Boolean> switchedToAdminSession) throws Exception {
 		Node node = JcrUtil.findNode(session, nodeId);
-		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
-		node.remove();
+		String commentBy = JcrUtil.safeGetStringProp(node, JcrProp.COMMENT_BY);
+
+		/*
+		 * Detect if this node is a comment we "own" (although true security rules make it belong to
+		 * admin user) then we should be able to delete it, so we execute the delete under an
+		 * 'AdminSession'. Also now that we have switched sessions, we set that in the return value,
+		 * so the caller can always, stop processing after this happens. Meaning essentialy only
+		 * *one* comment node can be deleted at a time unless you are admin user.
+		 */
+		if (session.getUserID().equals(commentBy)) {
+			session.logout();
+			session = oak.newAdminSession();
+			node = JcrUtil.findNode(session, nodeId);
+
+			/* notify caller what just happened */
+			if (switchedToAdminSession != null) {
+				switchedToAdminSession.setVal(true);
+			}
+			node.remove();
+			session.save();
+		}
+		else {
+			JcrUtil.checkNodeCreatedBy(node, session.getUserID());
+			node.remove();
+		}
 	}
 
 	/*

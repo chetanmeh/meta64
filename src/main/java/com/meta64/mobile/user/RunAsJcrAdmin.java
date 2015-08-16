@@ -25,7 +25,7 @@ public class RunAsJcrAdmin {
 		Session session = null;
 
 		try {
-			session = oak.getRepository().login(new SimpleCredentials(oak.getJcrAdminUserName(), oak.getJcrAdminPassword().toCharArray()));
+			session = oak.newAdminSession();
 			runner.run(session);
 		}
 		finally {

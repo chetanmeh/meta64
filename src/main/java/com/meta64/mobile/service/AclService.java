@@ -46,6 +46,9 @@ public class AclService {
 	private SessionContext sessionContext;
 
 	@Autowired
+	private UserManagerService userManagerService;
+
+	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
 	/**
@@ -67,7 +70,7 @@ public class AclService {
 		}
 
 		if (req.isIncludeOwners()) {
-			List<String> owners = AccessControlUtil.getOwnerNames(session, node);
+			List<String> owners = userManagerService.getOwnerNames(node);
 			res.setOwners(owners);
 		}
 

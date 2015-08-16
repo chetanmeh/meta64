@@ -5,6 +5,17 @@ package com.meta64.mobile.config;
  */
 public class JcrProp {
 
+	/* 
+	 * "true" means any user can add subnode under the node that has this property
+	 */
+	public static final String PUBLIC_APPEND = "publicAppend";
+	
+	/* comment nodes are always 'admin owned' in terms of the true credentials, but are flagged as 
+	 * who the comment was actually posted by using the 'commentBy' property. This way that person
+	 * can be allowed to edit the content, but have no other privileges.
+	 */
+	public static final String COMMENT_BY = "commentBy";
+	
 	public static final String MIXIN_TYPES = "jcr:mixinTypes";
 
 	public static final String USER_PREF_LAST_NODE = "lastNode";

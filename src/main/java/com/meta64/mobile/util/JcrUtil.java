@@ -36,6 +36,9 @@ public class JcrUtil {
 		nonSavableProperties.add(JcrProp.MIXIN_TYPES);
 		nonSavableProperties.add(JcrProp.UUID);
 
+		nonSavableProperties.add(JcrProp.COMMENT_BY);
+		nonSavableProperties.add(JcrProp.PUBLIC_APPEND);
+		
 		nonSavableProperties.add(JcrProp.CREATED);
 		nonSavableProperties.add(JcrProp.CREATED_BY);
 		nonSavableProperties.add(JcrProp.LAST_MODIFIED);
@@ -48,6 +51,10 @@ public class JcrUtil {
 		nonSavableProperties.add(JcrProp.IMG_WIDTH);
 	}
 
+	public static boolean isPublicAppend(Node node) {
+		return "true".equals(JcrUtil.safeGetStringProp(node, JcrProp.PUBLIC_APPEND));
+	}
+	
 	public static void checkNodeCreatedBy(Node node, String userName) throws Exception {
 		if (JcrPrincipal.ADMIN.equals(userName)) return;
 		if (userName == null || !userName.equals(getRequiredStringProp(node, JcrProp.CREATED_BY))) throw new Exception("Access failed.");

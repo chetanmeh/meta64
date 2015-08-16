@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.AppServer;
 import com.meta64.mobile.config.JcrPrincipal;
 import com.meta64.mobile.service.UserManagerService;
 import com.meta64.mobile.util.JcrRunnable;
@@ -34,6 +35,8 @@ public class UserSettingsDaemon {
 
 	@Scheduled(fixedDelay = 20 * 1000)
 	public void run() {
+		if (AppServer.isShuttingDown()) return;
+		
 		//log.trace("UserSettingsDeamon.run");
 		synchronized (lock) {
 			if (mapByUser == null) {

@@ -112,17 +112,18 @@ var edit = function() {
 	}
 
 	var _createSubNodeResponse = function(res) {
-		util.checkSuccess("Create subnode", res);
+		if (util.checkSuccess("Create subnode", res)) {
 
-		/*
-		 * TODO: verify this value gets used now that we aren't going
-		 * IMMEDIATELY to the treeview after creates
-		 */
-		meta64.newChildNodeId = res.newNode.id;
-		console.log("new child identifier: " + meta64.newChildNodeId);
+			/*
+			 * TODO: verify this value gets used now that we aren't going
+			 * IMMEDIATELY to the treeview after creates
+			 */
+			meta64.newChildNodeId = res.newNode.id;
+			console.log("new child identifier: " + meta64.newChildNodeId);
 
-		meta64.initNode(res.newNode);
-		_.runEditNode(res.newNode.uid);
+			meta64.initNode(res.newNode);
+			_.runEditNode(res.newNode.uid);
+		}
 	}
 
 	var _ = {
@@ -646,6 +647,10 @@ var edit = function() {
 			_.startEditingNewNode();
 		},
 
+		replyToComment : function(uid) {
+			_.createSubNode(uid);
+		},
+		
 		createSubNode : function(uid) {
 			/*
 			 * If no uid provided we deafult to creating a node under the

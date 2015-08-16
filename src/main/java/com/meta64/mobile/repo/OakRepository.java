@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jcr.Repository;
 import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
 
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.Oak;
@@ -36,6 +37,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.common.collect.ImmutableMap;
+import com.meta64.mobile.AppServer;
 import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
@@ -61,6 +63,20 @@ public class OakRepository {
 	private Repository repository;
 	protected ConfigurationParameters securityParams;
 	private SecurityProvider securityProvider;
+
+	/*
+	 * Because of the criticality of this variable, I am not using the Spring getter to get it, but
+	 * just using a private static. It's slightly safer and better for the purpose of cleanup in the
+	 * shutdown hook which is all it's used for.
+	 */
+	private static OakRepository instance;
+
+	/*
+	 * We only need this lock to protect against startup and/or shutdown concurrency. Remember
+	 * during debugging, etc the server process can be shutdown (CTRL-C) even while it's in the
+	 * startup phase.
+	 */
+	private static final Object lock = new Object();
 
 	private boolean initialized = false;
 
@@ -91,6 +107,23 @@ public class OakRepository {
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
+	public OakRepository() {
+		instance = this;
+
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				/*
+				 * I know this tight coupling is going to be upsetting to some developers, but this
+				 * is a good design despite that. I don't want a complex PUB/SUB or indirection to
+				 * get in the way of this working perfectly and being dead simple!
+				 */
+				AppServer.setShuttingDown(true);
+				instance.close();
+			}
+		}));
+	}
+
 	@PostConstruct
 	public void postConstruct() throws Exception {
 		mongoInit(mongoDbHost, mongoDbPort, mongoDbName);
@@ -119,48 +152,63 @@ public class OakRepository {
 		return repository;
 	}
 
+	public Session newAdminSession() throws Exception {
+		return repository.login(new SimpleCredentials(getJcrAdminUserName(), getJcrAdminPassword().toCharArray()));
+	}
+
 	public void mongoInit(String mongoDbHost, int mongoDbPort, String mongoDbName) throws Exception {
-		if (initialized) {
-			throw new Exception("Repository already initialized");
-		}
-		initialized = true;
-
-		try {
-			DB db = new MongoClient(mongoDbHost, mongoDbPort).getDB(mongoDbName);
-			DocumentNodeStore ns = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
-			root = ns.getRoot();
-
-			Jcr jcr = new Jcr(new Oak(ns));
-			jcr = jcr.with(getSecurityProvider());
-
-			if (indexEnabled) {
-				/*
-				 * WARNING: Not all valid SQL will work with these lucene queries. Namely the
-				 * contains() method fails so always use '=' operator for exact string matches or
-				 * LIKE %something%, instead of using the contains method.
-				 */
-				indexProvider = new LuceneIndexProvider();
-				indexProvider = indexProvider.with(getNodeAggregator());
-				jcr = jcr.with(new LuceneFullTextInitializer("contentIndex", "jcr:content"));
-				jcr = jcr.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified"));
-				jcr = jcr.with(new LuceneSortInitializer("codeIndex", "code"));
-				jcr = jcr.with((QueryIndexProvider) indexProvider);
-				jcr = jcr.with((Observer) indexProvider);
-				jcr = jcr.with(new LuceneIndexEditorProvider());
+		synchronized (lock) {
+			if (initialized) {
+				throw new Exception("Repository already initialized");
 			}
+			initialized = true;
 
-			repository = jcr.createRepository();
+			try {
+				DB db = new MongoClient(mongoDbHost, mongoDbPort).getDB(mongoDbName);
+				DocumentNodeStore ns = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
+				root = ns.getRoot();
 
-			log.debug("MongoDb connection ok.");
+				/* can shutdown during startup. */
+				if (AppServer.isShuttingDown()) return;
 
-			UserManagerUtil.verifyAdminAccountReady(this);
-			initRequiredNodes();
+				Jcr jcr = new Jcr(new Oak(ns));
+				jcr = jcr.with(getSecurityProvider());
 
-			log.debug("Repository fully initialized.");
-		}
-		catch (MongoTimeoutException e) {
-			log.error("********** Did you forget to start MongoDb Server? **********", e);
-			throw e;
+				if (indexEnabled) {
+					/*
+					 * WARNING: Not all valid SQL will work with these lucene queries. Namely the
+					 * contains() method fails so always use '=' operator for exact string matches
+					 * or LIKE %something%, instead of using the contains method.
+					 */
+					indexProvider = new LuceneIndexProvider();
+					indexProvider = indexProvider.with(getNodeAggregator());
+					jcr = jcr.with(new LuceneFullTextInitializer("contentIndex", "jcr:content"));
+					jcr = jcr.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified"));
+					jcr = jcr.with(new LuceneSortInitializer("codeIndex", "code"));
+					jcr = jcr.with((QueryIndexProvider) indexProvider);
+					jcr = jcr.with((Observer) indexProvider);
+					jcr = jcr.with(new LuceneIndexEditorProvider());
+				}
+
+				/* can shutdown during startup. */
+				if (AppServer.isShuttingDown()) return;
+
+				repository = jcr.createRepository();
+
+				log.debug("MongoDb connection ok.");
+
+				/* can shutdown during startup. */
+				if (AppServer.isShuttingDown()) return;
+
+				UserManagerUtil.verifyAdminAccountReady(this);
+				initRequiredNodes();
+
+				log.debug("Repository fully initialized.");
+			}
+			catch (MongoTimeoutException e) {
+				log.error("********** Did you forget to start MongoDb Server? **********", e);
+				throw e;
+			}
 		}
 	}
 
@@ -181,20 +229,26 @@ public class OakRepository {
 	}
 
 	public void close() {
+		synchronized (lock) {
+			if (!initialized) {
+				return;
+			}
+			initialized = false;
 
-		log.debug("Closing nodeStore.");
-		if (nodeStore != null) {
-			nodeStore.dispose();
-			nodeStore = null;
-		}
+			log.debug("Closing nodeStore.");
+			if (nodeStore != null) {
+				nodeStore.dispose();
+				nodeStore = null;
+			}
 
-		log.debug("Closing indexProvider.");
-		if (indexProvider != null) {
-			indexProvider.close();
-			indexProvider = null;
+			log.debug("Closing indexProvider.");
+			if (indexProvider != null) {
+				indexProvider.close();
+				indexProvider = null;
+			}
+			repository = null;
+			log.debug("Repository close complete.");
 		}
-		repository = null;
-		initialized = false;
 	}
 
 	public DocumentNodeState getRoot() {

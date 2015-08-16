@@ -1,5 +1,7 @@
 package com.meta64.mobile.service;
 
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.Session;
 
@@ -246,6 +248,17 @@ public class UserManagerService {
 		}
 	}
 
+	public List<String> getOwnerNames(final Node node) throws Exception {
+		final ValContainer<List<String>> ret = new ValContainer<List<String>>();
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				ret.setVal(AccessControlUtil.getOwnerNames(session, node));
+			}
+		});
+		return ret.getVal();
+	}
+	
 	/* Returns true if the user exists and matches the oauthServie */
 	public boolean userExists(Session session, String userName, String oauthService, ValContainer<String> passwordContainer) throws Exception {
 		Node prefsNode = JcrUtil.getNodeByPath(session, "/" + JcrName.USER_PREFERENCES + "/" + userName);
@@ -458,5 +471,21 @@ public class UserManagerService {
 
 		sessionContext.setPassword(req.getNewPassword());
 		res.setSuccess(true);
+	}
+	
+	/*
+	 * Warning: not yet tested. Ended up not needing this yet.
+	 */
+	public String getPasswordOfUser(final String userName) throws Exception {
+		final ValContainer<String> password = new ValContainer<String>();
+		adminRunner.run(new JcrRunnable() {
+			@Override
+			public void run(Session session) throws Exception {
+				Node prefsNode = getPrefsNodeForSessionUser(session, userName);
+				String encPwd = JcrUtil.getRequiredStringProp(prefsNode, JcrProp.PWD);
+				password.setVal(encryptor.decrypt(encPwd));
+			}
+		});
+		return password.getVal();
 	}
 }

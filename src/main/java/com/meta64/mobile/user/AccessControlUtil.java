@@ -54,6 +54,11 @@ public class AccessControlUtil {
 		return privileges.toArray(privArr);
 	}
 
+	/*
+	 * TODO: Also can do this:
+	 * AccessControlUtils.addAccessControlEntry(session, "/", user.getPrincipal(),
+     *                   new String[] { Privilege.JCR_ALL }, true);
+	 */
 	public static boolean grantPrivileges(Session session, Node node, Principal principal, List<String> privilegeNames) throws Exception {
 
 		AccessControlManager acMgr = session.getAccessControlManager();
@@ -81,7 +86,7 @@ public class AccessControlUtil {
 		 */
 		try {
 			int sanityCheck = 0;
-			while (++sanityCheck < 50) {
+			while (++sanityCheck < 100) {
 				List<Principal> principals = getNodePrincipals(session, node);
 				for (Principal p : principals) {
 					owners.add(p.getName());

@@ -479,15 +479,16 @@ var meta64 = function() {
 
 			// console.log("******* initNode uid=" + node.uid);
 			_.uidToNodeMap[node.uid] = node;
-			_.idToNodeMap[node.id] = node;
+			_.idToNodeMap[node.id] = noyde;
 		},
 
 		initConstants : function() {
-			util.addAll(_.simpleModePropertyBlackList, [ jcrCnst.PRIMARY_TYPE, jcrCnst.POLICY ]);
+			util.addAll(_.simpleModePropertyBlackList, [jcrCnst.MIXIN_TYPES, jcrCnst.PRIMARY_TYPE, jcrCnst.POLICY, jcrCnst.IMG_WIDTH, jcrCnst.IMG_HEIGHT,
+					jcrCnst.BIN_VER, jcrCnst.BIN_DATA, jcrCnst.BIN_MIME, jcrCnst.COMMENT_BY, jcrCnst.PUBLIC_APPEND ]);
 
 			util.addAll(_.readOnlyPropertyList, [ jcrCnst.UUID, jcrCnst.MIXIN_TYPES, jcrCnst.CREATED, jcrCnst.CREATED_BY,
 					jcrCnst.LAST_MODIFIED, jcrCnst.LAST_MODIFIED_BY, jcrCnst.IMG_WIDTH, jcrCnst.IMG_HEIGHT, jcrCnst.BIN_VER,
-					jcrCnst.BIN_DATA, jcrCnst.BIN_MIME ]);
+					jcrCnst.BIN_DATA, jcrCnst.BIN_MIME, jcrCnst.COMMENT_BY, jcrCnst.PUBLIC_APPEND ]);
 
 			util.addAll(_.binaryPropertyList, [ jcrCnst.BIN_DATA ]);
 		},

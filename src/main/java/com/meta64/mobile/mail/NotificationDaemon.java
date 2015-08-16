@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.AppServer;
 import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SpringContextUtil;
 import com.meta64.mobile.user.RunAsJcrAdmin;
@@ -56,7 +57,8 @@ public class NotificationDaemon {
 	 */
 	@Scheduled(fixedDelay = 60 * 1000)
 	public void run() {
-
+		if (AppServer.isShuttingDown()) return;
+		
 		/* spring always calls immediately upon startup and we will ignore the first call */
 		if (runCounter++ == 0) {
 			return;

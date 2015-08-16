@@ -69,6 +69,7 @@ var render = function() {
 
 			ret += _.getTopRightImageTag(node);
 
+			var commentBy = props.getNodePropertyVal(jcrCnst.COMMENT_BY, node);
 			if (showPath && meta64.editMode) {
 				/*
 				 * todo: come up with a solid plan for wether to show jcr:root
@@ -82,7 +83,12 @@ var render = function() {
 				headerText += "<div class='path-display'>Path: " + _.formatPath(node) + "</div>";
 
 				headerText += "<div>";
-				if (node.createdBy) {
+
+				if (commentBy) {
+					var clazz = (commentBy === meta64.userName) ? "created-by-me" : "created-by-other";
+					headerText += "<span class='" + clazz + "'>Comment By: " + commentBy + "</span>";
+				} //
+				else if (node.createdBy) {
 					var clazz = (node.createdBy === meta64.userName) ? "created-by-me" : "created-by-other";
 					headerText += "<span class='" + clazz + "'>Created By: " + node.createdBy + "</span>";
 				}
@@ -127,7 +133,7 @@ var render = function() {
 				var contentProp = props.getNodeProperty(jcrCnst.CONTENT, node);
 				// console.log("contentProp: " + contentProp);
 				if (contentProp) {
-					
+
 					var jcrContent = props.renderProperty(contentProp);
 
 					if (jcrContent.length > 0) {
@@ -151,6 +157,40 @@ var render = function() {
 					ret = ret.replaceAll(cnst.INSERT_ATTACHMENT, binary);
 				} else {
 					ret += binary;
+				}
+			}
+
+			/*
+			 * If this is a comment node, but not by the current user (because
+			 * they cannot reply to themselves) then add a reply button, so they
+			 * can reply to some other use.
+			 */
+			if (commentBy && commentBy != meta64.userName) {
+				var replyButton = _.makeTag("a", //
+				{
+					"onClick" : "edit.replyToComment('" + node.uid + "');", //
+					"class" : "ui-btn ui-btn-b ui-btn-inline ui-icon-plus ui-mini ui-btn-icon-comment"
+				}, //
+				"Reply");
+				ret += replyButton;
+			}
+			/*
+			 * Otherwise check if this is a publicly appendable node and show a
+			 * button that does same as above but is labeled "Add Comment"
+			 * instead of "Reply". Note the check against userName, makes sure
+			 * the button doesn't show up on nodes we own, so we never are asked
+			 * to "Add Comment" to our own content.
+			 */
+			else {
+				var publicAppend = props.getNodePropertyVal(jcrCnst.PUBLIC_APPEND, node);
+				if (publicAppend && commentBy != meta64.userName) {
+					var addComment = _.makeTag("a", //
+					{
+						"onClick" : "edit.replyToComment('" + node.uid + "');", //
+						"class" : "ui-btn ui-btn-b ui-btn-inline ui-icon-plus ui-mini ui-btn-icon-comment"
+					}, //
+					"Add Comment");
+					ret += addComment;
 				}
 			}
 

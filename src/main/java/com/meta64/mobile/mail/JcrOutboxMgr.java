@@ -50,7 +50,7 @@ public class JcrOutboxMgr {
 	/*
 	 * node=Node that was created. userName = username of person who just created node.
 	 */
-	public void sendNotificationForChildNodeCreate(final Node node, final String userName) throws Exception {
+	public void sendNotificationForChildNodeCreate(final Node node, final String userName, final String parentProp) throws Exception {
 		/*
 		 * put in a catch block, because nothing going wrong in here should be allowed to blow up
 		 * the save operation
@@ -61,8 +61,8 @@ public class JcrOutboxMgr {
 				try {
 					Node parentNode = node.getParent();
 					if (parentNode != null) {
-						String parentCreator = JcrUtil.getRequiredStringProp(parentNode, JcrProp.CREATED_BY);
-						if (!parentCreator.equals(userName)) { // sessionContext.getUserName())) {
+						String parentCreator = JcrUtil.getRequiredStringProp(parentNode, parentProp);
+						if (!parentCreator.equals(userName)) { 
 							Node prefsNode = UserManagerService.getPrefsNodeForSessionUser(session, parentCreator);
 							String email = JcrUtil.getRequiredStringProp(prefsNode, JcrProp.EMAIL);
 							log.debug("TODO: send email to: " + email + " because his node was appended under.");

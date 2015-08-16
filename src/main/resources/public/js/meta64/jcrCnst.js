@@ -3,9 +3,11 @@ console.log("running module: jcrCnst.js");
 var jcrCnst = function() {
 
 	var _ = {
+		COMMENT_BY : "commentBy",
+		PUBLIC_APPEND : "publicAppend",
 		PRIMARY_TYPE : "jcr:primaryType",
 		POLICY : "rep:policy",
-		
+
 		MIXIN_TYPES : "jcr:mixinTypes",
 
 		EMAIL_CONTENT : "jcr:content",
