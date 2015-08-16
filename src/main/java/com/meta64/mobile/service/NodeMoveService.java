@@ -20,6 +20,7 @@ import com.meta64.mobile.response.MoveNodesResponse;
 import com.meta64.mobile.response.SetNodePositionResponse;
 import com.meta64.mobile.util.JcrUtil;
 import com.meta64.mobile.util.ValContainer;
+import com.meta64.mobile.util.VarUtil;
 
 /**
  * Service for controlling the positions (ordinals) of nodes relative to their parents and/or moving
@@ -57,9 +58,12 @@ public class NodeMoveService {
 	public void deleteNodes(Session session, DeleteNodesRequest req, DeleteNodesResponse res) throws Exception {
 
 		ValContainer<Boolean> switchedToAdminSession = new ValContainer<Boolean>();
+		
 		for (String nodeId : req.getNodeIds()) {
 			deleteNode(session, nodeId, switchedToAdminSession);
-			if (switchedToAdminSession.getVal()) {
+			
+			/* did we switch to admin session ? */
+			if (VarUtil.safeBooleanVal(switchedToAdminSession.getVal())) {
 				break;
 			}
 		}
@@ -69,7 +73,7 @@ public class NodeMoveService {
 		 * admin session then we expect it to also have done a save, so this 'session' in this local
 		 * scope is now logged out and unuable actually.
 		 */
-		if (!switchedToAdminSession.getVal()) {
+		if (!VarUtil.safeBooleanVal(switchedToAdminSession.getVal())) {
 			session.save();
 		}
 		res.setSuccess(true);

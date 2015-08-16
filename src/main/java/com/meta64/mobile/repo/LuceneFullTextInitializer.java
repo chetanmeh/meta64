@@ -48,7 +48,7 @@ class LuceneFullTextInitializer implements RepositoryInitializer {
 				 * Using ASYNC appears to completely disable the index. Not sure what else I need to
 				 * do here or how badly this will impact performance, to have 'synchronous'.
 				 */
-				// .setProperty(IndexConstants.ASYNC_PROPERTY_NAME, "async") //
+				.setProperty(IndexConstants.ASYNC_PROPERTY_NAME, "async") //
 
 				// .setProperty(LuceneIndexConstants.TEST_MODE, true)
 				.setProperty(LuceneIndexConstants.EVALUATE_PATH_RESTRICTION, true)//

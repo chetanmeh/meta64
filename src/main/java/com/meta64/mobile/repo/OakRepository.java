@@ -5,6 +5,8 @@ import static org.apache.jackrabbit.JcrConstants.JCR_CONTENT;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -15,6 +17,7 @@ import javax.jcr.SimpleCredentials;
 import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.oak.Oak;
 import org.apache.jackrabbit.oak.jcr.Jcr;
+import org.apache.jackrabbit.oak.jcr.repository.RepositoryImpl;
 import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeState;
 import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
@@ -56,10 +59,15 @@ public class OakRepository {
 
 	private static final Logger log = LoggerFactory.getLogger(OakRepository.class);
 
-	private boolean indexEnabled = true;
+	@Value("${indexingEnabled}")
+	private boolean indexingEnabled;
+	
 	private LuceneIndexProvider indexProvider;
 	private DocumentNodeStore nodeStore;
 	private DocumentNodeState root;
+	private ExecutorService executor;
+	private Oak oak;
+	private Jcr jcr;
 	private Repository repository;
 	protected ConfigurationParameters securityParams;
 	private SecurityProvider securityProvider;
@@ -171,10 +179,14 @@ public class OakRepository {
 				/* can shutdown during startup. */
 				if (AppServer.isShuttingDown()) return;
 
-				Jcr jcr = new Jcr(new Oak(ns));
+				executor = Oak.defaultExecutorService();
+				oak = new Oak(ns);
+				oak = oak.with(executor);
+				
+				jcr = new Jcr(oak);
 				jcr = jcr.with(getSecurityProvider());
 
-				if (indexEnabled) {
+				if (indexingEnabled) {
 					/*
 					 * WARNING: Not all valid SQL will work with these lucene queries. Namely the
 					 * contains() method fails so always use '=' operator for exact string matches
@@ -188,8 +200,9 @@ public class OakRepository {
 					jcr = jcr.with((QueryIndexProvider) indexProvider);
 					jcr = jcr.with((Observer) indexProvider);
 					jcr = jcr.with(new LuceneIndexEditorProvider());
+					jcr = jcr.withAsyncIndexing();
 				}
-
+				
 				/* can shutdown during startup. */
 				if (AppServer.isShuttingDown()) return;
 
@@ -235,7 +248,23 @@ public class OakRepository {
 			}
 			initialized = false;
 
-			log.debug("Closing nodeStore.");
+			log.debug("Shutting down Oak Executor");
+			if (executor != null) {
+				executor.shutdown();
+				
+				log.debug("Awaiting executor shutdown");
+				try {
+					executor.awaitTermination(5, TimeUnit.MINUTES);
+					log.debug("Executor shutdown completed ok.");
+				}
+				catch (InterruptedException ex) {
+					log.error("Executor failed to shutdown gracefully.", ex);
+				}
+				
+				executor = null;
+			}
+			
+			log.debug("disposing nodeStore.");
 			if (nodeStore != null) {
 				nodeStore.dispose();
 				nodeStore = null;
@@ -246,8 +275,14 @@ public class OakRepository {
 				indexProvider.close();
 				indexProvider = null;
 			}
-			repository = null;
-			log.debug("Repository close complete.");
+			
+			log.debug("Shutting down repository.");
+			if (repository!=null) {
+				((RepositoryImpl)repository).shutdown();
+				repository = null;
+			}
+			
+			log.debug("***** All Persistence Shutdown complete. *****");
 		}
 	}
 

@@ -479,7 +479,7 @@ var meta64 = function() {
 
 			// console.log("******* initNode uid=" + node.uid);
 			_.uidToNodeMap[node.uid] = node;
-			_.idToNodeMap[node.id] = noyde;
+			_.idToNodeMap[node.id] = node;
 		},
 
 		initConstants : function() {
