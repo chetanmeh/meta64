@@ -128,15 +128,17 @@ Bold labels are more visible on a background image.
 }
 
 .privilege-list {
+	background: lightGray;
 }
 
 .binary-link {
 }
 
 .privilege-entry {
-	margin: 1em;
+	margin: 10px;
+	padding: 10px;
 	background: lightGray;
-	border-bottom: 1px solid #d6d6d6;
+	border-bottom: 3px solid gray;
 }
 
 .jcr-content {

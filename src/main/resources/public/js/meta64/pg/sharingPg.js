@@ -3,15 +3,15 @@ console.log("running module: sharingPg.js");
 var sharingPg = function() {
 
 	var _ = {
-			domId : "sharingPg",
-			
+		domId : "sharingPg",
+
 		build : function() {
 
 			var header = render.makeTag("div", //
 			{
-				"data-role" : "header"//,
-				//"data-position" : "fixed"
-				//"data-tap-toggle" : "false"
+				"data-role" : "header"// ,
+			// "data-position" : "fixed"
+			// "data-tap-toggle" : "false"
 			}, //
 			"<h2>" + BRANDING_TITLE + " - Node Sharing</h2>");
 
@@ -22,7 +22,7 @@ var sharingPg = function() {
 
 			var internalMainContent = "<div id='shareNodeNameDisplay'></div>" + //
 			"<div id='sharingListFieldContainer'></div>";
-			
+
 			var mainContent = render.makeTag("div", //
 			{
 				"role" : "main", //
@@ -36,7 +36,7 @@ var sharingPg = function() {
 			$("#shareNodeToPersonPgButton").on("click", share.shareNodeToPersonPg);
 			$("#shareNodeToPublicButton").on("click", share.shareNodeToPublic);
 		},
-		
+
 		init : function() {
 			share.reload();
 		}

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.meta64.mobile.config.JcrProp;
 import com.meta64.mobile.config.SessionContext;
 import com.meta64.mobile.model.AccessControlEntryInfo;
 import com.meta64.mobile.repo.OakRepository;
@@ -63,6 +64,8 @@ public class AclService {
 			throw new Exception("no specific information requested for getNodePrivileges");
 		}
 
+		res.setPublicAppend(JcrUtil.safeGetBooleanProp(node, JcrProp.PUBLIC_APPEND));
+
 		if (req.isIncludeAcl()) {
 			AccessControlEntry[] aclEntries = AccessControlUtil.getAccessControlEntries(session, node);
 			List<AccessControlEntryInfo> aclEntriesInfo = Convert.convertToAclListInfo(aclEntries);
@@ -78,6 +81,9 @@ public class AclService {
 	}
 
 	/*
+	 * I made this privilege capable of doing either a 'publicAppend' update, or actual privileges
+	 * update. Only one at a time will be done, usually, if not always.
+	 * 
 	 * Adds a new privilege to a node. Request object is self explanatory.
 	 */
 	public void addPrivilege(Session session, AddPrivilegeRequest req, AddPrivilegeResponse res) throws Exception {
@@ -86,23 +92,36 @@ public class AclService {
 		Node node = JcrUtil.findNode(session, nodeId);
 		JcrUtil.checkNodeCreatedBy(node, session.getUserID());
 
-		String principal = req.getPrincipal();
-		List<String> privileges = req.getPrivileges();
-		Principal principalObj = null;
-
-		if (principal.equalsIgnoreCase(EveryonePrincipal.NAME)) {
-			principalObj = EveryonePrincipal.getInstance();
-		}
-		else {
-			principalObj = new PrincipalImpl(principal);
-		}
-
 		boolean success = false;
-		try {
-			success = AccessControlUtil.grantPrivileges(session, node, principalObj, privileges);
+		String principal = req.getPrincipal();
+		if (principal != null) {
+			List<String> privileges = req.getPrivileges();
+			Principal principalObj = null;
+
+			if (principal.equalsIgnoreCase(EveryonePrincipal.NAME)) {
+				principalObj = EveryonePrincipal.getInstance();
+			}
+			else {
+				principalObj = new PrincipalImpl(principal);
+			}
+
+			try {
+				success = AccessControlUtil.grantPrivileges(session, node, principalObj, privileges);
+			}
+			catch (Exception e) {
+				// leave success==false and continue.
+			}
 		}
-		catch (Exception e) {
-			// leave success==false and continue.
+
+		if (req.getPublicAppend() != null) {
+			boolean publicAppend = req.getPublicAppend().booleanValue();
+			if (!publicAppend) {
+				JcrUtil.safeDeleteProperty(node, JcrProp.PUBLIC_APPEND);
+			}
+			else {
+				node.setProperty(JcrProp.PUBLIC_APPEND, true);
+			}
+			success = true;
 		}
 
 		if (success) {

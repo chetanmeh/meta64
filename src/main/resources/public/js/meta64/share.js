@@ -26,8 +26,7 @@ var share = function() {
 
 			var row = render.makeHorizontalFieldSet(removeButton);
 
-			row += "<b>" + principal + "</b> has privilege <b>" + privilege.privilegeName 
-					+ "</b> on this node.";
+			row += "<b>" + principal + "</b> has privilege <b>" + privilege.privilegeName + "</b> on this node.";
 
 			ret += render.makeTag("div", {
 				"class" : "privilege-entry"
@@ -48,25 +47,60 @@ var share = function() {
 
 		sharingNode : null,
 
+		/*
+		 * Processes the response gotten back from the server containing ACL
+		 * info so we can populate the sharing page in the gui
+		 */
 		populateSharingPg : function(res) {
 
-			var html = "<h2>Access Control Entries</h2>";
+			var html = "<h2>Node Share Settings</h2>";
 
 			$.each(res.aclEntries, function(index, aclEntry) {
 				html += "<h4>User: " + aclEntry.principalName + "</h4>";
 				html += render.makeTag("div", {
 					"class" : "privilege-list"
 				}, _renderAclPrivileges(aclEntry.principalName, aclEntry));
-
 			});
 
-			if (html === "") {
-				html = "Node is not shared with anyone.";
-			}
+			html += render.makeTag("input", {
+				"type" : "checkbox",
+				"name" : "allowPublicCommenting",
+				"id" : "allowPublicCommenting"
+			}, "", false);
 
+			html += render.makeTag("label", {
+				"for" : "allowPublicCommenting"
+			}, "Allow public commenting under this node.", true);
+
+			/* Example to put checkbox in its own div, with label. */
+			// <div class="ui-field-contain">
+			// <fieldset data-role="controlgroup">
+			// <legend>Agree to the terms:</legend>
+			// <input type="checkbox" name="checkbox-2" id="checkbox-2"
+			// class="custom">
+			// <label for="checkbox-2">I agree</label>
+			// </fieldset>
+			// </div>
 			util.setHtmlEnhanced($("#sharingListFieldContainer"), html);
+
+			util.setCheckboxVal("#allowPublicCommenting", res.publicAppend);
+			$("#allowPublicCommenting").bind("change", _.publicCommentingChanged);
 		},
 		
+		publicCommentingChanged : function() {
+			var publicAppend = $("#allowPublicCommenting").is(":checked");
+			
+			/*
+			 * TODO: Need to test of 'nodeTypeManagement' is actually required.
+			 * What is below does work, but need to make it as minimal as
+			 * possible
+			 */
+			util.json("addPrivilege", {
+				"nodeId" : _.sharingNode.id,
+				"publicAppend" : publicAppend ? "true" : "false"
+			}, null);
+		},
+
 		removePrivilege : function(principal, privilege) {
 			util.json("removePrivilege", {
 				"nodeId" : _.sharingNode.id,
@@ -78,24 +112,26 @@ var share = function() {
 		shareNodeToPersonPg : function() {
 			meta64.changePage(shareToPersonPg);
 		},
-		
+
 		shareNodeToPerson : function() {
-			var targetUser = $("#shareToUserName").val(); 
+			var targetUser = $("#shareToUserName").val();
 			if (!targetUser) {
 				alert("Please enter a username");
 				return;
 			}
-			
-			/* TODO: Need to test of 'nodeTypeManagement' is actually required. What is below does work, but need
-			 * to make it as minimal as possible
+
+			/*
+			 * TODO: Need to test of 'nodeTypeManagement' is actually required.
+			 * What is below does work, but need to make it as minimal as
+			 * possible
 			 */
 			util.json("addPrivilege", {
 				"nodeId" : _.sharingNode.id,
 				"principal" : targetUser,
-				"privileges" : ["read", "write", "addChildren", "nodeTypeManagement"]
+				"privileges" : [ "read", "write", "addChildren", "nodeTypeManagement" ]
 			}, _.reloadFromShareWithPerson);
 		},
-		
+
 		shareNodeToPublic : function() {
 			console.log("Sharing node to public.");
 			/*
@@ -108,7 +144,7 @@ var share = function() {
 			util.json("addPrivilege", {
 				"nodeId" : _.sharingNode.id,
 				"principal" : "everyone",
-				"privileges" : ["read"]
+				"privileges" : [ "read" ]
 			}, _.reload);
 		},
 
@@ -132,14 +168,14 @@ var share = function() {
 				meta64.changePage(sharingPg);
 			}
 		},
-		
+
 		/*
-		 * Gets privileges from server and displays in GUI also. Assumes gui is already
-		 * at correct page.
+		 * Gets privileges from server and displays in GUI also. Assumes gui is
+		 * already at correct page.
 		 */
 		reload : function() {
 			console.log("Loading node sharing info.");
-			
+
 			util.json("getNodePrivileges", {
 				"nodeId" : _.sharingNode.id,
 				"includeAcl" : true,
@@ -152,4 +188,4 @@ var share = function() {
 	return _;
 }();
 
-//# sourceURL=share.js
+// # sourceURL=share.js

@@ -232,6 +232,10 @@ var util = function() {
 			return e;
 		},
 
+		setCheckboxVal : function(id, val) {
+			$(id).prop("checked", val).checkboxradio("refresh");
+		},
+		
 		isObject : function(obj) {
 			return obj && obj.length != 0;
 		},

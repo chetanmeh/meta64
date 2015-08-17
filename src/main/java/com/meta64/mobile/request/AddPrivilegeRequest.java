@@ -10,6 +10,9 @@ public class AddPrivilegeRequest {
 	private List<String> privileges;
 
 	private String principal;
+	
+	/* if this is null, we ignore it and make no change */
+	private Boolean publicAppend;
 
 	public String getNodeId() {
 		return nodeId;
@@ -33,5 +36,13 @@ public class AddPrivilegeRequest {
 
 	public void setPrivileges(List<String> privileges) {
 		this.privileges = privileges;
+	}
+
+	public Boolean getPublicAppend() {
+		return publicAppend;
+	}
+
+	public void setPublicAppend(Boolean publicAppend) {
+		this.publicAppend = publicAppend;
 	}
 }

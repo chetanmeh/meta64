@@ -9,6 +9,12 @@ public class GetNodePrivilegesResponse extends OakResponseBase {
 	private List<AccessControlEntryInfo> aclEntries;
 	private List<String> owners;
 
+	/*
+	 * This value will match (and come from) the property named 'publicAppend' on the nodes which is
+	 * an optional property and if not present this boolean will be 'false'
+	 */
+	private boolean publicAppend;
+
 	public List<AccessControlEntryInfo> getAclEntries() {
 		return aclEntries;
 	}
@@ -24,4 +30,13 @@ public class GetNodePrivilegesResponse extends OakResponseBase {
 	public void setOwners(List<String> owners) {
 		this.owners = owners;
 	}
+
+	public boolean isPublicAppend() {
+		return publicAppend;
+	}
+
+	public void setPublicAppend(boolean publicAppend) {
+		this.publicAppend = publicAppend;
+	}
+
 }

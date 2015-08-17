@@ -97,7 +97,7 @@ public class NodeEditService {
 
 		if (publicAppend) {
 			newNode.setProperty(JcrProp.COMMENT_BY, curUser);
-			newNode.setProperty(JcrProp.PUBLIC_APPEND, "true");
+			newNode.setProperty(JcrProp.PUBLIC_APPEND, true);
 		}
 		session.save();
 

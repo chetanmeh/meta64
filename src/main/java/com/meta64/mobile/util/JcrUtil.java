@@ -52,7 +52,7 @@ public class JcrUtil {
 	}
 
 	public static boolean isPublicAppend(Node node) {
-		return "true".equals(JcrUtil.safeGetStringProp(node, JcrProp.PUBLIC_APPEND));
+		return JcrUtil.safeGetBooleanProp(node, JcrProp.PUBLIC_APPEND);
 	}
 	
 	public static void checkNodeCreatedBy(Node node, String userName) throws Exception {
