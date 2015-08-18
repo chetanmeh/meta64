@@ -1,54 +1,45 @@
 package com.meta64.mobile.repo;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.jackrabbit.JcrConstants.JCR_CONTENT;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.Principal;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
+import javax.security.auth.Subject;
 
-import org.apache.jackrabbit.JcrConstants;
-import org.apache.jackrabbit.oak.Oak;
-import org.apache.jackrabbit.oak.jcr.Jcr;
-import org.apache.jackrabbit.oak.jcr.repository.RepositoryImpl;
-import org.apache.jackrabbit.oak.plugins.document.DocumentMK;
-import org.apache.jackrabbit.oak.plugins.document.DocumentNodeState;
-import org.apache.jackrabbit.oak.plugins.document.DocumentNodeStore;
-import org.apache.jackrabbit.oak.plugins.index.aggregate.NodeAggregator;
-import org.apache.jackrabbit.oak.plugins.index.aggregate.SimpleNodeAggregator;
-import org.apache.jackrabbit.oak.plugins.index.lucene.LuceneIndexEditorProvider;
-import org.apache.jackrabbit.oak.plugins.index.lucene.LuceneIndexProvider;
-import org.apache.jackrabbit.oak.security.SecurityProviderImpl;
-import org.apache.jackrabbit.oak.spi.commit.Observer;
-import org.apache.jackrabbit.oak.spi.query.QueryIndexProvider;
-import org.apache.jackrabbit.oak.spi.security.ConfigurationParameters;
-import org.apache.jackrabbit.oak.spi.security.SecurityProvider;
-import org.apache.jackrabbit.oak.spi.security.user.UserConfiguration;
-import org.apache.jackrabbit.oak.spi.security.user.UserConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.google.common.collect.ImmutableMap;
 import com.meta64.mobile.AppServer;
 import com.meta64.mobile.config.JcrName;
 import com.meta64.mobile.user.RunAsJcrAdmin;
 import com.meta64.mobile.user.UserManagerUtil;
 import com.meta64.mobile.util.JcrRunnable;
 import com.meta64.mobile.util.JcrUtil;
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoTimeoutException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.jackrabbit.api.JackrabbitRepository;
+import org.apache.jackrabbit.oak.api.AuthInfo;
+import org.apache.jackrabbit.oak.run.osgi.OakOSGiRepositoryFactory;
+import org.apache.jackrabbit.oak.spi.security.authentication.AuthInfoImpl;
+import org.apache.jackrabbit.oak.spi.security.principal.AdminPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
+
+import static java.util.Collections.singleton;
 
 /**
  * Instance of a MonboDB-based Repository.
@@ -62,15 +53,7 @@ public class OakRepository {
 	@Value("${indexingEnabled}")
 	private boolean indexingEnabled;
 	
-	private LuceneIndexProvider indexProvider;
-	private DocumentNodeStore nodeStore;
-	private DocumentNodeState root;
-	private ExecutorService executor;
-	private Oak oak;
-	private Jcr jcr;
 	private Repository repository;
-	protected ConfigurationParameters securityParams;
-	private SecurityProvider securityProvider;
 
 	/*
 	 * Because of the criticality of this variable, I am not using the Spring getter to get it, but
@@ -112,6 +95,19 @@ public class OakRepository {
 	@Value("${anonUserLandingPageNode}")
 	private String userLandingPageNode;
 
+	@Value("${jcrHome}")
+	private String repoHome;
+
+	@Value("classpath:/repository-config.json")
+	private Resource defaultRepoConfig;
+	
+	private String bundleFilter = "(|" +
+				"(Bundle-SymbolicName=org.apache.jackrabbit*)" +
+				"(Bundle-SymbolicName=org.apache.sling*)" +
+				"(Bundle-SymbolicName=org.apache.felix*)" +
+				"(Bundle-SymbolicName=org.apache.aries*)" +
+				")";
+
 	@Autowired
 	private RunAsJcrAdmin adminRunner;
 
@@ -134,7 +130,7 @@ public class OakRepository {
 
 	@PostConstruct
 	public void postConstruct() throws Exception {
-		mongoInit(mongoDbHost, mongoDbPort, mongoDbName);
+		initRepository();
 	}
 
 	@PreDestroy
@@ -142,8 +138,94 @@ public class OakRepository {
 		close();
 	}
 
-	public void initRequiredNodes() throws Exception {
+	public Repository getRepository() {
+		return repository;
+	}
 
+	public Session newAdminSession() throws RepositoryException {
+		//Admin ID here can be any string and need not match the actual admin userId
+		final String adminId = "admin";
+		Principal admin = new AdminPrincipal() {
+			@Override
+			public String getName() {
+				return adminId;
+			}
+		};
+
+		//Following approach allows obtaining Admin session without known admin user credentials
+		AuthInfo authInfo = new AuthInfoImpl(adminId, null, singleton(admin));
+		Subject subject = new Subject(true, singleton(admin), singleton(authInfo), Collections.emptySet());
+		Session adminSession;
+		try {
+			adminSession = Subject.doAsPrivileged(subject, new PrivilegedExceptionAction<Session>() {
+				@Override
+				public Session run() throws Exception {
+					return repository.login();
+				}
+			}, null);
+		} catch (PrivilegedActionException e) {
+			throw new RepositoryException("failed to retrieve admin session.", e);
+		}
+
+		return adminSession;
+	}
+
+	public void close() {
+		synchronized (lock) {
+			if (!initialized) {
+				return;
+			}
+			initialized = false;
+
+			log.debug("Shutting down repository.");
+			if (repository != null) {
+				((JackrabbitRepository) repository).shutdown();
+				repository = null;
+			}
+			log.debug("***** All Persistence Shutdown complete. *****");
+		}
+	}
+
+	public String getJcrAdminUserName() {
+		return jcrAdminUserName;
+	}
+
+	public String getJcrAdminPassword() {
+		return jcrAdminPassword;
+	}
+
+	private void initRepository() throws Exception {
+		File repoHomeDir = new File(repoHome);
+		FileUtils.forceMkdir(repoHomeDir);
+
+		File repoConfig = new File(repoHomeDir, "repository-config.json");
+		copyDefaultConfig(repoConfig, defaultRepoConfig);
+		repository = createRepository(repoConfig, repoHomeDir);
+
+		UserManagerUtil.verifyAdminAccountReady(this);
+		initRequiredNodes();
+		adminRunner.run(new IndexInitializer());
+		initialized = true;
+	}
+
+	private Repository createRepository(File repoConfig, File repoHomeDir) throws RepositoryException {
+		Map<String,Object> config = new HashMap<>();
+		config.put(OakOSGiRepositoryFactory.REPOSITORY_HOME, repoHomeDir.getAbsolutePath());
+		config.put(OakOSGiRepositoryFactory.REPOSITORY_CONFIG_FILE, repoConfig.getAbsolutePath());
+		config.put(OakOSGiRepositoryFactory.REPOSITORY_BUNDLE_FILTER, bundleFilter);
+		config.put(OakOSGiRepositoryFactory.REPOSITORY_SHUTDOWN_ON_TIMEOUT, false);
+		config.put(OakOSGiRepositoryFactory.REPOSITORY_ENV_SPRING_BOOT, true);
+		config.put(OakOSGiRepositoryFactory.REPOSITORY_TIMEOUT_IN_SECS, 10);
+
+		//Pass on config required for substitution in OSGi config
+		config.put("mongodb.host", mongoDbHost);
+		config.put("mongodb.port", mongoDbPort);
+		config.put("mongodb.name", mongoDbName);
+
+		return new OakOSGiRepositoryFactory().getRepository(config);
+	}
+
+	private void initRequiredNodes() throws Exception {
 		adminRunner.run(new JcrRunnable() {
 			@Override
 			public void run(Session session) throws Exception {
@@ -156,145 +238,21 @@ public class OakRepository {
 		});
 	}
 
-	public Repository getRepository() {
-		return repository;
-	}
-
-	public Session newAdminSession() throws Exception {
-		return repository.login(new SimpleCredentials(getJcrAdminUserName(), getJcrAdminPassword().toCharArray()));
-	}
-
-	public void mongoInit(String mongoDbHost, int mongoDbPort, String mongoDbName) throws Exception {
-		synchronized (lock) {
-			if (initialized) {
-				throw new Exception("Repository already initialized");
+	private static void copyDefaultConfig(File repoConfig, Resource defaultRepoConfig)
+			throws IOException, RepositoryException {
+		if (!repoConfig.exists()){
+			InputStream in = defaultRepoConfig.getInputStream();
+			if (in == null){
+				throw new RepositoryException("No config file found in classpath " + defaultRepoConfig);
 			}
-			initialized = true;
-
+			OutputStream os = null;
 			try {
-				DB db = new MongoClient(mongoDbHost, mongoDbPort).getDB(mongoDbName);
-				DocumentNodeStore ns = new DocumentMK.Builder().setMongoDB(db).getNodeStore();
-				root = ns.getRoot();
-
-				/* can shutdown during startup. */
-				if (AppServer.isShuttingDown()) return;
-
-				executor = Oak.defaultExecutorService();
-				oak = new Oak(ns);
-				oak = oak.with(executor);
-				
-				jcr = new Jcr(oak);
-				jcr = jcr.with(getSecurityProvider());
-
-				if (indexingEnabled) {
-					/*
-					 * WARNING: Not all valid SQL will work with these lucene queries. Namely the
-					 * contains() method fails so always use '=' operator for exact string matches
-					 * or LIKE %something%, instead of using the contains method.
-					 */
-					indexProvider = new LuceneIndexProvider();
-					indexProvider = indexProvider.with(getNodeAggregator());
-					jcr = jcr.with(new LuceneFullTextInitializer("contentIndex", "jcr:content"));
-					jcr = jcr.with(new LuceneSortInitializer("lastModifiedIndex", "jcr:lastModified"));
-					jcr = jcr.with(new LuceneSortInitializer("codeIndex", "code"));
-					jcr = jcr.with((QueryIndexProvider) indexProvider);
-					jcr = jcr.with((Observer) indexProvider);
-					jcr = jcr.with(new LuceneIndexEditorProvider());
-					jcr = jcr.withAsyncIndexing();
-				}
-				
-				/* can shutdown during startup. */
-				if (AppServer.isShuttingDown()) return;
-
-				repository = jcr.createRepository();
-
-				log.debug("MongoDb connection ok.");
-
-				/* can shutdown during startup. */
-				if (AppServer.isShuttingDown()) return;
-
-				UserManagerUtil.verifyAdminAccountReady(this);
-				initRequiredNodes();
-
-				log.debug("Repository fully initialized.");
-			}
-			catch (MongoTimeoutException e) {
-				log.error("********** Did you forget to start MongoDb Server? **********", e);
-				throw e;
+				os = FileUtils.openOutputStream(repoConfig);
+				IOUtils.copy(in, os);
+			} finally {
+				IOUtils.closeQuietly(os);
+				IOUtils.closeQuietly(in);
 			}
 		}
-	}
-
-	/* TODO: I don't know what this aggregator is or if I need it */
-	private static NodeAggregator getNodeAggregator() {
-		return new SimpleNodeAggregator().newRuleWithName(JcrConstants.NT_UNSTRUCTURED, //
-				newArrayList(JCR_CONTENT, JCR_CONTENT + "/*"));
-	}
-
-	private SecurityProvider getSecurityProvider() {
-		Map<String, Object> userParams = new HashMap<String, Object>();
-		userParams.put(UserConstants.PARAM_ADMIN_ID, "admin");
-		userParams.put(UserConstants.PARAM_OMIT_ADMIN_PW, false);
-
-		securityParams = ConfigurationParameters.of(ImmutableMap.of(UserConfiguration.NAME, ConfigurationParameters.of(userParams)));
-		securityProvider = new SecurityProviderImpl(securityParams);
-		return securityProvider;
-	}
-
-	public void close() {
-		synchronized (lock) {
-			if (!initialized) {
-				return;
-			}
-			initialized = false;
-
-			log.debug("Shutting down Oak Executor");
-			if (executor != null) {
-				executor.shutdown();
-				
-				log.debug("Awaiting executor shutdown");
-				try {
-					executor.awaitTermination(5, TimeUnit.MINUTES);
-					log.debug("Executor shutdown completed ok.");
-				}
-				catch (InterruptedException ex) {
-					log.error("Executor failed to shutdown gracefully.", ex);
-				}
-				
-				executor = null;
-			}
-			
-			log.debug("disposing nodeStore.");
-			if (nodeStore != null) {
-				nodeStore.dispose();
-				nodeStore = null;
-			}
-
-			log.debug("Closing indexProvider.");
-			if (indexProvider != null) {
-				indexProvider.close();
-				indexProvider = null;
-			}
-			
-			log.debug("Shutting down repository.");
-			if (repository!=null) {
-				((RepositoryImpl)repository).shutdown();
-				repository = null;
-			}
-			
-			log.debug("***** All Persistence Shutdown complete. *****");
-		}
-	}
-
-	public DocumentNodeState getRoot() {
-		return root;
-	}
-
-	public String getJcrAdminUserName() {
-		return jcrAdminUserName;
-	}
-
-	public String getJcrAdminPassword() {
-		return jcrAdminPassword;
 	}
 }
