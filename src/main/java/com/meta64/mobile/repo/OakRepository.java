@@ -17,6 +17,7 @@ import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.security.auth.Subject;
+import javax.servlet.ServletContext;
 
 import com.meta64.mobile.AppServer;
 import com.meta64.mobile.config.JcrName;
@@ -31,6 +32,8 @@ import org.apache.jackrabbit.oak.api.AuthInfo;
 import org.apache.jackrabbit.oak.run.osgi.OakOSGiRepositoryFactory;
 import org.apache.jackrabbit.oak.spi.security.authentication.AuthInfoImpl;
 import org.apache.jackrabbit.oak.spi.security.principal.AdminPrincipal;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,12 +103,16 @@ public class OakRepository {
 
 	@Value("classpath:/repository-config.json")
 	private Resource defaultRepoConfig;
+
+	@Autowired
+	private ServletContext servletContext;
 	
 	private String bundleFilter = "(|" +
 				"(Bundle-SymbolicName=org.apache.jackrabbit*)" +
 				"(Bundle-SymbolicName=org.apache.sling*)" +
 				"(Bundle-SymbolicName=org.apache.felix*)" +
 				"(Bundle-SymbolicName=org.apache.aries*)" +
+				"(Bundle-SymbolicName=groovy-all)" +
 				")";
 
 	@Autowired
@@ -222,7 +229,24 @@ public class OakRepository {
 		config.put("mongodb.port", mongoDbPort);
 		config.put("mongodb.name", mongoDbName);
 
+		configureActivator(config);
+
 		return new OakOSGiRepositoryFactory().getRepository(config);
+	}
+
+	private void configureActivator(Map<String, Object> config) {
+		config.put(BundleActivator.class.getName(), new BundleActivator() {
+			@Override
+			public void start(BundleContext bundleContext) throws Exception {
+				servletContext.setAttribute(BundleContext.class.getName(), bundleContext);
+			}
+
+			@Override
+			public void stop(BundleContext bundleContext) throws Exception {
+				servletContext.removeAttribute(BundleContext.class.getName());
+			}
+		});
+
 	}
 
 	private void initRequiredNodes() throws Exception {
